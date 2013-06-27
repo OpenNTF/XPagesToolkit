@@ -1,4 +1,4 @@
-XPagesToolbox
+XPagesToolkit
 =============
 
 OPENNTF
