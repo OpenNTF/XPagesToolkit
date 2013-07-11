@@ -1,0 +1,16 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Core of the XPagesToolBox
+Bundle-SymbolicName: org.openntf.xpt.objectlist;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.openntf.xpt.objectlist.Activator
+Bundle-Vendor: WebGate Consulting AG
+Require-Bundle: org.eclipse.core.runtime,
+ com.ibm.xsp.core,
+ com.ibm.commons,
+ org.openntf.xpt.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openntf.xpt.objectlist,
+ org.openntf.xpt.objectlist.config,
+ org.openntf.xpt.objectlist.datasource

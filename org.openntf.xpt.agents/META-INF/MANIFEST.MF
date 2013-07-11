@@ -1,0 +1,27 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Agents XPagesToolBox
+Bundle-SymbolicName: org.openntf.xpt.agents;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.openntf.xpt.agents.XPTAgentActivator
+Bundle-Vendor: WebGate Consulting AG
+Require-Bundle: org.eclipse.core.runtime,
+ org.openntf.xpt.core,
+ com.ibm.xsp.core,
+ com.ibm.jscript,
+ com.ibm.xsp.domino,
+ com.ibm.designer.runtime,
+ com.ibm.xsp.extsn,
+ com.ibm.domino.xsp.adapter
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Import-Package: lotus.domino
+Export-Package: org.openntf.xpt.agents,
+ org.openntf.xpt.agents.annotations,
+ org.openntf.xpt.agents.beans,
+ org.openntf.xpt.agents.component,
+ org.openntf.xpt.agents.config,
+ org.openntf.xpt.agents.master,
+ org.openntf.xpt.agents.renderkit.html_extended,
+ org.openntf.xpt.agents.resources,
+ org.openntf.xpt.agents.servlet

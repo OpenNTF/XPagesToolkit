@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="org.openntf.xpt.objectlist"
+         name="XPT ObjectList DataSource"
+         point="org.openntf.xpt.part">
+      <PartConfiguration
+            class="org.openntf.xpt.objectlist.config.ObjectListConfig">
+      </PartConfiguration>
+   </extension>
+
+</plugin>

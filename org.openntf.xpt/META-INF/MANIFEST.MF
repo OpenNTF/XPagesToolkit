@@ -1,0 +1,18 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: XPagesToolBox
+Bundle-SymbolicName: org.openntf.xpt;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.openntf.xpt.Activator
+Bundle-Vendor: WebGate Consulting AG
+Require-Bundle: org.eclipse.core.runtime,
+ com.ibm.xsp.core,
+ org.openntf.xpt.core;visibility:=reexport,
+ org.openntf.xpt.rss;visibility:=reexport,
+ org.openntf.xpt.agents;visibility:=reexport,
+ org.openntf.xpt.objectlist;visibility:=reexport,
+ org.openntf.xpt.properties;visibility:=reexport
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openntf.xpt,
+ org.openntf.xpt.library

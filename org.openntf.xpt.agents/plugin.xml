@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         id="org.openntf.xpt.agents"
+         name="XPT AgentsFrameWork"
+         point="org.openntf.xpt.part">
+      <PartConfiguration
+            class="org.openntf.xpt.agents.config.AgentConfig">
+      </PartConfiguration>
+   </extension>
+   <extension
+         point="com.ibm.commons.Extension">
+      <service
+            class="org.openntf.xpt.agents.resources.XPTAgentResourceProvider"
+            type="com.ibm.xsp.GlobalResourceProvider">
+      </service>
+   </extension>
+   <extension point="com.ibm.commons.Extension">
+         <service
+            type="com.ibm.xsp.resource.DojoModulePathResource"
+            class="org.openntf.xpt.agents.resources.XPTModulePath" />
+   </extension>
+
+<extension point="com.ibm.commons.Extension">
+         <service type="com.ibm.xsp.RequestParameters" class="org.openntf.xpt.agents.resources.XPTRequestCustomizerFactory" />
+   </extension>
+</plugin>

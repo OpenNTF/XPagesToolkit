@@ -1,0 +1,40 @@
+<faces-config>
+	<faces-config-extension>
+   		<namespace-uri>http://www.openntf.org/xsp/xpt</namespace-uri>
+   		<default-prefix>xpt</default-prefix>
+	</faces-config-extension>
+	
+	<complex-type>
+        <description>Properties File as Datasource</description>
+        <display-name>Properties File Datasource</display-name>
+        <complex-class>org.openntf.xpt.properties.datasource.PropertiesDataSource</complex-class>
+        <complex-id>org.openntf.xpt.properties.datasource.PropertiesDataSource</complex-id>
+		<property>
+			<description>Database</description>
+			<display-name>datebaseName</display-name>
+			<property-name>databaseName</property-name>
+			<property-class>java.lang.String</property-class>
+			<property-extension>
+				<category>Properties</category>
+				<allow-run-time-binding>true</allow-run-time-binding>
+				<required>true</required>
+			</property-extension>
+		</property>
+		<property>
+			<description>Filename</description>
+			<display-name>fileName</display-name>
+			<property-name>fileName</property-name>
+			<property-class>java.lang.String</property-class>
+			<property-extension>
+				<category>Properties</category>
+				<allow-run-time-binding>true</allow-run-time-binding>
+				<required>true</required>
+			</property-extension>
+		</property>
+		<group-type-ref>com.ibm.xsp.model.group.DataSource</group-type-ref>
+    	<complex-extension>
+    		<tag-name>propertiesSource</tag-name>
+    		<base-complex-id>dataInterface</base-complex-id>
+    	</complex-extension>
+    </complex-type>
+</faces-config>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feature
+      id="org.openntf.xpt.feature"
+      label="XPages Toolkit"
+      version="1.0.0.qualifier"
+      provider-name="WebGate Consulting AG">
+
+   <description url="http://www.example.com/description">
+      [Enter Feature Description here.]
+   </description>
+
+   <copyright url="http://www.example.com/copyright">
+      [Enter Copyright Description here.]
+   </copyright>
+
+   <license url="http://www.example.com/license">
+      [Enter License Description here.]
+   </license>
+
+   <requires>
+      <import plugin="org.eclipse.core.runtime"/>
+      <import plugin="com.ibm.xsp.core"/>
+      <import plugin="com.ibm.jscript"/>
+      <import plugin="com.ibm.xsp.domino"/>
+      <import plugin="com.ibm.designer.runtime"/>
+      <import plugin="com.ibm.xsp.extsn"/>
+      <import plugin="com.ibm.domino.xsp.adapter"/>
+      <import plugin="com.ibm.notes.java.api"/>
+      <import plugin="com.ibm.domino.napi" version="9.0.0" match="greaterOrEqual"/>
+      <import plugin="com.ibm.commons"/>
+   </requires>
+
+   <plugin
+         id="org.openntf.xpt"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.openntf.xpt.agents"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.openntf.xpt.core"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.openntf.xpt.objectlist"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.openntf.xpt.properties"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+   <plugin
+         id="org.openntf.xpt.rss"
+         download-size="0"
+         install-size="0"
+         version="0.0.0"
+         unpack="false"/>
+
+</feature>

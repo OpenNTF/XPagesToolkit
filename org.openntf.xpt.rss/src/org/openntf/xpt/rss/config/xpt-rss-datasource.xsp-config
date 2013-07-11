@@ -1,0 +1,29 @@
+<faces-config>
+	<faces-config-extension>
+   		<namespace-uri>http://www.openntf.org/xsp/xpt</namespace-uri>
+   		<default-prefix>xpt</default-prefix>
+	</faces-config-extension>
+
+	<complex-type>
+        <description>RSS Feed as Datasource</description>
+        <display-name>RSS Feed Datasource</display-name>
+        <complex-class>org.openntf.xpt.rss.datasource.RSSDataSource</complex-class>
+        <complex-id>org.openntf.xpt.rss.datasource.RSSDataSource</complex-id>
+		<property>
+			<description>URL of the RSS Feed</description>
+			<display-name>feedURL</display-name>
+			<property-name>feedURL</property-name>
+			<property-class>java.lang.String</property-class>
+			<property-extension>
+				<category>RSS</category>
+				<allow-run-time-binding>true</allow-run-time-binding>
+				<required>true</required>
+			</property-extension>
+		</property>
+		<group-type-ref>com.ibm.xsp.model.group.DataSource</group-type-ref>
+    	<complex-extension>
+    		<tag-name>rssFeed</tag-name>
+    		<base-complex-id>dataInterface</base-complex-id>
+    	</complex-extension>
+    </complex-type>
+</faces-config>

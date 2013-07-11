@@ -1,0 +1,21 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: RSS Feature for XPagesToolBox
+Bundle-SymbolicName: org.openntf.xpt.rss;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.openntf.xpt.rss.Activator
+Bundle-Vendor: WebGate Consulting AG
+Require-Bundle: org.eclipse.core.runtime,
+ com.ibm.xsp.core,
+ com.ibm.commons,
+ org.openntf.xpt.core
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openntf.xpt.rss,
+ org.openntf.xpt.rss.beans,
+ org.openntf.xpt.rss.config,
+ org.openntf.xpt.rss.datasource,
+ org.openntf.xpt.rss.model
+Bundle-ClassPath: lib/rome-1.0.jar,
+ lib/jdom.jar,
+ .

@@ -1,0 +1,187 @@
+<faces-config>
+	<faces-config-extension>
+   		<namespace-uri>http://www.openntf.org/xsp/xpt</namespace-uri>
+   		<default-prefix>xpt</default-prefix>
+	</faces-config-extension>
+	
+
+  <component>
+    <description>XPageAgents Overview and Controll</description>
+    <display-name>XPageAgentsOverview</display-name>
+    <component-type>org.openntf.xpt.agents.component.uiagentlist</component-type>
+    <component-class>org.openntf.xpt.agents.component.UIAgentList</component-class>
+
+    <component-extension>
+      <component-family>org.openntf.xpt.agents.component.uiagentlist</component-family>
+      <renderer-type>org.openntf.xpt.agents.uiagentlist</renderer-type>
+      <tag-name>agentlist</tag-name>
+      <designer-extension>
+ 			<in-palette>true</in-palette>
+        	<category>XPages Toolkit</category>
+      </designer-extension>
+    </component-extension>
+  </component>
+  
+  <component>
+    <description>Execute an Agent and display a progressbar</description>
+    <display-name>XPageAgentsProgressBar</display-name>
+    <component-type>org.openntf.xpt.agents.component.uiagentprogressbar</component-type>
+    <component-class>org.openntf.xpt.agents.component.UIAgentProgressbar</component-class>
+
+    <group-type-ref>com.ibm.xsp.group.core.prop.style</group-type-ref>
+    <group-type-ref>com.ibm.xsp.group.core.prop.styleClass</group-type-ref>
+
+    <property>
+      <description>Name of the javascript service</description>
+      <display-name>ServiceName</display-name>
+      <property-name>serviceName</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+          <category>basics</category>
+        </designer-extension>
+      </property-extension>
+    </property>
+    <property>
+      <description>Alias of the agent to execute</description>
+      <display-name>AgentName</display-name>
+      <property-name>agentName</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+          <category>basics</category>
+        </designer-extension>
+      </property-extension>
+    </property>
+
+    <property>
+      <description>Style Title</description>
+      <display-name>styleTitle</display-name>
+      <property-name>styleTitle</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+        	<category>styling</category>
+          	<editor>com.ibm.workplace.designer.property.editors.StylesEditor</editor>
+        </designer-extension>
+      </property-extension>
+    </property>  
+    <property>
+      <description>Class Title</description>
+      <display-name>classTitle</display-name>
+      <property-name>styleClassTitle</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+        	<category>styling</category>
+          	<editor>com.ibm.workplace.designer.property.editors.StyleClassEditor</editor>
+        </designer-extension>
+      </property-extension>
+    </property>
+
+   <property>
+      <description>Style Task</description>
+      <display-name>styleTaks</display-name>
+      <property-name>styleTask</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+        	<category>styling</category>
+          	<editor>com.ibm.workplace.designer.property.editors.StylesEditor</editor>
+        </designer-extension>
+      </property-extension>
+    </property>  
+    <property>
+      <description>Class Task</description>
+      <display-name>classTask</display-name>
+      <property-name>styleClassTask</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+        	<category>styling</category>
+          	<editor>com.ibm.workplace.designer.property.editors.StyleClassEditor</editor>
+        </designer-extension>
+      </property-extension>
+    </property>
+
+   <property>
+      <description>Style ProgressBar</description>
+      <display-name>styleProgressBar</display-name>
+      <property-name>styleProgressBar</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+        	<category>styling</category>
+          	<editor>com.ibm.workplace.designer.property.editors.StylesEditor</editor>
+        </designer-extension>
+      </property-extension>
+    </property>  
+    <property>
+      <description>Class ProgressBar</description>
+      <display-name>classProgressBar</display-name>
+      <property-name>styleClassProgressBar</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+        	<category>styling</category>
+          	<editor>com.ibm.workplace.designer.property.editors.StyleClassEditor</editor>
+        </designer-extension>
+      </property-extension>
+    </property>
+
+	<property>
+		<description>Agent Properties</description>
+		<display-name>agentProperties</display-name>
+		<property-name>agentProperties</property-name>
+        <property-class>java.util.List</property-class>
+       	<property-extension>
+                <allow-run-time-binding>false</allow-run-time-binding>
+          		<collection-property>true</collection-property>
+          		<property-item-class>org.openntf.xpt.agents.component.UIAgentProperty</property-item-class>
+            	<property-add-method>addAgentProperty</property-add-method>
+            	<designer-extension>
+            		<category>XPageAgents</category>
+            	</designer-extension>
+        	</property-extension>
+	</property>
+
+    <component-extension>
+      <component-family>org.openntf.xpt.agents.component.uiagentprogressbar</component-family>
+      <renderer-type>org.openntf.xpt.agents.component.uiagentprogressbar</renderer-type>
+      <tag-name>agentprogressbar</tag-name>
+      <designer-extension>
+ 			<in-palette>true</in-palette>
+        	<category>XPages Toolkit</category>
+        	<render-markup>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+				&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+				&lt;xp:image url="/icons/ui_progressbar.png" id="uiprogressbar"&gt;&lt;/xp:image&gt;&#xd;
+				&lt;/xp:view&gt;&#xd;
+			</render-markup>
+      </designer-extension>
+    </component-extension>
+  </component>
+  
+  
+  <complex-type>
+  		<description>Agent Properties</description>
+  		<display-name>agentProperty</display-name>
+  		<complex-id>org.openntf.xpt.agents.component.UIAgentProperty</complex-id>
+  		<complex-class>org.openntf.xpt.agents.component.UIAgentProperty</complex-class>
+  		<property>
+    		<description>Key des Values</description>
+	 	 	<display-name>key</display-name>
+		    <property-name>key</property-name>
+    		<property-class>java.lang.String</property-class>
+  		</property>
+  		<property>
+    		<description>Value</description>
+	 	 	<display-name>value</display-name>
+		    <property-name>value</property-name>
+    		<property-class>java.lang.String</property-class>
+  		</property>
+   		<complex-extension>
+    		<tag-name>agentPropery</tag-name>
+  		</complex-extension>
+	</complex-type>
+  
+</faces-config>

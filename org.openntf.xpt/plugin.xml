@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?eclipse version="3.4"?>
+<plugin>
+   <extension
+         point="com.ibm.commons.Extension">
+      <service
+            class="org.openntf.xpt.library.XPTLibrary"
+            type="com.ibm.xsp.Library">
+      </service>
+   </extension>
+   
+   <extension point="com.ibm.commons.Extension">
+         <service type="com.ibm.xsp.adapter.servletFactory" class="org.openntf.xpt.agents.servlet.ExecutorServletFactory" />
+   </extension>
+</plugin>
