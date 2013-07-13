@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' replicaid='C1257B95007265C6'>
+<noteinfo noteid='186' unid='A20F437728D4A6D1C1257B5800493A2B' sequence='2'>
+<created><datetime dst='true'>20130425T151950,19+02</datetime></created>
+<modified><datetime dst='true'>20130625T224932,16+02</datetime></modified>
+<revised><datetime dst='true'>20130425T151950,55+02</datetime></revised>
+<lastaccessed><datetime dst='true'>20130625T224932,16+02</datetime></lastaccessed>
+<addedtofile><datetime dst='true'>20130625T224932,16+02</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
+<wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
+<item name='$FormulaClass' sign='true'><text>1</text></item>
+<item name='$TITLE' sign='true'><text>AuthorCloud</text></item>
+<item name='$Index' sign='true'><text/></item>
+<item name='$Formula' summary='true' sign='true'><formula compiled='true'>
+tgAKAAQAAQAgABEAX21ldGFTZXAAWDBfAIR3JQAAAQABAH4AAwACAEAAAgAkMgEABgBBdXRob3L7
+ATMBBQARAF9tZXRhU2VwAFgwXwCEdyUAACICAQAGAEF1dGhvcvsBMwEiAgMABQAeABkAAwACAAkA
+BAAkMiRDb25mbGljdCRSRUYABAAEAAAAIgAFAAQARm9ybQEACgBEaXNjdXNzaW9uCgIEAAQAAwAH
+AAwABQAJM1M0UwA=
+</formula></item>
+<item name='$Collation' summary='true'>
+<rawitemdata type='2'>
+DwABAABECGYHAAACACQy
+</rawitemdata></item>
+<item name='$ViewFormat' summary='true' sign='true'>
+<rawitemdata type='5'>
+AQABAAMACAAAAFZDAwACAAkAfgAAAAgBAQAACgABAAAAAAAAAAICAAAAJDJGaXJzdE5hbWV+AAoA
+BAABACAAEQBfbWV0YVNlcABYMF8AhHclAAABAAEAfgADAAcADAAFAAkxUzJTAAIAQAACACQyAQAG
+AEF1dGhvcvsBMwEFABEAX21ldGFTZXAAWDBfAIR3JQAAIgIBAAYAQXV0aG9y+wEzASICAwAHAAwA
+BQAJMFI2UwAmAAEAAAABAQAJAQAACgEBDgoAAAEArSsBAAEAAQAAAAAAAAAAAFdDAQEACQAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAP//AAAAAAAAAAAAAAAAAABCAAAAAAABAP///wAFAP///wABAAAA
+AAAAAAAAAAAAAAEA////AAEA////AAAAAQAAAAAAAQAAAAAAAQAAAAAAAAAIAAAAAAABAA==
+</rawitemdata></item>
+<item name='$Flags'><text>PY</text></item>
+<item name='$WebFlags' sign='true'><text>A</text></item>
+<item name='$SelQuery' sign='true'>
+<rawitemdata type='f'>
+gQYAAAAAif8WAAAAAAABAAoARGlzY3Vzc2lvbg==
+</rawitemdata></item>
+<item name='$Comment' sign='true'><text>from XPagesExt.nsf</text></item>
+<item name='$DesignerVersion' sign='true'><text>8.5.3</text></item></note>
+

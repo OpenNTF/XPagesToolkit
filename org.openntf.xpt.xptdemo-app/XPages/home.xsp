@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom">
+
+	<xc:cc_application pageTitle="Welcome to POI 4 XPages"
+		navigationPath="/docx/home">
+		<xp:this.facets>
+			<xc:cc_nav_agents xp:key="facetLeft"></xc:cc_nav_agents>
+			<xp:panel xp:key="facetMiddle">
+				<xp:panel>
+					<xp:image url="/XPT_rgb.png" id="image2"></xp:image>
+					<h1>XPages ToolBox</h1></xp:panel><xp:panel><xp:br></xp:br>
+				Have fun!
+				<xp:br></xp:br>
+				Christian
+				</xp:panel>
+			</xp:panel>
+			<xp:panel xp:key="facetRight">
+				<xp:image id="image1">
+					<xp:this.url><![CDATA[#{javascript:"sidebar_img.png"}]]></xp:this.url>
+				</xp:image>
+			</xp:panel>
+			
+		</xp:this.facets>
+	</xc:cc_application>
+</xp:view>

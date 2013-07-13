@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:wgdt="http://www.webgate.biz/xsp/dt"
+	xmlns:xe="http://www.ibm.com/xsp/coreex"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+
+	<xc:cc_application navigationPath="/agent/overview"
+		pageTitle="Agents - Overview">
+		<xp:this.facets>
+			<xp:panel xp:key="facetRight"></xp:panel>
+			<xp:panel xp:key="facetMiddle">
+
+			<xpt:agentlist id="agentlist1"></xpt:agentlist></xp:panel>
+			<xp:panel xp:key="facetLeft">
+				<xc:cc_nav_agents></xc:cc_nav_agents>
+			</xp:panel>
+		</xp:this.facets>
+	</xc:cc_application>
+</xp:view>
