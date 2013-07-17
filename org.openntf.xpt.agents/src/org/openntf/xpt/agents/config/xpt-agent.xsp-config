@@ -168,7 +168,7 @@
   		<complex-id>org.openntf.xpt.agents.component.UIAgentProperty</complex-id>
   		<complex-class>org.openntf.xpt.agents.component.UIAgentProperty</complex-class>
   		<property>
-    		<description>Key des Values</description>
+    		<description>Key of the values</description>
 	 	 	<display-name>key</display-name>
 		    <property-name>key</property-name>
     		<property-class>java.lang.String</property-class>
@@ -180,7 +180,7 @@
     		<property-class>java.lang.String</property-class>
   		</property>
    		<complex-extension>
-    		<tag-name>agentPropery</tag-name>
+    		<tag-name>agentProperty</tag-name>
   		</complex-extension>
 	</complex-type>
   

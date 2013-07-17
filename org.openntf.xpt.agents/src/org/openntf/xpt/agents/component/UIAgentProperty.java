@@ -1,6 +1,7 @@
 package org.openntf.xpt.agents.component;
 
 import javax.faces.context.FacesContext;
+import javax.faces.el.ValueBinding;
 
 import com.ibm.xsp.complex.ValueBindingObjectImpl;
 
@@ -10,7 +11,15 @@ public class UIAgentProperty extends ValueBindingObjectImpl {
 	private String m_Value;
 
 	public String getKey() {
-		return m_Key;
+		if (m_Key != null) {
+			return m_Key;
+		}
+		ValueBinding vb = getValueBinding("key");
+		if (vb != null) {
+			return (String) vb.getValue(getFacesContext());
+		}
+		return null;
+
 	}
 
 	public void setKey(String key) {
@@ -18,7 +27,15 @@ public class UIAgentProperty extends ValueBindingObjectImpl {
 	}
 
 	public String getValue() {
-		return m_Value;
+		if (m_Value != null) {
+			return m_Value;
+		}
+		ValueBinding vb = getValueBinding("value");
+		if (vb != null) {
+			return (String) vb.getValue(getFacesContext());
+		}
+		return null;
+
 	}
 
 	public void setValue(String value) {

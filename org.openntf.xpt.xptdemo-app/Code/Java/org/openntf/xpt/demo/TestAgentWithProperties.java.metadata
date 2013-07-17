@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="form" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="2aa" sequence="6" unid="72203C18A4AE9CB5C1257BAB004409DE">
+<created><datetime dst="true">20130717T142309,74+02</datetime></created>
+<modified><datetime dst="true">20130717T152256,79+02</datetime></modified>
+<revised><datetime dst="true">20130717T152256,78+02</datetime></revised>
+<lastaccessed><datetime dst="true">20130717T152256,79+02</datetime></lastaccessed>
+<addedtofile><datetime dst="true">20130717T142309,75+02</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
+<wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
+<item name="$Flags"><text>34567Cg~[</text></item>
+<item name="$TITLE"><text>org/openntf/xpt/demo/TestAgentWithProperties.java</text></item>
+<item name="$DesignerVersion"><text>8.5.3</text></item>
+
+
+<item name="$FileNames" sign="true"><text>org/openntf/xpt/demo/TestAgentWithProperties.java</text></item>
+
+
+</note>

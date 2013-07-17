@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xe="http://www.ibm.com/xsp/coreex"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+	<xp:this.resources>
+		<xp:dojoModule name="dijit.ProgressBar"></xp:dojoModule>
+		<xp:dojoModule name="extlib.dijit.ExtLib"></xp:dojoModule>
+	</xp:this.resources>
+	<xe:jsonRpcService id="jsonRpcService1"
+		serviceName="agentmonitor">
+		<xe:this.methods>
+			<xe:remoteMethod name="getStatus">
+				<xe:this.script><![CDATA[print("RPC Call "+agentID);
+var statusOBJ = xptAgentBean.getJobStatus(agentID);
+return statusOBJ]]></xe:this.script>
+				<xe:this.arguments>
+					<xe:remoteMethodArg name="agentID" type="string">
+					</xe:remoteMethodArg>
+				</xe:this.arguments>
+			</xe:remoteMethod>
+		</xe:this.methods>
+	</xe:jsonRpcService>
+	<xp:scriptBlock id="scriptBlock1">
+		<xp:this.value><![CDATA[function updateProgress(agentJOBID) {
+	var deferred = agentmonitor.getStatus(agentJOBID);
+	deferred.addCallback(function(result) {
+		//console.log("LOG: "+XSP.toJson(result))
+		var title = dojo.byId("#{id:title}");
+		var taskTitle = dojo.byId("#{id:taskTitle}");
+		var p1 = dijit.byId("#{id:progress1}");
+		XSP.setNodeText(title,result.title);
+		XSP.setNodeText(taskTitle,result.progressMessage);
+		p1.update({ progress:result.taskCompletion });
+		if (result.status == "RUNNING") {
+			setTimeout(updateProgress(agentJOBID),800);
+		} else {
+			alert(result.status);
+		}
+	});
+}]]></xp:this.value>
+	</xp:scriptBlock>
+
+
+	<xc:cc_application pageTitle="UI Agent TEST"
+		navigationPath="/agent">
+		<xp:this.facets>
+			<xp:panel xp:key="facetRight"></xp:panel>
+			<xp:panel xp:key="facetMiddle">
+				<xp:button value="Run Agent 1" id="btRunAgent">
+					<xp:eventHandler event="onclick" submit="true"
+						refreshMode="partial" refreshId="btRunAgent">
+						<xp:this.action><![CDATA[#{javascript:var hsProps:java.util.HashMap = new java.util.HashMap();
+hsProps.put("starttime", (new java.util.Date()).toString());
+hsProps.put("irgendwas", context.getUser().getCommonName());
+var jobID = xptAgentBean.executeAgentUI("longRunAgent", hsProps);
+print ("UI -> JOBID: "+ jobID);
+var statusOBJ = xptAgentBean.getJobStatus(jobID);
+print ("UI -> JOBStatus: "+ statusOBJ.status);
+print ("UI -> JOBStatus: "+ statusOBJ.title);
+print ("UI -> JOBStatus: "+ statusOBJ.taskCompletion);
+print ("UI -> JOBStatus: "+ statusOBJ.progressMessage);
+view.postScript("updateProgress('"+jobID+"')");
+}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+				<xp:br></xp:br>
+
+
+				<xp:br></xp:br>
+				<xp:br></xp:br>
+				<xpt:agentprogressbar id="agentprogressbar1"
+					agentName="longRunAgent" serviceName="longRunAgentService">
+				</xpt:agentprogressbar>
+				<xp:br></xp:br>
+				<xp:br></xp:br>
+				<xp:panel id="progressPanel">
+					<xp:label value="Running: "></xp:label>
+					<xp:text escape="true" id="title"></xp:text>
+					<xp:br />
+					<xp:label value="Current Task: "></xp:label>
+					<xp:text escape="true" id="taskTitle"></xp:text>
+					<xp:br />
+					<xp:br></xp:br>
+					<xp:label value="Task Completion: "></xp:label>
+					<xp:div dojoType="dijit.ProgressBar"
+						style="width:300px" id="progress1">
+					</xp:div>
+					<xp:br />
+				</xp:panel>
+
+			</xp:panel>
+			<xp:panel xp:key="facetLeft">
+				<xc:cc_nav_agents></xc:cc_nav_agents>
+			</xp:panel>
+		</xp:this.facets>
+	</xc:cc_application>
+
+</xp:view>

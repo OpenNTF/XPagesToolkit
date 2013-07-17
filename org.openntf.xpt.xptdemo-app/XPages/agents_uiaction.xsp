@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xe="http://www.ibm.com/xsp/coreex"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+	<xp:this.resources>
+
+		<xp:dojoModule name="extlib.dijit.ExtLib"></xp:dojoModule>
+	</xp:this.resources>
+
+
+
+
+	<xc:cc_application pageTitle="UI Agent TEST"
+		navigationPath="/agent">
+		<xp:this.facets>
+			<xp:panel xp:key="facetRight"></xp:panel>
+			<xp:panel xp:key="facetMiddle">
+				<xp:button value="Run Agent 1" id="btRunAgent">
+					<xp:eventHandler event="onclick" submit="false">
+						<xp:this.script><![CDATA[longRunAgentService.startJob();]]></xp:this.script>
+					</xp:eventHandler>
+				</xp:button>
+				<xp:br></xp:br>
+
+
+				<xp:br></xp:br>
+				<xp:br></xp:br>
+				<xpt:agentprogressbar id="agentprogressbar1"
+					agentName="longRunAgent" serviceName="longRunAgentService">
+				<xpt:this.agentProperties>
+					<xpt:agentPropery></xpt:agentPropery>
+				</xpt:this.agentProperties></xpt:agentprogressbar>
+				<xp:br></xp:br>
+				<xp:br></xp:br>
+
+				<xp:button value="Run Agent 2" id="button1">
+					<xp:eventHandler event="onclick" submit="false">
+						<xp:this.script><![CDATA[agent2Service.startJob();]]></xp:this.script>
+					</xp:eventHandler>
+				</xp:button>
+				<xp:br></xp:br>
+				<xp:br></xp:br>
+				<xp:br></xp:br>
+				<xpt:agentprogressbar id="agentprogressbar2"
+					agentName="longRunAgent" serviceName="agent2Service"
+					styleTask="color:rgb(255,0,0);font-size:9pt;height:50.0px"
+					styleTitle="font-size:16pt;font-weight:bold"
+					style="width:300.0px">
+					<xpt:this.agentProperties>
+						<xpt:agentPropery></xpt:agentPropery>
+					</xpt:this.agentProperties>
+				</xpt:agentprogressbar></xp:panel>
+			<xp:panel xp:key="facetLeft">
+				<xc:cc_nav_agents></xc:cc_nav_agents>
+			</xp:panel>
+		</xp:this.facets>
+	</xc:cc_application>
+
+</xp:view>

@@ -4,7 +4,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Logger;
 
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.ExternalContext;
@@ -14,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.openntf.xpt.agents.beans.XPTAgentBean;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.commons.util.io.json.JsonFactory;
@@ -212,7 +216,7 @@ public class UIAgentProgressbar extends UIComponentBase implements FacesAjaxComp
 		// Disable the XPages response buffer as this will collide with the
 		// engine one
 		// We mark it as committed and use its delegate instead
-
+		Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
 		if (httpResponse instanceof XspHttpServletResponse) {
 			XspHttpServletResponse r = (XspHttpServletResponse) httpResponse;
 			r.setCommitted(true);
@@ -228,7 +232,33 @@ public class UIAgentProgressbar extends UIComponentBase implements FacesAjaxComp
 			if ("startAgent".equals(strMethod)) {
 				JsonWriter jsWriter = new JsonWriter(httpResponse.getWriter(), true);
 				String strAgentName = json.getString("agentname");
-				String jobID = XPTAgentBean.get(context).executeAgentUI(strAgentName);
+				HashMap<String, String> hmProps = new HashMap<String, String>();
+
+				// Parsing the SSJS AgentArguments
+				if (m_AgentProperties != null) {
+					for (UIAgentProperty uip : m_AgentProperties) {
+						hmProps.put(uip.getKey(), uip.getValue());
+					}
+				}
+
+				// Parsing the Arguments form JavaScript submit
+				if (json.containsKey("arguments")) {
+					logCurrent.info("Arguments from the CSJS");
+					JsonJavaObject jsObj = json.getAsObject("arguments");
+					for (Iterator<String> itProp = jsObj.getProperties(); itProp.hasNext();) {
+						
+						String strProp = itProp.next();
+						logCurrent.info(strProp +" -> "+ jsObj.getAsString(strProp));
+						hmProps.put(strProp, jsObj.getAsString(strProp));
+					}
+				}
+
+				String jobID = null;
+				if (hmProps.size() > 0) {
+					jobID = XPTAgentBean.get(context).executeAgentUI(strAgentName, hmProps);
+				} else {
+					jobID = XPTAgentBean.get(context).executeAgentUI(strAgentName);
+				}
 				jsWriter.startObject();
 				jsWriter.startProperty("status");
 				jsWriter.outStringLiteral("ok");

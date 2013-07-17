@@ -76,7 +76,6 @@ public class UIAgentEntry implements Serializable, StateHolder {
 		Object[] values = new Object[2];
 		values[0] = m_DetailsOpen;
 		values[1] = FacesUtil.objectToSerializable(context, m_Entry);
-		// values[1] = StateHolderUtil.saveObjectState(context, m_Entry);
 		return values;
 	}
 
