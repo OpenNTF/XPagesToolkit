@@ -10,4 +10,16 @@
       </PartConfiguration>
    </extension>
 
+  <extension
+         point="com.ibm.commons.Extension">
+      <service
+            class="org.openntf.xpt.rss.resources.XPTRSSResourceProvider"
+            type="com.ibm.xsp.GlobalResourceProvider">
+      </service>
+   </extension>
+   <extension point="com.ibm.commons.Extension">
+         <service
+            type="com.ibm.xsp.resource.DojoModulePathResource"
+            class="org.openntf.xpt.rss.resources.XPTRSSModulePath" />
+   </extension>
 </plugin>

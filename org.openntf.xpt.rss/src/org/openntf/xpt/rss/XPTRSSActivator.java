@@ -15,31 +15,17 @@
  */
 package org.openntf.xpt.rss;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
+import org.eclipse.core.runtime.Plugin;
 
-public class Activator implements BundleActivator {
+public class XPTRSSActivator extends Plugin {
 
-	private static BundleContext context;
+	private static XPTRSSActivator m_Instance;
 
-	static BundleContext getContext() {
-		return context;
+	public XPTRSSActivator() {
+		m_Instance = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext bundleContext) throws Exception {
-		Activator.context = bundleContext;
+	public static XPTRSSActivator getInstance() {
+		return m_Instance;
 	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext bundleContext) throws Exception {
-		Activator.context = null;
-	}
-
 }

@@ -26,4 +26,81 @@
     		<base-complex-id>dataInterface</base-complex-id>
     	</complex-extension>
     </complex-type>
+    
+    <component>
+    <description>Calling a RSS Feed asynchronous and Displays the entries</description>
+    <display-name>RSSList</display-name>
+    <component-type>org.openntf.xpt.rss.component.uisrsslist</component-type>
+    <component-class>org.openntf.xpt.rss.component.UIRSSList</component-class>
+
+    <group-type-ref>com.ibm.xsp.group.core.prop.style</group-type-ref>
+    <group-type-ref>com.ibm.xsp.group.core.prop.styleClass</group-type-ref>
+
+    <property>
+      <description>URL of the RSSFeed</description>
+      <display-name>FeedURL</display-name>
+      <property-name>feedURL</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+          <category>basics</category>
+        </designer-extension>
+      </property-extension>
+    </property>
+    <property>
+      <description>HTML Template for each entry. If empty, a default will be used</description>
+      <display-name>HtmlTemplate</display-name>
+      <property-name>htmlTemplate</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+          <category>basics</category>
+        </designer-extension>
+      </property-extension>
+    </property>
+
+
+
+   <property>
+      <description>Style of the container</description>
+      <display-name>style</display-name>
+      <property-name>style</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+        	<category>styling</category>
+          	<editor>com.ibm.workplace.designer.property.editors.StylesEditor</editor>
+        </designer-extension>
+      </property-extension>
+    </property>  
+
+    <property>
+      <description>Class of the container</description>
+      <display-name>class</display-name>
+      <property-name>styleClass</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+        	<category>styling</category>
+          	<editor>com.ibm.workplace.designer.property.editors.StyleClassEditor</editor>
+        </designer-extension>
+      </property-extension>
+    </property>
+
+
+    <component-extension>
+      <component-family>org.openntf.xpt.rss.component.uisrsslist</component-family>
+      <renderer-type>org.openntf.xpt.rss.component.uisrsslist</renderer-type>
+      <tag-name>rsslist</tag-name>
+      <designer-extension>
+ 			<in-palette>true</in-palette>
+        	<category>XPages Toolkit</category>
+        	<render-markup>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+				&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+				&lt;xp:image url="/icons/ui_rsslist.png" id="uirsslist"&gt;&lt;/xp:image&gt;&#xd;
+				&lt;/xp:view&gt;&#xd;
+			</render-markup>
+      </designer-extension>
+    </component-extension>
+  </component>
 </faces-config>

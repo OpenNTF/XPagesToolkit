@@ -19,12 +19,18 @@
 <!-- -->
 <!-- ******************************************************************* -->
 <faces-config>
+	<render-kit>
+		<renderer>
+			<component-family>org.openntf.xpt.rss.component.uisrsslist</component-family>
+			<renderer-type>org.openntf.xpt.rss.component.uisrsslist</renderer-type>
+			<renderer-class>org.openntf.xpt.rss.renderkit.html_extended.RSSListRenderer</renderer-class>
+		</renderer>
+	</render-kit>
+	<managed-bean>
+		<managed-bean-name>xptRssBean</managed-bean-name>
+		<managed-bean-class>org.openntf.xpt.rss.beans.XPTRSSBean</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
 
-  <managed-bean>
-    <managed-bean-name>xptRssBean</managed-bean-name>
-    <managed-bean-class>org.openntf.xpt.rss.beans.XPTRSSBean</managed-bean-class>
-    <managed-bean-scope>application</managed-bean-scope>
-  </managed-bean>
 
-  
 </faces-config>

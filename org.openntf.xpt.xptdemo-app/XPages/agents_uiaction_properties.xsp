@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
-	xmlns:xc="http://www.ibm.com/xsp/custom"
-	xmlns:xe="http://www.ibm.com/xsp/coreex"
-	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xe="http://www.ibm.com/xsp/coreex" xmlns:xpt="http://www.openntf.org/xsp/xpt">
 	<xp:this.resources>
 
 		<xp:dojoModule name="extlib.dijit.ExtLib"></xp:dojoModule>
@@ -27,36 +25,41 @@
 				<xp:br></xp:br>
 				<xp:br></xp:br>
 				<xpt:agentprogressbar id="agentprogressbar1"
-					agentName="longRunAgent" serviceName="agentWithProperties1">
+					agentName="agentWithProperties" serviceName="agentWithProperties1">
 					<xpt:this.agentProperties>
-						<xpt:agentPropery key="myname">
-							<xpt:this.value><![CDATA[#{javascript:"Propertie myName = "+ @Name("[CN]", @UserName())}]]></xpt:this.value>
-						</xpt:agentPropery>
-						<xpt:agentPropery key="startdate"
+						<xpt:agentProperty key="myname">
+							<xpt:this.value><![CDATA[#{javascript:"Property myName = "+ @Name("[CN]", @UserName())}]]></xpt:this.value>
+						</xpt:agentProperty>
+						<xpt:agentProperty key="startdate"
 							value="#{javascript:return java.util.Date()}">
-						</xpt:agentPropery>
+						</xpt:agentProperty>
 					</xpt:this.agentProperties>
 				</xpt:agentprogressbar>
 				<xp:br></xp:br>
 				<xp:br></xp:br>
 
-				<xp:button value="Run Agent  with Client Side Properties" id="button1">
+				<xp:button value="Run Agent  with Client Side Properties"
+					id="button1">
 					<xp:eventHandler event="onclick" submit="false">
-						<xp:this.script><![CDATA[agent2Service.startJob();]]></xp:this.script>
+						<xp:this.script><![CDATA[agentWithProperties2.startJob({"myname": "myName set by CSJS:", "startdate": new Date()});]]></xp:this.script>
 					</xp:eventHandler>
 				</xp:button>
 				<xp:br></xp:br>
 				<xp:br></xp:br>
 				<xp:br></xp:br>
 				<xpt:agentprogressbar id="agentprogressbar2"
-					agentName="longRunAgent" serviceName="agent2Service"
+					agentName="agentWithProperties" serviceName="agentWithProperties2"
 					styleTask="color:rgb(255,0,0);font-size:9pt;height:50.0px"
 					styleTitle="font-size:16pt;font-weight:bold"
 					style="width:300.0px">
 					<xpt:this.agentProperties>
-						<xpt:agentPropery></xpt:agentPropery>
+						<xpt:agentProperty key="myname"
+							value="This Value will be overwritten by the CSJS">
+
+						</xpt:agentProperty>
 					</xpt:this.agentProperties>
-				</xpt:agentprogressbar></xp:panel>
+				</xpt:agentprogressbar>
+			</xp:panel>
 			<xp:panel xp:key="facetLeft">
 				<xc:cc_nav_agents></xc:cc_nav_agents>
 			</xp:panel>

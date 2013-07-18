@@ -26,23 +26,15 @@ public class TestAgentWithProperties extends XPageAgentJob {
 			int numberOfSubTasks = (int) (Math.random() * 50);
 			for (int p = 0; p < numberOfSubTasks; p++) {
 				setTaskCompletion((int) ((long) p * (long) 100 / numberOfSubTasks));
-				setCurrentTaskStatus("ST: " + p +"  .... of "+ numberOfSubTasks +" / Started at:"+exProp.get("startdate"));
+				setCurrentTaskStatus("ST: " + p +"  .... of "+ numberOfSubTasks +" / Started at: "+exProp.get("startdate"));
 				try {
 					Thread.sleep((long) (Math.random() * 1000 +1000));
 				} catch (InterruptedException ex) {
 					ex.printStackTrace();
 				}
 			}
-			for (int p = 100; p > -1; p--) {
-				setTaskCompletion(p);
-				setCurrentTaskStatus("Undo changes: " + p );
-				System.out.println("   >>  " + this.getClass().getCanonicalName() + " -->" + getTaskCompletion() + " ["
-						+ getCurrentTaskStatus() + "]");
-				Thread.sleep((long) (Math.random() * 500));
-			}
 			setCurrentTaskStatus("Task finished");
-
-			//setTaskCompletion(100);
+			setTaskCompletion(100);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

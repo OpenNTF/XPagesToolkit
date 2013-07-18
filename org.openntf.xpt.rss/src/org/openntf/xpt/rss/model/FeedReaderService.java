@@ -19,7 +19,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openntf.xpt.rss.Activator;
+import org.openntf.xpt.rss.XPTRSSActivator;
 
 import com.sun.syndication.feed.synd.SyndCategoryImpl;
 import com.sun.syndication.feed.synd.SyndContentImpl;
@@ -50,7 +50,7 @@ public class FeedReaderService {
 		ClassLoader clCurrent = currentThread.getContextClassLoader();
 
 		try {
-			currentThread.setContextClassLoader(Activator.class.getClassLoader());
+			currentThread.setContextClassLoader(XPTRSSActivator.class.getClassLoader());
 
 			URL feedUrl = new URL(strURL);
 			SyndFeedInput input = new SyndFeedInput();

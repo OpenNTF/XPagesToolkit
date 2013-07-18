@@ -330,7 +330,7 @@ public class UIAgentProgressbar extends UIComponentBase implements FacesAjaxComp
 
 	@Override
 	public Object saveState(FacesContext context) {
-		Object[] values = new Object[3];
+		Object[] values = new Object[12];
 		values[0] = super.saveState(context);
 		values[1] = m_AgentName;
 		values[2] = m_ServiceName;
