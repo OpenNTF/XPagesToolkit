@@ -1,23 +1,21 @@
 package org.openntf.xpt.rss.component;
 
 import java.io.IOException;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
 import java.util.List;
-import java.util.logging.Logger;
 
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.openntf.xpt.core.utils.JSONSupport;
-import org.openntf.xpt.core.utils.logging.LoggerFactory;
 import org.openntf.xpt.rss.model.FeedReaderService;
 import org.openntf.xpt.rss.model.RSSEntry;
 
 import com.ibm.commons.util.StringUtil;
-//import com.ibm.commons.util.io.json.util.JsonWriter;
 import com.ibm.domino.services.util.JsonWriter;
 import com.ibm.xsp.ajax.AjaxUtil;
 import com.ibm.xsp.application.UniqueViewIdManager;
@@ -81,9 +79,9 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 		if (m_FeedURL != null) {
 			return m_FeedURL;
 		}
-		ValueBinding _vb = getValueBinding("htmlTemplate"); //$NON-NLS-1$
+		ValueBinding _vb = getValueBinding("feedURL"); //$NON-NLS-1$
 		if (_vb != null) {
-			return (java.lang.String) _vb.getValue(getFacesContext());
+			return (java.lang.String) _vb.getValue(FacesContext.getCurrentInstance());
 		} else {
 			return null;
 		}
@@ -114,7 +112,14 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 			r.setCommitted(true);
 			httpResponse = r.getDelegate();
 		}
-		List<RSSEntry> lstResult = FeedReaderService.getInstance().getAllEntriesFromURL(getFeedURL());
+		final String finURL = getFeedURL();
+		List<RSSEntry> lstResult = AccessController.doPrivileged(new PrivilegedAction<List<RSSEntry>>() {
+			@Override
+			public List<RSSEntry> run() {
+				return FeedReaderService.getInstance().getAllEntriesFromURL(finURL);
+			}
+
+		});
 
 		JsonWriter jsWriter = new JsonWriter(httpResponse.getWriter(), true);
 		jsWriter.startObject();
@@ -138,7 +143,7 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 			JSONSupport.writeDate(jsWriter, "updated", rssE.getUpdated(), false);
 
 			jsWriter.endObject();
-			jsWriter.endArray();
+			jsWriter.endArrayItem();
 		}
 		jsWriter.endArray();
 		jsWriter.endProperty();

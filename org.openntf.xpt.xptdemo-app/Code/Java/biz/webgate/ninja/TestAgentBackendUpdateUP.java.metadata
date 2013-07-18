@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="form" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="252" sequence="26" unid="CD6254CC1DA66A70C1257B8B00448606">
+<created><datetime dst="true">20130615T142827,58+02</datetime></created>
+<modified><datetime dst="true">20130626T091801,00+02</datetime></modified>
+<revised><datetime dst="true">20130626T091800,99+02</datetime></revised>
+<lastaccessed><datetime dst="true">20130626T091801,00+02</datetime></lastaccessed>
+<addedtofile><datetime dst="true">20130625T224933,18+02</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
+<wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
+<item name="$Flags"><text>34567Cg~[</text></item>
+<item name="$TITLE"><text>biz/webgate/ninja/TestAgentBackendUpdateUP.java</text></item>
+
+<item name="$DesignerVersion"><text>8.5.3</text></item>
+
+
+<item name="$FileNames" sign="true"><text>biz/webgate/ninja/TestAgentBackendUpdateUP.java</text></item>
+
+</note>

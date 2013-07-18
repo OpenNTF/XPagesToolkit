@@ -20,16 +20,20 @@ dojo.require("dojox.dtl._Templated");
 dojo.declare("xptrss.list.feedcontroller", [ dijit._Widget, dojox.dtl._Templated ], {
 	proxyurl:null,
 	feed : null,
-	templateString : dojo.cache("xptrss.list.feedcontroller",	"../html/rssTempalte.html"),
-	postCreate: functoon() {
+	templateString : dojo.cache("xptrss.list.feedcontroller",	"../../html/rssTemplate.html"),
+	targetid: null,
+	postCreate: function() {
 		var mySelf = this;
 		var xhrArgs = {
-				url : this.proxyurl,
+				url : mySelf.proxyurl,
 				handleAs : "json",
 				preventCache : true,
 				load : function(data) {
 					mySelf.feed = data;
 					mySelf.render();
+					dojo.style(mySelf.targetid +"_feedLoader", {
+						display : "none"
+					});
 				},
 				error : function(error) {
 					alert(error);

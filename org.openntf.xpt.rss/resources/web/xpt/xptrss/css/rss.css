@@ -1,1 +1,7 @@
-@CHARSET "ISO-8859-1";
+.feedEntry { border: 1px solid #DDDDDD; border-left: 2px solid #DDDDDD; border-radius: 3px; box-shadow: 0 0 4px #E3E5EB; overflow: hidden; margin-bottom: 12px; }
+.feedEntry H2 { padding:0; margin: 0; }
+.feedEntry .feedDate { float: right; }
+.feedEntry .feedHeader { background-color: #FAFAFA; box-shadow: 0 0 4px #E3E5EB; padding: 3px; } 
+.feedEntry .feedBody { padding: 4px 3px; }
+.feedEntry .feedBody IMG { float: left; padding: 0 5px 3px 0; }
+.feedEntry .feedDesc { }

@@ -2,13 +2,15 @@
 	{% for entry in feed.entries%}
 	<div style="height: auto;" class="feedEntry">
 		<div class="feedHeader">
-			<div class="feedDate">{entry.published}</div>
+			<div class="feedDate">{{entry.created}}</div>
 			<h2 class="feedTitle">
-				<a class="feedTitleLink" target="_blank" href="{entry.link}">{entry.title}</a>
+				<a class="feedTitleLink" target="_blank" href="{{entry.link}}">{{entry.title}}</a>
 			</h2>
 		</div>
 		<div class="feedBody">
-			<div class="feedDesc">{entry.content}</div>
+			<div class="feedDesc">
+				{{entry.content|safe}}
+			</div>
 		</div>
 	</div>
 	{%endfor%}
