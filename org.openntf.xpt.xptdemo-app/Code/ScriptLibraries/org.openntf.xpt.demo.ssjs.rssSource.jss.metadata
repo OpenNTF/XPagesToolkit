@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><note class="filter" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="2b2" sequence="4" unid="C0ABBA1C84EABB70C1257BAD00234F63">
+<created><datetime dst="true">20130719T082540,83+02</datetime></created>
+<modified><datetime dst="true">20130719T083848,64+02</datetime></modified>
+<revised><datetime dst="true">20130719T083848,63+02</datetime></revised>
+<lastaccessed><datetime dst="true">20130719T083848,64+02</datetime></lastaccessed>
+<addedtofile><datetime dst="true">20130719T082540,86+02</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
+<wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
+<item name="$TITLE" sign="true"><text>org.openntf.xpt.demo.ssjs.rssSource</text></item>
+<item name="$Flags"><text>.5834Q</text></item>
+<item name="$PublicAccess" sign="true"><text>1</text></item>
+<item name="$DesignerVersion"><text>8.5.3</text></item>
+</note>

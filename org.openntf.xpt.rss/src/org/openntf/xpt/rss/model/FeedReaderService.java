@@ -60,7 +60,11 @@ public class FeedReaderService {
 				RSSEntry rssEntry = new RSSEntry();
 				rssEntry.setTitle(sEntry.getTitle());
 				rssEntry.setLink(sEntry.getLink());
-				rssEntry.setDescription(sEntry.getDescription().getValue());
+				if (sEntry.getDescription() != null) {
+					rssEntry.setDescription(sEntry.getDescription().getValue());
+				} else {
+					rssEntry.setDescription("");
+				}
 				rssEntry.setAuthors(buildStringList(sEntry.getAuthors()));
 				rssEntry.setCategories(buildStringList(sEntry.getCategories()));
 				rssEntry.setContents(buildStringList(sEntry.getContents()));

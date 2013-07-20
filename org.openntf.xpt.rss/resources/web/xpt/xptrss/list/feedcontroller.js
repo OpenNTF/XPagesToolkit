@@ -17,33 +17,52 @@
 dojo.provide("xptrss.list.feedcontroller");
 dojo.require("dijit._Widget");
 dojo.require("dojox.dtl._Templated");
-dojo.declare("xptrss.list.feedcontroller", [ dijit._Widget, dojox.dtl._Templated ], {
-	proxyurl:null,
+dojo.declare("xptrss.list.feedcontroller", [ dijit._Widget,
+		dojox.dtl._Templated ], {
+	proxyurl : null,
+	feedURL : null,
 	feed : null,
-	templateString : dojo.cache("xptrss.list.feedcontroller",	"../../html/rssTemplate.html"),
-	targetid: null,
-	postCreate: function() {
+	templateString : dojo.cache("xptrss.list.feedcontroller",
+			"../../html/rssTemplate.html"),
+	targetid : null,
+	postCreate : function() {
 		var mySelf = this;
+		var postData = {
+			"feedURL" : this.feedURL
+		};
 		var xhrArgs = {
-				url : mySelf.proxyurl,
-				handleAs : "json",
-				preventCache : true,
-				load : function(data) {
+			url : mySelf.proxyurl,
+			postData : dojo.toJson(postData),
+			handleAs : "json",
+			headers : {
+				"Content-Type" : "application/json"
+			},
+			preventCache : true,
+			load : function(data) {
+				if (data.status == "ok") {
 					mySelf.feed = data;
 					mySelf.render();
-					dojo.style(mySelf.targetid +"_feedLoader", {
+					dojo.style(mySelf.targetid + "_feedLoader", {
 						display : "none"
 					});
-				},
-				error : function(error) {
-					alert(error);
+				} else {
+					alert(data.error);
+					dojo.style(mySelf.targetid + "_feedLoader", {
+						display : "none"
+					});
 				}
-			
+			},
+			error : function(error) {
+				alert(error);
+				dojo.style(mySelf.targetid + "_feedLoader", {
+					display : "none"
+				});
 			}
-			var deferred = dojo.xhrGet(xhrArgs);
+
+		}
+		var deferred = dojo.xhrPost(xhrArgs);
 	}
 });
-
 
 // -- custom DTL filter to parse datetime objects in Internuts Explorer
 // -- the built-in date tag of DTL will not work with ISO timestamps
@@ -51,17 +70,25 @@ dojo.provide('xptrss.dtl.filter.datetime');
 dojo.require("dojo.date.locale");
 
 dojo.mixin(xptrss.dtl.filter.datetime, {
-	xptrssDateFilter: function(value) {
+	xptrssDateFilter : function(value) {
 		var dt = dojo.date.stamp.fromISOString(value);
-		return dojo.date.locale.format(dt, {selector: "date", formatLength: "medium"});
-},
+		return dojo.date.locale.format(dt, {
+			selector : "date",
+			formatLength : "medium"
+		});
+	},
 
-xptrssTimeFilter: function(value) {
-	 	var dt = dojo.date.stamp.fromISOString(value);
-	 	return dojo.date.locale.format(dt, {selector: "time", formatLength: "medium"});
-}
+	xptrssTimeFilter : function(value) {
+		var dt = dojo.date.stamp.fromISOString(value);
+		return dojo.date.locale.format(dt, {
+			selector : "time",
+			formatLength : "medium"
+		});
+	}
 
 });
 
-dojox.dtl.register.filters('xptrss.dtl.filter', { datetime: ['xptrssDateFilter', 'xptrssTimeFilter'] });
+dojox.dtl.register.filters('xptrss.dtl.filter', {
+	datetime : [ 'xptrssDateFilter', 'xptrssTimeFilter' ]
+});
 // -- end of custom DTL filter

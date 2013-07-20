@@ -43,6 +43,9 @@ public class ErrorJSONBuilder {
 			resp.getWriter().flush();
 			JsonWriter jsWriter = new JsonWriter(resp.getWriter(), true);
 			jsWriter.startObject();
+			jsWriter.startProperty("status");
+			jsWriter.outStringLiteral("error");
+			jsWriter.endProperty();
 			jsWriter.startProperty("error");
 			jsWriter.outStringLiteral(strError);
 			jsWriter.endProperty();

@@ -40,10 +40,11 @@ public class RSSListRenderer extends FacesRenderer {
 		url = url.replaceAll("\\\\", "/");
 
 		String strHTMLTemplate = rssList.getHtmlTemplate();
-
+		String strFeeedURL = rssList.getFeedURL();
 		String strID = rssList.getClientId(context);
 		// Add the dojo modules
 		UIViewRootEx rootEx = (UIViewRootEx) context.getViewRoot();
+		rootEx.addEncodeResource(context, XPTRSSResourceProvider.XPTRSS_DATE_LOCALE);
 		rootEx.addEncodeResource(context, XPTRSSResourceProvider.XPTRSS_WIDGET);
 		rootEx.addEncodeResource(context, XPTRSSResourceProvider.XPTRSS_TEMPLATED);
 		rootEx.addEncodeResource(context, XPTRSSResourceProvider.XPTRSS_FEEDCONTROLLER);
@@ -55,6 +56,9 @@ public class RSSListRenderer extends FacesRenderer {
 		b.append("new xptrss.list.feedcontroller({\n"); // $NON-NLS-1$
 		b.append(" proxyurl: \"");
 		b.append(url);
+		b.append("\",\n"); // $NON-NLS-1$
+		b.append(" feedURL: \"");
+		b.append(strFeeedURL);
 		b.append("\",\n"); // $NON-NLS-1$
 		if (!StringUtil.isEmpty(strHTMLTemplate)) {
 			b.append(" templateString: \"");
@@ -93,5 +97,4 @@ public class RSSListRenderer extends FacesRenderer {
 			writer.writeAttribute("style", strStyle, null);
 		}
 	}
-
 }

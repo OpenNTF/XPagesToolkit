@@ -61,4 +61,5 @@ public class XPTRSSResourceProvider extends BundleResourceProvider {
 	public static final StyleSheetResource XPTRSS_CSS = new StyleSheetResource(CSS_PROGRESSBAR);
 	public static final DojoModuleResource XPTRSS_WIDGET = new DojoModuleResource("dijit._Widget");
 	public static final DojoModuleResource XPTRSS_TEMPLATED = new DojoModuleResource("dojox.dtl._Templated");
+	public static final DojoModuleResource XPTRSS_DATE_LOCALE = new DojoModuleResource("dojo.date.locale");
 }

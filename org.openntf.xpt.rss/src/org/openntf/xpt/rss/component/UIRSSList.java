@@ -9,13 +9,18 @@ import javax.faces.component.UIComponentBase;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.faces.el.ValueBinding;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.openntf.xpt.core.utils.ErrorJSONBuilder;
 import org.openntf.xpt.core.utils.JSONSupport;
 import org.openntf.xpt.rss.model.FeedReaderService;
 import org.openntf.xpt.rss.model.RSSEntry;
 
 import com.ibm.commons.util.StringUtil;
+import com.ibm.commons.util.io.json.JsonJavaFactory;
+import com.ibm.commons.util.io.json.JsonJavaObject;
+import com.ibm.commons.util.io.json.JsonParser;
 import com.ibm.domino.services.util.JsonWriter;
 import com.ibm.xsp.ajax.AjaxUtil;
 import com.ibm.xsp.application.UniqueViewIdManager;
@@ -99,8 +104,7 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 	@Override
 	public void processAjaxRequest(FacesContext context) throws IOException {
 		HttpServletResponse httpResponse = (HttpServletResponse) context.getExternalContext().getResponse();
-		// HttpServletRequest httpRequest = (HttpServletRequest)
-		// context.getExternalContext().getRequest();
+		HttpServletRequest httpRequest = (HttpServletRequest) context.getExternalContext().getRequest();
 
 		// Disable the XPages response buffer as this will collide with the
 		// engine one
@@ -112,43 +116,56 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 			r.setCommitted(true);
 			httpResponse = r.getDelegate();
 		}
-		final String finURL = getFeedURL();
-		List<RSSEntry> lstResult = AccessController.doPrivileged(new PrivilegedAction<List<RSSEntry>>() {
-			@Override
-			public List<RSSEntry> run() {
-				return FeedReaderService.getInstance().getAllEntriesFromURL(finURL);
+		JsonJavaObject json = null;
+		JsonJavaFactory factory = JsonJavaFactory.instanceEx;
+		try {
+			httpResponse.setContentType("text/json");
+			httpResponse.setCharacterEncoding("utf-8");
+			json = (JsonJavaObject) JsonParser.fromJson(factory, httpRequest.getReader());
+
+			final String finURL = json.getString("feedURL");
+			if (StringUtil.isEmpty(finURL)) {
+				ErrorJSONBuilder.getInstance().processError2JSON(httpResponse, 1000, "No URL found!", null);
 			}
+			List<RSSEntry> lstResult = AccessController.doPrivileged(new PrivilegedAction<List<RSSEntry>>() {
+				@Override
+				public List<RSSEntry> run() {
+					return FeedReaderService.getInstance().getAllEntriesFromURL(finURL);
+				}
 
-		});
+			});
 
-		JsonWriter jsWriter = new JsonWriter(httpResponse.getWriter(), true);
-		jsWriter.startObject();
-		jsWriter.startProperty("status");
-		jsWriter.outStringLiteral("ok");
-		jsWriter.endProperty();
-
-		jsWriter.startProperty("entries");
-		jsWriter.startArray();
-		for (RSSEntry rssE : lstResult) {
-			jsWriter.startArrayItem();
+			JsonWriter jsWriter = new JsonWriter(httpResponse.getWriter(), true);
 			jsWriter.startObject();
+			jsWriter.startProperty("status");
+			jsWriter.outStringLiteral("ok");
+			jsWriter.endProperty();
 
-			JSONSupport.writeString(jsWriter, "title", rssE.getTitle(), false);
-			JSONSupport.writeString(jsWriter, "link", rssE.getLink(), false);
-			JSONSupport.writeString(jsWriter, "content", rssE.getContentsTXT(), false);
-			JSONSupport.writeString(jsWriter, "author", rssE.getAuthorsTXT(), false);
-			JSONSupport.writeString(jsWriter, "categories", rssE.getCategoriesTXT(), false);
-			JSONSupport.writeString(jsWriter, "description", rssE.getDescription(), false);
-			JSONSupport.writeDate(jsWriter, "created", rssE.getCreated(), false);
-			JSONSupport.writeDate(jsWriter, "updated", rssE.getUpdated(), false);
+			jsWriter.startProperty("entries");
+			jsWriter.startArray();
+			for (RSSEntry rssE : lstResult) {
+				jsWriter.startArrayItem();
+				jsWriter.startObject();
 
+				JSONSupport.writeString(jsWriter, "title", rssE.getTitle(), false);
+				JSONSupport.writeString(jsWriter, "link", rssE.getLink(), false);
+				JSONSupport.writeString(jsWriter, "content", rssE.getContentsTXT(), false);
+				JSONSupport.writeString(jsWriter, "author", rssE.getAuthorsTXT(), false);
+				JSONSupport.writeString(jsWriter, "categories", rssE.getCategoriesTXT(), false);
+				JSONSupport.writeString(jsWriter, "description", rssE.getDescription(), false);
+				JSONSupport.writeDate(jsWriter, "created", rssE.getCreated(), false);
+				JSONSupport.writeDate(jsWriter, "updated", rssE.getUpdated(), false);
+
+				jsWriter.endObject();
+				jsWriter.endArrayItem();
+			}
+			jsWriter.endArray();
+			jsWriter.endProperty();
 			jsWriter.endObject();
-			jsWriter.endArrayItem();
+			jsWriter.close();
+		} catch (Exception e) {
+			ErrorJSONBuilder.getInstance().processError2JSON(httpResponse, 9999, "Error during parsing!", e);
 		}
-		jsWriter.endArray();
-		jsWriter.endProperty();
-		jsWriter.endObject();
-		jsWriter.close();
 
 	}
 
