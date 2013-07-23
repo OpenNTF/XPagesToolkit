@@ -59,6 +59,17 @@
       </property-extension>
     </property>
 
+    <property>
+      <description>Use description instead of content for the feedentry description</description>
+      <display-name>UseDescription</display-name>
+      <property-name>useDescription</property-name>
+      <property-class>boolean</property-class>
+      <property-extension>
+        <designer-extension>
+          <category>basics</category>
+        </designer-extension>
+      </property-extension>
+    </property>
 
 
    <property>

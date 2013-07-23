@@ -44,10 +44,10 @@
 				</xe:this.footerLinks>
 				<xe:this.titleBarTabs>
 					<xe:pageTreeNode label="XPagesAgents"
-						selection="/docx/.*" page="/agent_overview.xsp">
+						selection="/agents/.*" page="/agent_overview.xsp">
 					</xe:pageTreeNode>
-					<xe:pageTreeNode selection="/xlsx/.*"
-						page="/xlsx_view_embdatasource.xsp" label="RSS Feeds">
+					<xe:pageTreeNode selection="/rss/.*"
+						page="/rss_overview.xsp" label="RSS Feeds">
 					</xe:pageTreeNode>
 					<xe:pageTreeNode
 						label="Properties / Propertie Files" selection="/csv/.*"

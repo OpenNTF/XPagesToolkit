@@ -43,7 +43,7 @@ print ("viewScope.rssURL_SEL =" +viewScope.rssURL_SEL)
 				<xp:br></xp:br>
 				<xp:br></xp:br>
 
-				<xpt:rsslist id="rsslist1">
+				<xpt:rsslist id="rsslist1" useDescription="true">
 					<xpt:this.feedURL><![CDATA[#{javascript:print("Check in code: "+viewScope.rssURL);
 if (viewScope.rssURL == null || viewScope.rssURL == "") {
 	return getFirstSource();

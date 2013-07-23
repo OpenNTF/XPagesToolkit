@@ -3,7 +3,6 @@ package org.openntf.xpt.rss.component;
 import java.io.IOException;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.List;
 
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.ExternalContext;
@@ -16,6 +15,7 @@ import org.openntf.xpt.core.utils.ErrorJSONBuilder;
 import org.openntf.xpt.core.utils.JSONSupport;
 import org.openntf.xpt.rss.model.FeedReaderService;
 import org.openntf.xpt.rss.model.RSSEntry;
+import org.openntf.xpt.rss.model.RSSFeed;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.commons.util.io.json.JsonJavaFactory;
@@ -37,6 +37,23 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 	private String m_HtmlTemplate;
 	private String m_Style;
 	private String m_StyleClass;
+	private Boolean m_UseDescription;
+
+	public Boolean getUseDescription() {
+		if (m_UseDescription != null) {
+			return m_UseDescription;
+		}
+		ValueBinding _vb = getValueBinding("useDescription"); //$NON-NLS-1$
+		if (_vb != null) {
+			return (Boolean) _vb.getValue(getFacesContext());
+		} else {
+			return false;
+		}
+	}
+
+	public void setUseDescription(Boolean useDescription) {
+		m_UseDescription = useDescription;
+	}
 
 	public UIRSSList() {
 		setRendererType(RENDERER_TYPE);
@@ -127,23 +144,27 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 			if (StringUtil.isEmpty(finURL)) {
 				ErrorJSONBuilder.getInstance().processError2JSON(httpResponse, 1000, "No URL found!", null);
 			}
-			List<RSSEntry> lstResult = AccessController.doPrivileged(new PrivilegedAction<List<RSSEntry>>() {
+			RSSFeed rssFeed = AccessController.doPrivileged(new PrivilegedAction<RSSFeed>() {
 				@Override
-				public List<RSSEntry> run() {
-					return FeedReaderService.getInstance().getAllEntriesFromURL(finURL);
+				public RSSFeed run() {
+					return FeedReaderService.getInstance().getFeedFromURL(finURL);
 				}
 
 			});
 
 			JsonWriter jsWriter = new JsonWriter(httpResponse.getWriter(), true);
 			jsWriter.startObject();
-			jsWriter.startProperty("status");
-			jsWriter.outStringLiteral("ok");
-			jsWriter.endProperty();
+
+			JSONSupport.writeString(jsWriter, "status", "ok", false);
+			JSONSupport.writeString(jsWriter, "url", rssFeed.getURL(), false);
+			JSONSupport.writeString(jsWriter, "title", rssFeed.getTitle(), false);
+			JSONSupport.writeString(jsWriter, "author", rssFeed.getAuthor(), false);
+			JSONSupport.writeString(jsWriter, "description", rssFeed.getDescription(), false);
+			JSONSupport.writeString(jsWriter, "imageurl", rssFeed.getImageURL(), false);
 
 			jsWriter.startProperty("entries");
 			jsWriter.startArray();
-			for (RSSEntry rssE : lstResult) {
+			for (RSSEntry rssE : rssFeed.getEntries()) {
 				jsWriter.startArrayItem();
 				jsWriter.startObject();
 
@@ -205,16 +226,18 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 		m_HtmlTemplate = (String) values[2];
 		m_Style = (String) values[3];
 		m_StyleClass = (String) values[4];
+		m_UseDescription = (Boolean) values[5];
 	}
 
 	@Override
 	public Object saveState(FacesContext context) {
-		Object[] values = new Object[5];
+		Object[] values = new Object[6];
 		values[0] = super.saveState(context);
 		values[1] = m_FeedURL;
 		values[2] = m_HtmlTemplate;
 		values[3] = m_Style;
 		values[4] = m_StyleClass;
+		values[5] = m_UseDescription;
 		return values;
 	}
 

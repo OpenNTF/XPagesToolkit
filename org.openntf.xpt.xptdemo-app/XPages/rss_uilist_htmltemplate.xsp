@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:wgdt="http://www.webgate.biz/xsp/dt"
+	xmlns:xe="http://www.ibm.com/xsp/coreex"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+
+	<xp:this.beforeRenderResponse><![CDATA[#{javascript:if(viewScope.rssURL == null || viewScope.rssURL == "") {
+ 	viewScope.rssURL =getFirstSource();
+ }
+ }]]></xp:this.beforeRenderResponse>
+	<xp:this.resources>
+		<xp:script src="/org.openntf.xpt.demo.ssjs.rssSource.jss"
+			clientSide="false">
+		</xp:script>
+	</xp:this.resources>
+	<xc:cc_application navigationPath="/rss/uilist-hml"
+		pageTitle="RSS UI List Control - Custom HTML">
+		<xp:this.facets>
+			<xp:panel xp:key="facetRight"></xp:panel>
+			<xp:panel xp:key="facetMiddle">
+
+				<xp:label value="RSS Feeds" id="lbTitle"></xp:label>
+				<xp:br></xp:br>
+				<xp:comboBox id="comboBox1"
+					value="#{viewScope.rssURL}">
+
+					<xp:selectItems>
+						<xp:this.value><![CDATA[#{javascript:getSources ()}]]></xp:this.value>
+					</xp:selectItems>
+					<xp:eventHandler event="onchange" submit="true"
+						refreshMode="partial" refreshId="panRefresh">
+						<xp:this.action><![CDATA[#{javascript:print ("viewScope.rssURL =" +viewScope.rssURL);
+viewScope.rssURL_SEL = viewScope.rssURL;
+print ("viewScope.rssURL_SEL =" +viewScope.rssURL_SEL)
+}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:comboBox>
+				<xp:panel id="panRefresh">
+					<xp:br></xp:br>
+					<xp:br></xp:br>
+					URL:&#160;
+					<xp:text escape="true" id="computedField1"
+						value="#{viewScope.rssURL}">
+					</xp:text>
+					<xp:br></xp:br>
+					<xp:br></xp:br>
+
+					<xpt:rsslist id="rsslist1">
+						<xpt:this.feedURL><![CDATA[#{javascript:print("Check in code: "+viewScope.rssURL);
+if (viewScope.rssURL == null || viewScope.rssURL == "") {
+	return getFirstSource();
+}
+return viewScope.rssURL}]]></xpt:this.feedURL>
+						<xpt:this.htmlTemplate><![CDATA[<div class="feedMain">
+	<div class="feedMainHeader">
+		<div class="Author">{{feed.author}}</div>
+		<h2 class="Title">{{feed.title}}</h2>
+	</div>
+	<div class="feedMainDescription">
+		<div class="image">
+		{%if feed.imageurl %}
+		 <img src="{{feed.imageurl}}"></img>
+		 {% else %}
+		 
+		 {% endif %}
+		 </div>
+		<div class="link">{{feed.url}}</div>
+		<div class="descripiton">{{feed.description}}</div>
+	</div>
+	{% for entry in feed.entries%}
+	<div style="height: auto;" class="feedEntry">
+		<div class="feedHeader">
+			<div class="feedDate">{{entry.created|xptrssDateFilter}} {{entry.created|xptrssTimeFilter}}</div>
+			<h2 class="feedTitle">
+				<a class="feedTitleLink" target="_blank" href="{{entry.link}}">{{entry.title}}</a>
+			</h2>
+		</div>
+		<div class="feedBody">
+		
+			<div class="feedDesc">
+				{% if feed.useDescription %}
+					{{entry.description}}				
+				{% else %}
+					{{entry.content|safe}}
+				{% endif %}
+			</div>
+		</div>
+	</div>
+	{%endfor%}
+</div>
+]]></xpt:this.htmlTemplate>
+					</xpt:rsslist>
+				</xp:panel>
+			</xp:panel>
+			<xp:panel xp:key="facetLeft">
+
+				<xc:cc_nav_rss></xc:cc_nav_rss>
+			</xp:panel>
+		</xp:this.facets>
+	</xc:cc_application>
+</xp:view>
