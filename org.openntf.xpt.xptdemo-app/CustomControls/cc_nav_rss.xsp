@@ -6,13 +6,19 @@
 		<xe:this.treeNodes>
 			<xe:pageTreeNode label="Home" page="/home.xsp"></xe:pageTreeNode>
 			<xe:separatorTreeNode></xe:separatorTreeNode>
-			<xe:pageTreeNode label="View with poi-datasource"
-				page="/csv_view_embdatasource.xsp">
+			<xe:pageTreeNode label="RSS as DataSource"
+				page="/rss_overview.xsp">
 			</xe:pageTreeNode>
-			<xe:pageTreeNode label="View with category selection"
-				page="/csv_view_embdatasource_by_key.xsp">
+			<xe:pageTreeNode label="RSS as UIListControl"
+				page="/rss_uilist.xsp">
 			</xe:pageTreeNode>
 
+			<xe:pageTreeNode label="RSS List Custom CSS / Styles"
+				page="/rss_uilist_css.xsp">
+			</xe:pageTreeNode>
+			<xe:pageTreeNode label="RSS List Custom HTML"
+				page="/rss_uilist_htmltemplate.xsp">
+			</xe:pageTreeNode>
 
 
 

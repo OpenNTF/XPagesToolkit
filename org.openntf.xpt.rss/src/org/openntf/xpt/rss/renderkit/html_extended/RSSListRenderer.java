@@ -61,9 +61,12 @@ public class RSSListRenderer extends FacesRenderer {
 		b.append(strFeeedURL);
 		b.append("\",\n"); // $NON-NLS-1$
 		if (!StringUtil.isEmpty(strHTMLTemplate)) {
-			b.append(" templateString: \"");
+			b.append(" templateString: ");
 			b.append(strHTMLTemplate);
-			b.append("\",\n"); // $NON-NLS-1$
+			b.append(",\n"); // $NON-NLS-1$
+		}
+		if (rssList.getUseDescription()) {
+			b.append(" useDescription: true,\n"); // $NON-NLS-1$
 		}
 		b.append(" targetid: \"");
 		b.append(strID);

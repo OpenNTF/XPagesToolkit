@@ -26,7 +26,7 @@
 	float: right;
 }
 
-.feedMain .feedMainHeader H2 {margin: 0px 0px 0px 0px;}
+.feedMain .feedMainHeader .Title H2 {margin: 0px 0px 0px 0px;}
 
 .feedMain .feedMainHeader .Title {
 	
@@ -76,9 +76,6 @@
 	background-color: #FAFAFA;
 	box-shadow: 0 0 4px #E3E5EB;
 	padding: 3px;
-}
-.feedMain .feedEntry .feedHeader H2 {
-	font-size: 1.1em;
 }
 
 .feedMain .feedEntry .feedBody {

@@ -1,15 +1,38 @@
-<div>
+<div class="feedMain">
+	<div class="feedMainHeader">
+		{% if feeed.author %}
+			<div class="author">{{feed.author}}</div>
+		{% endif %}
+		<h2 class="title">{{feed.title}}</h2>
+	</div>
+	<div class="feedMainDescription">
+		<div class="image">
+		{%if feed.imageurl %}
+		 <img src="{{feed.imageurl}}"></img>
+		 {% endif %}
+		 </div>
+		<div class="link"><a href="{{feed.url}}" target="_blank">{{feed.url}}</a></div>
+		<div class="description">{{feed.description}}</div>
+		<div class="clear"></div>
+	</div>
 	{% for entry in feed.entries%}
 	<div style="height: auto;" class="feedEntry">
 		<div class="feedHeader">
-			<div class="feedDate">{{entry.created}}</div>
+			{% if entry.created %}
+				<div class="feedDate">{{entry.created|xptrssDateFilter}} {{entry.created|xptrssTimeFilter}}</div>
+			{% endif %}
 			<h2 class="feedTitle">
 				<a class="feedTitleLink" target="_blank" href="{{entry.link}}">{{entry.title}}</a>
 			</h2>
 		</div>
 		<div class="feedBody">
+		
 			<div class="feedDesc">
-				{{entry.content|safe}}
+				{% if feed.useDescription %}
+					{{entry.description|safe}}				
+				{% else %}
+					{{entry.content|safe}}
+				{% endif %}
 			</div>
 		</div>
 	</div>

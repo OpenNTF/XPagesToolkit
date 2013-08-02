@@ -55,29 +55,60 @@ public class FeedReaderService {
 			URL feedUrl = new URL(strURL);
 			SyndFeedInput input = new SyndFeedInput();
 			SyndFeed feed = input.build(new XmlReader(feedUrl));
-			for (Object synEntryObject : feed.getEntries()) {
-				SyndEntry sEntry = (SyndEntry) synEntryObject;
-				RSSEntry rssEntry = new RSSEntry();
-				rssEntry.setTitle(sEntry.getTitle());
-				rssEntry.setLink(sEntry.getLink());
-				if (sEntry.getDescription() != null) {
-					rssEntry.setDescription(sEntry.getDescription().getValue());
-				} else {
-					rssEntry.setDescription("");
-				}
-				rssEntry.setAuthors(buildStringList(sEntry.getAuthors()));
-				rssEntry.setCategories(buildStringList(sEntry.getCategories()));
-				rssEntry.setContents(buildStringList(sEntry.getContents()));
-				rssEntry.setLinks(buildStringList(sEntry.getLinks()));
-				rssEntry.setCreated(sEntry.getPublishedDate());
-				rssEntry.setUpdated(sEntry.getUpdatedDate());
-				lstRC.add(rssEntry);
-			}
+			lstRC = processFeed2List(feed);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			currentThread.setContextClassLoader(clCurrent);
+		}
+		return lstRC;
+	}
+
+	public RSSFeed getFeedFromURL(String strURL) {
+		RSSFeed rssFeed = new RSSFeed();
+		rssFeed.setURL(strURL);
+		Thread currentThread = Thread.currentThread();
+		ClassLoader clCurrent = currentThread.getContextClassLoader();
+		try {
+			currentThread.setContextClassLoader(XPTRSSActivator.class.getClassLoader());
+			URL feedUrl = new URL(strURL);
+			SyndFeedInput input = new SyndFeedInput();
+			SyndFeed feed = input.build(new XmlReader(feedUrl));
+			rssFeed.setAuthor(feed.getAuthor());
+			rssFeed.setDescription(feed.getDescription());
+			rssFeed.setTitle(feed.getTitle());
+			if (feed.getImage() != null) {
+				rssFeed.setImageURL(feed.getImage().getUrl());
+			}
+			rssFeed.setEntries(processFeed2List(feed));
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			currentThread.setContextClassLoader(clCurrent);
+		}
+		return rssFeed;
+	}
+
+	private List<RSSEntry> processFeed2List(SyndFeed feed) {
+		List<RSSEntry> lstRC = new ArrayList<RSSEntry>();
+		for (Object synEntryObject : feed.getEntries()) {
+			SyndEntry sEntry = (SyndEntry) synEntryObject;
+			RSSEntry rssEntry = new RSSEntry();
+			rssEntry.setTitle(sEntry.getTitle());
+			rssEntry.setLink(sEntry.getLink());
+			if (sEntry.getDescription() != null) {
+				rssEntry.setDescription(sEntry.getDescription().getValue());
+			} else {
+				rssEntry.setDescription("");
+			}
+			rssEntry.setAuthors(buildStringList(sEntry.getAuthors()));
+			rssEntry.setCategories(buildStringList(sEntry.getCategories()));
+			rssEntry.setContents(buildStringList(sEntry.getContents()));
+			rssEntry.setLinks(buildStringList(sEntry.getLinks()));
+			rssEntry.setCreated(sEntry.getPublishedDate());
+			rssEntry.setUpdated(sEntry.getUpdatedDate());
+			lstRC.add(rssEntry);
 		}
 		return lstRC;
 	}

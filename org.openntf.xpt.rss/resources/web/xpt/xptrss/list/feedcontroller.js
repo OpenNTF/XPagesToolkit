@@ -25,6 +25,7 @@ dojo.declare("xptrss.list.feedcontroller", [ dijit._Widget,
 	templateString : dojo.cache("xptrss.list.feedcontroller",
 			"../../html/rssTemplate.html"),
 	targetid : null,
+	useDescription : false,
 	postCreate : function() {
 		var mySelf = this;
 		var postData = {
@@ -40,6 +41,9 @@ dojo.declare("xptrss.list.feedcontroller", [ dijit._Widget,
 			preventCache : true,
 			load : function(data) {
 				if (data.status == "ok") {
+					if (mySelf.useDescription) {
+						data.useDescription = true;
+					}
 					mySelf.feed = data;
 					mySelf.render();
 					dojo.style(mySelf.targetid + "_feedLoader", {
