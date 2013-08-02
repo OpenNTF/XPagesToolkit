@@ -3,9 +3,15 @@
 	xmlns:wgdt="http://www.webgate.biz/xsp/dt" xmlns:xe="http://www.ibm.com/xsp/coreex"
 	xmlns:xpt="http://www.openntf.org/xsp/xpt">
 
-	<xp:this.beforeRenderResponse><![CDATA[#{javascript:if(viewScope.rssURL == null || viewScope.rssURL == "");
- 	viewScope.rssURL ="http://blog.openntf.org/blogs/openntf.nsf/stories.xml";
+	<xp:this.beforeRenderResponse><![CDATA[#{javascript:if(viewScope.rssURL == null || viewScope.rssURL == "") {
+ 	viewScope.rssURL =getFirstSource();
+ }
  }]]></xp:this.beforeRenderResponse>
+	<xp:this.resources>
+		<xp:script src="/org.openntf.xpt.demo.ssjs.rssSource.jss"
+			clientSide="false">
+		</xp:script>
+	</xp:this.resources>
 	<xc:cc_application navigationPath="/rss/overview"
 		pageTitle="RSS Overview - Overview">
 		<xp:this.facets>
@@ -15,23 +21,29 @@
 				<xp:label value="RSS Feeds" id="lbTitle"></xp:label>
 				<xp:br></xp:br>
 				<xp:comboBox id="comboBox1" value="#{viewScope.rssURL}">
-					<xp:selectItem itemLabel="OpenNTF Blog Feed"
-						itemValue="http://blog.openntf.org/blogs/openntf.nsf/stories.xml"></xp:selectItem>
+
+					<xp:selectItems>
+						<xp:this.value><![CDATA[#{javascript:getSources ()}]]></xp:this.value>
+					</xp:selectItems>
+					<xp:eventHandler event="onchange" submit="true"
+						refreshMode="partial" refreshId="dataView1">
+						<xp:this.action><![CDATA[#{javascript:viewScope.rssURL_SEL = viewScope.rssURL;
+}]]></xp:this.action>
+					</xp:eventHandler>
 				</xp:comboBox>
 				<xp:br></xp:br>
 				<xe:dataView id="dataView1" var="rssEntry"
 					expandedDetail="true" collapsibleDetail="true">
 
 					<xe:this.summaryColumn>
-						<xe:viewSummaryColumn
-							href="#{javascript:rssEntry.link}"
+						<xe:viewSummaryColumn href="#{javascript:rssEntry.link}"
 							value="#{javascript:rssEntry.title}">
 						</xe:viewSummaryColumn>
 					</xe:this.summaryColumn>
 					<xp:this.facets>
 						<xp:panel xp:key="detail">
-							<xp:text id="computedField1"
-								value="#{javascript:rssEntry.contents}" escape="false">
+							<xp:text id="computedField1" value="#{javascript:rssEntry.contents}"
+								escape="false">
 							</xp:text>
 						</xp:panel>
 					</xp:this.facets>
@@ -39,16 +51,17 @@
 						<xpt:rssFeed scope="request"
 							var="rssFeedList">
 							<xpt:this.feedURL><![CDATA[#{javascript:if (viewScope.rssURL == null || viewScope.rssURL == "") {
-	return "http://blog.openntf.org/blogs/openntf.nsf/stories.xml";
+	return getFirstSource();
 }
-viewScope.rssURL}]]></xpt:this.feedURL>
+return viewScope.rssURL}]]></xpt:this.feedURL>
 						</xpt:rssFeed>
 					</xe:this.data>
 				</xe:dataView>
 			</xp:panel>
 			<xp:panel xp:key="facetLeft">
-				
-			<xc:cc_nav_rss></xc:cc_nav_rss></xp:panel>
+
+				<xc:cc_nav_rss></xc:cc_nav_rss>
+			</xp:panel>
 		</xp:this.facets>
 	</xc:cc_application>
 </xp:view>

@@ -1,92 +1,96 @@
-.feedMain {
-	border: 1px solid #CCCCCC;
-	box-shadow: 0 2px 10px #EEEEEE;
+.feedCustomMain {
+	border: 1px solid #8A0808;
+	box-shadow: 0 2px 10px #61210B;
 	padding: 0 12px;
+	width: 400px;
 }
 
-.feedMain .feedMainHeader {
-	padding: 6px;
-	box-shadow: 0 0 4px #E3E5EB;
+.feedCustomMain .feedMainHeader {
+	padding: 2px;
+	box-shadow: 0 0 4px #61210B;
 	border-bottom-radius: 3px;
 	margin-bottom: 12px;
 	margin-left: -12px;
 	margin-right: -12px;
 	background-color: #EBECF0;
-	background: -moz-linear-gradient(top, #E8E8E8 0%, #FFFFFF 100%);
+	background: -moz-linear-gradient(top, #61210B 0%, #FFFFFF 100%);
 	/* firefox */
-	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #E8E8E8),
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #61210B),
 		color-stop(100%, #FFFFFF) ); /* webkit */
 	filter: progid :     DXImageTransform.Microsoft.gradient (     
 		 startColorstr =  
-		  '#E8E8E8', endColorstr =     '#FFFFFF', GradientType =     0 );
+		  '#61210B', endColorstr =     '#FFFFFF', GradientType =     0 );
 	/* ie */
 	font-weight: bold;
 }
-.feedMain .feedMainHeader .Author {
-	float: right;
-}
 
-.feedMain .feedMainHeader .Title H2 {margin: 0px 0px 0px 0px;}
+.feedCustomMain .feedMainHeader .Title H2 {margin: 0px 0px 0px 0px;}
 
-.feedMain .feedMainHeader .Title {
+.feedCustomMain .feedMainHeader .Title {
 	
 }
 
-.feedMain .feedMainDescription {
+.feedCustomMain .feedMainDescription {
 	padding-bottom: 15px;
 }
 
-.feedMain .feedMainDescription .image {
+.feedCustomMain .feedMainDescription .image {
 	float: left;
 	padding: 0 5px 3px 0;
 }
 
-.feedMain .feedMainDescription .link {
+.feedCustomMain .feedMainDescription .link {
 	text-align: right;
+	color: #B40404;
+}
+.feedCustomMain .feedMainDescription .link A {
+	color: #B40404;
 }
 
-.feedMain .feedMainDescription .description {
+.feedCustomMain .feedMainDescription .description {
 	padding-top: 5px;
 	font-size: 1.1em;
 }
 
-.feedMain .feedMainDescription .clear {
+.feedCustomMain .feedMainDescription .clear {
 	clear: both;
 }
 
-.feedMain .feedEntry {
-	border: 1px solid #DDDDDD;
-	border-left: 2px solid #DDDDDD;
+.feedCustomMain .feedEntry {
+	border: 1px solid #8A0808;
+	border-left: 2px solid #8A0808;
 	border-radius: 3px;
 	box-shadow: 0 0 4px #E3E5EB;
 	overflow: hidden;
 	margin-bottom: 12px;
 }
 
-.feedMain .feedEntry H2 {
-	padding: 0;
-	margin: 0;
-}
 
-.feedMain .feedEntry .feedDate {
-	float: right;
-}
-
-.feedMain .feedEntry .feedHeader {
+.feedCustomMain .feedEntry .feedHeader {
 	background-color: #FAFAFA;
-	box-shadow: 0 0 4px #E3E5EB;
-	padding: 3px;
+	box-shadow: 0 0 4px #61210B;
+	padding: 1px;
 }
 
-.feedMain .feedEntry .feedBody {
+.feedCustomMain .feedEntry .feedHeader H2 {
+	margin: 1px 1px 1px 1px;
+	font-size: 1.1em;
+}
+
+.feedCustomMain .feedEntry .feedHeader H2 A{
+	color: #424242;
+}
+
+
+.feedCustomMain .feedEntry .feedBody {
 	padding: 4px 3px;
 }
 
-.feedMain .feedEntry .feedBody IMG {
+.feedCustomMain .feedEntry .feedBody IMG {
 	float: left;
 	padding: 0 5px 3px 0;
 }
 
-.feedMain .feedEntry .feedDesc {
+.feedCustomMain .feedEntry .feedDesc {
 	
 }

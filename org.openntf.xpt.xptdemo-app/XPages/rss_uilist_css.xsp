@@ -38,18 +38,9 @@ print ("viewScope.rssURL_SEL =" +viewScope.rssURL_SEL)
 				</xp:comboBox>
 				<xp:panel id="panRefresh">
 					<xp:br></xp:br>
-					<xp:br></xp:br>
-					URL:&#160;
-					<xp:text escape="true" id="computedField1"
-						value="#{viewScope.rssURL}">
-					</xp:text>
-					<xp:br></xp:br>
-					<xp:br></xp:br>
-
 					<xpt:rsslist id="rsslist1"
 						style="height:400.0px;width:300.0px;background-color:rgb(192,192,192)">
-						<xpt:this.feedURL><![CDATA[#{javascript:print("Check in code: "+viewScope.rssURL);
-if (viewScope.rssURL == null || viewScope.rssURL == "") {
+						<xpt:this.feedURL><![CDATA[#{javascript:if (viewScope.rssURL == null || viewScope.rssURL == "") {
 	return getFirstSource();
 }
 return viewScope.rssURL}]]></xpt:this.feedURL>

@@ -31,25 +31,14 @@
 					</xp:selectItems>
 					<xp:eventHandler event="onchange" submit="true"
 						refreshMode="partial" refreshId="panRefresh">
-						<xp:this.action><![CDATA[#{javascript:print ("viewScope.rssURL =" +viewScope.rssURL);
-viewScope.rssURL_SEL = viewScope.rssURL;
-print ("viewScope.rssURL_SEL =" +viewScope.rssURL_SEL)
+						<xp:this.action><![CDATA[#{javascript:viewScope.rssURL_SEL = viewScope.rssURL;
 }]]></xp:this.action>
 					</xp:eventHandler>
 				</xp:comboBox>
 				<xp:panel id="panRefresh">
 					<xp:br></xp:br>
-					<xp:br></xp:br>
-					URL:&#160;
-					<xp:text escape="true" id="computedField1"
-						value="#{viewScope.rssURL}">
-					</xp:text>
-					<xp:br></xp:br>
-					<xp:br></xp:br>
-
 					<xpt:rsslist id="rsslist1" useDescription="true">
-						<xpt:this.feedURL><![CDATA[#{javascript:print("Check in code: "+viewScope.rssURL);
-if (viewScope.rssURL == null || viewScope.rssURL == "") {
+						<xpt:this.feedURL><![CDATA[#{javascript:if (viewScope.rssURL == null || viewScope.rssURL == "") {
 	return getFirstSource();
 }
 return viewScope.rssURL}]]></xpt:this.feedURL>

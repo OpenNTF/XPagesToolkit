@@ -33,27 +33,32 @@
 				</xp:comboBox>
 				<xp:panel id="panRefresh">
 					<xp:br></xp:br>
-					<xp:br></xp:br>
-					URL:&#160;
-					<xp:text escape="true" id="computedField1" value="#{viewScope.rssURL}"></xp:text>
-					<xp:br></xp:br>
-					<xp:br></xp:br>
-					<xp:table>
+					<xp:table style="width:100%">
 						<xp:tr>
-							<xp:td style="width:50%" align="left"
-								valign="top">
-								<xpt:rsslist id="rsslist1"
-									useDescription="false">
+							<xp:td style="width:50%" align="left">
+								<xp:text escape="true"
+									id="computedField2">
+									<xp:this.value><![CDATA[#{javascript:"With content as summary"}]]></xp:this.value>
+								</xp:text>
+							</xp:td>
+							<xp:td style="width:50%" align="left">
+								<xp:text escape="true"
+									id="computedField3">
+									<xp:this.value><![CDATA[#{javascript:"With description as summary"}]]></xp:this.value>
+								</xp:text>
+							</xp:td>
+						</xp:tr>
+						<xp:tr>
+							<xp:td style="width:50%" align="left" valign="top">
+								<xpt:rsslist id="rsslist1" useDescription="false">
 									<xpt:this.feedURL><![CDATA[#{javascript:if (viewScope.rssURL == null || viewScope.rssURL == "") {
 	return getFirstSource();
 }
 return viewScope.rssURL}]]></xpt:this.feedURL>
 								</xpt:rsslist>
 							</xp:td>
-							<xp:td style="width:50%" align="left"
-								valign="top">
-								<xpt:rsslist id="rsslist2"
-									useDescription="true">
+							<xp:td style="width:50%" align="left" valign="top">
+								<xpt:rsslist id="rsslist2" useDescription="true">
 									<xpt:this.feedURL><![CDATA[#{javascript:if (viewScope.rssURL == null || viewScope.rssURL == "") {
 	return getFirstSource();
 }
@@ -66,8 +71,8 @@ return viewScope.rssURL}]]></xpt:this.feedURL>
 				</xp:panel>
 			</xp:panel>
 			<xp:panel xp:key="facetLeft">
-				
-			<xc:cc_nav_rss></xc:cc_nav_rss>
+
+				<xc:cc_nav_rss></xc:cc_nav_rss>
 			</xp:panel>
 		</xp:this.facets>
 	</xc:cc_application>
