@@ -1,0 +1,19 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: XPT OneUI Elements
+Bundle-SymbolicName: org.openntf.xpt.oneui;singleton:=true
+Bundle-Version: 1.0.0.qualifier
+Bundle-Activator: org.openntf.xpt.oneui.XPTOneUIActivator
+Bundle-Vendor: WebGate Consulting AG
+Require-Bundle: org.eclipse.core.runtime,
+ com.ibm.xsp.core,
+ com.ibm.commons,
+ org.openntf.xpt.core,
+ com.ibm.xsp.extsn,
+ com.ibm.xsp.extlib
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
+Bundle-ActivationPolicy: lazy
+Export-Package: org.openntf.xpt.oneui,
+ org.openntf.xpt.oneui.component,
+ org.openntf.xpt.oneui.config,
+ org.openntf.xpt.oneui.renderkit.html_extended

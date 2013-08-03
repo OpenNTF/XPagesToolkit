@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='utf-8'?>
 <note class='form' xmlns='http://www.lotus.com/dxl' version='9.0' replicaid='C1257B95007265C6'>
-<noteinfo noteid='22e' unid='89B0FC44AF0DC435C1257B5800493B13' sequence='3'>
+<noteinfo noteid='22e' unid='89B0FC44AF0DC435C1257B5800493B13' sequence='6'>
 <created><datetime dst='true'>20130425T151952,51+02</datetime></created>
-<modified><datetime dst='true'>20130626T082915,25+02</datetime></modified>
-<revised><datetime dst='true'>20130626T082915,24+02</datetime></revised>
-<lastaccessed><datetime dst='true'>20130626T082915,25+02</datetime></lastaccessed>
+<modified><datetime dst='true'>20130803T091809,90+02</datetime></modified>
+<revised><datetime dst='true'>20130803T091809,89+02</datetime></revised>
+<lastaccessed><datetime dst='true'>20130803T091809,90+02</datetime></lastaccessed>
 <addedtofile><datetime dst='true'>20130625T224933,00+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
@@ -85,7 +85,7 @@ oWnEIGRanjp1Stk6OzuNGGS3JORRlk07S7S6GhoajJTiKR1Z7eM7Ud+KspJNWgFJ4Dwt0UiA2VK6
 unFyYOWLBp89ezYkOAbCAkFYQ0RX6vS0eJ5sz549+m+KMm0f4DwZLH8Sjk8DdXsgEDSOlMMByeWh
 nJyct3k3Iii15iQJdsqTpVBgySm/osMTHQHJooGOjo5Md9myZTlSjhdKcI1QuQilaxJX8LK5Vf4y
 nmSaXBw9FWBxampqni8Hz6Qi8+TJk9iVy1c8iWI2Ab8RkPD/gnY7aWLha9euhdk7CA7dzpPof7WO
-DnhRPg8SsZjSjTND8s3Atu5KUytAdnY2vY1/AEQp+lGIGoa4AAAAAElFTkSuQmCCog==
+DnhRPg8SsZjSjTND8s3Atu5KUytAdnY2vY1/AEQp+lGIGoa4AAAAAElFTkSuQmCCAA==
 </rawitemdata></item>
 <item name='$MimeType' sign='true'><text>image/png</text></item>
 <item name='$FileModDT' sign='true'><datetime dst='true'>20130626T082906,00+02</datetime></item>

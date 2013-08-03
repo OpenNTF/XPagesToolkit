@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<faces-config>
+	<faces-config-extension>
+   		<namespace-uri>http://www.openntf.org/xsp/xpt</namespace-uri>
+   		<default-prefix>xpt</default-prefix>
+	</faces-config-extension>
+    
+    <component>
+    	<description>OneUI Welcombox</description>
+    	<display-name>OneUI-WelcomeBox</display-name>
+    	<component-type>org.openntf.xpt.oneui.component.uiwelcomebox</component-type>
+    	<component-class>org.openntf.xpt.oneui.component.UIWelcomebox</component-class>
+    	
+    	<group-type-ref>com.ibm.xsp.group.core.prop.style</group-type-ref>
+    	<group-type-ref>com.ibm.xsp.group.core.prop.styleClass</group-type-ref>
+
+    	<property>
+      		<property-name>title</property-name>
+      		<property-class>string</property-class>
+      		<display-name>Title of the Box</display-name>
+    	</property>
+    	<property>
+      		<property-name>closeable</property-name>
+      		<property-class>boolean</property-class>
+      		<property-extension>
+        		<designer-extension>
+          			<editor/>
+          			<default-value>false</default-value>
+        		</designer-extension>
+      		</property-extension>
+      		<display-name>Closeable</display-name>
+    	</property>
+    	<property>
+      		<property-name>closed</property-name>
+      		<property-class>boolean</property-class>
+      		<display-name>Closed</display-name>
+    	</property>
+    	<property>
+      		<property-name>showBoxTitle</property-name>
+      		<property-class>string</property-class>
+    	</property>
+
+    	<component-extension>
+      		<component-family>javax.faces.Panel</component-family>
+      		<renderer-type>org.openntf.xpt.oneui.component.uiwelcomebox</renderer-type>
+      		<tag-name>rsslist</tag-name>
+      		<designer-extension>
+ 				<in-palette>true</in-palette>
+        		<category>XPages Toolkit</category>
+        		<render-markup>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+							&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+							&lt;xp:panel styleClass="lotusWelcomeBox"&gt;&#xd;
+							&lt;h2&gt;&lt;%=this.title %&gt;&lt;/h2&gt;&#xd;
+							&lt;xp:panel&gt;&#xd;
+							&lt;xp:callback facetName="welcomeText" id="callback1"&gt;&lt;/xp:callback&gt;&#xd;
+							&lt;/xp:panel&gt;&#xd;
+							&lt;/xp:panel&gt;&#xd;
+							&lt;/xp:view&gt;&#xd;
+							&#xd;
+				</render-markup>
+      		</designer-extension>
+    	</component-extension>
+	</component>
+</faces-config>
