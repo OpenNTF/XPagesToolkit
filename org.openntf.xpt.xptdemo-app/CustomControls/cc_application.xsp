@@ -13,8 +13,8 @@
 			</xp:callback>
 		</xe:this.facets>
 		<xe:this.configuration>
-			<xe:oneuiApplication productLogoAlt="XPages ToolBox"
-				titleBarName="WGC DesignerTools" productLogoHeight="20px"
+			<xe:oneuiApplication productLogoAlt="XPages ToolToolkit"
+				titleBarName="XPages Toolkit" productLogoHeight="20px"
 				productLogoWidth="100px"
 				placeBarName="#{javascript:compositeData.pageTitle}"
 				navigationPath="#{javascript:compositeData.navigationPath}"
