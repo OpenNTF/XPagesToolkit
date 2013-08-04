@@ -11,7 +11,8 @@ Require-Bundle: org.eclipse.core.runtime,
  org.openntf.xpt.rss;visibility:=reexport,
  org.openntf.xpt.agents;visibility:=reexport,
  org.openntf.xpt.objectlist;visibility:=reexport,
- org.openntf.xpt.properties;visibility:=reexport
+ org.openntf.xpt.properties;visibility:=reexport,
+ org.openntf.xpt.oneui;visibility:=reexport
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openntf.xpt,

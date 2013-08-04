@@ -43,7 +43,7 @@
     	<component-extension>
       		<component-family>javax.faces.Panel</component-family>
       		<renderer-type>org.openntf.xpt.oneui.component.uiwelcomebox</renderer-type>
-      		<tag-name>rsslist</tag-name>
+      		<tag-name>oneuiwelcome</tag-name>
       		<designer-extension>
  				<in-palette>true</in-palette>
         		<category>XPages Toolkit</category>
