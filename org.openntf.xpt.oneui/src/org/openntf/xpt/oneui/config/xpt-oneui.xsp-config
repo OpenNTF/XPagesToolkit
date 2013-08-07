@@ -61,4 +61,143 @@
       		</designer-extension>
     	</component-extension>
 	</component>
+	
+	
+	
+	  <complex-type>
+  		<description>About Block</description>
+  		<display-name>About Block</display-name>
+  		<complex-id>org.openntf.xpt.oneui.component.UIAboutBlock</complex-id>
+  		<complex-class>org.openntf.xpt.oneui.component.UIAboutBlock</complex-class>
+  		
+  		<property>
+    		<description>The title of the block</description>
+	 	 	<display-name>title</display-name>
+		    <property-name>title</property-name>
+    		<property-class>java.lang.String</property-class>
+  		</property>
+  		
+  		<property>
+    		<description>The text of the block</description>
+	 	 	<display-name>text</display-name>
+		    <property-name>text</property-name>
+    		<property-class>java.lang.String</property-class>
+  		</property>
+  		
+  		<property>
+    		<description>The link of the block</description>
+	 	 	<display-name>link</display-name>
+		    <property-name>link</property-name>
+    		<property-class>java.lang.String</property-class>
+  		</property>
+  		
+  		<property>
+      		<description>Style</description>
+      		<display-name>style</display-name>
+      		<property-name>style</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+        			<category>styling</category>
+          			<editor>com.ibm.workplace.designer.property.editors.StylesEditor</editor>
+        		</designer-extension>
+      		</property-extension>
+  		</property>
+ 
+      	 <property>
+      		<description>Style Title</description>
+      		<display-name>styleTitle</display-name>
+      		<property-name>styleTitle</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+        			<category>styling</category>
+          			<editor>com.ibm.workplace.designer.property.editors.StylesEditor</editor>
+        		</designer-extension>
+      		</property-extension>
+  		</property>
+ 
+  		<property>
+      		<description>Style Text</description>
+      		<display-name>styleText</display-name>
+      		<property-name>styleText</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+        			<category>styling</category>
+          			<editor>com.ibm.workplace.designer.property.editors.StylesEditor</editor>
+        		</designer-extension>
+      		</property-extension>
+  		</property>
+ 
+  		<property>
+      		<description>Style Link</description>
+      		<display-name>styleLink</display-name>
+      		<property-name>styleLink</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+        			<category>styling</category>
+          			<editor>com.ibm.workplace.designer.property.editors.StylesEditor</editor>
+        		</designer-extension>
+      		</property-extension>
+  		</property>
+      	
+      	<property>
+      		<description>Class</description>
+      		<display-name>class</display-name>
+      		<property-name>styleClass</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+        			<category>styling</category>
+          			<editor>com.ibm.workplace.designer.property.editors.StyleClassEditor</editor>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+      	
+      	<property>
+      		<description>Class Title</description>
+      		<display-name>classTitle</display-name>
+      		<property-name>styleClassTitle</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+        			<category>styling</category>
+          			<editor>com.ibm.workplace.designer.property.editors.StyleClassEditor</editor>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+ 
+       	<property>
+      		<description>Class Text</description>
+      		<display-name>classText</display-name>
+      		<property-name>styleClassText</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+        			<category>styling</category>
+          			<editor>com.ibm.workplace.designer.property.editors.StyleClassEditor</editor>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+    	
+       	<property>
+      		<description>Class Link</description>
+      		<display-name>classLink</display-name>
+      		<property-name>styleClassLink</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+        			<category>styling</category>
+          			<editor>com.ibm.workplace.designer.property.editors.StyleClassEditor</editor>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+	
+	   	<complex-extension>
+    		<tag-name>oneuiAboutBlock</tag-name>
+  		</complex-extension>
+	</complex-type>
+	
 </faces-config>
