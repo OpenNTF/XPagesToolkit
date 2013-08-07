@@ -6,6 +6,40 @@
 	</faces-config-extension>
     
     <component>
+    	<description>OneUI Tips Box</description>
+    	<display-name>OneUI Tips Box</display-name>
+    	<component-type>org.openntf.xpt.oneui.component.uitips</component-type>
+    	<component-class>org.openntf.xpt.oneui.component.UITips</component-class>
+    	
+    	<group-type-ref>com.ibm.xsp.group.core.prop.style</group-type-ref>
+    	<group-type-ref>com.ibm.xsp.group.core.prop.styleClass</group-type-ref>
+
+    	<property>
+      		<property-name>title</property-name>
+      		<property-class>string</property-class>
+      		<display-name>Title of the Box</display-name>
+    	</property>
+    	<property>
+      		<property-name>text</property-name>
+      		<property-class>string</property-class>
+      		<display-name>Text</display-name>
+    	</property>
+ 
+    	<component-extension>
+      		<component-family>org.openntf.xpt.oneui.component.uitips</component-family>
+      		<renderer-type>org.openntf.xpt.oneui.component.uitips</renderer-type>
+      		<tag-name>oneuitps</tag-name>
+      		<designer-extension>
+ 				<in-palette>true</in-palette>
+        		<category>XPages Toolkit</category>
+        		<render-markup>
+				</render-markup>
+      		</designer-extension>
+    	</component-extension>
+	</component>
+
+
+    <component>
     	<description>OneUI Welcombox</description>
     	<display-name>OneUI-WelcomeBox</display-name>
     	<component-type>org.openntf.xpt.oneui.component.uiwelcomebox</component-type>
@@ -62,6 +96,94 @@
     	</component-extension>
 	</component>
 	
+	<component>
+    	<description>Shows a about Page</description>
+    	<display-name>OneUI AboutPage</display-name>
+    	<component-type>org.openntf.xpt.oneui.component.uiaboutpage</component-type>
+    	<component-class>org.openntf.xpt.oneui.component.UIAboutPage</component-class>
+
+	    <group-type-ref>com.ibm.xsp.group.core.prop.style</group-type-ref>
+   	 	<group-type-ref>com.ibm.xsp.group.core.prop.styleClass</group-type-ref>
+
+	    <property>
+    	  	<description>Title / Applicationname</description>
+      		<display-name>title</display-name>
+      		<property-name>title</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+          			<category>basics</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+
+	    <property>
+    	  	<description>Marketing Claim</description>
+      		<display-name>marketingClaim</display-name>
+      		<property-name>marketingClaim</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+          			<category>basics</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+	    <property>
+    	  	<description>Text</description>
+      		<display-name>text</display-name>
+      		<property-name>text</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+          			<category>basics</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+
+		<property>
+			<description>About Blocks for the left column</description>
+			<display-name>leftColumnBlocks</display-name>
+			<property-name>leftColumnBlocks</property-name>
+        	<property-class>java.util.List</property-class>
+       		<property-extension>
+                <allow-run-time-binding>false</allow-run-time-binding>
+          		<collection-property>true</collection-property>
+          		<property-item-class>org.openntf.xpt.oneui.component.UIAboutBlock</property-item-class>
+            	<property-add-method>addLeftColumnBlock</property-add-method>
+            	<designer-extension>
+            		<category>About Blocks</category>
+            	</designer-extension>
+        	</property-extension>
+		</property>
+
+		<property>
+			<description>About Blocks for the right column</description>
+			<display-name>rightColumnBlocks</display-name>
+			<property-name>rightColumnBlocks</property-name>
+        	<property-class>java.util.List</property-class>
+       		<property-extension>
+                <allow-run-time-binding>false</allow-run-time-binding>
+          		<collection-property>true</collection-property>
+          		<property-item-class>org.openntf.xpt.oneui.component.UIAboutBlock</property-item-class>
+            	<property-add-method>addRightColumnBlock</property-add-method>
+            	<designer-extension>
+            		<category>About Blocks</category>
+            	</designer-extension>
+        	</property-extension>
+		</property>
+
+    	<component-extension>
+      		<component-family>javax.faces.Panel</component-family>
+      		<renderer-type>org.openntf.xpt.oneui.component.uiaboutpage</renderer-type>
+      		<tag-name>oneuiaboutpage</tag-name>
+      		<designer-extension>
+ 				<in-palette>true</in-palette>
+        		<category>XPages Toolkit</category>
+        		<render-markup>
+				</render-markup>
+      		</designer-extension>
+    	</component-extension>
+  	</component>
 	
 	
 	  <complex-type>

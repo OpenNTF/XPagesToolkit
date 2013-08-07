@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: XPT OneUI Elements
+Bundle-Name: OneUI Elements XPages Toolkit
 Bundle-SymbolicName: org.openntf.xpt.oneui;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.openntf.xpt.oneui.XPTOneUIActivator

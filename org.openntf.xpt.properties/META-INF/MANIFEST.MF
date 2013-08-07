@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Properties Datasource XPagesToolBox
+Bundle-Name: Properties Datasource XPages ToolKit
 Bundle-SymbolicName: org.openntf.xpt.properties;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.openntf.xpt.properties.Activator

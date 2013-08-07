@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Core of the XPagesToolBox
+Bundle-Name: ObjectList Datasource XPages Toolkit
 Bundle-SymbolicName: org.openntf.xpt.objectlist;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.openntf.xpt.objectlist.Activator

@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: Agents XPagesToolBox
+Bundle-Name: Agents XPages ToolKit
 Bundle-SymbolicName: org.openntf.xpt.agents;singleton:=true
 Bundle-Version: 1.0.0.qualifier
 Bundle-Activator: org.openntf.xpt.agents.XPTAgentActivator
