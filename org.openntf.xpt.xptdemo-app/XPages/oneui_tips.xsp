@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+
+	<xc:cc_application navigationPath="/oneui/uitips"
+		pageTitle="Tips Box">
+		<xp:this.facets>
+			<xc:cc_nav_oneui xp:key="facetLeft"></xc:cc_nav_oneui>
+			<xp:panel xp:key="facetMiddle">
+				<xpt:oneuitps id="oneuitps1" text="This is a tip"
+					title="Tips">
+				</xpt:oneuitps></xp:panel>
+		</xp:this.facets>
+	</xc:cc_application>
+</xp:view>
