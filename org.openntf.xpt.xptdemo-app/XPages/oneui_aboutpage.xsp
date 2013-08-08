@@ -1,8 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xp:view xmlns:xp="http://www.ibm.com/xsp/core"
-	xmlns:xc="http://www.ibm.com/xsp/custom">
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
 
 	<xc:cc_application navigationPath="/oneui/aboutpage"
 		pageTitle="About an Application">
+		<xp:this.facets>
+			<xc:cc_nav_oneui xp:key="facetLeft"></xc:cc_nav_oneui>
+			<xpt:oneuiaboutpage id="oneuiaboutpage1"
+				xp:key="facetMiddle" title="The XPages ToolKit"
+				marketingClaim="Needed, useful, powerful!">
+				<xpt:this.leftColumnBlocks>
+					<xpt:oneuiAboutBlock text="Das ist ein cooler TEST"
+						title="RSS Features">
+					</xpt:oneuiAboutBlock>
+				</xpt:this.leftColumnBlocks>
+			</xpt:oneuiaboutpage></xp:this.facets>
 
-	</xc:cc_application></xp:view>
+	</xc:cc_application>
+</xp:view>

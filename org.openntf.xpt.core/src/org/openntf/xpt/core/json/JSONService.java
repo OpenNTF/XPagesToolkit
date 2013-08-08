@@ -16,11 +16,13 @@
 package org.openntf.xpt.core.json;
 
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashMap;
 
 import org.openntf.xpt.core.json.annotations.JSONEntity;
 import org.openntf.xpt.core.json.annotations.JSONObject;
 import org.openntf.xpt.core.json.binding.Java2JSONBinder;
+import org.openntf.xpt.core.utils.ServiceSupport;
 
 import com.ibm.designer.runtime.Application;
 import com.ibm.domino.services.util.JsonWriter;
@@ -70,7 +72,8 @@ public class JSONService {
 	private Java2JSONBinder buildBinder(Class<?> currentClass) {
 		Java2JSONBinder j2jsonBinder = new Java2JSONBinder();
 		JSONObject jo = m_JSONObject.get(currentClass.getCanonicalName());
-		for (Field fldCurrent : currentClass.getDeclaredFields()) {
+		Collection<Field> lstFields = ServiceSupport.getClassFields(currentClass);
+		for (Field fldCurrent : lstFields) {
 			if (fldCurrent.isAnnotationPresent(JSONEntity.class)) {
 				JSONEntity je = fldCurrent.getAnnotation(JSONEntity.class);
 				Definition def = DefinitionFactory.getDefinition(fldCurrent, je, jo);

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><note class="form" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="2ca" sequence="4" unid="7D487B71034FADB8C1257BC0006EA4B4">
+<noteinfo noteid="2ca" sequence="12" unid="7D487B71034FADB8C1257BC0006EA4B4">
 <created><datetime dst="true">20130807T220831,24+02</datetime></created>
-<modified><datetime dst="true">20130807T220940,17+02</datetime></modified>
-<revised><datetime dst="true">20130807T220940,16+02</datetime></revised>
-<lastaccessed><datetime dst="true">20130807T220940,17+02</datetime></lastaccessed>
+<modified><datetime dst="true">20130808T101618,72+02</datetime></modified>
+<revised><datetime dst="true">20130808T101618,71+02</datetime></revised>
+<lastaccessed><datetime dst="true">20130808T101618,72+02</datetime></lastaccessed>
 <addedtofile><datetime dst="true">20130807T220831,25+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
@@ -11,4 +11,10 @@
 <item name="$TITLE"><text>oneui_aboutpage.xsp</text></item>
 
 
-<item name="$FileNames" sign="true"><text>oneui_aboutpage.xsp</text></item></note>
+<item name="$FileNames" sign="true"><text>oneui_aboutpage.xsp</text></item>
+<item name="$DesignerVersion"><text>8.5</text></item>
+
+
+
+
+</note>

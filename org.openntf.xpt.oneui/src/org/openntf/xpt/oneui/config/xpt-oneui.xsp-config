@@ -33,6 +33,14 @@
  				<in-palette>true</in-palette>
         		<category>XPages Toolkit</category>
         		<render-markup>
+        		&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+				&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+				&#xd;
+				&lt;xp:panel style="background-color:#fffabc"&gt;&#xd;
+				&lt;h3&gt;&lt;%=this.title %&gt;&lt;/h3&gt;&#xd;
+				&lt;p&gt;&lt;%=this.text %&gt;&lt;/p&gt;&#xd;
+				&lt;/xp:panel&gt;&#xd;
+				&lt;/xp:view&gt;&#xd;
 				</render-markup>
       		</designer-extension>
     	</component-extension>

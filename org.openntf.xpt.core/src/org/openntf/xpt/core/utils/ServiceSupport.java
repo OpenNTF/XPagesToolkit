@@ -15,6 +15,15 @@
  */
 package org.openntf.xpt.core.utils;
 
+import java.lang.reflect.Field;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Set;
+import java.util.TreeSet;
+
 import org.openntf.xpt.core.dss.annotations.DominoStore;
 import org.openntf.xpt.core.json.annotations.JSONObject;
 
@@ -38,4 +47,33 @@ public class ServiceSupport {
 		}
 		return fldNameClean;
 	}
+
+	public static Collection<Field> getClassFields(final Class<?> currentClass) {
+		Collection<Field> lstFields = AccessController.doPrivileged(new PrivilegedAction<Collection<Field>>() {
+
+			@Override
+			public Collection<Field> run() {
+				Set<Field> setFields = new TreeSet<Field>(new Comparator<Field>() {
+					@Override
+					public int compare(Field o1, Field o2) {
+						return o1.getName().compareTo(o2.getName());
+					}
+				});
+				getAllFieldsRec(currentClass, setFields);
+				return setFields;
+			}
+
+		});
+		return lstFields;
+	}
+
+	private static Set<Field> getAllFieldsRec(Class<?> clazz, Set<Field> setFields) {
+		Class<?> superClazz = clazz.getSuperclass();
+		setFields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+		if (superClazz != null) {
+			getAllFieldsRec(superClazz, setFields);
+		}
+		return setFields;
+	}
+
 }

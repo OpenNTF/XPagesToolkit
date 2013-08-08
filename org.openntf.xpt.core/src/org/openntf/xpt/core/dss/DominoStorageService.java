@@ -17,6 +17,7 @@ package org.openntf.xpt.core.dss;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -25,6 +26,7 @@ import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.NotesException;
 import lotus.domino.View;
+
 import org.openntf.xpt.core.dss.annotations.DominoEntity;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
 import org.openntf.xpt.core.dss.binding.DateBinder;
@@ -39,6 +41,7 @@ import org.openntf.xpt.core.dss.binding.ObjectBinder;
 import org.openntf.xpt.core.dss.binding.StringArrayBinder;
 import org.openntf.xpt.core.dss.binding.StringBinder;
 import org.openntf.xpt.core.utils.ServiceSupport;
+
 import com.ibm.designer.runtime.Application;
 
 public class DominoStorageService {
@@ -212,7 +215,8 @@ public class DominoStorageService {
 
 	private Java2DominoBinder buildSaveBinder(DominoStore dsStore, Class<?> currentClass) {
 		Java2DominoBinder j2dRC = new Java2DominoBinder();
-		for (Field fldCurrent : currentClass.getDeclaredFields()) {
+		Collection<Field> lstFields = ServiceSupport.getClassFields(currentClass);
+		for (Field fldCurrent : lstFields) {
 			if (fldCurrent.isAnnotationPresent(DominoEntity.class)) {
 				DominoEntity de = fldCurrent.getAnnotation(DominoEntity.class);
 				if (!de.readOnly()) {
@@ -244,7 +248,8 @@ public class DominoStorageService {
 
 	private Domino2JavaBinder buildLoadBinder(DominoStore dsStore, Class<?> currentClass) {
 		Domino2JavaBinder djdRC = new Domino2JavaBinder();
-		for (Field fldCurrent : currentClass.getDeclaredFields()) {
+		Collection<Field> lstFields = ServiceSupport.getClassFields(currentClass);
+		for (Field fldCurrent : lstFields) {
 			if (fldCurrent.isAnnotationPresent(DominoEntity.class)) {
 				DominoEntity de = fldCurrent.getAnnotation(DominoEntity.class);
 				if (!de.writeOnly()) {
