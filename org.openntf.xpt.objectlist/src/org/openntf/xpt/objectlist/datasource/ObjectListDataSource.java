@@ -35,8 +35,7 @@ import com.ibm.xsp.model.DataContainer;
 import com.ibm.xsp.model.ModelDataSource;
 import com.ibm.xsp.util.StateHolderUtil;
 
-public class ObjectListDataSource extends AbstractDataSource implements
-		ModelDataSource {
+public class ObjectListDataSource extends AbstractDataSource implements ModelDataSource {
 
 	private MethodBinding m_BuildValues;
 
@@ -50,21 +49,18 @@ public class ObjectListDataSource extends AbstractDataSource implements
 
 	@Override
 	public DataModel getDataModel() {
-		return (DataModel) ((ObjectListDataContainer) getDataContainer())
-				.getData();
+		return (DataModel) ((ObjectListDataContainer) getDataContainer()).getData();
 	}
 
 	@Override
 	protected String composeUniqueId() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("OBJECTLIST|");
-		String strPrefix = getRequestParamPrefix();
-		if (!StringUtil.isEmpty(strPrefix)) {
-			sb.append(strPrefix);
-			sb.append("|");
-		}
-		sb.append(UUID.randomUUID());
-		return sb.toString();
+		/*
+		 * StringBuilder sb = new StringBuilder(); sb.append("OBJECTLIST|");
+		 * String strPrefix = getRequestParamPrefix(); if
+		 * (!StringUtil.isEmpty(strPrefix)) { sb.append(strPrefix);
+		 * sb.append("|"); } sb.append(UUID.randomUUID()); return sb.toString();
+		 */
+		return getClass().getName();
 	}
 
 	@Override
@@ -79,29 +75,30 @@ public class ObjectListDataSource extends AbstractDataSource implements
 
 	@Override
 	public DataContainer load(FacesContext arg0) throws IOException {
-		return new ObjectListDataContainer(getBeanId(), getUniqueId(),
-				buildList());
+		return new ObjectListDataContainer(getBeanId(), getUniqueId(), buildList());
+	}
+
+	public void sortList(String strAttribute, boolean ascending) {
+		ObjectListDataContainer oldc = (ObjectListDataContainer) getDataContainer();
+		oldc.sortList(strAttribute, ascending);
 	}
 
 	private List<ObjectListDataEntry> buildList() throws IOException {
-		Logger logCurrent = LoggerFactory
-				.getLogger(this.getClass().getCanonicalName());
+		Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
 		if (m_BuildValues != null) {
 			logCurrent.info("Exectue BuildValues");
 			Object objCurrent = m_BuildValues.invoke(getFacesContext(), null);
 			logCurrent.info(objCurrent.getClass().getCanonicalName());
 			if (objCurrent instanceof List<?>) {
 				List<?> lstBrowse = (List<?>) objCurrent;
-				List<ObjectListDataEntry> lstRC = new ArrayList<ObjectListDataEntry>(
-						lstBrowse.size());
+				List<ObjectListDataEntry> lstRC = new ArrayList<ObjectListDataEntry>(lstBrowse.size());
 				for (Object obj : lstBrowse) {
 					ObjectListDataEntry olde = new ObjectListDataEntry(obj);
 					lstRC.add(olde);
 				}
 				return lstRC;
 			} else {
-				throw new IOException(
-						"buildValues must return a java.util.List Object");
+				throw new IOException("buildValues must return a java.util.List Object");
 			}
 		}
 		return null;
@@ -112,8 +109,7 @@ public class ObjectListDataSource extends AbstractDataSource implements
 	}
 
 	@Override
-	public boolean save(FacesContext arg0, DataContainer arg1)
-			throws FacesExceptionEx {
+	public boolean save(FacesContext arg0, DataContainer arg1) throws FacesExceptionEx {
 		return false;
 	}
 
@@ -122,8 +118,7 @@ public class ObjectListDataSource extends AbstractDataSource implements
 	public Object saveState(FacesContext arg0) {
 		Object[] state = new Object[2];
 		state[0] = super.saveState(arg0);
-		state[1] = StateHolderUtil.saveMethodBinding(getFacesContext(),
-				m_BuildValues);
+		state[1] = StateHolderUtil.saveMethodBinding(getFacesContext(), m_BuildValues);
 		return state;
 	}
 
@@ -131,8 +126,21 @@ public class ObjectListDataSource extends AbstractDataSource implements
 	public void restoreState(FacesContext arg0, Object state) {
 		Object[] values = (Object[]) state;
 		super.restoreState(arg0, values[0]);
-		m_BuildValues = StateHolderUtil.restoreMethodBinding(getFacesContext(),
-				getComponent(), values[1]);
+		m_BuildValues = StateHolderUtil.restoreMethodBinding(getFacesContext(), getComponent(), values[1]);
+	}
+
+	@Override
+	public void refresh() {
+		// instead of delegate to superclass, copy template in
+		// com.ibm.xsp.extlib.model.DataAccessorSource.refresh()
+		// to do a reduced refresh, that clears
+		// the current value but doesn't re-load.
+		FacesContext context = getFacesContext();
+		if (context == null)
+			return;
+
+		// clear the current value
+		putDataContainer(context, null);
 	}
 
 }

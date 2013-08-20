@@ -18,6 +18,7 @@ package org.openntf.xpt.objectlist.datasource;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectOutput;
+import java.util.Collections;
 import java.util.List;
 
 import com.ibm.xsp.model.AbstractDataContainer;
@@ -28,11 +29,9 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 	private ObjectListDataModel m_Model;
 
 	public ObjectListDataContainer() {
-		super();
 	}
 
-	public ObjectListDataContainer(String strBeanID, String strUniqueID,
-			List<ObjectListDataEntry> objList) {
+	public ObjectListDataContainer(String strBeanID, String strUniqueID, List<ObjectListDataEntry> objList) {
 		super(strBeanID, strUniqueID);
 		m_ObjectList = objList;
 	}
@@ -67,6 +66,13 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 			m_Model = new ObjectListDataModel(this);
 		}
 		return m_Model;
+	}
+
+	public void sortList(String strAttribute, boolean ascending) {
+		if (m_ObjectList != null) {
+			Collections.sort(m_ObjectList, new ObjectEntryComperator(strAttribute, ascending));
+		}
+		m_Model.setRowIndex(0);
 	}
 
 }

@@ -17,10 +17,15 @@ package org.openntf.xpt.core.utils;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.List;
+
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 
 import org.openntf.xpt.core.Activator;
 
 import com.ibm.commons.util.StringUtil;
+import com.ibm.xsp.model.AbstractDataSource;
 
 public class XPTLibUtils {
 
@@ -42,38 +47,78 @@ public class XPTLibUtils {
 		}
 		return "";
 	}
-	
-    // ==============================================================================
-    // Style utility 
-    // ==============================================================================
 
-    public static String concatStyleClasses(String s1, String s2) {
-        if(StringUtil.isNotEmpty(s1)) {
-            if(StringUtil.isNotEmpty(s2)) {
-                return s1 + " " + s2;
-            }
-            return s1;
-        } else {
-            if(StringUtil.isNotEmpty(s2)) {
-                return s2;
-            }
-            return "";
-        }
-    }
+	// ==============================================================================
+	// Style utility
+	// ==============================================================================
 
-    public static String concatStyles(String s1, String s2) {
-        if(StringUtil.isNotEmpty(s1)) {
-            if(StringUtil.isNotEmpty(s2)) {
-                return s1 + ";" + s2;
-            }
-            return s1;
-        } else {
-            if(StringUtil.isNotEmpty(s2)) {
-                return s2;
-            }
-            return "";
-        }
-    }
+	public static String concatStyleClasses(String s1, String s2) {
+		if (StringUtil.isNotEmpty(s1)) {
+			if (StringUtil.isNotEmpty(s2)) {
+				return s1 + " " + s2;
+			}
+			return s1;
+		} else {
+			if (StringUtil.isNotEmpty(s2)) {
+				return s2;
+			}
+			return "";
+		}
+	}
 
+	public static String concatStyles(String s1, String s2) {
+		if (StringUtil.isNotEmpty(s1)) {
+			if (StringUtil.isNotEmpty(s2)) {
+				return s1 + ";" + s2;
+			}
+			return s1;
+		} else {
+			if (StringUtil.isNotEmpty(s2)) {
+				return s2;
+			}
+			return "";
+		}
+	}
+
+	public AbstractDataSource getDatasource(String dsName) {
+		UIComponent uiTop = FacesContext.getCurrentInstance().getViewRoot();
+		AbstractDataSource as = getDatasourceFromUIComp(uiTop, dsName);
+		if (as != null) {
+			return as;
+		}
+		findDSFromCompAndChildern(uiTop, dsName);
+
+		return null;
+	}
+
+	private AbstractDataSource findDSFromCompAndChildern(UIComponent uic, String dsName) {
+		if (uic.getChildCount() > 0) {
+			for (Object uicOChild : uic.getChildren()) {
+				UIComponent uicChild = (UIComponent) uicOChild;
+				AbstractDataSource as = getDatasourceFromUIComp(uicChild, dsName);
+				if (as != null) {
+					return as;
+				}
+				findDSFromCompAndChildern(uicChild, dsName);
+			}
+		}
+		return null;
+	}
+
+	private AbstractDataSource getDatasourceFromUIComp(UIComponent uic, String dsName) {
+		List<?> lstDS = (List<?>) uic.getAttributes().get("data");
+		if (lstDS == null) {
+			return null;
+		}
+		for (Object obj : lstDS) {
+			if (obj instanceof AbstractDataSource) {
+				AbstractDataSource as = (AbstractDataSource) obj;
+				if (as.getVar().equals(dsName)) {
+					return as;
+				}
+			}
+		}
+		return null;
+	}
 
 }
