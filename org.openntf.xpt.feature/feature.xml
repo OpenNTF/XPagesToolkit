@@ -7,11 +7,11 @@
 
    <description url="http://my.webgate.biz/xpt.documentation">
       The XPages ToolKit is a collection of handy controls and beans.
-
 It contains:
-- XPagesAgents (let you long running operations)
+- XPagesAgents (let you run long running operations)
 - RSS UI Control / Datasource
 - Properties DataSource
+- Object List Data Source
 - Domino Storage Service (The NinjaXPages - Programming - Concept)
 - JSON Service
 - The missing OneUI - Elements

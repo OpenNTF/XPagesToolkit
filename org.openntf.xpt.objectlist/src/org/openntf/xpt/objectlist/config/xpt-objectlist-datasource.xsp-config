@@ -18,7 +18,24 @@
 				<method-binding-property>true</method-binding-property>
 			</property-extension>
 		</property>
-  			<group-type-ref>com.ibm.xsp.model.group.DataSource</group-type-ref>
+		<property>
+			<description>Attribute on a object to sort</description>
+			<display-name>SortAttribute</display-name>
+			<property-name>sortAttribute</property-name>
+			<property-class>java.lang.String</property-class>
+			<property-extension>
+			</property-extension>
+		</property>
+		<property>
+			<description>The sort order</description>
+			<display-name>Ascending</display-name>
+			<property-name>ascending</property-name>
+			<property-class>boolean</property-class>
+			<property-extension>
+			</property-extension>
+		</property>
+		
+  		<group-type-ref>com.ibm.xsp.model.group.DataSource</group-type-ref>
     	<complex-extension>
     		<tag-name>objectlistSource</tag-name>
     		<base-complex-id>dataInterface</base-complex-id>

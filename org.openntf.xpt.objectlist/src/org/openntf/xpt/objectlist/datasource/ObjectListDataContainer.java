@@ -72,7 +72,9 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 		if (m_ObjectList != null) {
 			Collections.sort(m_ObjectList, new ObjectEntryComperator(strAttribute, ascending));
 		}
-		m_Model.setRowIndex(0);
+		if (m_Model != null) {
+			m_Model.setRowIndex(0);
+		}
 	}
 
 }

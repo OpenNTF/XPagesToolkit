@@ -125,6 +125,9 @@ public class DominoStorageService {
 
 	private boolean getObjectFromDocument(DominoStore dsDefinition, Domino2JavaBinder d2j, Object objCurrent, Object pk, Database ndbTarget) {
 		try {
+			if (pk != null){
+				setPK2Object(dsDefinition, objCurrent, pk);
+			}
 			Document docCurrent = getDocument(dsDefinition, objCurrent, ndbTarget, false);
 			if (docCurrent == null) {
 				return false;
@@ -184,6 +187,16 @@ public class DominoStorageService {
 		}
 	}
 
+	private void setPK2Object(DominoStore ds, Object obj, Object pk) {
+		try {
+			Method mt = obj.getClass().getMethod("set" + ds.PrimaryKeyField(), ds.PrimaryFieldClass());
+			mt.invoke(obj, pk);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
 	private Object getObjectID(DominoStore ds, Object obj) {
 		try {
 			if (ds.PrimaryFieldClass().equals(String.class)) {
@@ -238,7 +251,7 @@ public class DominoStorageService {
 							addValues.put("genericType", fldCurrent.getGenericType());
 						}
 
-						j2dRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldName(dsStore, fldCurrent.getName()), binder, addValues);
+						j2dRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, addValues);
 					}
 				}
 			}
@@ -256,7 +269,7 @@ public class DominoStorageService {
 					if (de.isFormula()) {
 						IBinder<?> binder = DefinitionFactory.getFormulaBinder(fldCurrent.getType());
 						if (binder != null) {
-							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldName(dsStore, fldCurrent.getName()), binder, null);
+							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, null);
 						}
 					} else {
 						IBinder<?> binder = DefinitionFactory.getBinder(fldCurrent.getType(), fldCurrent.getGenericType());
@@ -277,7 +290,7 @@ public class DominoStorageService {
 						}
 
 						if (binder != null) {
-							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldName(dsStore, fldCurrent.getName()), binder, addValues);
+							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, addValues);
 						}
 					}
 				}

@@ -19,7 +19,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.faces.context.FacesContext;
@@ -28,7 +27,6 @@ import javax.faces.model.DataModel;
 
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
-import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.FacesExceptionEx;
 import com.ibm.xsp.model.AbstractDataSource;
 import com.ibm.xsp.model.DataContainer;
@@ -38,6 +36,12 @@ import com.ibm.xsp.util.StateHolderUtil;
 public class ObjectListDataSource extends AbstractDataSource implements ModelDataSource {
 
 	private MethodBinding m_BuildValues;
+
+	private String m_SortAttribute;
+	private Boolean m_Ascending;
+
+	private String m_CurrentSortAttribute;
+	private Boolean m_CurrentAscending;
 
 	public MethodBinding getBuildValues() {
 		return m_BuildValues;
@@ -75,12 +79,32 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 
 	@Override
 	public DataContainer load(FacesContext arg0) throws IOException {
-		return new ObjectListDataContainer(getBeanId(), getUniqueId(), buildList());
+		ObjectListDataContainer dtC = new ObjectListDataContainer(getBeanId(), getUniqueId(), buildList());
+		if (m_CurrentSortAttribute != null) {
+			dtC.sortList(m_CurrentSortAttribute, m_CurrentAscending);
+
+		} else {
+			if (m_SortAttribute != null) {
+				if (m_Ascending != null) {
+					dtC.sortList(m_SortAttribute, m_Ascending);
+				} else {
+					dtC.sortList(m_SortAttribute, true);
+				}
+			}
+		}
+		return dtC;
 	}
 
 	public void sortList(String strAttribute, boolean ascending) {
 		ObjectListDataContainer oldc = (ObjectListDataContainer) getDataContainer();
 		oldc.sortList(strAttribute, ascending);
+		m_CurrentSortAttribute = strAttribute;
+		m_CurrentAscending = ascending;
+	}
+
+	public void clearSort() {
+		m_CurrentAscending = null;
+		m_CurrentSortAttribute = null;
 	}
 
 	private List<ObjectListDataEntry> buildList() throws IOException {
@@ -116,9 +140,13 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 	// SAVE and RESTOR of Datas
 	@Override
 	public Object saveState(FacesContext arg0) {
-		Object[] state = new Object[2];
+		Object[] state = new Object[6];
 		state[0] = super.saveState(arg0);
 		state[1] = StateHolderUtil.saveMethodBinding(getFacesContext(), m_BuildValues);
+		state[2] = m_SortAttribute;
+		state[3] = m_Ascending;
+		state[4] = m_CurrentAscending;
+		state[5] = m_CurrentSortAttribute;
 		return state;
 	}
 
@@ -127,20 +155,36 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 		Object[] values = (Object[]) state;
 		super.restoreState(arg0, values[0]);
 		m_BuildValues = StateHolderUtil.restoreMethodBinding(getFacesContext(), getComponent(), values[1]);
+		m_SortAttribute = (String) values[2];
+		m_Ascending = (Boolean) values[3];
+		m_CurrentAscending = (Boolean) values[4];
+		m_CurrentSortAttribute = (String) values[5];
 	}
 
 	@Override
 	public void refresh() {
-		// instead of delegate to superclass, copy template in
-		// com.ibm.xsp.extlib.model.DataAccessorSource.refresh()
-		// to do a reduced refresh, that clears
-		// the current value but doesn't re-load.
 		FacesContext context = getFacesContext();
 		if (context == null)
 			return;
 
 		// clear the current value
 		putDataContainer(context, null);
+	}
+
+	public String getSortAttribute() {
+		return m_SortAttribute;
+	}
+
+	public void setSortAttribute(String sortAttribute) {
+		m_SortAttribute = sortAttribute;
+	}
+
+	public boolean getAscending() {
+		return m_Ascending;
+	}
+
+	public void setAscending(boolean ascending) {
+		m_Ascending = ascending;
 	}
 
 }

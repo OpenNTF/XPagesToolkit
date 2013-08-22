@@ -26,6 +26,11 @@ public class ObjectEntryComperator implements Comparator<ObjectListDataEntry> {
 		if (val2 == null) {
 			return 1 * (m_Ascending ? 1 : -1);
 		}
+		if (val1 instanceof String && val2 instanceof String) {
+			String sVal1 = (String)val1;
+			String sVal2 = (String)val2;
+			return sVal1.toLowerCase().compareTo(sVal2.toLowerCase());
+		}
 		if (val1 instanceof Comparable<?> && val2 instanceof Comparable<?>) {
 			@SuppressWarnings("unchecked")
 			Comparable<Object> valO1 = (Comparable<Object>) val1;

@@ -18,6 +18,8 @@ package org.openntf.xpt.objectlist.datasource;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 
+import org.openntf.xpt.core.utils.ServiceSupport;
+
 import com.ibm.xsp.model.ViewRowData;
 
 public class ObjectListDataEntry implements ViewRowData, Serializable {
@@ -57,14 +59,12 @@ public class ObjectListDataEntry implements ViewRowData, Serializable {
 	}
 
 	@Override
-	public Object getValue(String arg0) {
-		String strGetter = "get" + arg0.substring(0, 1).toUpperCase()
-				+ arg0.substring(1);
+	public Object getValue(String field) {
+		String strGetter = ServiceSupport.makeGetter(field);
 		try {
 			Method mt = m_BO.getClass().getMethod(strGetter);
 			return mt.invoke(m_BO);
 		} catch (Exception e) {
-			// TODO: handle exception
 		}
 		return null;
 	}

@@ -25,6 +25,7 @@ import javax.faces.context.FacesContext;
 import org.openntf.xpt.core.Activator;
 
 import com.ibm.commons.util.StringUtil;
+import com.ibm.xsp.extlib.util.ExtLibUtil;
 import com.ibm.xsp.model.AbstractDataSource;
 
 public class XPTLibUtils {
@@ -80,32 +81,17 @@ public class XPTLibUtils {
 		}
 	}
 
-	public AbstractDataSource getDatasource(String dsName) {
+	public static AbstractDataSource getDatasource(String compName, String dsName) {
 		UIComponent uiTop = FacesContext.getCurrentInstance().getViewRoot();
-		AbstractDataSource as = getDatasourceFromUIComp(uiTop, dsName);
-		if (as != null) {
-			return as;
+		UIComponent uiFound = ExtLibUtil.getComponentFor(uiTop, compName);
+		if (uiFound == null) {
+			return null;
 		}
-		findDSFromCompAndChildern(uiTop, dsName);
-
-		return null;
+		return getDatasourceFromUIComp(uiFound, dsName);
 	}
 
-	private AbstractDataSource findDSFromCompAndChildern(UIComponent uic, String dsName) {
-		if (uic.getChildCount() > 0) {
-			for (Object uicOChild : uic.getChildren()) {
-				UIComponent uicChild = (UIComponent) uicOChild;
-				AbstractDataSource as = getDatasourceFromUIComp(uicChild, dsName);
-				if (as != null) {
-					return as;
-				}
-				findDSFromCompAndChildern(uicChild, dsName);
-			}
-		}
-		return null;
-	}
 
-	private AbstractDataSource getDatasourceFromUIComp(UIComponent uic, String dsName) {
+	private static AbstractDataSource getDatasourceFromUIComp(UIComponent uic, String dsName) {
 		List<?> lstDS = (List<?>) uic.getAttributes().get("data");
 		if (lstDS == null) {
 			return null;

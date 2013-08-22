@@ -29,10 +29,17 @@ import org.openntf.xpt.core.json.annotations.JSONObject;
 
 public class ServiceSupport {
 
+	public static String buildCleanFieldNameCC(DominoStore dsCurrent, String strFieldName) {
+		return makeCamelCase(buildCleanFieldName(dsCurrent, strFieldName));
+	}
+
 	public static String buildCleanFieldName(DominoStore dsCurrent, String strFieldName) {
 		return internalBuildCleanFieldName(dsCurrent.JavaFieldPrefix(), dsCurrent.JavaFieldPostFix(), strFieldName);
 	}
 
+	public static String buildCleanFieldNameCC(JSONObject jsCurrent, String strFieldName) {
+		return makeCamelCase(buildCleanFieldName(jsCurrent, strFieldName));
+	}
 	public static String buildCleanFieldName(JSONObject jsCurrent, String strFieldName) {
 		return internalBuildCleanFieldName(jsCurrent.JavaFieldPrefix(), jsCurrent.JavaFieldPostFix(), strFieldName);
 	}
@@ -48,6 +55,41 @@ public class ServiceSupport {
 		return fldNameClean;
 	}
 
+	
+	public static String makeGetter(String strFieldClean) {
+		return "get"+ makeCamelCase(strFieldClean);
+	}
+	
+	public static String makeSetter(String strFieldClean) {
+		return "get"+ makeCamelCase(strFieldClean);		
+	}
+	
+	public static String makeGetter(DominoStore dsCurrent, String strField ) {
+		String strFieldClean = buildCleanFieldName(dsCurrent, strField);
+		return makeGetter(strFieldClean);
+	}
+
+	public static String makeGetter(JSONObject dsCurrent, String strField ) {
+		String strFieldClean = buildCleanFieldName(dsCurrent, strField);
+		return makeGetter(strFieldClean);
+	}
+
+	public static String makeSetter(DominoStore dsCurrent, String strField ) {
+		String strFieldClean = buildCleanFieldName(dsCurrent, strField);
+		return makeSetter(strFieldClean);
+	}
+
+	public static String makeSetter(JSONObject dsCurrent, String strField ) {
+		String strFieldClean = buildCleanFieldName(dsCurrent, strField);
+		return makeSetter(strFieldClean);
+	}
+
+	
+	public static String makeCamelCase(String strCurrent) {
+		return strCurrent.substring(0, 1).toUpperCase()
+				+ strCurrent.substring(1);
+	}
+	
 	public static Collection<Field> getClassFields(final Class<?> currentClass) {
 		Collection<Field> lstFields = AccessController.doPrivileged(new PrivilegedAction<Collection<Field>>() {
 
@@ -75,5 +117,7 @@ public class ServiceSupport {
 		}
 		return setFields;
 	}
+	
+	
 
 }

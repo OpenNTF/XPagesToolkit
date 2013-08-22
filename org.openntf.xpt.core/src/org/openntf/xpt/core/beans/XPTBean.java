@@ -19,6 +19,8 @@ import javax.faces.context.FacesContext;
 
 import org.openntf.xpt.core.utils.XPTLibUtils;
 
+import com.ibm.xsp.model.AbstractDataSource;
+
 public class XPTBean {
 
 	public static final String BEAN_NAME = "xptBean"; //$NON-NLS-1$
@@ -34,5 +36,9 @@ public class XPTBean {
 
 	public String getXptVersion() {
 		return XPTLibUtils.getXptLibVersion();
+	}
+
+	public AbstractDataSource findDataSource(String strCompID, String strDSId) {
+		return XPTLibUtils.getDatasource(strCompID, strDSId);
 	}
 }
