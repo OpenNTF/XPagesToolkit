@@ -38,6 +38,8 @@ public class UIAboutPage extends UIComponentBase {
 
 	private String m_Title;
 	private String m_MarketingClaim;
+	private String m_ApplicationLogo;
+
 	private String m_Text;
 	private String m_Style;
 	private String m_StyleClass;
@@ -87,6 +89,14 @@ public class UIAboutPage extends UIComponentBase {
 
 	public void setTitle(String title) {
 		m_Title = title;
+	}
+
+	public String getApplicationLogo() {
+		return ValueBindingSupport.getValue(m_ApplicationLogo, "applicationLogo", this, null, getFacesContext());
+	}
+
+	public void setApplicationLogo(String applicationLogo) {
+		m_ApplicationLogo = applicationLogo;
 	}
 
 	public String getMarketingClaim() {

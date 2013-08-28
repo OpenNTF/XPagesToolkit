@@ -17,12 +17,17 @@ package org.openntf.xpt.oneui.component;
 
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.FacesContext;
+import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
+
+import com.ibm.xsp.binding.MethodBindingEx;
+import com.ibm.xsp.util.FacesUtil;
+import com.ibm.xsp.util.StateHolderUtil;
 
 public class UIWelcomebox extends UIComponentBase {
 
 	public static final String FACET_WELCOMETEXT = "welcomeText";//$NON-NLS-1$
-	
+
 	public static final String COMPONENT_TYPE = "org.openntf.xpt.oneui.component.uiwelcomebox"; //$NON-NLS-1$
 	public static final String COMPONENT_FAMILY = "javax.faces.Panel"; //$NON-NLS-1$
 	public static final String RENDERER_TYPE = "org.openntf.xpt.oneui.component.uiwelcomebox"; //$NON-NLS-1$
@@ -33,6 +38,8 @@ public class UIWelcomebox extends UIComponentBase {
 	private String m_ShowBoxTitle;
 	private String m_Style;
 	private String m_StyleClass;
+
+	private MethodBinding m_OnStateChange;
 
 	public UIWelcomebox() {
 		setRendererType(RENDERER_TYPE);
@@ -144,6 +151,14 @@ public class UIWelcomebox extends UIComponentBase {
 		m_StyleClass = styleClass;
 	}
 
+	public MethodBinding getOnStateChange() {
+		return m_OnStateChange;
+	}
+
+	public void setOnStateChange(MethodBinding onStateChange) {
+		m_OnStateChange = onStateChange;
+	}
+
 	public void restoreState(FacesContext context, Object state) {
 		Object[] values = (Object[]) state;
 		super.restoreState(context, values[0]);
@@ -153,11 +168,12 @@ public class UIWelcomebox extends UIComponentBase {
 		m_ShowBoxTitle = (String) values[4];
 		m_Style = (String) values[5];
 		m_StyleClass = (String) values[6];
+		m_OnStateChange = StateHolderUtil.restoreMethodBinding(context, this, values[7]);
 	}
 
 	@Override
 	public Object saveState(FacesContext context) {
-		Object[] values = new Object[7];
+		Object[] values = new Object[8];
 		values[0] = super.saveState(context);
 		values[1] = m_Title;
 		values[2] = m_Closeable;
@@ -165,7 +181,25 @@ public class UIWelcomebox extends UIComponentBase {
 		values[4] = m_ShowBoxTitle;
 		values[5] = m_Style;
 		values[6] = m_StyleClass;
+		values[7] = StateHolderUtil.saveMethodBinding(context, m_OnStateChange);
 		return values;
 	}
 
+	public boolean processOnStateChange(FacesContext context, boolean blOpen) {
+		if (m_OnStateChange != null) {
+			Object[] params = null;
+			if (m_OnStateChange instanceof MethodBindingEx) {
+				params = new Object[] { blOpen };
+				((MethodBindingEx) m_OnStateChange).setComponent(this);
+				((MethodBindingEx) m_OnStateChange).setParamNames(s_processOnStateChangeParam);
+			}
+			if (FacesUtil.isCancelled(m_OnStateChange.invoke(context, params))) {
+				return false;
+			}
+			return true;
+		}
+		return true;
+	}
+
+	private static final String[] s_processOnStateChangeParam = { "isClosed" }; // $NON-NLS-1$
 }

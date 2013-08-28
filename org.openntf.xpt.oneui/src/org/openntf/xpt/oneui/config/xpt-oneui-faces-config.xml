@@ -26,6 +26,11 @@
       		<renderer-class>org.openntf.xpt.oneui.renderkit.html_extended.WelcomeBoxRenderer</renderer-class>
     	</renderer>
 		 <renderer>
+     	 	<component-family>javax.faces.Panel</component-family>
+      		<renderer-type>org.openntf.xpt.oneui.component.uiaboutpage</renderer-type>
+      		<renderer-class>org.openntf.xpt.oneui.renderkit.html_extended.AboutPageRenderer</renderer-class>
+    	</renderer>
+		 <renderer>
      	 	<component-family>org.openntf.xpt.oneui.component.uitips</component-family>
       		<renderer-type>org.openntf.xpt.oneui.component.uitips</renderer-type>
       		<renderer-class>org.openntf.xpt.oneui.renderkit.html_extended.TipsBoxRenderer</renderer-class>

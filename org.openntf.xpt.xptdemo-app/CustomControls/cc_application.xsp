@@ -56,6 +56,9 @@
 					<xe:pageTreeNode label="OneUI"
 						page="/oneui_tips.xsp" selection="/oneui/.*">
 					</xe:pageTreeNode>
+					<xe:pageTreeNode label="DSS / JSON"
+						page="/dss_contact.xsp" selection="/dss/.*">
+					</xe:pageTreeNode>
 				</xe:this.titleBarTabs>
 				<xe:this.bannerApplicationLinks>
 					<xe:basicLeafNode label="OpenNTF"

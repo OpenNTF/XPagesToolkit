@@ -26,6 +26,7 @@ public class UIAboutBlock extends ValueBindingObjectImpl {
 	private String m_Title;
 	private String m_Text;
 	private String m_Link;
+	private String m_LinkTitle;
 	private String m_Style;
 	private String m_StyleClass;
 	private String m_StyleTitle;
@@ -58,6 +59,14 @@ public class UIAboutBlock extends ValueBindingObjectImpl {
 
 	public void setLink(String link) {
 		m_Link = link;
+	}
+
+	public String getLinkTitle() {
+		return ValueBindingSupport.getValue(m_LinkTitle, "linkTitle", this, null, getFacesContext());
+	}
+
+	public void setLinkTitle(String linkTitle) {
+		m_LinkTitle = linkTitle;
 	}
 
 	public String getStyle() {

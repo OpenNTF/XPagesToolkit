@@ -3,7 +3,8 @@
 
 	<xc:cc_application pageTitle="Welcome to the XPages Toolkit" navigationPath="/agents/home">
 		<xp:this.facets>
-			<xc:cc_nav_agents xp:key="facetLeft"></xc:cc_nav_agents>
+			<xc:cc_nav_home xp:key="facetLeft"></xc:cc_nav_home>
+			
 			<xp:panel xp:key="facetMiddle">
 				<xp:panel>
 					<xp:image url="/XPT_rgb.png" id="image2"></xp:image>

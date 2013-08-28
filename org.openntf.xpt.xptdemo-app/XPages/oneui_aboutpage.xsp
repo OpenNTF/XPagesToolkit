@@ -9,13 +9,17 @@
 			<xc:cc_nav_oneui xp:key="facetLeft"></xc:cc_nav_oneui>
 			<xpt:oneuiaboutpage id="oneuiaboutpage1"
 				xp:key="facetMiddle" title="The XPages ToolKit"
-				marketingClaim="Needed, useful, powerful!">
+				marketingClaim="Needed, useful, powerful!"
+				text="The XPages Toolkit delivers power to developers"
+				applicationLogo="/XPT_rgb.png">
 				<xpt:this.leftColumnBlocks>
 					<xpt:oneuiAboutBlock text="Das ist ein cooler TEST"
-						title="RSS Features">
+						title="RSS Features" link="http://www.webgate.biz"
+						linkTitle="WebGate Consulting AG - read more">
 					</xpt:oneuiAboutBlock>
 				</xpt:this.leftColumnBlocks>
-			</xpt:oneuiaboutpage></xp:this.facets>
+			</xpt:oneuiaboutpage>
+		</xp:this.facets>
 
 	</xc:cc_application>
 </xp:view>

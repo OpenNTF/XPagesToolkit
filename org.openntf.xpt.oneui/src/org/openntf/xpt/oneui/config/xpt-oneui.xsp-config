@@ -60,6 +60,11 @@
       		<property-name>title</property-name>
       		<property-class>string</property-class>
       		<display-name>Title of the Box</display-name>
+			<property-extension>
+				<designer-extension>
+          			<category>basic</category>
+        		</designer-extension>
+			</property-extension>
     	</property>
     	<property>
       		<property-name>closeable</property-name>
@@ -68,6 +73,7 @@
         		<designer-extension>
           			<editor/>
           			<default-value>false</default-value>
+          			<category>basic</category>
         		</designer-extension>
       		</property-extension>
       		<display-name>Closeable</display-name>
@@ -76,11 +82,34 @@
       		<property-name>closed</property-name>
       		<property-class>boolean</property-class>
       		<display-name>Closed</display-name>
+			<property-extension>
+				<designer-extension>
+          			<category>basic</category>
+        		</designer-extension>
+			</property-extension>
     	</property>
     	<property>
       		<property-name>showBoxTitle</property-name>
       		<property-class>string</property-class>
+			<property-extension>
+				<designer-extension>
+          			<category>basic</category>
+        		</designer-extension>
+			</property-extension>
     	</property>
+    	<property>
+			<description>Triggered when the box is closed or opened</description>
+			<display-name>onStateChange</display-name>
+			<property-name>onStateChange</property-name>
+			<property-class>javax.faces.el.MethodBinding</property-class>
+			<property-extension>
+				<method-binding-property>true</method-binding-property>
+				<designer-extension>
+          			<category>events</category>
+          			<subcategory>box-event</subcategory>
+        		</designer-extension>
+			</property-extension>
+		</property>
 
     	<component-extension>
       		<component-family>javax.faces.Panel</component-family>
@@ -112,6 +141,21 @@
 
 	    <group-type-ref>com.ibm.xsp.group.core.prop.style</group-type-ref>
    	 	<group-type-ref>com.ibm.xsp.group.core.prop.styleClass</group-type-ref>
+   	 	
+   	 	<property>
+      		<description>Logo of the Application for the About Block</description>
+      		<display-name>Application Logo</display-name>
+      		<property-name>applicationLogo</property-name>
+      		<property-class>java.lang.String</property-class>
+      		<property-extension>
+        		<designer-extension>
+          			<editor>com.ibm.workplace.designer.property.editors.ImagePicker</editor>
+          			<tags>
+                    	 todo
+                	</tags>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
 
 	    <property>
     	  	<description>Title / Applicationname</description>
@@ -218,6 +262,13 @@
     		<description>The link of the block</description>
 	 	 	<display-name>link</display-name>
 		    <property-name>link</property-name>
+    		<property-class>java.lang.String</property-class>
+  		</property>
+
+  		<property>
+    		<description>The Title for the Link</description>
+	 	 	<display-name>linkTitle</display-name>
+		    <property-name>linkTitle</property-name>
     		<property-class>java.lang.String</property-class>
   		</property>
   		

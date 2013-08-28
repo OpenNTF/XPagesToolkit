@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+
+	<xc:cc_application navigationPath="/oneui/aboutpage"
+		pageTitle="About an Application">
+		<xp:this.facets>
+			<xpt:oneuiwelcome closeable="true" id="oneuiwelcome1"
+				xp:key="facetMiddle" title="Hi Ho Welcome Page">
+				<xp:this.facets>
+					<xp:panel xp:key="welcomeText">
+						This is my Clever content
+					</xp:panel>
+				</xp:this.facets>
+			</xpt:oneuiwelcome>
+			<xc:cc_nav_oneui xp:key="facetLeft"></xc:cc_nav_oneui>
+			</xp:this.facets>
+
+	</xc:cc_application>
+</xp:view>

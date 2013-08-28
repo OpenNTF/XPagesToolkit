@@ -16,18 +16,25 @@
 package org.openntf.xpt.oneui.renderkit.html_extended;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 import org.openntf.xpt.oneui.component.UIWelcomebox;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.renderkit.FacesRenderer;
 import com.ibm.xsp.util.FacesUtil;
+import com.ibm.xsp.util.JavaScriptUtil;
 
 public class WelcomeBoxRenderer extends FacesRenderer {
+
+	private static final String CLOSEACTION_CLOSE = "_closeaction_close";
+	private static final String CLOSEACTION_OPEN = "_closeaction_open";
+	private String BLANK_GIF = "/oneuiv2.1/images/blank.gif";
 
 	@Override
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
@@ -44,7 +51,11 @@ public class WelcomeBoxRenderer extends FacesRenderer {
 		String strStyleClass = uiwc.getStyleClass();
 		String strID = uiwc.getClientId(context);
 		if (StringUtil.isEmpty(strStyleClass)) {
-			strStyleClass = "lotusWelcomeBox";
+			if (uiwc.isCloseable() && uiwc.isClosed()) {
+				strStyleClass = "lotusRight";
+			} else {
+				strStyleClass = "lotusWelcomeBox";
+			}
 		}
 		w.startElement("div", uiwc);
 		if (!StringUtil.isEmpty(strStyle)) {
@@ -68,8 +79,14 @@ public class WelcomeBoxRenderer extends FacesRenderer {
 	}
 
 	private void writeWelcomeBoxClosed(FacesContext context, ResponseWriter w, UIWelcomebox uiwc, String strID) throws IOException {
-		// TODO Auto-generated method stub
-
+		String strWCTitle = StringUtil.isEmpty(uiwc.getShowBoxTitle()) ? "show welcomeinfo" : uiwc.getShowBoxTitle();
+		w.startElement("a", null);
+		w.writeURIAttribute("href", "javascript:;", null);
+		w.writeAttribute("id", strID + CLOSEACTION_OPEN, null);
+		w.writeAttribute("class", "lotusAction", null);
+		w.writeText(strWCTitle, null);
+		w.endElement("a");
+		setupSubmitOnClick(context, w, uiwc, strID, strID + CLOSEACTION_OPEN);
 	}
 
 	private void writeWelcomeBox(FacesContext context, ResponseWriter w, UIWelcomebox uiwc, boolean b, String strID) throws IOException {
@@ -85,6 +102,23 @@ public class WelcomeBoxRenderer extends FacesRenderer {
 			FacesUtil.renderChildren(context, content);
 			w.endElement("p");
 		}
+		if (uiwc.isCloseable()) {
+			w.startElement("a", null);
+			w.writeURIAttribute("href", "javascript:;", null);
+			w.writeAttribute("id", strID + CLOSEACTION_CLOSE, null);
+			w.writeAttribute("class", "lotusBtnImg lotusClose", null);
+			w.startElement("img", null);
+			w.writeURIAttribute("src", BLANK_GIF, null);
+			w.writeAttribute("aria-label", "close button", null);
+			w.writeAttribute("alt", "", null);
+			w.endElement("img");
+			w.startElement("span", null);
+			w.writeAttribute("class", "lotusAltText", null);
+			w.writeText("X", null);
+			w.endElement("span");
+			w.endElement("a");
+			setupSubmitOnClick(context, w, uiwc, strID, strID + CLOSEACTION_CLOSE);
+		}
 	}
 
 	@Override
@@ -98,5 +132,44 @@ public class WelcomeBoxRenderer extends FacesRenderer {
 	@Override
 	public boolean getRendersChildren() {
 		return true;
+	}
+
+	protected void setupSubmitOnClick(FacesContext context, ResponseWriter w, UIWelcomebox uiw, String welcomeBoxID, String sourceId) throws IOException {
+		String execId = null;
+		String refreshId = welcomeBoxID;
+		final String event = "onclick"; // $NON-NLS-1$
+		StringBuilder buff = new StringBuilder();
+		JavaScriptUtil.appendAttachPartialRefreshEvent(buff, sourceId, sourceId, execId, event,
+		/* clientSideScriptName */null,
+		/* immediate */JavaScriptUtil.VALIDATION_NONE,
+		/* refreshId */refreshId,
+		/* onstart getOnStart(pager) */"",
+		/* oncomplete getOnComplete(pager) */"",
+		/* onerror getOnError(pager) */"");
+		String script = buff.toString();
+
+		// Add the script block we just generated.
+		JavaScriptUtil.addScriptOnLoad(script);
+	}
+
+	@Override
+	public void decode(FacesContext context, UIComponent component) {
+		Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
+		if (component instanceof UIWelcomebox) {
+			UIWelcomebox uiwc = (UIWelcomebox) component;
+			String currentClientId = component.getClientId(context);
+			String hiddenValue = FacesUtil.getHiddenFieldValue(context);
+			logCurrent.info("currentClientID = " + currentClientId);
+			logCurrent.info("hiddenValue =" + hiddenValue);
+			if (StringUtil.isNotEmpty(hiddenValue) && hiddenValue.startsWith(currentClientId + CLOSEACTION_OPEN)) {
+				uiwc.setClosed(false);
+				uiwc.processOnStateChange(context, false);
+			}
+			if (StringUtil.isNotEmpty(hiddenValue) && hiddenValue.startsWith(currentClientId + CLOSEACTION_CLOSE)) {
+				uiwc.setClosed(true);
+				uiwc.processOnStateChange(context, true);
+			}
+		}
+		super.decode(context, component);
 	}
 }

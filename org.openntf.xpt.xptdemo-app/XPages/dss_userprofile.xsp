@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom">
+
+	
+	<xc:cc_application navigationPath="/dss/userprofile"
+		pageTitle="DSS UserProfile">
+		<xp:this.facets>
+			<xp:panel xp:key="facetRight"></xp:panel>
+			<xp:panel xp:key="facetLeft">
+				<xc:cc_nav_dss></xc:cc_nav_dss></xp:panel>
+			<xp:panel xp:key="facetMiddle">
+				<xp:button value="create myUser" id="button1">
+					<xp:eventHandler event="onclick" submit="true"
+						refreshMode="complete">
+						<xp:this.action><![CDATA[#{javascript:var myUser =userProfileBean.createMyUser();
+userProfileBean.saveUser(myUser);}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+			</xp:panel>
+		</xp:this.facets>
+	</xc:cc_application></xp:view>

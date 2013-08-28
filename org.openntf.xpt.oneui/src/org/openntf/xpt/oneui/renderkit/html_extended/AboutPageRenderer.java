@@ -27,53 +27,77 @@ import org.openntf.xpt.oneui.component.UIAboutPage;
 import org.openntf.xpt.oneui.component.UIWelcomebox;
 
 import com.ibm.commons.util.StringUtil;
+import com.ibm.xsp.component.UIScriptCollector;
 import com.ibm.xsp.renderkit.FacesRenderer;
+import com.ibm.xsp.renderkit.html_basic.HtmlRendererUtil;
 import com.ibm.xsp.util.FacesUtil;
 
 public class AboutPageRenderer extends FacesRenderer {
 
 	@Override
+	public void decode(FacesContext context, UIComponent component) {
+		System.out.println("DECODE");
+	}
+
+	@Override
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
+		System.out.println("ENCODE");
 		UIAboutPage uip = (UIAboutPage) component;
 		if (!uip.isRendered()) {
 			return;
 		}
-		ResponseWriter writer =context.getResponseWriter();
+		String strBodyChange = "document.getElementsByTagName(\"body\")[0].className += \" lotusAbout\"";
+		UIScriptCollector sc = UIScriptCollector.find();
+		sc.addScriptOnLoad(strBodyChange);
+
+		ResponseWriter writer = context.getResponseWriter();
 		writeAboutBox(context, writer, uip);
 		if (uip.getLeftColumnBlocks() != null && uip.getLeftColumnBlocks().size() > 0) {
-			writeColumnBlocks(context,writer,uip.getLeftColumnBlocks(), true);
+			writeColumnBlocks(context, writer, uip.getLeftColumnBlocks(), true);
 		}
 		if (uip.getRightColumnBlocks() != null && uip.getRightColumnBlocks().size() > 0) {
-			writeColumnBlocks(context,writer,uip.getRightColumnBlocks(), false);
+			writeColumnBlocks(context, writer, uip.getRightColumnBlocks(), false);
 		}
 	}
-	
-	private void writeColumnBlocks(FacesContext context, ResponseWriter writer, List<UIAboutBlock> columnBlocks,boolean isLeft) throws IOException {
-		String strClass = isLeft? "lotusContentColOne": "lotusContentColTwo";
-		
+
+	private void writeColumnBlocks(FacesContext context, ResponseWriter writer, List<UIAboutBlock> columnBlocks, boolean isLeft) throws IOException {
+		String strClass = isLeft ? "lotusContentColOne" : "lotusContentColTwo";
+
 		writer.startElement("div", null);
-		writer.writeAttribute("class",strClass, null);
-		
-		for(UIAboutBlock block : columnBlocks) {
+		writer.writeAttribute("class", strClass, null);
+
+		for (UIAboutBlock block : columnBlocks) {
 			writer.startElement("h2", null);
 			writer.writeText(block.getTitle(), null);
 			writer.endElement("h2");
 			writer.startElement("p", null);
 			writer.writeText(block.getText(), null);
 			writer.endElement("p");
-			//TODO: Link muss noch korrekt erfasst werden / braucht auch noch den LINK Title
-
+			if (!StringUtil.isEmpty(block.getLink())) {
+				writer.startElement("p", null);
+				writer.startElement("a", null);
+				writer.writeAttribute("class", "lotusAction", null);
+				writer.writeURIAttribute("href", block.getLink(), null);
+				if (!StringUtil.isEmpty(block.getLinkTitle())) {
+					writer.writeText(block.getLinkTitle(), null);
+				} else {
+					writer.writeText(block.getLink(), null);
+				}
+				writer.endElement("a");
+				writer.endElement("p");
+			}
 		}
 		writer.endElement("div");
 	}
 
-	private void writeAboutBox(FacesContext context, ResponseWriter writer, UIAboutPage uip) throws IOException{
+	private void writeAboutBox(FacesContext context, ResponseWriter writer, UIAboutPage uip) throws IOException {
 		String strID = uip.getClientId(context);
 		String strStyleClass = uip.getStyleClass();
 		String strStyle = uip.getStyle();
 		String strTitle = uip.getTitle();
 		String strMarketingClaim = uip.getMarketingClaim();
 		String strText = uip.getText();
+		String strApplicationLog = uip.getApplicationLogo();
 		if (StringUtil.isEmpty(strStyleClass)) {
 			strStyleClass = "lotusAboutBox";
 		}
@@ -83,17 +107,27 @@ public class AboutPageRenderer extends FacesRenderer {
 		if (!StringUtil.isEmpty(strStyle)) {
 			writer.writeAttribute("style", strStyle, null);
 		}
-		
+		writeApplicationLogo(context, writer, uip, strApplicationLog);
 		writeAboutText(context, writer, uip, strTitle, strMarketingClaim, strText);
-		
+
 		writer.endElement("div");
+	}
+
+	private void writeApplicationLogo(FacesContext context, ResponseWriter writer, UIAboutPage uip, String strApplicationLog) throws IOException {
+		if (StringUtil.isNotEmpty(strApplicationLog)) {
+			String imgSrc = HtmlRendererUtil.getImageURL(context, strApplicationLog);
+			writer.startElement("img", uip); // $NON-NLS-1$
+			writer.writeURIAttribute("src", imgSrc, null); // $NON-NLS-1$
+			writer.writeAttribute("alt", "ApplicationLogo", null); // $NON-NLS-1$
+			writer.endElement("img"); // $NON-NLS-1$
+		}
 	}
 
 	private void writeAboutText(FacesContext context, ResponseWriter writer, UIAboutPage uip, String strTitle, String strMarketingClaim, String strText)
 			throws IOException {
 		writer.startElement("div", null);
 		writer.writeAttribute("class", "lotusAboutText", null);
-		
+
 		if (!StringUtil.isEmpty(strTitle)) {
 			writer.startElement("h1", null);
 			writer.writeText(strTitle, null);
@@ -104,7 +138,7 @@ public class AboutPageRenderer extends FacesRenderer {
 			writer.writeText(strMarketingClaim, null);
 			writer.endElement("h3");
 		}
-		
+
 		if (!StringUtil.isEmpty(strText)) {
 			writer.startElement("p", null);
 			writer.writeText(strText, null);
@@ -117,14 +151,13 @@ public class AboutPageRenderer extends FacesRenderer {
 			writer.endElement("p");
 		}
 
-		
 		writer.endElement("div");
 	}
 
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
 	}
-	
+
 	@Override
 	public boolean getRendersChildren() {
 		return true;

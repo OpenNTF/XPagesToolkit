@@ -38,17 +38,13 @@ public class AgentListRenderer extends Renderer {
 
 	@Override
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
-		System.out.println("AgentListRenderer started....");
 		if (component instanceof UIAgentList) {
 			UIAgentList agl = (UIAgentList) component;
 			if (!agl.isRendered()) {
 				return;
 			}
-			System.out.println("Starting rendering");
 			ResponseWriter rw = context.getResponseWriter();
 			writeMainElement(context, rw, agl);
-			System.out.println("Ended");
-
 		}
 	}
 
