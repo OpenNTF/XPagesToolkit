@@ -1,5 +1,6 @@
 package org.openntf.xpt.demo.api;
 
+import org.openntf.xpt.core.dss.DominoStorageService;
 import org.openntf.xpt.demo.UserProfile;
 import org.openntf.xpt.demo.UserStorageService;
 
@@ -7,10 +8,11 @@ import com.ibm.xsp.extlib.util.ExtLibUtil;
 
 public class UserSessionFacade {
 
-	public UserProfile createMyUser() {
+	public UserProfile getMyUser() {
 		UserProfile uRC = new UserProfile();
 		try {
-			uRC.setUserName(ExtLibUtil.getCurrentSession().getEffectiveUserName());
+			DominoStorageService.getInstance().getObject(uRC, ExtLibUtil.getCurrentSession().getEffectiveUserName(),
+					ExtLibUtil.getCurrentSession().getCurrentDatabase());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

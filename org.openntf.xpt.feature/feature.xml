@@ -234,8 +234,9 @@ It contains:
       <import plugin="com.ibm.xsp.extsn"/>
       <import plugin="com.ibm.domino.xsp.adapter"/>
       <import plugin="com.ibm.notes.java.api"/>
-      <import plugin="com.ibm.domino.napi" version="9.0.0" match="greaterOrEqual"/>
+      <import plugin="com.ibm.domino.napi" match="greaterOrEqual"/>
       <import plugin="com.ibm.commons"/>
+      <import plugin="com.ibm.xsp.extlib"/>
    </requires>
 
    <plugin

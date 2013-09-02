@@ -3,17 +3,71 @@
 	xmlns:xc="http://www.ibm.com/xsp/custom"
 	xmlns:xpt="http://www.openntf.org/xsp/xpt">
 
+	
+	
+	
+	<xp:this.afterPageLoad><![CDATA[#{javascript:if (sessionScope.wcbSes == null) {
+	print ("SET Session Scope");
+	sessionScope.wcbSes = "OPEN";
+}
+print("wcbSess is ->" +sessionScope.wcbSes)}]]></xp:this.afterPageLoad>
 	<xc:cc_application navigationPath="/oneui/aboutpage"
 		pageTitle="About an Application">
 		<xp:this.facets>
-			<xpt:oneuiwelcome closeable="true" id="oneuiwelcome1"
-				xp:key="facetMiddle" title="Hi Ho Welcome Page">
-				<xp:this.facets>
-					<xp:panel xp:key="welcomeText">
-						This is my Clever content
-					</xp:panel>
-				</xp:this.facets>
-			</xpt:oneuiwelcome>
+			<xp:panel xp:key="facetMiddle">
+				<xpt:oneuiwelcome closeable="false" id="oneuiwelcome1"
+					title="The oneUI WelcomeBox">
+					<xp:this.facets>
+						<xp:panel xp:key="welcomeText">
+							The welcomebox can be closable or not. This example is not closable
+						</xp:panel>
+					</xp:this.facets>
+				</xpt:oneuiwelcome>
+				<xp:br></xp:br>
+				<xpt:oneuiwelcome closeable="true" id="oneuiwelcome2"
+					title="Closable WelcomeBox - but ...."
+					showBoxTitle="open the welcomebox"><xp:this.facets>
+	<xp:panel xp:key="welcomeText">This welcomebox is closable, but it does not saves the state of the box.<xp:br></xp:br>If you leave the page, the box and rereturn, the box has its programatical state.</xp:panel></xp:this.facets>
+				</xpt:oneuiwelcome>
+				<xp:br></xp:br>
+				<xpt:oneuiwelcome closeable="true" id="oneuiwelcome3"
+					title="Closable WelcomeBox - with sessionScope - binding"
+					showBoxTitle="open this box"><xp:this.facets>
+	<xp:panel xp:key="welcomeText">This welcomebox is closable and saves its state in the sessionScope Variable wcbSes. The Welcomebox will during the session of the user alway get the state from the session.<xp:br></xp:br>onStateChange is executed on any close/open click and isClosed is filled with a boolean attribute. In the onStateChange is in this example the following Code:<xp:br></xp:br>
+		<xp:br></xp:br>print (&quot;Calling onStateChange&quot;);<xp:br></xp:br>
+print (&quot;wcbSes has the following state: &quot;+ sessionScope.wcbSes);
+<xp:br></xp:br>print (&quot;isClosed has the following value -&gt;&quot; + isClosed);
+<xp:br></xp:br>sessionScope.wcbSes = isClosed?&quot;CLOSED&quot;:&quot;OPEN&quot;;
+<xp:br></xp:br>print (&quot;wcbSes is after onStateChange -&gt; &quot;+ sessionScope.wcbSes);</xp:panel></xp:this.facets>
+					<xpt:this.closed><![CDATA[#{javascript:print("WCB.close -> wcbSess is ->" +sessionScope.wcbSes)
+return (sessionScope.wcbSes == "CLOSED");}]]></xpt:this.closed>
+					<xpt:this.onStateChange><![CDATA[#{javascript:print ("Calling onStateChange");
+print ("wcbSes has the following state: "+ sessionScope.wcbSes);
+print ("isClosed has the following value ->" + isClosed);
+sessionScope.wcbSes = isClosed?"CLOSED":"OPEN";
+print ("wcbSes is after onStateChange -> "+ sessionScope.wcbSes);}]]></xpt:this.onStateChange>
+				</xpt:oneuiwelcome>
+				<xp:br></xp:br>
+				<xpt:oneuiwelcome id="oneuiwelcome4"
+					title="Closable WelcomeBox - with UserProfile (DataObject) binding"
+					showBoxTitle="open the userbinded welcome box" closeable="true"
+					closed="#{javascript:userProfileBean.getMyUser().isShowWelcomeBox();}"><xp:this.facets>
+	<xp:panel xp:key="welcomeText">This welcomebox is closable and saves its state in a userProfile Business Object.&#160;
+		<xp:link escape="true" text="See DSS for more information" id="link1" target="_self"
+			value="/dss_userprofile.xsp">
+		</xp:link>
+		. The Welcomebox will get its state from the
+		object and the object saves the state in a document. So the
+		state is saved over sessions.
+		<xp:br></xp:br>onStateChange is executed on any close/open click and isClosed is filled with a boolean attribute. In the onStateChange is in this example the following Code:<xp:br></xp:br>
+		<xp:br></xp:br>var user =userProfileBean.getMyUser();
+<xp:br></xp:br>user.setShowWelcomeBox(isClosed);
+<xp:br></xp:br>userProfileBean.saveUser( user );</xp:panel></xp:this.facets>
+					<xpt:this.onStateChange><![CDATA[#{javascript:var user =userProfileBean.getMyUser();
+user.setShowWelcomeBox(isClosed);
+userProfileBean.saveUser( user );}]]></xpt:this.onStateChange>
+				</xpt:oneuiwelcome></xp:panel>
+			
 			<xc:cc_nav_oneui xp:key="facetLeft"></xc:cc_nav_oneui>
 			</xp:this.facets>
 

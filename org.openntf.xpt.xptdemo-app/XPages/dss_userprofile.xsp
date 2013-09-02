@@ -13,7 +13,7 @@
 				<xp:button value="create myUser" id="button1">
 					<xp:eventHandler event="onclick" submit="true"
 						refreshMode="complete">
-						<xp:this.action><![CDATA[#{javascript:var myUser =userProfileBean.createMyUser();
+						<xp:this.action><![CDATA[#{javascript:var myUser =userProfileBean.getMyUser();
 userProfileBean.saveUser(myUser);}]]></xp:this.action>
 					</xp:eventHandler>
 				</xp:button>
