@@ -24,14 +24,15 @@
 					<xe:basicContainerNode label="Container 1">
 						<xe:this.children>
 							<xe:basicLeafNode label="Documentation"
-								href="http://my.webgate.biz/poi.documentation">
+								href="http://my.webgate.biz/xpt.documentation">
 							</xe:basicLeafNode>
 							<xe:basicLeafNode
 								label="WebGate Consulting AG" href="http://www.webgate.biz">
 							</xe:basicLeafNode>
 							<xe:basicLeafNode
 								label="Project on OpenNTF">
-								<xe:this.href><![CDATA[http://www.openntf.org/internal/home.nsf/project.xsp?action=openDocument&name=POI%204%20XPages]]></xe:this.href>
+
+								<xe:this.href><![CDATA[http://www.openntf.org/Internal/home.nsf/project.xsp?action=openDocument&name=XPages%20Toolkit]]></xe:this.href>
 							</xe:basicLeafNode>
 							<xe:basicLeafNode label="OpenNTF.org"
 								href="http://www.openntf.org">
@@ -67,10 +68,7 @@
 
 
 
-					<xe:pageTreeNode
-						label="Properties / Propertie Files" selection="/csv/.*"
-						page="/csv_view_embdatasource.xsp">
-					</xe:pageTreeNode>
+					
 
 
 

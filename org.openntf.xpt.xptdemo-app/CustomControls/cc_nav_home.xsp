@@ -6,13 +6,12 @@
 		<xe:this.treeNodes>
 			<xe:pageTreeNode label="Home" page="/home.xsp"></xe:pageTreeNode>
 			<xe:separatorTreeNode></xe:separatorTreeNode>
-			<xe:pageTreeNode page="/dss_contact.xsp" label="License"></xe:pageTreeNode>
-			<xe:pageTreeNode label="Credits"
-				page="/oneui_aboutpage.xsp">
+			<xe:pageTreeNode page="/home_licence.xsp" label="License"></xe:pageTreeNode>
+			<xe:pageTreeNode label="Notice" page="/home_notice.xsp">
 			</xe:pageTreeNode>
 
-			<xe:pageTreeNode label="Contribute"
-				page="/dss_userprofile.xsp">
+			<xe:pageTreeNode label="Contribute" page="home_contribute"
+				rendered="false">
 			</xe:pageTreeNode>
 
 

@@ -10,11 +10,11 @@
 				page="/dss_contact.xsp">
 			</xe:pageTreeNode>
 			<xe:pageTreeNode label="CRUD with DSS"
-				page="/oneui_aboutpage.xsp">
+				page="/dss_contact_crud.xsp">
 			</xe:pageTreeNode>
 
 			<xe:pageTreeNode label="User Profiles "
-				page="/dss_userprofile.xsp">
+				page="/dss_userprofile.xsp" rendered="false">
 			</xe:pageTreeNode>
 
 

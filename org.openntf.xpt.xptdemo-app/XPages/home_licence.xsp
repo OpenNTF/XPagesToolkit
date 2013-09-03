@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+
+
+	<xc:cc_application pageTitle="Welcome to the XPages Toolkit"
+		navigationPath="/home/home">
+		<xp:this.facets>
+			<xc:cc_nav_home xp:key="facetLeft"></xc:cc_nav_home>
+
+			<xp:panel xp:key="facetMiddle">
+				<xp:panel>
+
+					<xpt:oneuiwelcome closeable="false" id="oneuiwelcome1"
+						title="Apache V 2.0">
+						<xp:this.facets>
+							<xp:panel xp:key="welcomeText">
+								<xp:link escape="true" text="http://www.apache.org/licenses/"
+									id="link1" value="http://www.apache.org/licenses/" target="_blank">
+								</xp:link>
+							</xp:panel>
+						</xp:this.facets>
+					</xpt:oneuiwelcome>
+					
+				</xp:panel>
+			</xp:panel>
+			<xp:panel xp:key="facetRight">
+				<xp:image id="image1" url="/XPTSidebar.png">
+
+				</xp:image>
+			</xp:panel>
+
+		</xp:this.facets>
+	</xc:cc_application>
+</xp:view>

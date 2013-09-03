@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+
+
+	<xc:cc_application pageTitle="Welcome to the XPages Toolkit"
+		navigationPath="/home/home">
+		<xp:this.facets>
+			<xc:cc_nav_home xp:key="facetLeft"></xc:cc_nav_home>
+
+			<xp:panel xp:key="facetMiddle">
+				
+				<xp:br></xp:br><xp:panel id="newPanel">
+				OpenNTF XPages Toolkit
+Copyright 2013 WebGate Consulting AG<xp:br></xp:br>
+
+This product includes software contributed to 
+OpenNTF Alliance (http://www.OpenNTF.org/)<xp:br></xp:br><xp:br></xp:br>
+
+
+List of third party software used in this project:
+
+	<xp:br></xp:br>- Apache Commons Codec, Verison 1.6 (http://commons.apache.org/proper/commons-codec/) under Apache V2.0 (http://www.apache.org/licenses/)
+
+	<xp:br></xp:br>- Apache Commons Logging, Verison 1.1.1 (http://commons.apache.org/proper/commons-logging/) under Apache V2.0 (http://www.apache.org/licenses/)
+ 
+	<xp:br></xp:br>- Apache HTTP Client, Verison 4.2.4 (http://hc.apache.org/httpcomponents-client-ga/) under Apache V2.0 (http://www.apache.org/licenses/)
+ 
+ 	<xp:br></xp:br>- ROME, Version 0.9 (https://rometools.jira.com/wiki/display/ROME/Home) under Apache V2.0 (http://www.apache.org/licenses/)
+ 
+<xp:br></xp:br>XPages Toolkit includes a number of subcomponents with separate copyright notices
+and license terms. Your use of these subcomponents is subject to the terms and
+conditions of the following licenses.
+ 
+ <xp:br></xp:br><xp:br></xp:br>DOM4J library (dom4j)
+
+    Copyright 2001-2005 (C) MetaStuff, Ltd. All Rights Reserved.
+
+    Redistribution and use of this software and associated documentation
+    (&quot;Software&quot;), with or without modification, are permitted provided
+    that the following conditions are met:
+
+    <xp:br></xp:br>1. Redistributions of source code must retain copyright
+       statements and notices.  Redistributions must also contain a
+       copy of this document.
+
+    <xp:br></xp:br>2. Redistributions in binary form must reproduce the
+       above copyright notice, this list of conditions and the
+       following disclaimer in the documentation and/or other
+       materials provided with the distribution.
+
+    <xp:br></xp:br>3. The name &quot;DOM4J&quot; must not be used to endorse or promote
+       products derived from this Software without prior written
+       permission of MetaStuff, Ltd.  For written permission,
+       please contact dom4j-info@metastuff.com.
+
+    <xp:br></xp:br>4. Products derived from this Software may not be called &quot;DOM4J&quot;
+       nor may &quot;DOM4J&quot; appear in their names without prior written
+       permission of MetaStuff, Ltd. DOM4J is a registered
+       trademark of MetaStuff, Ltd.
+
+    <xp:br></xp:br>5. Due credit should be given to the DOM4J Project - 
+       http://www.dom4j.org
+ 
+    <xp:br></xp:br><xp:br></xp:br>THIS SOFTWARE IS PROVIDED BY METASTUFF, LTD. AND CONTRIBUTORS
+    ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT
+    NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL
+    METASTUFF, LTD. OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
+    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
+    OF THE POSSIBILITY OF SUCH DAMAGE.
+ </xp:panel>
+			</xp:panel>
+			<xp:panel xp:key="facetRight">
+				<xp:image id="image1" url="/XPTSidebar.png">
+
+				</xp:image>
+			</xp:panel>
+
+		</xp:this.facets>
+	</xc:cc_application>
+</xp:view>

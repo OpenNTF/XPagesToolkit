@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom">
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
 
-	
+
 	<xc:cc_application pageTitle="Welcome to the XPages Toolkit"
 		navigationPath="/home/home">
 		<xp:this.facets>
@@ -9,19 +11,55 @@
 
 			<xp:panel xp:key="facetMiddle">
 				<xp:panel>
-					<xp:image url="/XPT_rgb.png" id="image2"></xp:image>
-					<h1>XPages ToolBox</h1>
+
+		<xpt:oneuiaboutpage id="oneuiaboutpage1"
+			applicationLogo="/XPT_rgb.png" title="XPages Toolkit"
+			text="A collection of powerful controls, beans and the implementation of the myWebGate Ninja programming style.">
+			<xpt:this.marketingClaim><![CDATA[<xpt:....> Needed, useful, powerful!]]></xpt:this.marketingClaim>
+			<xpt:this.leftColumnBlocks>
+				<xpt:oneuiAboutBlock title="DSS / JSON"
+					text="It was never so easy to store your business object directly to documents only by declaration. Use the same pattern for json."
+					linkTitle="learn more">
+					<xpt:this.link><![CDATA[#{javascript: return context.getUrl().toString().split(view.getPageName())[0] +"/dss_contact.xsp"}]]></xpt:this.link>
+				</xpt:oneuiAboutBlock>
+				<xpt:oneuiAboutBlock title="OneUI - Elements"
+					text="Build your own about page, use welcome box for your application and give good advices with tips."
+					linkTitle="learn more">
+					<xpt:this.link><![CDATA[#{javascript: return context.getUrl().toString().split(view.getPageName())[0] +"/oneui_aboutpage.xsp"}]]></xpt:this.link>
+				</xpt:oneuiAboutBlock>
+			</xpt:this.leftColumnBlocks>
+			<xpt:this.rightColumnBlocks>
+				<xpt:oneuiAboutBlock title="XPages Agents"
+					text="Long running tasks? Constantly update the user interface while the agent is running in the background."
+					linkTitle="Learn more">
+					<xpt:this.link><![CDATA[#{javascript: return	context.getUrl().toString().split(view.getPageName())[0] +"/agent_overview.xsp"}]]></xpt:this.link>
+				</xpt:oneuiAboutBlock>
+				<xpt:oneuiAboutBlock title="RSS Feeds"
+					text="Integrate RSS Feeds direct as UI Element in your page or use it as datasource."
+					linkTitle="Learn more">
+					<xpt:this.link><![CDATA[#{javascript: return	context.getUrl().toString().split(view.getPageName())[0] +"/rss_overview.xsp"}]]></xpt:this.link>
+				</xpt:oneuiAboutBlock>
+				<xpt:oneuiAboutBlock title="Properties"
+					text="Reading and writing any properties file in your application. The test case is still unter construction and comes soon.">
+				</xpt:oneuiAboutBlock>
+				
+				
+			</xpt:this.rightColumnBlocks></xpt:oneuiaboutpage>
 				</xp:panel>
-				<xp:panel>
-					<xp:br></xp:br>
+				<xp:br style="clear:both;">
+
+				</xp:br>
+				<xp:br></xp:br>
+				<xp:panel id="newPanel">
+					
 					Have fun!
 					<xp:br></xp:br>
 					Christian
 				</xp:panel>
 			</xp:panel>
 			<xp:panel xp:key="facetRight">
-				<xp:image id="image1">
-					<xp:this.url><![CDATA[#{javascript:"sidebar_img.png"}]]></xp:this.url>
+				<xp:image id="image1" url="/XPTSidebar.png">
+
 				</xp:image>
 			</xp:panel>
 

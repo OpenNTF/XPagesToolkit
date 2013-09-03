@@ -6,22 +6,24 @@
 		<xe:this.treeNodes>
 			<xe:pageTreeNode label="Home" page="/home.xsp"></xe:pageTreeNode>
 			<xe:separatorTreeNode></xe:separatorTreeNode>
-			<xe:pageTreeNode label="OneUI Tips"
-				page="/oneui_tips.xsp">
-			</xe:pageTreeNode>
 			<xe:pageTreeNode label="OneUI About Page"
 				page="/oneui_aboutpage.xsp">
 			</xe:pageTreeNode>
 
+
+
 			<xe:pageTreeNode label="OneUI Welcombox"
 				page="oneui_welcomebox">
 			</xe:pageTreeNode>
-			
 
 
 
 
 
 
+
+			<xe:pageTreeNode label="OneUI Tips"
+				page="/oneui_tips.xsp">
+			</xe:pageTreeNode>
 		</xe:this.treeNodes>
 	</xe:navigator></xp:view>
