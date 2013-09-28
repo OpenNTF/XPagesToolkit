@@ -15,10 +15,16 @@
  */
 package org.openntf.xpt.core.beans;
 
+import java.util.List;
+
 import javax.faces.context.FacesContext;
 
+import lotus.domino.Database;
+
+import org.openntf.xpt.core.utils.RoleAndGroupProvider;
 import org.openntf.xpt.core.utils.XPTLibUtils;
 
+import com.ibm.xsp.extlib.util.ExtLibUtil;
 import com.ibm.xsp.model.AbstractDataSource;
 
 public class XPTBean {
@@ -41,4 +47,19 @@ public class XPTBean {
 	public AbstractDataSource findDataSource(String strCompID, String strDSId) {
 		return XPTLibUtils.getDatasource(strCompID, strDSId);
 	}
+
+	public List<String> getMyGroupsAndRoles() {
+		return RoleAndGroupProvider.getInstance().getMyRolesAndGroups();
+	}
+
+	public List<String> getGroupsAndRolesOf(String strUserName) {
+		return RoleAndGroupProvider.getInstance().getRolesAndGroupsOf(strUserName, ExtLibUtil.getCurrentDatabase());
+
+	}
+
+	public List<String> getGroupsAndRolesOf(String strUserName, Database ndbTarget) {
+		return RoleAndGroupProvider.getInstance().getRolesAndGroupsOf(strUserName, ndbTarget);
+
+	}
+
 }
