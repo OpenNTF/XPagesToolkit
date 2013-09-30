@@ -28,8 +28,7 @@ public class XPTPropertiesBean {
 	public static final String BEAN_NAME = "xptPropertiesBean"; //$NON-NLS-1$
 
 	public static XPTPropertiesBean get(FacesContext context) {
-		XPTPropertiesBean bean = (XPTPropertiesBean) context.getApplication()
-				.getVariableResolver().resolveVariable(context, BEAN_NAME);
+		XPTPropertiesBean bean = (XPTPropertiesBean) context.getApplication().getVariableResolver().resolveVariable(context, BEAN_NAME);
 		return bean;
 	}
 
@@ -41,15 +40,27 @@ public class XPTPropertiesBean {
 		final String finDB = strDatabase;
 		final String finFile = strFileName;
 
-		return AccessController
-				.doPrivileged(new PrivilegedAction<Properties>() {
+		return AccessController.doPrivileged(new PrivilegedAction<Properties>() {
 
-					@Override
-					public Properties run() {
-						return StorageService.getInstance()
-								.getPropertiesFromFile(finDB, finFile);
-					}
-				});
+			@Override
+			public Properties run() {
+				return StorageService.getInstance().getPropertiesFromFile(finDB, finFile);
+			}
+		});
+	}
+
+	public int saveProperties(String strDatabase, String strFileName, Properties props) {
+		final String finDB = strDatabase;
+		final String finFile = strFileName;
+		final Properties finProps = props;
+
+		return AccessController.doPrivileged(new PrivilegedAction<Integer>() {
+			@Override
+			public Integer run() {
+				return StorageService.getInstance().saveProperties(finDB, finFile, finProps);
+			}
+		});
+
 	}
 
 }

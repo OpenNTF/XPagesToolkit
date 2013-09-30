@@ -15,6 +15,7 @@
  */
 package org.openntf.xpt.core.properties.storage;
 
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.Properties;
 import java.util.logging.Logger;
@@ -100,6 +101,17 @@ public class StorageService {
 			return -9;
 		}
 		return 1;
+	}
+
+	public int saveProperties(String strDatabase, String strFileName, Properties props) {
+		try {
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			props.store(bos, "XPT Properties StorageService");
+			return saveProperties(strDatabase, strFileName, bos.toByteArray());
+		} catch (Exception e) {
+			e.printStackTrace();
+			return -9;
+		}
 	}
 
 	public boolean hasPropertiesFile(String strDatabase, String strFileName) {
