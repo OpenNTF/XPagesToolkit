@@ -28,11 +28,11 @@ import com.ibm.xsp.webapp.resources.BundleResourceProvider;
 
 public class XPTRSSResourceProvider extends BundleResourceProvider {
 
-	private static final String CSS_PROGRESSBAR = "/.ibmxspres/.xptrss/css/rss.css";
+	private static final String CSS_STYLE = "/.ibmxspres/.xptrss/css/rss.css";
 	private static final String RESOURCES_WEB_XPT = "/resources/web/xpt/xptrss/";
 	public static final String XPT_PREFIX = ".xptrss";
 
-	public static final String DOJO_XPT_AGENTCONROLLER = "xptrss.list.feedcontroller";
+	public static final String DOJO_XPT_RSSCONROLLER = "xptrss.list.feedcontroller";
 
 	public XPTRSSResourceProvider() {
 		super(XPTRSSActivator.getInstance().getBundle(), XPT_PREFIX);
@@ -57,8 +57,8 @@ public class XPTRSSResourceProvider extends BundleResourceProvider {
 
 	}
 
-	public static final DojoModuleResource XPTRSS_FEEDCONTROLLER = new DojoModuleResource(DOJO_XPT_AGENTCONROLLER);
-	public static final StyleSheetResource XPTRSS_CSS = new StyleSheetResource(CSS_PROGRESSBAR);
+	public static final DojoModuleResource XPTRSS_FEEDCONTROLLER = new DojoModuleResource(DOJO_XPT_RSSCONROLLER);
+	public static final StyleSheetResource XPTRSS_CSS = new StyleSheetResource(CSS_STYLE);
 	public static final DojoModuleResource XPTRSS_WIDGET = new DojoModuleResource("dijit._Widget");
 	public static final DojoModuleResource XPTRSS_TEMPLATED = new DojoModuleResource("dojox.dtl._Templated");
 	public static final DojoModuleResource XPTRSS_DATE_LOCALE = new DojoModuleResource("dojo.date.locale");
