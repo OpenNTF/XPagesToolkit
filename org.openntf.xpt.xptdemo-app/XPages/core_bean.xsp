@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xe="http://www.ibm.com/xsp/coreex">
+
+	<xc:cc_application navigationPath="/dss/coreBean"
+		pageTitle="xptBean ">
+		<xp:this.facets>
+			<xp:panel xp:key="facetMiddle">
+				<xp:table styleClass="lotusTable">
+					<xp:tr>
+						<xp:td style="width:200px">
+							Bean Operation
+						</xp:td>
+						<xp:td></xp:td>
+						<xp:td></xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td align="left" valign="top">
+							xptBean.getMyGroupsAndRoles()
+						</xp:td>
+						<xp:td>
+							<xp:repeat id="repeat1" rows="10"
+								value="#{javascript:xptBean.getMyGroupsAndRoles()}" var="grp">
+								<xp:text value="#{javascript:grp}"></xp:text>
+								<xp:br></xp:br>
+							</xp:repeat>
+						</xp:td>
+						<xp:td>
+							<xp:pager layout="Previous Group Next"
+								partialRefresh="true" id="pager1" for="repeat1">
+							</xp:pager>
+						</xp:td>
+
+					</xp:tr>
+					<xp:tr>
+						<xp:td align="left" valign="top">
+							xptBean.getGroupsAndRolesOf()
+						</xp:td>
+						<xp:td>
+							<xp:inputText id="itUserName"
+								value="#{viewScope.userName}">
+								<xp:this.defaultValue><![CDATA[#{javascript:"Anonymous"}]]></xp:this.defaultValue>
+								<xp:eventHandler event="onchange"
+									submit="true" refreshMode="partial" refreshId="repeat2">
+								</xp:eventHandler>
+							</xp:inputText>
+							<xe:namePicker id="namePicker1"
+								dialogTitle="Selecte Person to inspect" for="itUserName">
+								<xe:this.dataProvider>
+									<xe:dominoNABNamePicker
+										groups="false" nameList="peopleByLastName" people="true">
+									</xe:dominoNABNamePicker>
+								</xe:this.dataProvider>
+							</xe:namePicker>
+							<xp:br></xp:br>
+							<xp:br></xp:br>
+							<xp:repeat id="repeat2" rows="10"
+								var="grp">
+								<xp:this.value><![CDATA[#{javascript:if (viewScope.userName == null) {
+	viewScope.userName = "Anonymous";
+}
+xptBean.getGroupsAndRolesOf( viewScope.userName, database );}]]></xp:this.value>
+								<xp:text value="#{javascript:grp}"></xp:text>
+								<xp:br></xp:br>
+							</xp:repeat>
+						</xp:td>
+						<xp:td>
+							<xp:pager layout="Previous Group Next"
+								partialRefresh="true" id="pager2" for="repeat2">
+							</xp:pager>
+						</xp:td>
+					</xp:tr>
+				</xp:table>
+			</xp:panel>
+			<xc:cc_nav_dss xp:key="facetLeft"></xc:cc_nav_dss>
+		</xp:this.facets>
+	</xc:cc_application>
+</xp:view>

@@ -40,12 +40,12 @@ public class RoleAndGroupProvider {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<String> getMyRolesAndGroups() {
+	public List<String> getMyGroupsAndRoles() {
 		List<String> lstRC = new ArrayList<String>();
 		try {
 			XSPContext xsp = ExtLibUtil.getXspContext();
 			DirectoryUser dirUser = xsp.getUser();
-			Name nonUser = ExtLibUtil.getCurrentSession().createName(dirUser.getFullName());
+			Name nonUser = ExtLibUtil.getCurrentSession().createName(ExtLibUtil.getCurrentSession().getEffectiveUserName());
 			lstRC.add(nonUser.getCanonical());
 			lstRC.add(nonUser.getAbbreviated());
 			lstRC.add(nonUser.getCommon());
@@ -60,14 +60,14 @@ public class RoleAndGroupProvider {
 	}
 
 	@SuppressWarnings("unchecked")
-	public List<String> getRolesAndGroupsOf(String strUser, Database ndbTarget) {
+	public List<String> getGroupsAndRolesOf(String strUser, Database ndbTarget) {
 		List<String> lstRC = new ArrayList<String>();
 		try {
 			Name nonUser = ExtLibUtil.getCurrentSession().createName(strUser);
 			lstRC.add(nonUser.getCanonical());
 			lstRC.add(nonUser.getAbbreviated());
 			lstRC.add(nonUser.getCommon());
-			lstRC.addAll(new lotus.notes.addins.DominoServer(ndbTarget.getServer()).getNamesList(nonUser.getAbbreviated()));
+			lstRC.addAll(new lotus.notes.addins.DominoServer(ndbTarget.getServer()).getNamesList(nonUser.getCanonical()));
 			lstRC.addAll(ndbTarget.queryAccessRoles(nonUser.getAbbreviated()));
 		} catch (Exception e) {
 			e.printStackTrace();

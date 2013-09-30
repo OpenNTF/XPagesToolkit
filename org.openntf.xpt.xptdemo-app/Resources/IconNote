@@ -1,20 +1,14 @@
 <?xml version='1.0' encoding='utf-8'?>
 <note default='true' class='icon' xmlns='http://www.lotus.com/dxl' version='9.0'
  replicaid='C1257B95007265C6'>
-<noteinfo noteid='122' unid='43CA7C23CC5C458EC1257B580049345A' sequence='20'>
+<noteinfo noteid='122' unid='43CA7C23CC5C458EC1257B580049345A' sequence='24'>
 <created><datetime dst='true'>20130425T151935,30+02</datetime></created>
-<modified><datetime dst='true'>20130803T091944,68+02</datetime></modified>
-<revised><datetime dst='true'>20130803T091944,67+02</datetime></revised>
-<lastaccessed><datetime dst='true'>20130803T091944,68+02</datetime></lastaccessed>
+<modified><datetime dst='true'>20130921T211858,94+02</datetime></modified>
+<revised><datetime dst='true'>20130921T211858,93+02</datetime></revised>
+<lastaccessed><datetime dst='true'>20130921T211858,94+02</datetime></lastaccessed>
 <addedtofile><datetime dst='true'>20130625T224931,66+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
-<wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
 <item name='$Daos'><text>0</text></item>
-<item name='$DefaultClientXPage'><text>home.xsp</text></item>
-<item name='$DefaultXPage'><text>home.xsp</text></item>
-<item name='$TITLE'><text>XPT Demo Application</text></item>
-<item name='$Flags'><text>J7?!</text></item>
-<item name='$FlagsNoRefresh'><text>rv</text></item>
 <item name='IconBitmap' summary='true'>
 <rawitemdata type='6'>
 AiAgAQAAg///g4P//4OD//+Dg///g4P//4OD//+Dgf//A4AAAAPAAAAHwAAAB+AAAA/4AAA/////
@@ -29,5 +23,10 @@ AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 AAAAAAAAAAAAAAAAAAAAAAAAAA==
-</rawitemdata></item></note>
+</rawitemdata></item>
+<item name='$DefaultClientXPage'><text>home.xsp</text></item>
+<item name='$DefaultXPage'><text>home.xsp</text></item>
+<item name='$TITLE'><text>XPT Demo Application</text></item>
+<item name='$Flags'><text>J7?!</text></item>
+<item name='$FlagsNoRefresh'><text>rv</text></item></note>
 

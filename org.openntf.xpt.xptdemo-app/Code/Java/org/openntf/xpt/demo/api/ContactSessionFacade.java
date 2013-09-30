@@ -16,6 +16,7 @@
 package org.openntf.xpt.demo.api;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.openntf.xpt.demo.bo.Contact;
@@ -31,14 +32,38 @@ public class ContactSessionFacade implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public List<Contact> getAllContacts() {
-		return ContactStorageService.getInstance().getAllContacts(ExtLibUtil.getCurrentSession());
+		return ContactStorageService.getInstance().getAll("AllContacts");
 	}
 
 	public Contact getContactByID(String strID) {
-		return ContactStorageService.getInstance().getContactByID(strID, ExtLibUtil.getCurrentSession());
+		return ContactStorageService.getInstance().getById(strID);
 	}
 
 	public boolean saveContact(Contact conCurrent) {
-		return ContactStorageService.getInstance().save(conCurrent, ExtLibUtil.getCurrentSession());
+		return ContactStorageService.getInstance().save(conCurrent);
 	}
+
+	public List<Contact> getMyContacts() {
+		List<String> lstFields = new ArrayList<String>();
+		lstFields.add("Observer");
+		return ContactStorageService.getInstance().getAllMyObjects("AllContacts", lstFields);
+	}
+
+	public void addObserver(Contact conCurrent) {
+		try {
+			conCurrent.addObserver(ExtLibUtil.getCurrentSession().getEffectiveUserName());
+			saveContact(conCurrent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	public void removeObserver(Contact conCurrent) {
+		try {
+			conCurrent.removeObserver(ExtLibUtil.getCurrentSession().getEffectiveUserName());
+			saveContact(conCurrent);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 }

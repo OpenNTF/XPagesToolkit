@@ -130,7 +130,7 @@ public abstract class AbstractStorageService<T> {
 
 	public List<T> getAllMyObjectsFrom(String strViewID, List<String> lstFieldsToCheck, Database ndbSource) {
 		List<T> ret = new ArrayList<T>();
-		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getMyRolesAndGroups();
+		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getMyGroupsAndRoles();
 		try {
 			View viwDabases = ndbSource.getView(strViewID);
 			Document docNext = viwDabases.getFirstDocument();
@@ -160,7 +160,7 @@ public abstract class AbstractStorageService<T> {
 
 	public List<T> getAllObjectsForFrom(String strUser, String strViewID, List<String> lstFieldsToCheck, Database ndbSource) {
 		List<T> ret = new ArrayList<T>();
-		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getRolesAndGroupsOf(strUser, ndbSource);
+		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(strUser, ndbSource);
 		try {
 			View viwDabases = ndbSource.getView(strViewID);
 			Document docNext = viwDabases.getFirstDocument();

@@ -49,16 +49,16 @@ public class XPTBean {
 	}
 
 	public List<String> getMyGroupsAndRoles() {
-		return RoleAndGroupProvider.getInstance().getMyRolesAndGroups();
+		return RoleAndGroupProvider.getInstance().getMyGroupsAndRoles();
 	}
 
 	public List<String> getGroupsAndRolesOf(String strUserName) {
-		return RoleAndGroupProvider.getInstance().getRolesAndGroupsOf(strUserName, ExtLibUtil.getCurrentDatabase());
+		return RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(strUserName, ExtLibUtil.getCurrentDatabase());
 
 	}
 
 	public List<String> getGroupsAndRolesOf(String strUserName, Database ndbTarget) {
-		return RoleAndGroupProvider.getInstance().getRolesAndGroupsOf(strUserName, ndbTarget);
+		return RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(strUserName, ndbTarget);
 
 	}
 

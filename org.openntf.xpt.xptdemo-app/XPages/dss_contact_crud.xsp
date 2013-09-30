@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
-	xmlns:xc="http://www.ibm.com/xsp/custom"
-	xmlns:xpt="http://www.openntf.org/xsp/xpt"
-	xmlns:xe="http://www.ibm.com/xsp/coreex">
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt" xmlns:xe="http://www.ibm.com/xsp/coreex">
 
 	<xc:cc_application navigationPath="/dss/contacts"
 		pageTitle="DSS Contacts">
@@ -15,28 +13,25 @@
 				<xp:panel id="panContacts">
 					<xp:this.data>
 						<xpt:objectlistSource var="sourceContacts"
-							ascending="true"
-							buildValues="#{javascript:contactBean.getAllContacts()}"
+							ascending="true" buildValues="#{javascript:contactBean.getAllContacts()}"
 							scope="view" sortAttribute="firstName">
 						</xpt:objectlistSource>
 					</xp:this.data>
 					<xp:table styleClass="lotusTable">
 						<xp:tr>
 							<xp:td>
-								<xp:label value="First Name"
-									id="label1">
-									<xp:eventHandler event="onclick"
-										submit="true" refreshMode="partial" refreshId="panContacts">
+								<xp:label value="First Name" id="label1">
+									<xp:eventHandler event="onclick" submit="true"
+										refreshMode="partial" refreshId="panContacts">
 										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "sourceContacts");
 ds.sortList("firstName", true);}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
 							<xp:td>
-								<xp:label value="Last Name"
-									id="label2">
-									<xp:eventHandler event="onclick"
-										submit="true" refreshMode="partial" refreshId="panContacts">
+								<xp:label value="Last Name" id="label2">
+									<xp:eventHandler event="onclick" submit="true"
+										refreshMode="partial" refreshId="panContacts">
 										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "sourceContacts");
 ds.sortList("lastName", true);}]]></xp:this.action>
 									</xp:eventHandler>
@@ -44,8 +39,8 @@ ds.sortList("lastName", true);}]]></xp:this.action>
 							</xp:td>
 							<xp:td>
 								<xp:label value="State" id="label3">
-									<xp:eventHandler event="onclick"
-										submit="true" refreshMode="partial" refreshId="panContacts">
+									<xp:eventHandler event="onclick" submit="true"
+										refreshMode="partial" refreshId="panContacts">
 										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "sourceContacts");
 ds.sortList("state", true);}]]></xp:this.action>
 									</xp:eventHandler>
@@ -53,8 +48,8 @@ ds.sortList("state", true);}]]></xp:this.action>
 							</xp:td>
 							<xp:td>
 								<xp:label value="City" id="label4">
-									<xp:eventHandler event="onclick"
-										submit="true" refreshMode="partial" refreshId="panContacts">
+									<xp:eventHandler event="onclick" submit="true"
+										refreshMode="partial" refreshId="panContacts">
 										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "sourceContacts");
 ds.sortList("city", true);}]]></xp:this.action>
 									</xp:eventHandler>
@@ -62,16 +57,20 @@ ds.sortList("city", true);}]]></xp:this.action>
 							</xp:td>
 							<xp:td>
 								<xp:label value="E-Mail" id="label5">
-									<xp:eventHandler event="onclick"
-										submit="true" refreshMode="partial" refreshId="panContacts">
+									<xp:eventHandler event="onclick" submit="true"
+										refreshMode="partial" refreshId="panContacts">
 										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "sourceContacts");
 ds.sortList("email", true);}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
+							<xp:td>
+								<xp:pager layout="Previous Group Next"
+									partialRefresh="true" id="pager1" for="rpContact">
+								</xp:pager></xp:td>
 						</xp:tr>
 						<xp:repeat value="#{javascript:sourceContacts}"
-							rows="10" var="contact" indexVar="indContact">
+							var="contact" indexVar="indContact" id="rpContact" rows="25">
 							<xp:tr>
 								<xp:td>
 									<xp:text escape="true"
@@ -98,31 +97,102 @@ ds.sortList("email", true);}]]></xp:this.action>
 										id="computedField5" value="#{contact.email}">
 									</xp:text>
 								</xp:td>
+								<xp:td>
+									<xp:link id="lnkEdit" text="edit">
+										<xp:eventHandler event="onclick"
+											submit="true" refreshMode="partial"
+											refreshId="panContacts">
+											<xp:this.action><![CDATA[#{javascript:viewScope.conID = contact.ID;
+getComponent("dlgContact").show();}]]></xp:this.action>
+										</xp:eventHandler>
+									</xp:link>
+								</xp:td>
+
 							</xp:tr>
 						</xp:repeat>
 					</xp:table>
 				</xp:panel>
 
 				<xe:dialog id="dlgContact" title="Contact">
-					<xe:formTable id="formTable1"><xp:this.facets>
-	<xe:dialogButtonBar id="dialogButtonBar1" xp:key="footer">
-		<xp:panel>
-			<xp:button value="Label" id="button1">
-				<xp:eventHandler event="onclick" submit="true"
-					refreshMode="complete">
-					<xp:this.action><![CDATA[#{javascript:contactBean.saveContact( objContact);
+					<xp:panel>
+						<xp:this.data>
+							<xe:objectData var="objContact" scope="view">
+								<xe:this.createObject><![CDATA[#{javascript:if(viewScope.conID == null || viewScope.conID == "") {
+	return contactBean.createContact();
+} else {
+	return contactBean.getContactByID(viewScope.conID);
+}}]]></xe:this.createObject>
+							</xe:objectData>
+						</xp:this.data>
+						<xe:formTable id="formTable1"
+							labelPosition="left" disableRowError="true">
+							<xe:formRow id="formRow2" for="itFirstName"
+								label="First Name">
+								<xp:inputText id="itFirstName"
+									value="#{objContact.firstName}">
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow3" for="itLastName"
+								label="Last Name">
+								<xp:inputText id="itLastName"
+									value="#{objContact.lastName}" required="true">
+									<xp:this.validators>
+										<xp:validateRequired
+											message="The last name is required">
+										</xp:validateRequired>
+									</xp:this.validators>
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow4" for="itEmail"
+								label="E Mail">
+								<xp:inputText id="itEmail"
+									value="#{objContact.email}">
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow5" for="itState"
+								label="State">
+								<xp:inputText id="itState"
+									value="#{objContact.state}">
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow1" for="itCity"
+								label="City">
+								<xp:inputText id="itCity"
+									value="#{objContact.city}">
+								</xp:inputText>
+							</xe:formRow>
+							<xp:this.facets>
+								<xe:dialogButtonBar
+									id="dialogButtonBar1" xp:key="footer">
+									<xp:panel>
+										<xp:button value="save"
+											id="button1">
+											<xp:eventHandler
+												event="onclick" submit="true" refreshMode="complete">
+												<xp:this.action><![CDATA[#{javascript:contactBean.saveContact( objContact);
 var dlg = getComponent("dlgContact");
 viewScope.conID = "";
-dlg.hide("panContacts");}]]></xp:this.action>
-				</xp:eventHandler></xp:button>
-			&#160;
-			<xp:link escape="true" text="cancel" id="lnkClose">
-				<xp:eventHandler event="onclick" submit="true"
-					refreshMode="complete">
-					<xp:this.action><![CDATA[#{javascript:var dlg = getComponent("dlgContact");
+dlg.hide("panContacts");
+var ds = xptBean.findDataSource("panContacts", "sourceContacts");
+ds.refresh();}]]></xp:this.action>
+											</xp:eventHandler>
+										</xp:button>
+										&#160;
+										<xp:link escape="true"
+											text="cancel" id="lnkClose">
+											<xp:eventHandler
+												event="onclick" submit="true" refreshMode="complete" disableValidators="true">
+												<xp:this.action><![CDATA[#{javascript:var dlg = getComponent("dlgContact");
 viewScope.conID = "";
 dlg.hide();}]]></xp:this.action>
-				</xp:eventHandler></xp:link></xp:panel></xe:dialogButtonBar></xp:this.facets></xe:formTable></xe:dialog>
+											</xp:eventHandler>
+										</xp:link>
+									</xp:panel>
+								</xe:dialogButtonBar>
+							</xp:this.facets>
+						</xe:formTable>
+					</xp:panel>
+				</xe:dialog>
 			</xp:panel>
 		</xp:this.facets>
 	</xc:cc_application>

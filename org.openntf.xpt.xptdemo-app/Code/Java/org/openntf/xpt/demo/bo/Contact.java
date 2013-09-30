@@ -16,6 +16,8 @@
 package org.openntf.xpt.demo.bo;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.openntf.xpt.core.dss.annotations.DominoEntity;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
@@ -39,6 +41,8 @@ public class Contact implements Serializable {
 	private String m_Email;
 	@DominoEntity(FieldName = "State")
 	private String m_State;
+	@DominoEntity(FieldName = "Observer", isNames = true)
+	private List<String> m_Observers;
 
 	public String getID() {
 		return m_ID;
@@ -86,6 +90,30 @@ public class Contact implements Serializable {
 
 	public void setState(String state) {
 		m_State = state;
+	}
+
+	public void setObservers(List<String> observers) {
+		m_Observers = observers;
+	}
+
+	public List<String> getObservers() {
+		return m_Observers;
+	}
+
+	public void addObserver(String strObserver) {
+		if (m_Observers == null) {
+			m_Observers = new ArrayList<String>();
+		}
+		if (!m_Observers.contains(strObserver)) {
+			m_Observers.add(strObserver);
+		}
+	}
+
+	public void removeObserver(String effectiveUserName) {
+		if (m_Observers != null) {
+			m_Observers.remove(effectiveUserName);
+		}
+
 	}
 
 }
