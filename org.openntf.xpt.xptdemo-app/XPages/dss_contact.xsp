@@ -16,66 +16,150 @@
 				<xp:panel id="panContacts">
 					<xp:this.data>
 						<xpt:objectlistSource var="sourceContacts"
-							ascending="true" buildValues="#{javascript:contactBean.getAllContacts()}"
-							scope="view" sortAttribute="firstName">
+							ascending="true" scope="view" sortAttribute="firstName">
+							<xpt:this.buildValues><![CDATA[#{javascript:viewScope.SORT="FN_ASC";
+contactBean.getAllContacts()}]]></xpt:this.buildValues>
 						</xpt:objectlistSource>
 						<xpt:objectlistSource var="myContacts"
-							ascending="true" buildValues="#{javascript:contactBean.getMyContacts()}"
-							scope="view" sortAttribute="firstName">
+							ascending="true" scope="view" sortAttribute="firstName">
+							<xpt:this.buildValues><![CDATA[#{javascript:viewScope.SORT_MY="FN_ASC";
+contactBean.getMyContacts()}]]></xpt:this.buildValues>
 						</xpt:objectlistSource>
 
 					</xp:this.data>
 					<xp:table styleClass="lotusTable">
-						<xp:tr>
+						<xp:tr styleClass="lotusFirst lotusSort">
 							<xp:td>
-								<xp:label value="First Name" id="label1">
-									<xp:eventHandler event="onclick" submit="true"
-										refreshMode="partial" refreshId="panContacts">
-										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "sourceContacts");
-ds.sortList("firstName", true);}]]></xp:this.action>
+								<xp:label value="First Name"
+									id="label1">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "FN"
+if (viewScope.SORT == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "firstName";
+var sort = "FN";
+var ds = xptBean.findDataSource("panContacts", "sourceContacts");
+if (viewScope.SORT==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT=sort+"_ASC";
+}}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
 							<xp:td>
-								<xp:label value="Last Name" id="label2">
-									<xp:eventHandler event="onclick" submit="true"
-										refreshMode="partial" refreshId="panContacts">
-										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "sourceContacts");
-ds.sortList("lastName", true);}]]></xp:this.action>
+								<xp:label value="Last Name"
+									id="label2">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "LN"
+if (viewScope.SORT == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "lastName";
+var sort = "LN";
+var ds = xptBean.findDataSource("panContacts", "sourceContacts");
+if (viewScope.SORT==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT=sort+"_ASC";
+}}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
 							<xp:td>
 								<xp:label value="State" id="label3">
-									<xp:eventHandler event="onclick" submit="true"
-										refreshMode="partial" refreshId="panContacts">
-										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "sourceContacts");
-ds.sortList("state", true);}]]></xp:this.action>
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "STATE"
+if (viewScope.SORT == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass><xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "state";
+var sort = "STATE";
+var ds = xptBean.findDataSource("panContacts", "sourceContacts");
+if (viewScope.SORT==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT=sort+"_ASC";
+}
+}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
 							<xp:td>
 								<xp:label value="City" id="label4">
-									<xp:eventHandler event="onclick" submit="true"
-										refreshMode="partial" refreshId="panContacts">
-										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "sourceContacts");
-ds.sortList("city", true);}]]></xp:this.action>
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "CITY"
+if (viewScope.SORT == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass><xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "city";
+var sort = "CITY";
+var ds = xptBean.findDataSource("panContacts", "sourceContacts");
+if (viewScope.SORT==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT=sort+"_ASC";
+}}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
 							<xp:td>
 								<xp:label value="E-Mail" id="label5">
-									<xp:eventHandler event="onclick" submit="true"
-										refreshMode="partial" refreshId="panContacts">
-										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "sourceContacts");
-ds.sortList("email", true);}]]></xp:this.action>
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "EMAIL"
+if (viewScope.SORT == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass><xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "email";
+var sort = "EMAIL";
+var ds = xptBean.findDataSource("panContacts", "sourceContacts");
+if (viewScope.SORT==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT=sort+"_ASC";
+}
+}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
 							<xp:td>
 								<xp:pager layout="Previous Group Next"
 									partialRefresh="true" id="pager1" for="rpContacts">
-								</xp:pager></xp:td>
+								</xp:pager>
+							</xp:td>
 						</xp:tr>
 						<xp:repeat value="#{javascript:sourceContacts}"
 							rows="10" var="contact" indexVar="indContact" id="rpContacts">
@@ -124,49 +208,124 @@ ds.refresh()}]]></xp:this.action>
 					<xp:br></xp:br>
 					<xp:br></xp:br>
 					<h2>My watch list</h2><xp:table styleClass="lotusTable">
-						<xp:tr>
+						<xp:tr styleClass="lotusFirst lotusSort">
 							<xp:td>
 								<xp:label value="First Name" id="label6">
-									<xp:eventHandler event="onclick" submit="true"
-										refreshMode="partial" refreshId="panContacts">
-										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "myContacts");
-ds.sortList("firstName", true);}]]></xp:this.action>
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "FN"
+if (viewScope.SORT_MY == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT_MY == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass><xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "firstName";
+var sort = "FN";
+var ds = xptBean.findDataSource("panContacts", "myContacts");
+if (viewScope.SORT_MY==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT_MY=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT_MY=sort+"_ASC";
+}}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
 							<xp:td>
 								<xp:label value="Last Name" id="label7">
-									<xp:eventHandler event="onclick" submit="true"
-										refreshMode="partial" refreshId="panContacts">
-										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "myContacts");
-ds.sortList("lastName", true);}]]></xp:this.action>
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "LN"
+if (viewScope.SORT_MY == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT_MY == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass><xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "lastName";
+var sort = "LN";
+var ds = xptBean.findDataSource("panContacts", "myContacts");
+if (viewScope.SORT_MY==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT_MY=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT_MY=sort+"_ASC";
+}}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
 							<xp:td>
 								<xp:label value="State" id="label8">
-									<xp:eventHandler event="onclick" submit="true"
-										refreshMode="partial" refreshId="panContacts">
-										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "myContacts");
-ds.sortList("state", true);}]]></xp:this.action>
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "STATE"
+if (viewScope.SORT_MY == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT_MY == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass><xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "state";
+var sort = "STATE";
+var ds = xptBean.findDataSource("panContacts", "myContacts");
+if (viewScope.SORT_MY==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT_MY=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT_MY=sort+"_ASC";
+}}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
 							<xp:td>
 								<xp:label value="City" id="label9">
-									<xp:eventHandler event="onclick" submit="true"
-										refreshMode="partial" refreshId="panContacts">
-										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "myContacts");
-ds.sortList("city", true);}]]></xp:this.action>
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "CITY"
+if (viewScope.SORT_MY == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT_MY == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass><xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "city";
+var sort = "CITY";
+var ds = xptBean.findDataSource("panContacts", "myContacts");
+if (viewScope.SORT_MY==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT_MY=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT_MY=sort+"_ASC";
+}}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
 							<xp:td>
 								<xp:label value="E-Mail" id="label10">
-									<xp:eventHandler event="onclick" submit="true"
-										refreshMode="partial" refreshId="panContacts">
-										<xp:this.action><![CDATA[#{javascript:var ds = xptBean.findDataSource("panContacts", "myContacts");
-ds.sortList("email", true);}]]></xp:this.action>
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "EMAIL"
+if (viewScope.SORT_MY == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT_MY == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass><xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "email";
+var sort = "EMAIL";
+var ds = xptBean.findDataSource("panContacts", "myContacts");
+if (viewScope.SORT_MY==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT_MY=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT_MY=sort+"_ASC";
+}}]]></xp:this.action>
 									</xp:eventHandler>
 								</xp:label>
 							</xp:td>
