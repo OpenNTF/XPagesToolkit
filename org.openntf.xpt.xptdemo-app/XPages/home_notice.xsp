@@ -12,69 +12,112 @@
 			<xp:panel xp:key="facetMiddle">
 				
 				<xp:br></xp:br><xp:panel id="newPanel">
-				OpenNTF XPages Toolkit
-Copyright 2013 WebGate Consulting AG<xp:br></xp:br>
+OpenNTF XPages Toolkit
+Copyright 2013 WebGate Consulting AG
 
-This product includes software contributed to 
-OpenNTF Alliance (http://www.OpenNTF.org/)<xp:br></xp:br><xp:br></xp:br>
+<xp:br></xp:br>This product includes software contributed to 
+OpenNTF Alliance (http://www.OpenNTF.org/)
+
+<xp:br></xp:br><xp:br></xp:br>The example database uses:
+    <xp:br></xp:br>- the sample data genertion from the ExtLib - example database (&quot;http://exlib.openntf.org&quot;) under Apache V2.0 (http://www.apache.org/licenses/)
+
+    <xp:br></xp:br>- SampleDataUtil.java from Philippe Riand which is part of the ExtLib - example database (&quot;http://exlib.openntf.org&quot;) under Apache V2.0 (http://www.apache.org/licenses/)
 
 
-List of third party software used in this project:
+<xp:br></xp:br><xp:br></xp:br>List of third party software used in this project:
 
 	<xp:br></xp:br>- Apache Commons Codec, Verison 1.6 (http://commons.apache.org/proper/commons-codec/) under Apache V2.0 (http://www.apache.org/licenses/)
 
 	<xp:br></xp:br>- Apache Commons Logging, Verison 1.1.1 (http://commons.apache.org/proper/commons-logging/) under Apache V2.0 (http://www.apache.org/licenses/)
+
+	<xp:br></xp:br>- Apache Commons Collections, Verison 3.2.1 (http://commons.apache.org/proper/commons-collections/) under Apache V2.0 (http://www.apache.org/licenses/)
  
-	<xp:br></xp:br>- Apache HTTP Client, Verison 4.2.4 (http://hc.apache.org/httpcomponents-client-ga/) under Apache V2.0 (http://www.apache.org/licenses/)
+	<xp:br></xp:br>- Apache HTTP Client, Verison 4.2.5 (http://hc.apache.org/httpcomponents-client-ga/) under Apache V2.0 (http://www.apache.org/licenses/)
+
+	<xp:br></xp:br>- Apache HTTP Core, Version 4.2.4 (http://hc.apache.org/httpcomponents-core-ga/index.html) under Apache V2.0 (http://www.apache.org/licenses/)
+
+	<xp:br></xp:br>- Apache HTTP Fluent, Version 4.2.5 (http://hc.apache.org/httpcomponents-client-4.2.x/fluent-hc/project-info.html) under Apache V2.0 (http://www.apache.org/licenses/)
+
+	<xp:br></xp:br>- Apache HTTP Mime, Version 4.2.5 (http://hc.apache.org/httpcomponents-client-ga/httpmime/project-info.html) under under Apache V2.0 (http://www.apache.org/licenses/)
  
- 	<xp:br></xp:br>- ROME, Version 0.9 (https://rometools.jira.com/wiki/display/ROME/Home) under Apache V2.0 (http://www.apache.org/licenses/)
+ 	<xp:br></xp:br>- ROME, Version 1.0 (https://rometools.jira.com/wiki/display/ROME/Home) under Apache V2.0 (http://www.apache.org/licenses/)
+
+	<xp:br></xp:br>- JDOM, Version 1.0 (http://www.jdom.org/) under its own licence (http://www.jdom.org/docs/faq.html#a0030)
+
+
+<xp:br></xp:br><xp:br></xp:br>Export control
+
+<xp:br></xp:br>The XPagesToolkit includes cryptographic software. The country in which you currently reside may have restrictions on the import, possession, use, and/or re-export to another country, of encryption software. BEFORE using any encryption software, please check your country's laws, regulations and policies concerning the import, possession, or use, and re-export of encryption software, to see if this is permitted. See &lt;http://www.wassenaar.org/&gt; for more information.
+
+The U.S. Government Department of Commerce, Bureau of Industry and Security (BIS), has classified this software as Export Commodity Control Number (ECCN) 5D002.C.1, which includes information security software using or performing cryptographic functions with asymmetric algorithms. The form and manner of this Apache Software Foundation distribution makes it eligible for export under the License Exception ENC Technology Software Unrestricted (TSU) exception (see the BIS Export Administration Regulations, Section 740.13) for both object code and source code.
+
+The following provides more details on the included cryptographic software:
+
+    <xp:br></xp:br>* The XPagesToolkit uses Oracles Java ™ Cryptography Architecture(JCA) for encrypting and decrypting passwords.
+
+
  
-<xp:br></xp:br>XPages Toolkit includes a number of subcomponents with separate copyright notices
+<xp:br></xp:br><xp:br></xp:br>XPages Toolkit includes a number of subcomponents with separate copyright notices
 and license terms. Your use of these subcomponents is subject to the terms and
 conditions of the following licenses.
+
+<xp:br></xp:br><xp:br></xp:br>JDOM Version 1.0 
+/*-- 
+
+ $Id: LICENSE.txt,v 1.11 2004/02/06 09:32:57 jhunter Exp $
+
+ Copyright (C) 2000-2004 Jason Hunter &amp; Brett McLaughlin.
+ All rights reserved.
  
- <xp:br></xp:br><xp:br></xp:br>DOM4J library (dom4j)
-
-    Copyright 2001-2005 (C) MetaStuff, Ltd. All Rights Reserved.
-
-    Redistribution and use of this software and associated documentation
-    (&quot;Software&quot;), with or without modification, are permitted provided
-    that the following conditions are met:
-
-    <xp:br></xp:br>1. Redistributions of source code must retain copyright
-       statements and notices.  Redistributions must also contain a
-       copy of this document.
-
-    <xp:br></xp:br>2. Redistributions in binary form must reproduce the
-       above copyright notice, this list of conditions and the
-       following disclaimer in the documentation and/or other
-       materials provided with the distribution.
-
-    <xp:br></xp:br>3. The name &quot;DOM4J&quot; must not be used to endorse or promote
-       products derived from this Software without prior written
-       permission of MetaStuff, Ltd.  For written permission,
-       please contact dom4j-info@metastuff.com.
-
-    <xp:br></xp:br>4. Products derived from this Software may not be called &quot;DOM4J&quot;
-       nor may &quot;DOM4J&quot; appear in their names without prior written
-       permission of MetaStuff, Ltd. DOM4J is a registered
-       trademark of MetaStuff, Ltd.
-
-    <xp:br></xp:br>5. Due credit should be given to the DOM4J Project - 
-       http://www.dom4j.org
+ Redistribution and use in source and binary forms, with or without
+ modification, are permitted provided that the following conditions
+ are met:
  
-    <xp:br></xp:br><xp:br></xp:br>THIS SOFTWARE IS PROVIDED BY METASTUFF, LTD. AND CONTRIBUTORS
-    ``AS IS'' AND ANY EXPRESSED OR IMPLIED WARRANTIES, INCLUDING, BUT
-    NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
-    FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL
-    METASTUFF, LTD. OR ITS CONTRIBUTORS BE LIABLE FOR ANY DIRECT,
-    INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-    (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-    SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-    HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-    STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-    ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED
-    OF THE POSSIBILITY OF SUCH DAMAGE.
+ 1. Redistributions of source code must retain the above copyright
+    notice, this list of conditions, and the following disclaimer.
+ 
+ 2. Redistributions in binary form must reproduce the above copyright
+    notice, this list of conditions, and the disclaimer that follows 
+    these conditions in the documentation and/or other materials 
+    provided with the distribution.
+
+ 3. The name &quot;JDOM&quot; must not be used to endorse or promote products
+    derived from this software without prior written permission.  For
+    written permission, please contact &lt;request_AT_jdom_DOT_org&gt;.
+ 
+ 4. Products derived from this software may not be called &quot;JDOM&quot;, nor
+    may &quot;JDOM&quot; appear in their name, without prior written permission
+    from the JDOM Project Management &lt;request_AT_jdom_DOT_org&gt;.
+ 
+ In addition, we request (but do not require) that you include in the 
+ end-user documentation provided with the redistribution and/or in the 
+ software itself an acknowledgement equivalent to the following:
+     &quot;This product includes software developed by the
+      JDOM Project (http://www.jdom.org/).&quot;
+ Alternatively, the acknowledgment may be graphical using the logos 
+ available at http://www.jdom.org/images/logos.
+
+ <xp:br></xp:br><xp:br></xp:br>THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
+ WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+ OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ DISCLAIMED.  IN NO EVENT SHALL THE JDOM AUTHORS OR THE PROJECT
+ CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+ SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+ LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+ USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+ OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ SUCH DAMAGE.
+
+ This software consists of voluntary contributions made by many 
+ individuals on behalf of the JDOM Project and was originally 
+ created by Jason Hunter &lt;jhunter_AT_jdom_DOT_org&gt; and
+ Brett McLaughlin &lt;brett_AT_jdom_DOT_org&gt;.  For more information
+ on the JDOM Project, please see &lt;http://www.jdom.org/&gt;. 
+
+ */
+ 
  </xp:panel>
 			</xp:panel>
 			<xp:panel xp:key="facetRight">

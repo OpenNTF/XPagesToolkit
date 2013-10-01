@@ -23,5 +23,9 @@
 
 
 
+			<xe:separatorTreeNode></xe:separatorTreeNode>
+			<xe:pageTreeNode label="The xptBean"
+				page="/core_bean.xsp">
+			</xe:pageTreeNode>
 		</xe:this.treeNodes>
 	</xe:navigator></xp:view>

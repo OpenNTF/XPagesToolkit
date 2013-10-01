@@ -7,7 +7,7 @@
     
     <component>
     	<description>OneUI Tips Box</description>
-    	<display-name>OneUI Tips Box</display-name>
+    	<display-name>OneUI TipsBox</display-name>
     	<component-type>org.openntf.xpt.oneui.component.uitips</component-type>
     	<component-class>org.openntf.xpt.oneui.component.UITips</component-class>
     	
@@ -49,7 +49,7 @@
 
     <component>
     	<description>OneUI Welcombox</description>
-    	<display-name>OneUI-WelcomeBox</display-name>
+    	<display-name>OneUI WelcomeBox</display-name>
     	<component-type>org.openntf.xpt.oneui.component.uiwelcomebox</component-type>
     	<component-class>org.openntf.xpt.oneui.component.UIWelcomebox</component-class>
     	
@@ -231,8 +231,51 @@
       		<designer-extension>
  				<in-palette>true</in-palette>
         		<category>XPages Toolkit</category>
-        		<render-markup>
-				</render-markup>
+        		        <render-markup>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+&#xd;
+	&lt;xp:table style="width:100%"&gt;&#xd;
+		&lt;xp:tr&gt;&#xd;
+			&lt;xp:td&gt;&#xd;
+				&lt;xp:table style="width:100%"&gt;&#xd;
+					&lt;xp:tr&gt;&#xd;
+						&lt;xp:td style="width:120.0px"&gt;&#xd;
+&#xd;
+&#xd;
+							&lt;xp:image url="/icons/xpt_nologo.png"&#xd;
+								id="image1"&gt;&#xd;
+							&lt;/xp:image&gt;&#xd;
+						&lt;/xp:td&gt;&#xd;
+						&lt;xp:td style="width:1017.0px"&gt;&#xd;
+							&lt;h2&gt;&lt;%=this.title %&gt;&lt;/h2&gt;&#xd;
+							&lt;h3&gt;&lt;%=this.marketingClaim %&gt;&lt;/h3&gt;&#xd;
+							&lt;p&gt;&lt;%=this.text %&gt;&lt;/p&gt;&#xd;
+							&lt;xp:callback facetName="content"&#xd;
+								id="cb_content"&gt;&#xd;
+							&lt;/xp:callback&gt;&#xd;
+&#xd;
+						&lt;/xp:td&gt;&#xd;
+					&lt;/xp:tr&gt;&#xd;
+				&lt;/xp:table&gt;&#xd;
+			&lt;/xp:td&gt;&#xd;
+		&lt;/xp:tr&gt;&#xd;
+		&lt;xp:tr&gt;&#xd;
+			&lt;xp:td&gt;&#xd;
+				&lt;xp:table style="width:100%"&gt;&#xd;
+					&lt;xp:tr&gt;&#xd;
+						&lt;xp:td style="width:50.0%"&gt;&lt;h3&gt;Left Column Title&lt;/h3&gt;&#xd;
+						&lt;p&gt;Some text about it&lt;/p&gt;&#xd;
+						Learn more -&gt; the link&lt;/xp:td&gt;&#xd;
+						&lt;xp:td style="width:50%"&gt;&lt;h3&gt;Right Column Title&lt;/h3&gt;&#xd;
+						&lt;p&gt;Some text about it&lt;/p&gt;&#xd;
+						Learn more -&gt; the link&lt;/xp:td&gt;&#xd;
+					&lt;/xp:tr&gt;&#xd;
+				&lt;/xp:table&gt;&lt;/xp:td&gt;&#xd;
+		&lt;/xp:tr&gt;&#xd;
+	&lt;/xp:table&gt;&#xd;
+&lt;/xp:view&gt;&#xd;
+</render-markup>
+
       		</designer-extension>
     	</component-extension>
   	</component>

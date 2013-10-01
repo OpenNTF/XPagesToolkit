@@ -6,7 +6,7 @@
 	<xc:cc_application navigationPath="/dss/coreBean"
 		pageTitle="xptBean ">
 		<xp:this.facets>
-			<xp:panel xp:key="facetMiddle">
+			<xp:panel xp:key="facetMiddle" id="panAll">
 				<xp:table styleClass="lotusTable">
 					<xp:tr>
 						<xp:td style="width:200px">
@@ -42,7 +42,7 @@
 								value="#{viewScope.userName}">
 								<xp:this.defaultValue><![CDATA[#{javascript:"Anonymous"}]]></xp:this.defaultValue>
 								<xp:eventHandler event="onchange"
-									submit="true" refreshMode="partial" refreshId="repeat2">
+									submit="true" refreshMode="partial" refreshId="panAll">
 								</xp:eventHandler>
 							</xp:inputText>
 							<xe:namePicker id="namePicker1"

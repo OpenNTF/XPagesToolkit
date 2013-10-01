@@ -24,7 +24,6 @@ import javax.faces.context.ResponseWriter;
 
 import org.openntf.xpt.oneui.component.UIAboutBlock;
 import org.openntf.xpt.oneui.component.UIAboutPage;
-import org.openntf.xpt.oneui.component.UIWelcomebox;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.component.UIScriptCollector;
@@ -109,6 +108,7 @@ public class AboutPageRenderer extends FacesRenderer {
 		}
 		writeApplicationLogo(context, writer, uip, strApplicationLog);
 		writeAboutText(context, writer, uip, strTitle, strMarketingClaim, strText);
+		
 
 		writer.endElement("div");
 	}
@@ -144,7 +144,7 @@ public class AboutPageRenderer extends FacesRenderer {
 			writer.writeText(strText, null);
 			writer.endElement("p");
 		}
-		UIComponent content = uip.getFacet(UIWelcomebox.FACET_WELCOMETEXT);
+		UIComponent content = uip.getFacet(UIAboutPage.FACET_CONTENT);
 		if (content != null) {
 			writer.startElement("p", null);
 			FacesUtil.renderChildren(context, content);

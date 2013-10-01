@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xp:view xmlns:xp="http://www.ibm.com/xsp/core"
 	xmlns:xc="http://www.ibm.com/xsp/custom"
-	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+	xmlns:xpt="http://www.openntf.org/xsp/xpt"
+	xmlns:xe="http://www.ibm.com/xsp/coreex">
 
 	<xc:cc_application navigationPath="/oneui/aboutpage"
 		pageTitle="About an Application">
 		<xp:this.facets>
 			<xc:cc_nav_oneui xp:key="facetLeft"></xc:cc_nav_oneui>
 			<xpt:oneuiaboutpage id="oneuiaboutpage1"
-				xp:key="facetMiddle" title="The XPages ToolKit"
-				marketingClaim="Needed, useful, powerful!"
-				text="The XPages Toolkit delivers power to developers"
-				applicationLogo="/XPT_rgb.png">
+				xp:key="facetMiddle"
+				text="AboutPage with blocks, WelcomeBox and TipsBox"
+				applicationLogo="/XPT_rgb.png" title="XPT-OneUI "
+				marketingClaim="The missing OneUI Elements">
+				<xpt:this.rightColumnBlocks>
+					<xpt:oneuiAboutBlock link="oneui_tips.xsp"
+						linkTitle="learn more" text="Tips on a page to guide the user"
+						title="OneUI TipBox">
+					</xpt:oneuiAboutBlock>
+				</xpt:this.rightColumnBlocks>
+
+				<xp:this.facets>
+					<xp:panel xp:key="content">
+						- Easy to use
+						<xp:br></xp:br>
+						- see the examples
+					</xp:panel>
+				</xp:this.facets>
+
 				<xpt:this.leftColumnBlocks>
-					<xpt:oneuiAboutBlock text="Das ist ein cooler TEST"
-						title="RSS Features" link="http://www.webgate.biz"
-						linkTitle="WebGate Consulting AG - read more">
+					<xpt:oneuiAboutBlock
+						text="Build a closable welcome box for your application"
+						link="oneui_welcomebox.xsp" title="OneUI WelcomeBox"
+						linkTitle="learn more">
 					</xpt:oneuiAboutBlock>
 				</xpt:this.leftColumnBlocks>
 			</xpt:oneuiaboutpage>
