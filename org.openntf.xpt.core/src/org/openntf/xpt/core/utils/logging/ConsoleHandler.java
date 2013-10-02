@@ -23,9 +23,11 @@ public class ConsoleHandler extends Handler {
 
 	private String m_CallerClass = "";
 	private Level m_Level;
+	private String m_CallerApplication = "";
 
-	public ConsoleHandler(String callerClass, Level nLevel) {
+	public ConsoleHandler(String strApplication, String callerClass, Level nLevel) {
 		super();
+		m_CallerApplication = strApplication;
 		m_CallerClass = callerClass;
 		m_Level = nLevel;
 	}
@@ -47,7 +49,7 @@ public class ConsoleHandler extends Handler {
 	public void publish(LogRecord logEvent) {
 		if (logEvent.getLevel().intValue() >= m_Level.intValue())
 			System.out.println(logEvent.getLevel().getLocalizedName() + ": "
-					+ logEvent.getMessage() + " (" + m_CallerClass + ")");
+					+ logEvent.getMessage() + " (" + m_CallerClass + " @ "+ m_CallerApplication + ")");
 		if (logEvent.getThrown() != null) {
 			logEvent.getThrown().printStackTrace();
 		}

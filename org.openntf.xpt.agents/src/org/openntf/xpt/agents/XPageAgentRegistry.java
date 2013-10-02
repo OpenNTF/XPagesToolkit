@@ -52,7 +52,7 @@ import com.ibm.xsp.application.events.ApplicationListener2;
 
 public abstract class XPageAgentRegistry implements ApplicationListener2 {
 
-	private static final String XPAGEAGENT_SERVICE_KEY = "xpage.agent.registry"; // $NON-NLS-1$
+	private static final String XPAGEAGENT_SERVICE_KEY = "xpt.agent.registry"; // $NON-NLS-1$
 
 	private HashMap<String, XPageAgentEntry> m_Agents;
 
@@ -316,7 +316,7 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 				} else {
 					m_AgentRunProperties = new Properties();
 					ByteArrayOutputStream bos = new ByteArrayOutputStream();
-					m_AgentRunProperties.store(bos, "XPageAgentFrameWorks by WGC DesignerToolbox");
+					m_AgentRunProperties.store(bos, "XPT - XPagesAgents FrameWork");
 					StorageService.getInstance().saveProperties(ndbCurrent.getFilePath(), strServer + "_xpageagent.properties", bos.toByteArray());
 				}
 			}

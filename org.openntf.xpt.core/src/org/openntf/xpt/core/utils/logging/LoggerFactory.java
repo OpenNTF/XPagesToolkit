@@ -15,31 +15,54 @@
  */
 package org.openntf.xpt.core.utils.logging;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.openntf.xpt.core.properties.storage.StorageService;
+
+import com.ibm.designer.runtime.Application;
 import com.ibm.domino.xsp.module.nsf.NotesContext;
 
 public class LoggerFactory {
+	private static final String XPT_LOG_PROPERTIES = "xpt-log.properties";
+
+	private static final String APPLICATION_LOGPROP_KEY = "xpt.logger.properties";
+
 	private static HashMap<String, Logger> m_RegistredLoggers = new HashMap<String, Logger>();
 
 	private static int m_logLevel = -1;
 
 	public static Logger getLogger(String strName) {
 		try {
-			if (m_RegistredLoggers.containsKey(strName)) {
-				return m_RegistredLoggers.get(strName);
+			String strDB = "-core-";
+			if (NotesContext.getCurrent() != null) {
+				strDB = NotesContext.getCurrent().getCurrentDatabase().getFilePath();
+			}
+			if (m_RegistredLoggers.containsKey(strDB + strName)) {
+				return m_RegistredLoggers.get(strDB + strName);
 			}
 			Logger logRC = java.util.logging.Logger.getAnonymousLogger();
-			if (m_logLevel == -1) {
-				checkLogLevel();
+			if (strDB.equals("-core-")) {
+				if (m_logLevel == -1) {
+					checkLogLevel();
+				}
+				logRC.setLevel(getLogLevel(m_logLevel));
+				ConsoleHandler ch = new ConsoleHandler(strDB, strName, getLogLevel(m_logLevel));
+				logRC.addHandler(ch);
+			} else {
+				int nLevel = getAppLogLevel(strDB, strName);
+				logRC.setLevel(getLogLevel(nLevel));
+				ConsoleHandler ch = new ConsoleHandler(strDB, strName, getLogLevel(nLevel));
+				logRC.addHandler(ch);
+				
 			}
-			logRC.setLevel(getLogLevel(m_logLevel));
-			ConsoleHandler ch = new ConsoleHandler(strName,
-					getLogLevel(m_logLevel));
-			logRC.addHandler(ch);
-			m_RegistredLoggers.put(strName, logRC);
+			m_RegistredLoggers.put(strDB + strName, logRC);
 			return logRC;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -72,11 +95,10 @@ public class LoggerFactory {
 	private static void checkLogLevel() {
 		try {
 			NotesContext nc = NotesContext.getCurrentUnchecked();
-			//Session sesCurrent = nc.getCurrentSession();
-			//String strLogLevel = ContextInfo
-			//		.getEnvironmentString("DEBUG_XPAGEAGENTS");
-			String strLogLevel =nc.getEnvironmentString("DEBUG_XPAGEAGENTS");
-			//String strLogLevel = sesCurrent.getEnvironmentString("DEBUG_XPAGEAGENTS", true);
+			if (nc == null) {
+				return;
+			}
+			String strLogLevel = nc.getEnvironmentString("DEBUG_XPT");
 			if (strLogLevel == null || "".equals(strLogLevel)) {
 				m_logLevel = 1;
 			}
@@ -87,11 +109,57 @@ public class LoggerFactory {
 			} catch (Exception e) {
 				m_logLevel = 0;
 			}
-			System.out.println("XPAGESAGENTS     LOG-LEVEL is set to: "
-					+ strLogLevel + " / " + m_logLevel);
+			System.out.println("XPT     LOG-LEVEL is set to: " + strLogLevel + " / " + m_logLevel);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	private static int getAppLogLevel(String strDBPath, String strClassName) {
+		if (Application.get() == null) {
+			return -1;
+		}
+		int nRC = 1;
+		try {
+			Properties propLog = null;
+			if (Application.get().getObject(APPLICATION_LOGPROP_KEY) == null) {
+
+				if (!StorageService.getInstance().hasPropertiesFile(strDBPath, XPT_LOG_PROPERTIES)) {
+					propLog = new Properties();
+					propLog.setProperty("level", "1");
+				} else {
+					propLog = StorageService.getInstance().getPropertiesFromFile(strDBPath, XPT_LOG_PROPERTIES);
+				}
+				Application.get().putObject(APPLICATION_LOGPROP_KEY, propLog);
+			} else {
+				propLog = (Properties) Application.get().getObject(APPLICATION_LOGPROP_KEY);
+			}
+			List<String> arrList = new ArrayList<String>();
+			for (Enumeration<?> en = propLog.propertyNames(); en.hasMoreElements();) {
+				arrList.add((String) en.nextElement());
+			}
+			Collections.sort(arrList);
+			Collections.reverse(arrList);
+			String strLevel = "";
+			String strKeyCaller = "";
+			for (String strKey : arrList) {
+				if (strClassName.startsWith(strKey)) {
+					strLevel = propLog.getProperty(strKey);
+					strKeyCaller = strKey;
+					break;
+				}
+			}
+			if ("".equals(strLevel)) {
+				strLevel = propLog.getProperty("level", "1");
+			}
+			try {
+				nRC = Integer.parseInt(strLevel);
+			} catch (Exception e) {
+				System.out.println("XPT.LoggerFactory.getLogLevel with " + strDBPath + " / " + strClassName + " /" + strKeyCaller + ": strLevel =" + strLevel);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return nRC;
+	}
 }
