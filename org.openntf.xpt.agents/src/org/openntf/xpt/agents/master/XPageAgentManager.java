@@ -182,11 +182,15 @@ public class XPageAgentManager {
 
 		if (PasswordService.getInstance().checkPassword(strUser, strPassword, strPath)) {
 			Application appNew = new Application();
+			if (m_ApplicationRegistry.containsKey(strUNID)) {
+				appNew = m_ApplicationRegistry.get(strUNID);
+			} else {
+				m_ApplicationRegistry.put(strUNID, appNew);
+			}
 			appNew.setUNID(strUNID);
 			appNew.setPath(strPath);
 			appNew.setUserID(strUser);
 			appNew.setCredValues(strUser, PasswordService.getInstance().encrypt(strPassword));
-			m_ApplicationRegistry.put(strUNID, appNew);
 			pushApplication2Properties(appNew, PasswordService.getInstance().encrypt(strPassword));
 			return 1;
 		} else {

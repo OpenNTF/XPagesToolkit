@@ -16,21 +16,17 @@
 package org.openntf.xpt.agents.master;
 
 import java.security.MessageDigest;
-import java.util.ArrayList;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.params.ClientPNames;
-import org.apache.http.cookie.Cookie;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.auth.BasicScheme;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
-import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
 public class PasswordService {
@@ -57,32 +53,48 @@ public class PasswordService {
 
 			httpClient = (DefaultHttpClient) ClientSSLResistanceExtender.wrapClient(httpClient);
 			httpClient.setRedirectStrategy(new DefaultRedirectStrategy());
+			/*
+			 * String strNSFURL = strURL; String strRedirection = strNSFURL +
+			 * "/xsp/xpage.agent?loginCheck"; java.util.List<NameValuePair>
+			 * formparams = new ArrayList<NameValuePair>(); formparams.add(new
+			 * BasicNameValuePair("username", strUser)); formparams.add(new
+			 * BasicNameValuePair("password", strPW)); formparams.add(new
+			 * BasicNameValuePair("redirectto", strRedirection));
+			 * UrlEncodedFormEntity entity = new
+			 * UrlEncodedFormEntity(formparams, "UTF-8");
+			 * 
+			 * HttpPost postRequest = new HttpPost(strNSFURL + "?login");
+			 * postRequest.getParams().setParameter(ClientPNames.COOKIE_POLICY,
+			 * org
+			 * .apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY);
+			 * 
+			 * postRequest.setHeader("Content-Type",
+			 * "application/x-www-form-urlencoded");
+			 * postRequest.addHeader("accept", "application/json");
+			 * postRequest.setEntity(entity); HttpResponse hsr =
+			 * httpClient.execute(postRequest); for (Cookie ck :
+			 * httpClient.getCookieStore().getCookies()) { if
+			 * ("LtpaToken".equalsIgnoreCase(ck.getName())) { blRC = true; } if
+			 * ("DomAuthSessId".equalsIgnoreCase(ck.getName())) { blRC = true; }
+			 * }
+			 */
 			String strNSFURL = strURL;
-			String strRedirection = strNSFURL + "/xsp/xpage.agent?loginCheck";
-			java.util.List<NameValuePair> formparams = new ArrayList<NameValuePair>();
-			formparams.add(new BasicNameValuePair("username", strUser));
-			formparams.add(new BasicNameValuePair("password", strPW));
-			formparams.add(new BasicNameValuePair("redirectto", strRedirection));
-			UrlEncodedFormEntity entity = new UrlEncodedFormEntity(formparams, "UTF-8");
+			String strRedirection = strNSFURL + "/xsp/xpage.agent?action=loginCheck";
+			HttpGet getRequestINIT = new HttpGet(strNSFURL);
 
-			HttpPost postRequest = new HttpPost(strNSFURL + "?login");
-			postRequest.getParams().setParameter(ClientPNames.COOKIE_POLICY, org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY);
-
-			postRequest.setHeader("Content-Type", "application/x-www-form-urlencoded");
-			postRequest.addHeader("accept", "application/json");
-			postRequest.setEntity(entity);
-			HttpResponse hsr = httpClient.execute(postRequest);
-			for (Cookie ck : httpClient.getCookieStore().getCookies()) {
-				if ("LtpaToken".equalsIgnoreCase(ck.getName())) {
-					blRC = true;
-				}
-				if ("DomAuthSessId".equalsIgnoreCase(ck.getName())) {
-					blRC = true;
-				}
-			}
-			if (!blRC) {
+			HttpGet getRequest = new HttpGet(strRedirection);
+			getRequest.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(strUser, strPW), "UTF-8", false));
+			getRequestINIT.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(strUser, strPW), "UTF-8", false));
+			HttpResponse hsrINTI = httpClient.execute(getRequestINIT);
+			if (hsrINTI.getStatusLine().getStatusCode() == 200) {
+				EntityUtils.consume(hsrINTI.getEntity());
+				HttpResponse hsr = httpClient.execute(getRequest);
+				System.out.println(EntityUtils.toString(hsr.getEntity()));
 				if (EntityUtils.toString(hsr.getEntity()).equals("{result:\"OK\"}")) {
 					blRC = true;
+				} else {
+					EntityUtils.consume(hsrINTI.getEntity());
+					blRC = false;
 				}
 			}
 		} catch (Exception e) {

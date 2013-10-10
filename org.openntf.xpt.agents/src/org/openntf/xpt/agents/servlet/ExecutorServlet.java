@@ -42,7 +42,8 @@ public class ExecutorServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	// The FacesContext factory requires a lifecycle parameter whic is not used,
+	// The FacesContext factory requires a lifecycle parameter which is not
+	// used,
 	// but when not present, it generates
 	// a NUllPointer exception. Silly thing! So we create an empty one that does
 	// nothing...
@@ -92,17 +93,24 @@ public class ExecutorServlet extends HttpServlet {
 			System.out.println(agBean);
 			System.out.println(fcCurrent.getApplication());
 
+			String strAction = req.getParameter("action");
+			if (strAction != null) {
+				IXPTServletCommand command = CommandFactory.getInstance().getCommand(strAction);
+				if (command != null) {
+					command.processActionH(resp, agBean, fcCurrent);
+					releaseContext(fcCurrent);
+					return;
+				}
+			}
 			resp.setContentType("text/plain");
 			PrintWriter pwCurrent = resp.getWriter();
-			pwCurrent.append("Check scheduling: " + agBean.checkSchedule() + " started.");
-			pwCurrent.append("OK");
-			pwCurrent.close();
+			pwCurrent.println("Command: " + strAction + " is not available");
 			releaseContext(fcCurrent);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		doGet(req, resp);
@@ -114,7 +122,9 @@ public class ExecutorServlet extends HttpServlet {
 
 		// Create a temporary FacesContext and make it available
 
-		//FacesContext context = m_ContextFactory.getFacesContext(request.getSession().getServletContext(), request, response, dummyLifeCycle);
+		// FacesContext context =
+		// m_ContextFactory.getFacesContext(request.getSession().getServletContext(),
+		// request, response, dummyLifeCycle);
 		FacesContext context = m_ContextFactory.getFacesContext(m_Config.getServletContext(), request, response, dummyLifeCycle);
 		return context;
 	}
