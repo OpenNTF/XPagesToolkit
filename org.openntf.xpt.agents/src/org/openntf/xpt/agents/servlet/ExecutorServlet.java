@@ -105,6 +105,8 @@ public class ExecutorServlet extends HttpServlet {
 			resp.setContentType("text/plain");
 			PrintWriter pwCurrent = resp.getWriter();
 			pwCurrent.println("Command: " + strAction + " is not available");
+			pwCurrent.close();
+			
 			releaseContext(fcCurrent);
 		} catch (Exception e) {
 			e.printStackTrace();

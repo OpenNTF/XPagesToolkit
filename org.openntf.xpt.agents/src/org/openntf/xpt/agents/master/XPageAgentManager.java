@@ -178,9 +178,10 @@ public class XPageAgentManager {
 		return m_Datapath;
 	}
 
-	public int registerNewApplication(String strUNID, String strPath, String strUser, String strPassword) {
+	public ExecutionUserProperties registerNewApplication(String strUNID, String strPath, String strUser, String strPassword) {
 
-		if (PasswordService.getInstance().checkPassword(strUser, strPassword, strPath)) {
+		ExecutionUserProperties exProp = PasswordService.getInstance().checkPassword(strUser, strPassword, strPath);
+		if ( exProp.isLoggedIn()) {
 			Application appNew = new Application();
 			if (m_ApplicationRegistry.containsKey(strUNID)) {
 				appNew = m_ApplicationRegistry.get(strUNID);
@@ -192,10 +193,8 @@ public class XPageAgentManager {
 			appNew.setUserID(strUser);
 			appNew.setCredValues(strUser, PasswordService.getInstance().encrypt(strPassword));
 			pushApplication2Properties(appNew, PasswordService.getInstance().encrypt(strPassword));
-			return 1;
-		} else {
-			return -1;
-		}
+		} 
+		return exProp;
 	}
 
 	private void pushApplication2Properties(Application app, String strPasword) {

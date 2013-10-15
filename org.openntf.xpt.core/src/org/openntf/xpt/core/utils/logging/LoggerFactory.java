@@ -30,6 +30,8 @@ import com.ibm.designer.runtime.Application;
 import com.ibm.domino.xsp.module.nsf.NotesContext;
 
 public class LoggerFactory {
+	private static final String XPT_CORE_LOGGER = "-core-";
+
 	private static final String XPT_LOG_PROPERTIES = "xpt-log.properties";
 
 	private static final String APPLICATION_LOGPROP_KEY = "xpt.logger.properties";
@@ -40,15 +42,19 @@ public class LoggerFactory {
 
 	public static Logger getLogger(String strName) {
 		try {
-			String strDB = "-core-";
-			if (NotesContext.getCurrent() != null) {
-				strDB = NotesContext.getCurrent().getCurrentDatabase().getFilePath();
+			String strDB = XPT_CORE_LOGGER;
+			try {
+				if (Application.get() != null && NotesContext.getCurrent() != null) {
+					strDB = NotesContext.getCurrent().getCurrentDatabase().getFilePath();
+				}
+			} catch (Exception e) {
+				//System.out.println("Context has no Database... :"+e.getMessage());
 			}
 			if (m_RegistredLoggers.containsKey(strDB + strName)) {
 				return m_RegistredLoggers.get(strDB + strName);
 			}
 			Logger logRC = java.util.logging.Logger.getAnonymousLogger();
-			if (strDB.equals("-core-")) {
+			if (strDB.equals(XPT_CORE_LOGGER)) {
 				if (m_logLevel == -1) {
 					checkLogLevel();
 				}
@@ -60,7 +66,7 @@ public class LoggerFactory {
 				logRC.setLevel(getLogLevel(nLevel));
 				ConsoleHandler ch = new ConsoleHandler(strDB, strName, getLogLevel(nLevel));
 				logRC.addHandler(ch);
-				
+
 			}
 			m_RegistredLoggers.put(strDB + strName, logRC);
 			return logRC;

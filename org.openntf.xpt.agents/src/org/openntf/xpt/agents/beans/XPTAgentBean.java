@@ -21,8 +21,8 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.openntf.xpt.agents.XPageAgentRegistry;
+import org.openntf.xpt.agents.master.ExecutionUserProperties;
 import org.openntf.xpt.agents.master.XPageAgentManager;
-
 
 import com.ibm.domino.xsp.module.nsf.NotesContext;
 import com.ibm.jscript.types.FBSValue;
@@ -61,7 +61,7 @@ public class XPTAgentBean {
 		return XPageAgentRegistry.getInstance().checkSchedule();
 	}
 
-	public int registerApplication2Master(String strUser, String strPassword) {
+	public ExecutionUserProperties registerApplication2Master(String strUser, String strPassword) {
 		try {
 			String strHost = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURL().toString();
 			int nNSF = strHost.toLowerCase().indexOf(".nsf");
@@ -71,6 +71,6 @@ public class XPTAgentBean {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return -99999;
+		return null;
 	}
 }

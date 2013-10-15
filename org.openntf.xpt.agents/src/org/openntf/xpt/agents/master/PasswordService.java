@@ -46,8 +46,9 @@ public class PasswordService {
 		return m_Service;
 	}
 
-	public boolean checkPassword(String strUser, String strPW, String strURL) {
-		boolean blRC = false;
+	public ExecutionUserProperties checkPassword(String strUser, String strPW, String strURL) {
+		ExecutionUserProperties eupRC = new ExecutionUserProperties();
+		eupRC.setLoggedIn(false);
 		try {
 			DefaultHttpClient httpClient = new DefaultHttpClient();
 
@@ -91,16 +92,16 @@ public class PasswordService {
 				HttpResponse hsr = httpClient.execute(getRequest);
 				System.out.println(EntityUtils.toString(hsr.getEntity()));
 				if (EntityUtils.toString(hsr.getEntity()).equals("{result:\"OK\"}")) {
-					blRC = true;
+					eupRC.setLoggedIn(true);
 				} else {
 					EntityUtils.consume(hsrINTI.getEntity());
-					blRC = false;
+					eupRC.setLoggedIn(false);
 				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return blRC;
+		return eupRC;
 	}
 
 	public String encrypt(String strPW) {

@@ -15,11 +15,30 @@
  */
 package org.openntf.xpt.core.utils;
 
+import javax.servlet.http.HttpServletResponse;
+
 import com.ibm.domino.services.HttpServiceConstants;
 import com.ibm.domino.services.rest.RestServiceEngine;
 
 public class HttpResponseSupport {
 
+	public static void setJSONUTF8ContentType(HttpServletResponse resp) {
+		resp.setContentType(
+				HttpServiceConstants.CONTENTTYPE_APPLICATION_JSON_UTF8);
+	}
+
+	public static void setBINARYContentType(HttpServletResponse resp) {
+		resp.setContentType(
+				HttpServiceConstants.CONTENTTYPE_BINARY);
+	}
+
+
+	public static void setHTMLUTF8ContentType(HttpServletResponse resp) {
+		resp.setContentType(
+				HttpServiceConstants.CONTENTTYPE_TEXT_HTML_UTF8);
+	}
+
+	
 	public static void setJSONUTF8ContentType(RestServiceEngine engine) {
 		engine.getHttpResponse().setContentType(
 				HttpServiceConstants.CONTENTTYPE_APPLICATION_JSON_UTF8);
