@@ -26,10 +26,12 @@ dojo.declare("xptagents.login.controller", null, {
 
 	checkLogin : function() {
 		var context = this;
+		var userName = dojo.byId(context.targetid +"_user").value;
+		var pw = dojo.byId(context.targetid +"_password").value;
 		var postData = {
-			"method" : "startAgent",
-			"agentname" : this.agentname,
-			"arguments" : argMapping
+			"method" : "registerLogin",
+			"user" : userName,
+			"password" : pw
 		};
 		var xhrArgs = { // submit to server
 			url : this.serviceurl,
@@ -40,13 +42,10 @@ dojo.declare("xptagents.login.controller", null, {
 			},
 			load : function(response) {
 				if (response.status == "ok") {
-					context.jobid = response.jobid;
-					setTimeout(function() {
-						context.updatePB();
-					}, 500);
+					alert(context.refreshid);
+					XSP.partialRefreshGet(context.refreshid);
 				} else {
-					alert("Could not start " + this.agentname + "\nreason= "
-							+ response.error);
+					alert("Login failed with this user!");
 				}
 			},
 			error : function(error) {
@@ -57,9 +56,10 @@ dojo.declare("xptagents.login.controller", null, {
 
 	},
 	showLoginBox : function() {
-		var msgBox = dojo.byId(this.targetid);
-		dojo.style(this.targetid, "opacity", "0");
-		dojo.style(this.targetid, {
+		var strID = this.targetid+"_loginbox";
+		var msgBox = dojo.byId(strID);
+		dojo.style(strID, "opacity", "0");
+		dojo.style(strID, {
 			display : "block"
 		});
 		dojo.fadeIn({
@@ -67,7 +67,8 @@ dojo.declare("xptagents.login.controller", null, {
 		}).play();
 	},
 	hideLoginBox : function() {
-		var msgBox = dojo.byId(this.targetid);
+		var strID = this.targetid+"_loginbox";
+		var msgBox = dojo.byId(strID);
 		dojo.fadeOut({
 			node : msgBox,
 			onEnd : function() {
@@ -76,6 +77,56 @@ dojo.declare("xptagents.login.controller", null, {
 				});
 			}
 		}).play();
-
+	},
+	unregister : function() {
+		var context = this;
+		var postData = {
+			"method" : "unregister"
+		};
+		var xhrArgs = { // submit to server
+			url : this.serviceurl,
+			postData : dojo.toJson(postData),
+			handleAs : "json",
+			headers : {
+				"Content-Type" : "application/json"
+			},
+			load : function(response) {
+				if (response.status == "ok") {
+					XSP.partialRefreshGet(context.refreshid);
+				} else {
+					alert("Unregister failed!");
+				}
+			},
+			error : function(error) {
+				alert(error);
+			}
+		};
+		dojo.xhrPost(xhrArgs);
+	},
+	sort : function(prop) {
+		var context = this;
+		var postData = {
+			"method" : "sort",
+			"prop"	: prop;
+		};
+		var xhrArgs = { // submit to server
+			url : this.serviceurl,
+			postData : dojo.toJson(postData),
+			handleAs : "json",
+			headers : {
+				"Content-Type" : "application/json"
+			},
+			load : function(response) {
+				if (response.status == "ok") {
+					XSP.partialRefreshGet(context.refreshid);
+				} else {
+					alert("Sort failed?!");
+				}
+			},
+			error : function(error) {
+				alert(error);
+			}
+		};
+		dojo.xhrPost(xhrArgs);
 	}
 });

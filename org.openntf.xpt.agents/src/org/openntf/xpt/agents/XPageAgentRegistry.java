@@ -76,6 +76,10 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 	}
 
 	public XPageAgentEntry getXPageAgent(String strAlias) {
+		if (m_AgentRunProperties == null) {
+			initAgentRunProperties();
+		}
+		applyARP();
 		return m_Agents.get(strAlias);
 	}
 
@@ -87,6 +91,8 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		if (m_AgentRunProperties == null) {
 			initAgentRunProperties();
 		}
+		applyARP();
+
 		m_Logger.info("checkSchedule");
 		for (XPageAgentEntry en : m_Agents.values()) {
 			if (en.readyToExecute()) {
@@ -300,6 +306,10 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 	}
 
 	public List<XPageAgentEntry> getAllAgents() {
+		if (m_AgentRunProperties == null) {
+			initAgentRunProperties();
+		}
+		applyARP();
 		return new ArrayList<XPageAgentEntry>(m_Agents.values());
 	}
 
@@ -309,10 +319,10 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 			if (ndbCurrent != null) {
 				String strServer = ndbCurrent.getServer();
 				Name nonServer = ndbCurrent.getParent().createName(strServer);
-				strServer =nonServer.getAbbreviated().replaceAll("\\W+", "");
+				strServer = nonServer.getAbbreviated().replaceAll("\\W+", "");
 				nonServer.recycle();
 				if (StorageService.getInstance().hasPropertiesFile(ndbCurrent.getFilePath(), strServer + "_xpageagent.properties")) {
-					m_AgentRunProperties = StorageService.getInstance().getPropertiesFromFile(ndbCurrent.getFilePath(), strServer + "_xpageagent.properties");
+					m_AgentRunProperties = StorageService.getInstance().getPropertiesFromFile(ndbCurrent.getFilePath(), strServer + "_xpageagent.properties");					
 				} else {
 					m_AgentRunProperties = new Properties();
 					ByteArrayOutputStream bos = new ByteArrayOutputStream();
@@ -322,6 +332,52 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+
+	private void applyARP() {
+		for (XPageAgentEntry ape:m_Agents.values()) {
+			if (ape.getExecutionMode().isScheduled()) {
+				if ("ON".equalsIgnoreCase(m_AgentRunProperties.getProperty(ape.getAlias()))){
+					ape.setActive(true);
+				}
+			}
+		}
+	}
+	
+	private void saveARP() {
+		try {
+			Database ndbCurrent = NotesContext.getCurrentUnchecked().getCurrentDatabase();
+			if (ndbCurrent != null) {
+				String strServer = ndbCurrent.getServer();
+				Name nonServer = ndbCurrent.getParent().createName(strServer);
+				strServer = nonServer.getAbbreviated().replaceAll("\\W+", "");
+				nonServer.recycle();
+				ByteArrayOutputStream bos = new ByteArrayOutputStream();
+				m_AgentRunProperties.store(bos, "XPT - XPagesAgents FrameWork");
+				StorageService.getInstance().saveProperties(ndbCurrent.getFilePath(), strServer + "_xpageagent.properties", bos.toByteArray());
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	public void activateAgent(String strAgent) {
+		XPageAgentEntry age = m_Agents.get(strAgent);
+		if (age != null) {
+			age.setActive(true);
+			m_AgentRunProperties.setProperty(strAgent, "ON");
+			saveARP();
+		}
+	}
+	
+	public void deActivateAgent(String strAgent) {
+		XPageAgentEntry age = m_Agents.get(strAgent);
+		if (age != null) {
+			age.setActive(false);
+			m_AgentRunProperties.setProperty(strAgent, "OFF");
+			saveARP();
 		}
 	}
 

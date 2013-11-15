@@ -181,7 +181,7 @@ public class XPageAgentManager {
 	public ExecutionUserProperties registerNewApplication(String strUNID, String strPath, String strUser, String strPassword) {
 
 		ExecutionUserProperties exProp = PasswordService.getInstance().checkPassword(strUser, strPassword, strPath);
-		if ( exProp.isLoggedIn()) {
+		if (exProp.isLoggedIn()) {
 			Application appNew = new Application();
 			if (m_ApplicationRegistry.containsKey(strUNID)) {
 				appNew = m_ApplicationRegistry.get(strUNID);
@@ -193,8 +193,30 @@ public class XPageAgentManager {
 			appNew.setUserID(strUser);
 			appNew.setCredValues(strUser, PasswordService.getInstance().encrypt(strPassword));
 			pushApplication2Properties(appNew, PasswordService.getInstance().encrypt(strPassword));
-		} 
+		}
 		return exProp;
+	}
+
+	public ApplicationStatus getApplicationStatus(String strUNID) {
+		ApplicationStatus asCurrent = new ApplicationStatus();
+		asCurrent.setActive(false);
+		if (!m_ApplicationRegistry.containsKey(strUNID)) {
+			return asCurrent;
+		}
+		Application app = m_ApplicationRegistry.get(strUNID);
+		asCurrent.setActive(true);
+		asCurrent.setUserName(app.getUserID());
+		asCurrent.setLastStatus(app.getLastStatus());
+		return asCurrent;
+	}
+
+	public boolean unregisterApplication(String strUNID) {
+		m_ApplicationRegistry.remove(strUNID);
+		m_AGMRProperties.remove(strUNID + "_PATH");
+		m_AGMRProperties.remove(strUNID + "_USER");
+		m_AGMRProperties.remove(strUNID + "_PW");
+		saveAMGRProperties();
+		return true;
 	}
 
 	private void pushApplication2Properties(Application app, String strPasword) {

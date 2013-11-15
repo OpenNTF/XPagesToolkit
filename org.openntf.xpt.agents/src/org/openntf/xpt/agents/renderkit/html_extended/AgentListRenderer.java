@@ -24,12 +24,16 @@ import javax.faces.context.ResponseWriter;
 import javax.faces.render.Renderer;
 
 import org.openntf.xpt.agents.XPageAgentEntry;
+import org.openntf.xpt.agents.XPageAgentRegistry;
 import org.openntf.xpt.agents.component.UIAgentEntry;
 import org.openntf.xpt.agents.component.UIAgentList;
+import org.openntf.xpt.agents.master.ApplicationStatus;
+import org.openntf.xpt.agents.resources.XPTAgentResourceProvider;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
-
 import com.ibm.commons.util.StringUtil;
+import com.ibm.xsp.component.UIScriptCollector;
+import com.ibm.xsp.component.UIViewRootEx;
 import com.ibm.xsp.context.FacesContextEx;
 import com.ibm.xsp.util.FacesUtil;
 import com.ibm.xsp.util.JavaScriptUtil;
@@ -43,15 +47,41 @@ public class AgentListRenderer extends Renderer {
 			if (!agl.isRendered()) {
 				return;
 			}
+			String strClientID = agl.getClientId(context);
+
+			String url = agl.getUrl(context);
+			url = url.replaceAll("\\\\", "/");
+			UIViewRootEx rootEx = (UIViewRootEx) context.getViewRoot();
+			rootEx.addEncodeResource(context, XPTAgentResourceProvider.XPTAGENTS_AGENTLIST_CONTROLLER);
+			rootEx.addEncodeResource(context, XPTAgentResourceProvider.XPTAGENTS_AGENTLIST_CSS);
+			rootEx.setDojoParseOnLoad(true);
+
+			StringBuilder b = new StringBuilder(256);
+			b.append("agCont = new xptagents.login.controller({\n"); // $NON-NLS-1$
+			b.append(" serviceurl: \"");
+			b.append(url);
+			b.append("\",\n"); // $NON-NLS-1$
+			b.append(" targetid: \"");
+			b.append(strClientID + "_run");
+			b.append("\",\n"); // $NON-NLS-1$
+			b.append(" refreshid: \"");
+			b.append(strClientID);
+			b.append("\"});\n"); // $NON-NLS-1$
+
+			UIScriptCollector sc = UIScriptCollector.find();
+			sc.addScriptOnLoad(b.toString());
+
 			ResponseWriter rw = context.getResponseWriter();
-			writeMainElement(context, rw, agl);
+			writeMainElement(context, rw, agl, strClientID);
 		}
 	}
 
-	private void writeMainElement(FacesContext context, ResponseWriter rw, UIAgentList agl) throws IOException {
+	private void writeMainElement(FacesContext context, ResponseWriter rw, UIAgentList agl, String strClientID) throws IOException {
 		rw.startElement("div", agl);
-		String strClientID = agl.getClientId(context);
 		rw.writeAttribute("id", strClientID, null);
+
+		writerStatusAndActivation(strClientID, context, rw, agl);
+
 		rw.startElement("table", agl);
 		rw.writeAttribute("class", "lotusTable", null);
 		rw.writeAttribute("border", "0", null);
@@ -69,6 +99,61 @@ public class AgentListRenderer extends Renderer {
 		rw.endElement("table");
 		rw.endElement("div");
 
+	}
+
+	private void writerStatusAndActivation(String strClientID, FacesContext context, ResponseWriter rw, UIAgentList agl) throws IOException {
+		String strElementID = strClientID + "_run";
+		rw.startElement("div", null);
+		rw.writeAttribute("id", strElementID, null);
+		rw.writeAttribute("style", "width:100%;", null);
+		rw.writeAttribute("class", "xptAgentBox", null);
+		ApplicationStatus apStatus = agl.getApplicationStatus(context);
+		rw.startElement("div", null);
+		rw.writeAttribute("id", strElementID + "_status", null);
+		rw.writeAttribute("class", "xptAgentBoxStatus", null);
+		rw.writeText("Processing scheduled XPage Agents is: " + (apStatus.isActive() ? "activated. User: " + apStatus.getUserName() : "disabled") + "  (", null);
+
+		rw.startElement("a", null);
+		rw.writeAttribute("id", strElementID + "_selstatus", null);
+		rw.writeAttribute("onClick", apStatus.isActive() ? "agCont.unregister()" : "agCont.showLoginBox()", null);
+		rw.writeAttribute("href", "#", null);
+		// rw.writeAttribute("style", "align:right;", null);
+		rw.writeText((apStatus.isActive() ? "disable" : "enable"), null);
+		rw.endElement("a");
+		rw.writeText(")", null);
+		rw.endElement("div");
+
+		rw.startElement("div", null);
+		rw.writeAttribute("id", strElementID + "_loginbox", null);
+		rw.writeAttribute("class", "xptAgentBoxLogin", null);
+		rw.writeAttribute("style", "display:none;widht:100%", null);
+
+		rw.writeText("Username:", null);
+		rw.startElement("input", null);
+		rw.writeAttribute("id", strElementID + "_user", null);
+		rw.writeAttribute("name", strElementID + "_user", null);
+		rw.endElement("input");
+
+		rw.writeText("Password:", null);
+		rw.startElement("input", null);
+		rw.writeAttribute("id", strElementID + "_password", null);
+		rw.writeAttribute("name", strElementID + "_password", null);
+		rw.writeAttribute("type", "password", null);
+		rw.endElement("input");
+
+		rw.writeText("   ", null);
+
+		rw.startElement("a", null);
+		rw.writeAttribute("id", strElementID + "_lnkLogin", null);
+		rw.writeAttribute("onClick", "agCont.checkLogin()", null);
+		rw.writeAttribute("href", "#", null);
+		rw.writeText("login and activate", null);
+		rw.endElement("a");
+
+		
+		rw.endElement("div");
+
+		rw.endElement("div");
 	}
 
 	private void writeAgentList(FacesContext context, ResponseWriter rw, UIAgentList agl, String strClientID) throws IOException {
@@ -192,18 +277,18 @@ public class AgentListRenderer extends Renderer {
 			String hiddenValue = FacesUtil.getHiddenFieldValue(context);
 			logCurrent.info("currentClientID = " + currentClientId);
 			logCurrent.info("hiddenValue =" + hiddenValue);
-			if (StringUtil.isNotEmpty(hiddenValue) && hiddenValue.startsWith(currentClientId+"_")) {
-				hiddenValue = hiddenValue.substring(currentClientId.length()+1);
-				logCurrent.info("hiddenValue cutted: "+hiddenValue);
+			if (StringUtil.isNotEmpty(hiddenValue) && hiddenValue.startsWith(currentClientId + "_")) {
+				hiddenValue = hiddenValue.substring(currentClientId.length() + 1);
+				logCurrent.info("hiddenValue cutted: " + hiddenValue);
 				String[] arrValues = hiddenValue.split("_");
 				if (arrValues.length == 2) {
 					for (UIAgentEntry age : agl.getAllEntries()) {
 						logCurrent.info("test: " + age.getEntry().getAlias() + " -> " + arrValues[0]);
 						if (age.getEntry().getAlias().equals(arrValues[0])) {
 							if ("on".equalsIgnoreCase(arrValues[1])) {
-								age.getEntry().setActive(true);
+								XPageAgentRegistry.getInstance().activateAgent(age.getEntry().getAlias());
 							} else {
-								age.getEntry().setActive(false);
+								XPageAgentRegistry.getInstance().deActivateAgent(age.getEntry().getAlias());
 							}
 						}
 					}

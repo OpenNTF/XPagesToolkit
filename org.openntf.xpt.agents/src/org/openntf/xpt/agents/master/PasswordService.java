@@ -29,6 +29,10 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.util.EntityUtils;
 
+import com.ibm.commons.util.io.json.JsonJavaFactory;
+import com.ibm.commons.util.io.json.JsonJavaObject;
+import com.ibm.commons.util.io.json.JsonParser;
+
 public class PasswordService {
 
 	private static PasswordService m_Service;
@@ -80,7 +84,7 @@ public class PasswordService {
 			 * }
 			 */
 			String strNSFURL = strURL;
-			String strRedirection = strNSFURL + "/xsp/xpage.agent?action=loginCheck";
+			String strRedirection = strNSFURL + "/xsp/xpage.agent?action=checkLogin";
 			HttpGet getRequestINIT = new HttpGet(strNSFURL);
 
 			HttpGet getRequest = new HttpGet(strRedirection);
@@ -88,13 +92,18 @@ public class PasswordService {
 			getRequestINIT.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(strUser, strPW), "UTF-8", false));
 			HttpResponse hsrINTI = httpClient.execute(getRequestINIT);
 			if (hsrINTI.getStatusLine().getStatusCode() == 200) {
+				// TODO: PARSE RESULT AS JSON!
 				EntityUtils.consume(hsrINTI.getEntity());
 				HttpResponse hsr = httpClient.execute(getRequest);
+				JsonJavaObject json = (JsonJavaObject) JsonParser.fromJson(JsonJavaFactory.instanceEx, EntityUtils.toString(hsr.getEntity()));
 				System.out.println(EntityUtils.toString(hsr.getEntity()));
-				if (EntityUtils.toString(hsr.getEntity()).equals("{result:\"OK\"}")) {
+			
+				
+				if (json.getString("status").equalsIgnoreCase("ok")) {
 					eupRC.setLoggedIn(true);
+					eupRC.setUserName(json.getString("username"));
+					eupRC.setAccessLevel(json.getInt("level"));
 				} else {
-					EntityUtils.consume(hsrINTI.getEntity());
 					eupRC.setLoggedIn(false);
 				}
 			}

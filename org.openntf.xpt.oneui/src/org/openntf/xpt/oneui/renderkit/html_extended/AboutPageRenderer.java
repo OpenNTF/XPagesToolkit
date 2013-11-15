@@ -40,7 +40,6 @@ public class AboutPageRenderer extends FacesRenderer {
 
 	@Override
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
-		System.out.println("ENCODE");
 		UIAboutPage uip = (UIAboutPage) component;
 		if (!uip.isRendered()) {
 			return;
