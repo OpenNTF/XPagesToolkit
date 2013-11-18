@@ -42,6 +42,10 @@ dojo.declare("xptagents.login.controller", null, {
 			},
 			load : function(response) {
 				if (response.status == "ok") {
+<<<<<<< HEAD
+=======
+					alert(context.refreshid);
+>>>>>>> branch 'dev/it1' of https://github.com/OpenNTF/XPagesToolkit.git
 					XSP.partialRefreshGet(context.refreshid);
 				} else {
 					alert("Login failed with this user!");
