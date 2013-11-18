@@ -48,12 +48,12 @@ OpenNTF Alliance (http://www.OpenNTF.org/)
 <xp:br></xp:br><xp:br></xp:br>Export control
 
 <xp:br></xp:br>The XPagesToolkit includes cryptographic software. The country in which you currently reside may have restrictions on the import, possession, use, and/or re-export to another country, of encryption software. BEFORE using any encryption software, please check your country's laws, regulations and policies concerning the import, possession, or use, and re-export of encryption software, to see if this is permitted. See &lt;http://www.wassenaar.org/&gt; for more information.
-
-The U.S. Government Department of Commerce, Bureau of Industry and Security (BIS), has classified this software as Export Commodity Control Number (ECCN) 5D002.C.1, which includes information security software using or performing cryptographic functions with asymmetric algorithms. The form and manner of this Apache Software Foundation distribution makes it eligible for export under the License Exception ENC Technology Software Unrestricted (TSU) exception (see the BIS Export Administration Regulations, Section 740.13) for both object code and source code.
-
+<xp:br></xp:br>
+<xp:br></xp:br>The U.S. Government Department of Commerce, Bureau of Industry and Security (BIS), has classified this software as Export Commodity Control Number (ECCN) 5D002.C.1, which includes information security software using or performing cryptographic functions with asymmetric algorithms. The form and manner of this Apache Software Foundation distribution makes it eligible for export under the License Exception ENC Technology Software Unrestricted (TSU) exception (see the BIS Export Administration Regulations, Section 740.13) for both object code and source code.
+<xp:br></xp:br>
 The following provides more details on the included cryptographic software:
-
-    <xp:br></xp:br>* The XPagesToolkit uses Oracles Java ™ Cryptography Architecture(JCA) for encrypting and decrypting passwords.
+<xp:br></xp:br>
+<xp:br></xp:br>     * The XPagesToolkit uses Oracles Java ™ Cryptography Architecture(JCA) for encrypting and decrypting passwords.
 
 
  
@@ -62,61 +62,61 @@ and license terms. Your use of these subcomponents is subject to the terms and
 conditions of the following licenses.
 
 <xp:br></xp:br><xp:br></xp:br>JDOM Version 1.0 
-/*-- 
-
- $Id: LICENSE.txt,v 1.11 2004/02/06 09:32:57 jhunter Exp $
-
- Copyright (C) 2000-2004 Jason Hunter &amp; Brett McLaughlin.
- All rights reserved.
- 
- Redistribution and use in source and binary forms, with or without
- modification, are permitted provided that the following conditions
- are met:
- 
- 1. Redistributions of source code must retain the above copyright
-    notice, this list of conditions, and the following disclaimer.
- 
- 2. Redistributions in binary form must reproduce the above copyright
-    notice, this list of conditions, and the disclaimer that follows 
-    these conditions in the documentation and/or other materials 
-    provided with the distribution.
-
- 3. The name &quot;JDOM&quot; must not be used to endorse or promote products
-    derived from this software without prior written permission.  For
-    written permission, please contact &lt;request_AT_jdom_DOT_org&gt;.
- 
- 4. Products derived from this software may not be called &quot;JDOM&quot;, nor
-    may &quot;JDOM&quot; appear in their name, without prior written permission
-    from the JDOM Project Management &lt;request_AT_jdom_DOT_org&gt;.
- 
- In addition, we request (but do not require) that you include in the 
- end-user documentation provided with the redistribution and/or in the 
- software itself an acknowledgement equivalent to the following:
-     &quot;This product includes software developed by the
-      JDOM Project (http://www.jdom.org/).&quot;
- Alternatively, the acknowledgment may be graphical using the logos 
- available at http://www.jdom.org/images/logos.
+<xp:br></xp:br>/*-- 
+<xp:br></xp:br>
+<xp:br></xp:br> $Id: LICENSE.txt,v 1.11 2004/02/06 09:32:57 jhunter Exp $
+<xp:br></xp:br>
+<xp:br></xp:br> Copyright (C) 2000-2004 Jason Hunter &amp; Brett McLaughlin.
+<xp:br></xp:br> All rights reserved.
+<xp:br></xp:br> 
+<xp:br></xp:br> Redistribution and use in source and binary forms, with or without
+<xp:br></xp:br> modification, are permitted provided that the following conditions
+<xp:br></xp:br> are met:
+<xp:br></xp:br> 
+<xp:br></xp:br> 1. Redistributions of source code must retain the above copyright
+<xp:br></xp:br>    notice, this list of conditions, and the following disclaimer.
+<xp:br></xp:br> 
+<xp:br></xp:br> 2. Redistributions in binary form must reproduce the above copyright
+<xp:br></xp:br>    notice, this list of conditions, and the disclaimer that follows 
+<xp:br></xp:br>    these conditions in the documentation and/or other materials 
+<xp:br></xp:br>    provided with the distribution.
+<xp:br></xp:br>
+<xp:br></xp:br> 3. The name &quot;JDOM&quot; must not be used to endorse or promote products
+<xp:br></xp:br>    derived from this software without prior written permission.  For
+<xp:br></xp:br>    written permission, please contact &lt;request_AT_jdom_DOT_org&gt;.
+<xp:br></xp:br> 
+<xp:br></xp:br> 4. Products derived from this software may not be called &quot;JDOM&quot;, nor
+<xp:br></xp:br>    may &quot;JDOM&quot; appear in their name, without prior written permission
+<xp:br></xp:br>    from the JDOM Project Management &lt;request_AT_jdom_DOT_org&gt;.
+<xp:br></xp:br>
+<xp:br></xp:br> In addition, we request (but do not require) that you include in the 
+<xp:br></xp:br> end-user documentation provided with the redistribution and/or in the 
+<xp:br></xp:br> software itself an acknowledgement equivalent to the following:
+<xp:br></xp:br>     &quot;This product includes software developed by the
+<xp:br></xp:br>      JDOM Project (http://www.jdom.org/).&quot;
+<xp:br></xp:br> Alternatively, the acknowledgment may be graphical using the logos 
+<xp:br></xp:br> available at http://www.jdom.org/images/logos.
 
  <xp:br></xp:br><xp:br></xp:br>THIS SOFTWARE IS PROVIDED ``AS IS'' AND ANY EXPRESSED OR IMPLIED
- WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
- OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- DISCLAIMED.  IN NO EVENT SHALL THE JDOM AUTHORS OR THE PROJECT
- CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
- SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
- LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
- USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
- ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
- OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
- OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
- SUCH DAMAGE.
-
- This software consists of voluntary contributions made by many 
- individuals on behalf of the JDOM Project and was originally 
- created by Jason Hunter &lt;jhunter_AT_jdom_DOT_org&gt; and
- Brett McLaughlin &lt;brett_AT_jdom_DOT_org&gt;.  For more information
- on the JDOM Project, please see &lt;http://www.jdom.org/&gt;. 
-
- */
+<xp:br></xp:br> WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+<xp:br></xp:br> OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+<xp:br></xp:br> DISCLAIMED.  IN NO EVENT SHALL THE JDOM AUTHORS OR THE PROJECT
+<xp:br></xp:br> CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+<xp:br></xp:br> SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+<xp:br></xp:br> LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF
+<xp:br></xp:br> USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+<xp:br></xp:br> ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+<xp:br></xp:br> OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+<xp:br></xp:br> OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+<xp:br></xp:br> SUCH DAMAGE.
+<xp:br></xp:br>
+<xp:br></xp:br> This software consists of voluntary contributions made by many 
+<xp:br></xp:br> individuals on behalf of the JDOM Project and was originally 
+<xp:br></xp:br> created by Jason Hunter &lt;jhunter_AT_jdom_DOT_org&gt; and
+<xp:br></xp:br> Brett McLaughlin &lt;brett_AT_jdom_DOT_org&gt;.  For more information
+<xp:br></xp:br> on the JDOM Project, please see &lt;http://www.jdom.org/&gt;. 
+<xp:br></xp:br>
+<xp:br></xp:br> */
  
  </xp:panel>
 			</xp:panel>

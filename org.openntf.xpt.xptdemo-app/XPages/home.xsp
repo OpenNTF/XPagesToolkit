@@ -15,7 +15,7 @@
 		<xpt:oneuiaboutpage id="oneuiaboutpage1"
 			applicationLogo="/XPT_rgb.png" title="XPages Toolkit"
 			text="A collection of powerful controls, beans and the implementation of the myWebGate Ninja programming style.">
-			<xpt:this.marketingClaim><![CDATA[<xpt:....> Needed, useful, powerful!]]></xpt:this.marketingClaim>
+
 			<xpt:this.leftColumnBlocks>
 				<xpt:oneuiAboutBlock title="DSS / JSON"
 					text="It was never so easy to store your business object directly to documents only by declaration. Use the same pattern for json."
@@ -42,9 +42,12 @@
 				<xpt:oneuiAboutBlock title="Properties"
 					text="Reading and writing any properties file in your application. The test case is still unter construction and comes soon.">
 				</xpt:oneuiAboutBlock>
-				
-				
-			</xpt:this.rightColumnBlocks></xpt:oneuiaboutpage>
+
+
+			</xpt:this.rightColumnBlocks>
+
+			<xpt:this.marketingClaim><![CDATA[#{javascript:"xpt:.... Needed, useful, powerful!"}]]></xpt:this.marketingClaim>
+		</xpt:oneuiaboutpage>
 				</xp:panel>
 				<xp:br style="clear:both;">
 

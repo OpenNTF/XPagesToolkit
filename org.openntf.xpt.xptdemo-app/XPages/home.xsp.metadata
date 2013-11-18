@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?><note class="form" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="156" sequence="12" unid="A1A2F8146F452A0BC1257B5800493A02">
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="156" sequence="76" unid="A1A2F8146F452A0BC1257B5800493A02">
 <created><datetime dst="true">20130425T151949,78+02</datetime></created>
-<modified><datetime dst="true">20130626T091141,49+02</datetime></modified>
-<revised><datetime dst="true">20130626T091141,48+02</datetime></revised>
-<lastaccessed><datetime dst="true">20130626T091141,49+02</datetime></lastaccessed>
+<modified><datetime>20131118T140909,74+01</datetime></modified>
+<revised><datetime>20131118T140909,73+01</datetime></revised>
+<lastaccessed><datetime>20131118T140909,74+01</datetime></lastaccessed>
 <addedtofile><datetime dst="true">20130625T224931,92+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
 <item name="$Flags"><text>gC~4K</text></item>
 <item name="$TITLE"><text>home.xsp</text></item>
 
+
+
 <item name="$DesignerVersion"><text>8.5</text></item>
-
-
 
 
 <item name="$FileNames" sign="true"><text>home.xsp</text></item>
