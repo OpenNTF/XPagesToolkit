@@ -21,8 +21,7 @@ import javax.faces.component.StateHolder;
 import javax.faces.context.FacesContext;
 
 import org.openntf.xpt.agents.XPageAgentEntry;
-
-import com.ibm.xsp.util.FacesUtil;
+import org.openntf.xpt.agents.XPageAgentRegistry;
 
 
 public class UIAgentEntry implements Serializable, StateHolder {
@@ -30,6 +29,8 @@ public class UIAgentEntry implements Serializable, StateHolder {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	private String m_AgentAlias;
+	//NOT SAVE via save/restore. Serialized Object has no binding to the Registry!
 	private XPageAgentEntry m_Entry;
 	private boolean m_Transient;
 	private boolean m_DetailsOpen = false;;
@@ -40,7 +41,7 @@ public class UIAgentEntry implements Serializable, StateHolder {
 
 	public UIAgentEntry(XPageAgentEntry entry) {
 		super();
-		m_Entry = entry;
+		m_AgentAlias = entry.getAlias();
 	}
 
 	public boolean isDetailsOpen() {
@@ -52,12 +53,12 @@ public class UIAgentEntry implements Serializable, StateHolder {
 	}
 
 	public XPageAgentEntry getEntry() {
+		if (m_Entry == null) {
+			m_Entry = XPageAgentRegistry.getInstance().getXPageAgent(m_AgentAlias);
+		}
 		return m_Entry;
 	}
 
-	public void setEntry(XPageAgentEntry entry) {
-		m_Entry = entry;
-	}
 
 	@Override
 	public boolean isTransient() {
@@ -68,14 +69,14 @@ public class UIAgentEntry implements Serializable, StateHolder {
 	public void restoreState(FacesContext context, Object state) {
 		Object[] values = (Object[]) state;
 		m_DetailsOpen = (Boolean) values[0];
-		m_Entry = (XPageAgentEntry) FacesUtil.objectFromSerializable(context, values[1]);
+		m_AgentAlias = (String) values[1];
 	}
 
 	@Override
 	public Object saveState(FacesContext context) {
 		Object[] values = new Object[2];
 		values[0] = m_DetailsOpen;
-		values[1] = FacesUtil.objectToSerializable(context, m_Entry);
+		values[1] = m_AgentAlias;
 		return values;
 	}
 

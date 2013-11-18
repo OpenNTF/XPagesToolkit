@@ -88,11 +88,7 @@ public class ExecutorServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 		try {
 			FacesContext fcCurrent = initContext(req, resp);
-			System.out.println(fcCurrent);
 			XPTAgentBean agBean = XPTAgentBean.get(fcCurrent);
-			System.out.println(agBean);
-			System.out.println(fcCurrent.getApplication());
-
 			String strAction = req.getParameter("action");
 			if (strAction != null) {
 				IXPTServletCommand command = CommandFactory.getInstance().getCommand(strAction);

@@ -41,7 +41,7 @@ public class Contact implements Serializable {
 	private String m_Email;
 	@DominoEntity(FieldName = "State")
 	private String m_State;
-	@DominoEntity(FieldName = "Observer", isNames = true)
+	@DominoEntity(FieldName = "Observer", isNames = true )
 	private List<String> m_Observers;
 
 	public String getID() {

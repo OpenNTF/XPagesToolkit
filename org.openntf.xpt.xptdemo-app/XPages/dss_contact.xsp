@@ -18,6 +18,7 @@
 						<xpt:objectlistSource var="sourceContacts"
 							ascending="true" scope="view" sortAttribute="firstName">
 							<xpt:this.buildValues><![CDATA[#{javascript:viewScope.SORT="FN_ASC";
+print ("EXEC BUID VALUES");
 contactBean.getAllContacts()}]]></xpt:this.buildValues>
 						</xpt:objectlistSource>
 						<xpt:objectlistSource var="myContacts"

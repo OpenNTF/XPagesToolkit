@@ -15,10 +15,33 @@
  */
 package org.openntf.xpt.agents.annotations;
 
+import java.util.Calendar;
+
 public enum ExecutionDay {
 	MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY, SUNDAY, ALLDAY;
-	
+
 	public static ExecutionDay[] getAllDay() {
-		return new ExecutionDay[]{ ALLDAY};
+		return new ExecutionDay[] { ALLDAY };
+	}
+
+	public static ExecutionDay getByDateWeekday(int nDay) {
+		switch (nDay) {
+		case Calendar.SUNDAY:
+			return SUNDAY;
+		case Calendar.MONDAY:
+			return MONDAY;
+		case Calendar.TUESDAY:
+			return TUESDAY;
+		case Calendar.WEDNESDAY:
+			return WEDNESDAY;
+		case Calendar.THURSDAY:
+			return THURSDAY;
+		case Calendar.FRIDAY:
+			return FRIDAY;
+		case Calendar.SATURDAY:
+			return SATURDAY;
+		}
+
+		return null;
 	}
 }

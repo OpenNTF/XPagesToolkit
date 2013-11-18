@@ -20,7 +20,10 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.openntf.xpt.agents.annotations.ExecutionDay;
-import org.openntf.xpt.agents.annotations.ExecutionMode;;
+import org.openntf.xpt.agents.annotations.ExecutionMode;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
+
+;
 
 public class XPageAgentEntry implements Serializable {
 
@@ -34,13 +37,11 @@ public class XPageAgentEntry implements Serializable {
 	private ExecutionMode m_ExecutionMode;
 	private int m_Intervall;
 	private ExecutionDay[] m_ExecutionDay;
-	private int m_execTimeWindowStartHour;
-	private int m_execTimeWindowStartMinute;
-	private int m_execTimeWindowEndHour;
-	private int m_execTimeWindowEndMinute;
+	private int m_execTimeWindowStartHour = 0;
+	private int m_execTimeWindowStartMinute = 0;
+	private int m_execTimeWindowEndHour = 23;
+	private int m_execTimeWindowEndMinute = 59;
 	private boolean m_Active;
-	
-	
 
 	private Date m_LastRun;
 	private Date m_NextRun;
@@ -54,10 +55,7 @@ public class XPageAgentEntry implements Serializable {
 	public void setRunning(boolean running) {
 		if (!running && m_ExecutionMode.isScheduled()) {
 			m_LastRun = new Date();
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(m_LastRun);
-			cal.add(Calendar.MINUTE, m_Intervall);
-			m_NextRun = cal.getTime();
+			m_NextRun = calcNextRun(m_LastRun);
 		}
 		m_Running = running;
 	}
@@ -83,6 +81,9 @@ public class XPageAgentEntry implements Serializable {
 	}
 
 	public void setAlias(String alias) {
+		if (alias.contains(" ")) {
+			alias = alias.replaceAll(" ", "");
+		}
 		m_Alias = alias;
 	}
 
@@ -101,10 +102,7 @@ public class XPageAgentEntry implements Serializable {
 	public void setIntervall(int intervall) {
 		if (m_ExecutionMode.isScheduled()) {
 			m_LastRun = new Date();
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(m_LastRun);
-			cal.add(Calendar.MINUTE, intervall);
-			m_NextRun = cal.getTime();
+			m_NextRun = calcNextRun(m_LastRun);
 			m_Intervall = intervall;
 		}
 	}
@@ -149,7 +147,6 @@ public class XPageAgentEntry implements Serializable {
 		m_execTimeWindowEndMinute = execTimeWindowEndMinute;
 	}
 
-	
 	public boolean readyToExecute() {
 		if (!m_ExecutionMode.isScheduled()) {
 			return false;
@@ -165,4 +162,44 @@ public class XPageAgentEntry implements Serializable {
 		m_Active = active;
 	}
 
+	public Date calcNextRun(Date dtCurrent) {
+		Calendar calCurrent = Calendar.getInstance();
+		Calendar calNextRun = Calendar.getInstance();
+		calCurrent.setTime(dtCurrent);
+		calNextRun.setTime(dtCurrent);
+		calNextRun.add(Calendar.MINUTE, m_Intervall);
+		if (calNextRun.get(Calendar.HOUR_OF_DAY) > m_execTimeWindowEndHour || calNextRun.get(Calendar.HOUR_OF_DAY) > m_execTimeWindowEndHour
+				&& calNextRun.get(Calendar.MINUTE) > m_execTimeWindowEndMinute) {
+			if (m_execTimeWindowEndHour > m_execTimeWindowStartHour) {
+				calNextRun.add(Calendar.DAY_OF_YEAR, 1);
+			}
+			calNextRun.set(Calendar.HOUR_OF_DAY, m_execTimeWindowStartHour);
+			calNextRun.set(Calendar.MINUTE, m_execTimeWindowStartMinute);
+		}
+		if (calNextRun.get(Calendar.HOUR_OF_DAY) < m_execTimeWindowStartHour) {
+			calNextRun.set(Calendar.HOUR_OF_DAY, m_execTimeWindowStartHour);
+		}
+		if (calNextRun.get(Calendar.HOUR_OF_DAY) == m_execTimeWindowStartHour && calNextRun.get(Calendar.MINUTE) < m_execTimeWindowStartMinute) {
+			calNextRun.set(Calendar.MINUTE, m_execTimeWindowStartMinute);
+		}
+		if (m_ExecutionDay != null && m_ExecutionDay.length > 0 && m_ExecutionDay[0] != ExecutionDay.ALLDAY) {
+			boolean blFound = false;
+			int nCounter = 0;
+			while (!blFound && nCounter < 8) {
+				int nCurrentDay = calCurrent.get(Calendar.DAY_OF_WEEK);
+				for (ExecutionDay ed : m_ExecutionDay) {
+					if (ed == ExecutionDay.getByDateWeekday(nCurrentDay)) {
+						blFound = true;
+						break;
+					}
+				}
+				calNextRun.add(Calendar.DAY_OF_YEAR, 1);
+				nCounter++;
+				if (nCounter > 8) {
+					LoggerFactory.getLogger(this.getClass().getCanonicalName()).severe("Error in find next Day: " + m_Alias);
+				}
+			}
+		}
+		return calNextRun.getTime();
+	}
 }

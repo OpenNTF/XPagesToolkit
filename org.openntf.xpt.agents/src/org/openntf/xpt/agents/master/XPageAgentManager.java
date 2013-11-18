@@ -133,13 +133,6 @@ public class XPageAgentManager {
 			HttpGet getRequest = new HttpGet(strRedirection);
 			getRequest.addHeader(BasicScheme.authenticate(app.getCredentias(), "UTF-8", false));
 			getRequestINIT.addHeader(BasicScheme.authenticate(app.getCredentias(), "UTF-8", false));
-			// postRequest.getParams().setParameter(ClientPNames.COOKIE_POLICY,
-			// org.apache.http.client.params.CookiePolicy.BROWSER_COMPATIBILITY);
-
-			// postRequest.setHeader("Content-Type",
-			// "application/x-www-form-urlencoded");
-			// postRequest.addHeader("accept", "application/json");
-			// postRequest.setEntity(entity);
 			HttpResponse hsrINTI = httpClient.execute(getRequestINIT);
 			app.setLastStatus(hsrINTI.getStatusLine().getStatusCode());
 			app.setLastReason(hsrINTI.getStatusLine().getReasonPhrase());
@@ -147,7 +140,7 @@ public class XPageAgentManager {
 			if (hsrINTI.getStatusLine().getStatusCode() == 200) {
 				EntityUtils.consume(hsrINTI.getEntity());
 				HttpResponse hsr = httpClient.execute(getRequest);
-				System.out.println(EntityUtils.toString(hsr.getEntity()));
+				logCurrent.fine("Result from executeCheck: " + EntityUtils.toString(hsr.getEntity()));
 			} else {
 				EntityUtils.consume(hsrINTI.getEntity());
 				logCurrent.severe(app.getPath() + " does not response! -> " + hsrINTI.getStatusLine().toString());
@@ -181,7 +174,7 @@ public class XPageAgentManager {
 	public ExecutionUserProperties registerNewApplication(String strUNID, String strPath, String strUser, String strPassword) {
 
 		ExecutionUserProperties exProp = PasswordService.getInstance().checkPassword(strUser, strPassword, strPath);
-		if ( exProp.isLoggedIn()) {
+		if (exProp.isLoggedIn()) {
 			Application appNew = new Application();
 			if (m_ApplicationRegistry.containsKey(strUNID)) {
 				appNew = m_ApplicationRegistry.get(strUNID);
@@ -193,8 +186,30 @@ public class XPageAgentManager {
 			appNew.setUserID(strUser);
 			appNew.setCredValues(strUser, PasswordService.getInstance().encrypt(strPassword));
 			pushApplication2Properties(appNew, PasswordService.getInstance().encrypt(strPassword));
-		} 
+		}
 		return exProp;
+	}
+
+	public ApplicationStatus getApplicationStatus(String strUNID) {
+		ApplicationStatus asCurrent = new ApplicationStatus();
+		asCurrent.setActive(false);
+		if (!m_ApplicationRegistry.containsKey(strUNID)) {
+			return asCurrent;
+		}
+		Application app = m_ApplicationRegistry.get(strUNID);
+		asCurrent.setActive(true);
+		asCurrent.setUserName(app.getUserID());
+		asCurrent.setLastStatus(app.getLastStatus());
+		return asCurrent;
+	}
+
+	public boolean unregisterApplication(String strUNID) {
+		m_ApplicationRegistry.remove(strUNID);
+		m_AGMRProperties.remove(strUNID + "_PATH");
+		m_AGMRProperties.remove(strUNID + "_USER");
+		m_AGMRProperties.remove(strUNID + "_PW");
+		saveAMGRProperties();
+		return true;
 	}
 
 	private void pushApplication2Properties(Application app, String strPasword) {

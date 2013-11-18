@@ -21,6 +21,7 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import org.openntf.xpt.agents.XPageAgentRegistry;
+import org.openntf.xpt.agents.master.ApplicationStatus;
 import org.openntf.xpt.agents.master.ExecutionUserProperties;
 import org.openntf.xpt.agents.master.XPageAgentManager;
 
@@ -72,5 +73,23 @@ public class XPTAgentBean {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public ApplicationStatus getApplicationStatus() {
+		try {
+			return XPageAgentManager.getInstance().getApplicationStatus(NotesContext.getCurrentUnchecked().getCurrentDatabase().getReplicaID());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public boolean unregisterApplication() {
+		try {
+			return XPageAgentManager.getInstance().unregisterApplication(NotesContext.getCurrentUnchecked().getCurrentDatabase().getReplicaID());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

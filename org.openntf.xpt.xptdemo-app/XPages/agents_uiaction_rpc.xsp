@@ -42,8 +42,8 @@ return statusOBJ]]></xe:this.script>
 	</xp:scriptBlock>
 
 
-	<xc:cc_application pageTitle="UI Agent TEST"
-		navigationPath="/agent">
+	<xc:cc_application pageTitle="Long UI Actions with custom tracking"
+		navigationPath="/agent/uiActionsCustom">
 		<xp:this.facets>
 			<xp:panel xp:key="facetRight"></xp:panel>
 			<xp:panel xp:key="facetMiddle">

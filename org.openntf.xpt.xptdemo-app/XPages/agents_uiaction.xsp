@@ -11,8 +11,8 @@
 
 
 
-	<xc:cc_application pageTitle="UI Agent TEST"
-		navigationPath="/agent">
+	<xc:cc_application navigationPath="/agent/uiAgent"
+		pageTitle="Long UI Actions">
 		<xp:this.facets>
 			<xp:panel xp:key="facetRight"></xp:panel>
 			<xp:panel xp:key="facetMiddle">
@@ -45,7 +45,8 @@
 					styleTask="color:rgb(255,0,0);font-size:9pt;height:50.0px"
 					styleTitle="font-size:16pt;font-weight:bold"
 					style="width:300.0px">
-				</xpt:agentprogressbar></xp:panel>
+				</xpt:agentprogressbar>
+			</xp:panel>
 			<xp:panel xp:key="facetLeft">
 				<xc:cc_nav_agents></xc:cc_nav_agents>
 			</xp:panel>

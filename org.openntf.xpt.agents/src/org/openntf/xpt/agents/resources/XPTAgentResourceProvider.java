@@ -29,10 +29,12 @@ import com.ibm.xsp.webapp.resources.BundleResourceProvider;
 public class XPTAgentResourceProvider extends BundleResourceProvider {
 
 	private static final String CSS_PROGRESSBAR = "/.ibmxspres/.xptagents/css/progressbar.css";
+	private static final String CSS_AGENTLIST = "/.ibmxspres/.xptagents/css/agentlist.css";
 	private static final String RESOURCES_WEB_XPT = "/resources/web/xpt/xptagents/";
 	public static final String XPT_PREFIX = ".xptagents";
 
-	public static final String DOJO_XPT_AGENTCONROLLER = "xptagents.progressbar.agentcontroller";
+	public static final String DOJO_XPT_PROGRESSBAR_AGENTCONTROLlER = "xptagents.progressbar.agentcontroller";
+	public static final String DOJO_XPT_AGENTLISTCONROLLER = "xptagents.login.controller";
 
 	public XPTAgentResourceProvider() {
 		super(XPTAgentActivator.getInstance().getBundle(), XPT_PREFIX);
@@ -57,7 +59,11 @@ public class XPTAgentResourceProvider extends BundleResourceProvider {
 
 	}
 
-	public static final DojoModuleResource XPTAGENTS_PROGRESSBAR_AGENTCONTROLLER = new DojoModuleResource(DOJO_XPT_AGENTCONROLLER);
+	public static final DojoModuleResource XPTAGENTS_PROGRESSBAR_AGENTCONTROLLER = new DojoModuleResource(DOJO_XPT_PROGRESSBAR_AGENTCONTROLlER);
 	public static final StyleSheetResource XPTAGENTS_PROGRESSBAR_CSS = new StyleSheetResource(CSS_PROGRESSBAR);
 	public static final DojoModuleResource XPTAGENTS_PROGRESSBAR_DOJO = new DojoModuleResource("dijit.ProgressBar");
+	public static final StyleSheetResource XPTAGENTS_AGENTLIST_CSS = new StyleSheetResource(CSS_AGENTLIST);
+	public static final DojoModuleResource XPTAGENTS_AGENTLIST_CONTROLLER = new DojoModuleResource(DOJO_XPT_AGENTLISTCONROLLER);
+
+
 }

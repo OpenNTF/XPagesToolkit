@@ -57,7 +57,7 @@
 					</xe:pageTreeNode>
 
 					<xe:pageTreeNode label="XPagesAgents"
-						selection="/agents/.*" page="/agent_overview.xsp">
+						selection="/agent/.*" page="/agent_overview.xsp">
 					</xe:pageTreeNode>
 
 

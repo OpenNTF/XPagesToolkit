@@ -10,8 +10,8 @@ public class ExecutionUserProperties implements Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	private boolean m_LoggedIn;
-	private String m_UserName;
+	private boolean m_LoggedIn = false;
+	private String m_UserName = "";
 	private int m_AccessLevel;
 	private List<String> m_Roles;
 	public boolean isLoggedIn() {

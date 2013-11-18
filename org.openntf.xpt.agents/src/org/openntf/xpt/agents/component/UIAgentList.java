@@ -31,6 +31,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.openntf.xpt.agents.XPageAgentEntry;
 import org.openntf.xpt.agents.XPageAgentRegistry;
 import org.openntf.xpt.agents.beans.XPTAgentBean;
+import org.openntf.xpt.agents.master.ApplicationStatus;
 import org.openntf.xpt.agents.master.ExecutionUserProperties;
 
 import com.ibm.commons.util.StringUtil;
@@ -75,6 +76,7 @@ public class UIAgentList extends UIComponentBase implements FacesAjaxComponent {
 			for (XPageAgentEntry age : XPageAgentRegistry.getInstance().getAllAgents()) {
 				m_Entries.add(new UIAgentEntry(age));
 			}
+			doSort();
 		}
 		return m_Entries;
 	}
@@ -139,10 +141,27 @@ public class UIAgentList extends UIComponentBase implements FacesAjaxComponent {
 				jsWriter.startProperty("status");
 				jsWriter.outStringLiteral(exp.isLoggedIn() ? "ok" : "failed");
 				jsWriter.endProperty();
+				jsWriter.startProperty("username");
+				jsWriter.outStringLiteral(exp.getUserName());
+				jsWriter.endProperty();
 				jsWriter.endObject();
 				jsWriter.close();
 				return;
 			}
+
+			if ("unregister".equals(strMethod)) {
+				JsonWriter jsWriter = new JsonWriter(httpResponse.getWriter(), true);
+				boolean blREsp = XPTAgentBean.get(context).unregisterApplication();
+
+				jsWriter.startObject();
+				jsWriter.startProperty("status");
+				jsWriter.outStringLiteral(blREsp ? "ok" : "failed");
+				jsWriter.endProperty();
+				jsWriter.endObject();
+				jsWriter.close();
+				return;
+			}
+
 			if ("sort".equals(strMethod)) {
 				String strProperty = json.getString("prop");
 				if ((strProperty + "_ASC").equals(m_Sort + "_ASC")) {
@@ -192,6 +211,14 @@ public class UIAgentList extends UIComponentBase implements FacesAjaxComponent {
 				httpResponse.getWriter().flush();
 			}
 		}
+	}
+
+	public ApplicationStatus getApplicationStatus(FacesContext context) {
+		return XPTAgentBean.get(context).getApplicationStatus();
+	}
+
+	public boolean unregisterApplicaiton(FacesContext context) {
+		return XPTAgentBean.get(context).unregisterApplication();
 	}
 
 	private void doSort() {

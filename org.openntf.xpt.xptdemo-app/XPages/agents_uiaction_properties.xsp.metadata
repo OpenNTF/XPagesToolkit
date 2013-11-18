@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><note class="form" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="296" sequence="12" unid="CC4B4025107A17A7C1257BAB00437E5D">
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="296" sequence="38" unid="CC4B4025107A17A7C1257BAB00437E5D">
 <created><datetime dst="true">20130717T141712,61+02</datetime></created>
-<modified><datetime dst="true">20130717T152256,73+02</datetime></modified>
-<revised><datetime dst="true">20130717T152256,72+02</datetime></revised>
-<lastaccessed><datetime dst="true">20130717T152256,73+02</datetime></lastaccessed>
+<modified><datetime>20131118T133826,88+01</datetime></modified>
+<revised><datetime>20131118T133826,87+01</datetime></revised>
+<lastaccessed><datetime>20131118T133826,88+01</datetime></lastaccessed>
 <addedtofile><datetime dst="true">20130717T141712,62+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
@@ -11,10 +11,10 @@
 <item name="$TITLE" sign="true"><text>agents_uiaction_properties.xsp</text></item>
 
 
+
+
+
 <item name="$FileNames" sign="true"><text>agents_uiaction_properties.xsp</text></item>
 <item name="$DesignerVersion"><text>8.5.1</text></item>
-
-
-
 
 </note>

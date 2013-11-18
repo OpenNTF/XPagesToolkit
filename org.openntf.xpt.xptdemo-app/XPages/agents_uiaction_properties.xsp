@@ -9,12 +9,13 @@
 
 
 
-	<xc:cc_application pageTitle="UI Agent TEST"
-		navigationPath="/agent">
+	<xc:cc_application pageTitle="Longu UI Actions with Properties"
+		navigationPath="/agent/uiAgentProps">
 		<xp:this.facets>
 			<xp:panel xp:key="facetRight"></xp:panel>
 			<xp:panel xp:key="facetMiddle">
-				<xp:button value="Run Agent with SSJS Properies" id="btRunAgent">
+				<xp:button value="Run Agent with SSJS Properies"
+					id="btRunAgent">
 					<xp:eventHandler event="onclick" submit="false">
 						<xp:this.script><![CDATA[agentWithProperties1.startJob();]]></xp:this.script>
 					</xp:eventHandler>
@@ -25,7 +26,8 @@
 				<xp:br></xp:br>
 				<xp:br></xp:br>
 				<xpt:agentprogressbar id="agentprogressbar1"
-					agentName="agentWithProperties" serviceName="agentWithProperties1">
+					agentName="agentWithProperties"
+					serviceName="agentWithProperties1">
 					<xpt:this.agentProperties>
 						<xpt:agentProperty key="myname">
 							<xpt:this.value><![CDATA[#{javascript:"Property myName = "+ @Name("[CN]", @UserName())}]]></xpt:this.value>
@@ -38,8 +40,8 @@
 				<xp:br></xp:br>
 				<xp:br></xp:br>
 
-				<xp:button value="Run Agent  with Client Side Properties"
-					id="button1">
+				<xp:button
+					value="Run Agent  with Client Side Properties" id="button1">
 					<xp:eventHandler event="onclick" submit="false">
 						<xp:this.script><![CDATA[agentWithProperties2.startJob({"myname": "myName set by CSJS:", "startdate": new Date()});]]></xp:this.script>
 					</xp:eventHandler>
