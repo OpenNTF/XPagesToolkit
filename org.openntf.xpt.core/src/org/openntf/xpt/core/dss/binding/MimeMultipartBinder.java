@@ -28,49 +28,42 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 
 	private static MimeMultipartBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
-			MimeMultipart strValue = null;
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField,
-					MimeMultipart.class);
-
-			MIMEEntity entity = docCurrent.getMIMEEntity(strNotesField);
-			if (entity != null) {
-				strValue = MimeMultipart.fromHTML(entity.getContentAsText());
-			}
-			mt.invoke(objCurrent, strValue);
+			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, MimeMultipart.class);
+			mt.invoke(objCurrent, getValueFromStore(docCurrent, strNotesField, addValues));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+	public MimeMultipart[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+		MimeMultipart[] mpRC = new MimeMultipart[2];
 		try {
-			
+
+			MimeMultipart oldBody = getValueFromStore(docCurrent, strNotesField, addValues);
 			MimeMultipart body = getValue(objCurrent, strJavaField);
-			
+			mpRC[0] = oldBody;
+			mpRC[1] = body;
 			Stream stream = docCurrent.getParentDatabase().getParent().createStream();
-			if(body != null)
+			if (body != null)
 				stream.writeText(body.getHTML());
 			else
-				return;
-			
+				return null;
+
 			MIMEEntity entity = docCurrent.getMIMEEntity(strNotesField);
-			if(entity == null){
+			if (entity == null) {
 				docCurrent.removeItem(strNotesField);
 				entity = docCurrent.createMIMEEntity(strNotesField);
 			}
-			entity.setContentFromText(stream,"text/html;charset=UTF-8", 1725);
+			entity.setContentFromText(stream, "text/html;charset=UTF-8", 1725);
 			stream.close();
-			//docCurrent.replaceItemValue(strNotesField, strValue);
+			// docCurrent.replaceItemValue(strNotesField, strValue);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return mpRC;
 
 	}
 
@@ -81,16 +74,32 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 		return m_Binder;
 	}
 
-	private MimeMultipartBinder(){
-		
+	private MimeMultipartBinder() {
+
 	}
-	
+
 	public MimeMultipart getValue(Object objCurrent, String strJavaField) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("get" + strJavaField);
 			return (MimeMultipart) mt.invoke(objCurrent);
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public MimeMultipart getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		try {
+			MimeMultipart strValue = null;
+			MIMEEntity entity = docCurrent.getMIMEEntity(strNotesField);
+			if (entity != null) {
+				strValue = MimeMultipart.fromHTML(entity.getContentAsText());
+
+			}
+			return strValue;
+		} catch (Exception e) {
+
 		}
 		return null;
 	}

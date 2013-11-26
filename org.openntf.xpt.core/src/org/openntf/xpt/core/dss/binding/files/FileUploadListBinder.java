@@ -39,44 +39,39 @@ public class FileUploadListBinder implements IBinder<List<UploadedFile>> {
 		}
 		return m_Binder;
 	}
-	
-	private FileUploadListBinder(){
-		
-	}
-	
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+
+	private FileUploadListBinder() {
 
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField,
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+
+	}
+
+	public List<UploadedFile>[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
 			HashMap<String, Object> addValues) {
 		try {
-			
+
 			List<UploadedFile> files = getValue(objCurrent, strJavaField);
-			
-			for(UploadedFile file: files){
-			IUploadedFile FTemp = file.getUploadedFile();
-			File SrFile = FTemp.getServerFile();
-			
-			 File FNew = new File(SrFile.getParentFile().getAbsolutePath() +
-			 File.separator + FTemp.getClientFileName()); 
-			 SrFile.renameTo(FNew);
-			 RichTextItem rt = null;
-			 rt = (RichTextItem) docCurrent.getFirstItem(strNotesField);
-			 if(rt == null)
-				 rt = docCurrent.createRichTextItem(strNotesField);
-			 rt.embedObject(EmbeddedObject.EMBED_ATTACHMENT, "",FNew.getAbsolutePath(), null);
+
+			for (UploadedFile file : files) {
+				IUploadedFile FTemp = file.getUploadedFile();
+				File SrFile = FTemp.getServerFile();
+
+				File FNew = new File(SrFile.getParentFile().getAbsolutePath() + File.separator + FTemp.getClientFileName());
+				SrFile.renameTo(FNew);
+				RichTextItem rt = null;
+				rt = (RichTextItem) docCurrent.getFirstItem(strNotesField);
+				if (rt == null)
+					rt = docCurrent.createRichTextItem(strNotesField);
+				rt.embedObject(EmbeddedObject.EMBED_ATTACHMENT, "", FNew.getAbsolutePath(), null);
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		return null;
 	}
-
 
 	@SuppressWarnings("unchecked")
 	public List<UploadedFile> getValue(Object objCurrent, String strJavaField) {
@@ -86,6 +81,11 @@ public class FileUploadListBinder implements IBinder<List<UploadedFile>> {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		return null;
+	}
+
+	@Override
+	public List<UploadedFile> getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
 		return null;
 	}
 

@@ -54,8 +54,15 @@ public class FormulaDoubleBinder implements IBinder<Double>, IFormulaBinder {
 		}
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
+	public Double[] processJava2Domino(Document docCurrent, Object objCurrent,
 			String strNotesField, String JavaField, HashMap<String, Object> addValues) {
+		return null;
+	}
+
+	@Override
+	public Double getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

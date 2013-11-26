@@ -22,13 +22,15 @@ public class Definition {
 	private String m_NotesField;
 	private String m_JavaField;
 	private IBinder<?> m_Binder;
+	private boolean m_ChangeLog;
 	private HashMap<String, Object> m_AdditionalValues;
 
-	public Definition(String notesField, String javaField, IBinder<?> binCurrent, HashMap<String, Object> addValues) {
+	public Definition(String notesField, String javaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues) {
 		m_NotesField = notesField;
 		m_JavaField = javaField;
 		m_Binder = binCurrent;
 		m_AdditionalValues = addValues;
+		setChangeLog(changeLog);
 	}
 
 	public String getNotesField() {
@@ -61,6 +63,14 @@ public class Definition {
 
 	public HashMap<String, Object> getAdditionalValues() {
 		return m_AdditionalValues;
+	}
+
+	public boolean isChangeLog() {
+		return m_ChangeLog;
+	}
+
+	public void setChangeLog(boolean changeLog) {
+		m_ChangeLog = changeLog;
 	}
 
 }

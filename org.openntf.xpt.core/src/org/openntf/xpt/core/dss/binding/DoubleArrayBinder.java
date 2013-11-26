@@ -21,30 +21,28 @@ import java.util.Vector;
 
 import lotus.domino.Document;
 
-public class DoubleArrayBinder implements IBinder<Double[]>{
+public class DoubleArrayBinder implements IBinder<Double[]> {
 
 	private static DoubleArrayBinder m_Binder;
 
-	@SuppressWarnings("unchecked")
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField,
-					new Class[] { Double[].class });
-			Vector<Double[]> vecResult = docCurrent.getItemValue(strNotesField);
-
-			//Double[] nValue = new Double[vecResult.size()];
-			Double[] nValue = (Double[]) vecResult.toArray(new Double[vecResult.size()]);
-			mt.invoke(objCurrent, new Object[] { nValue });
+			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, new Class[] { Double[].class });
+			Double[] nValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (nValue != null) {
+				mt.invoke(objCurrent, new Object[] { nValue });
+			}
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
 	}
-	
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+
+	public Double[][] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+		Double[][] dblRC = new Double[2][];
 		try {
+			Double[] nOldValues = getValueFromStore(docCurrent, strNotesField, addValues);
 			Double[] nValues = getValue(objCurrent, strJavaField);
+			dblRC[0] = nOldValues;
+			dblRC[1] = nValues;
 			Vector<Double> vecValues = new Vector<Double>(nValues.length);
 			for (Double nVal : nValues) {
 				vecValues.addElement(nVal);
@@ -52,7 +50,7 @@ public class DoubleArrayBinder implements IBinder<Double[]>{
 			docCurrent.replaceItemValue(strNotesField, vecValues);
 		} catch (Exception e) {
 		}
-
+		return dblRC;
 	}
 
 	public static IBinder<Double[]> getInstance() {
@@ -62,10 +60,10 @@ public class DoubleArrayBinder implements IBinder<Double[]>{
 		return m_Binder;
 	}
 
-	private DoubleArrayBinder(){
-		
+	private DoubleArrayBinder() {
+
 	}
-	
+
 	public Double[] getValue(Object objCurrent, String strJavaField) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("get" + strJavaField);
@@ -73,6 +71,17 @@ public class DoubleArrayBinder implements IBinder<Double[]>{
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Double[] getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		try {
+			Vector<Double[]> vecResult = docCurrent.getItemValue(strNotesField);
+			return (Double[]) vecResult.toArray(new Double[vecResult.size()]);
+		} catch (Exception e) {
 		}
 		return null;
 	}

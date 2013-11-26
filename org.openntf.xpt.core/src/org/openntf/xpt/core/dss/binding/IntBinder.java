@@ -26,27 +26,28 @@ public class IntBinder extends BaseIntegerBinder implements IBinder<Integer> {
 
 	private static IntBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField,
-					Integer.TYPE);
-			int nValue = docCurrent.getItemValueInteger(strNotesField);
-			mt.invoke(objCurrent, nValue);
+			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Integer.TYPE);
+			Integer nValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (nValue != null) {
+				mt.invoke(objCurrent, nValue.intValue());
+			}
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public Integer[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+		Integer[] nRC = new Integer[2];
 		try {
+			int nValueOld = getValueFromStore(docCurrent, strNotesField, addValues);
 			int nValue = getValue(objCurrent, strJavaField).intValue();
+			nRC[0] = nValueOld;
+			nRC[1] = nValue;
 			docCurrent.replaceItemValue(strNotesField, nValue);
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
-
+		return nRC;
 	}
 
 	public static IBinder<Integer> getInstance() {
@@ -56,7 +57,17 @@ public class IntBinder extends BaseIntegerBinder implements IBinder<Integer> {
 		return m_Binder;
 	}
 
-	private IntBinder(){
-		
+	private IntBinder() {
+
+	}
+
+	@Override
+	public Integer getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		try {
+			int nValue = docCurrent.getItemValueInteger(strNotesField);
+			return new Integer(nValue);
+		} catch (Exception e) {
+		}
+		return null;
 	}
 }

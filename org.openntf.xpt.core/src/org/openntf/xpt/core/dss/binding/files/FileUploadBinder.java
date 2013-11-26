@@ -27,41 +27,35 @@ import org.openntf.xpt.core.dss.binding.IBinder;
 import com.ibm.xsp.component.UIFileuploadEx.UploadedFile;
 import com.ibm.xsp.http.IUploadedFile;
 
-
 public class FileUploadBinder implements IBinder<UploadedFile> {
 
 	private static FileUploadBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField,
+	public UploadedFile[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
 			HashMap<String, Object> addValues) {
 		try {
-			
+
 			UploadedFile file = getValue(objCurrent, strJavaField);
-			
+
 			IUploadedFile FTemp = file.getUploadedFile();
 			File SrFile = FTemp.getServerFile();
-			
-			 File FNew = new File(SrFile.getParentFile().getAbsolutePath() +
-			 File.separator + FTemp.getClientFileName()); 
-			 SrFile.renameTo(FNew);
-			 RichTextItem rt = null;
-			 rt = (RichTextItem) docCurrent.getFirstItem(strNotesField);
-			 if(rt == null)
-				 rt = docCurrent.createRichTextItem(strNotesField);
-			 rt.embedObject(EmbeddedObject.EMBED_ATTACHMENT, "",FNew.getAbsolutePath(), null);
 
+			File FNew = new File(SrFile.getParentFile().getAbsolutePath() + File.separator + FTemp.getClientFileName());
+			SrFile.renameTo(FNew);
+			RichTextItem rt = null;
+			rt = (RichTextItem) docCurrent.getFirstItem(strNotesField);
+			if (rt == null)
+				rt = docCurrent.createRichTextItem(strNotesField);
+			rt.embedObject(EmbeddedObject.EMBED_ATTACHMENT, "", FNew.getAbsolutePath(), null);
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		return null;
 	}
 
 	public static IBinder<UploadedFile> getInstance() {
@@ -71,10 +65,10 @@ public class FileUploadBinder implements IBinder<UploadedFile> {
 		return m_Binder;
 	}
 
-	private FileUploadBinder(){
-		
+	private FileUploadBinder() {
+
 	}
-	
+
 	public UploadedFile getValue(Object objCurrent, String strJavaField) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("get" + strJavaField);
@@ -82,6 +76,11 @@ public class FileUploadBinder implements IBinder<UploadedFile> {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
+		return null;
+	}
+
+	@Override
+	public UploadedFile getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
 		return null;
 	}
 

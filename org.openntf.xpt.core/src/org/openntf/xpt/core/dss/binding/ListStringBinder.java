@@ -29,30 +29,27 @@ public class ListStringBinder implements IBinder<List<String>> {
 
 	private static ListStringBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField,
-					List.class);
-			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);
-			ArrayList<String> lstValues = new ArrayList<String>();
-			for (Object strValue : vecResult) {
-				lstValues.add(NamesProcessor.getInstance().getPerson(addValues,
-						strValue.toString()));
+			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, List.class);
+			List<String> lstValues = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (lstValues != null) {
+				mt.invoke(objCurrent, lstValues);
 			}
-			mt.invoke(objCurrent, lstValues);
-			// mt.invoke(objCurrent, new ArrayList<String>(vecResult));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField,
+	public List<String>[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
 			HashMap<String, Object> addValues) {
+		@SuppressWarnings("unchecked")
+		List<String>[] lstRC = new ArrayList[2];
 		try {
+			List<String> lstOldValues = getValueFromStore(docCurrent, strNotesField, addValues);
 			List<String> lstValues = getValue(objCurrent, strJavaField);
+			lstRC[0] = lstOldValues;
+			lstRC[1] = lstValues;
 			Vector<String> vValues = new Vector<String>();
 
 			if (lstValues != null) {
@@ -60,23 +57,18 @@ public class ListStringBinder implements IBinder<List<String>> {
 				if (addValues != null && addValues.size() > 0) {
 					docCurrent.replaceItemValue(strNotesField, "");
 					Item iNotesField = docCurrent.getFirstItem(strNotesField);
-					isNamesValue = NamesProcessor.getInstance().setNamesField(
-							addValues, iNotesField);
+					isNamesValue = NamesProcessor.getInstance().setNamesField(addValues, iNotesField);
 				}
 
 				for (String strValue : lstValues) {
-					vValues.add(NamesProcessor.getInstance().setPerson(
-							strValue, isNamesValue));
+					vValues.add(NamesProcessor.getInstance().setPerson(strValue, isNamesValue));
 				}
 			}
 			docCurrent.replaceItemValue(strNotesField, vValues);
-
-			// docCurrent.replaceItemValue(strNotesField, new
-			// Vector<String>(lstValues));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		return lstRC;
 	}
 
 	public static IBinder<List<String>> getInstance() {
@@ -86,10 +78,10 @@ public class ListStringBinder implements IBinder<List<String>> {
 		return m_Binder;
 	}
 
-	private ListStringBinder(){
-		
+	private ListStringBinder() {
+
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public List<String> getValue(Object objCurrent, String strJavaField) {
 		try {
@@ -98,6 +90,20 @@ public class ListStringBinder implements IBinder<List<String>> {
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List<String> getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		try {
+			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);
+			ArrayList<String> lstValues = new ArrayList<String>();
+			for (Object strValue : vecResult) {
+				lstValues.add(NamesProcessor.getInstance().getPerson(additionalValues, strValue.toString()));
+			}
+			return lstValues;
+		} catch (Exception e) {
 		}
 		return null;
 	}

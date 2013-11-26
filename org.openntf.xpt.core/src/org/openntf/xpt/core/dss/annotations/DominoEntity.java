@@ -33,5 +33,6 @@ public @interface DominoEntity {
 	boolean isReader() default false;
 	String showNameAs() default ""; //CN and ABBREVIATE are implemented in NamesProcessor.java
 	boolean dateOnly() default false;
+	boolean changeLog() default false;
 	
 }

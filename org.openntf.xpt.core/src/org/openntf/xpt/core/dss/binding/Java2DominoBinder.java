@@ -1,4 +1,4 @@
- /*
+/*
  * © Copyright WebGate Consulting AG, 2012
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -30,19 +30,15 @@ public class Java2DominoBinder {
 		m_Definition = new ArrayList<Definition>();
 	}
 
-	public void addDefinition(String strNotesField, String strJavaField,
-			IBinder<?> binCurrent, HashMap<String, Object> addValues) {
-		m_Definition
-				.add(new Definition(strNotesField, strJavaField, binCurrent, addValues));
+	public void addDefinition(String strNotesField, String strJavaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues) {
+		m_Definition.add(new Definition(strNotesField, strJavaField, binCurrent, changeLog, addValues));
 	}
 
-	public void processDocument(Document docProcess, Object objCurrent)
-			throws NotesException {
-		for (Iterator<Definition> itDefinition = m_Definition.iterator(); itDefinition
-				.hasNext();) {
+	public void processDocument(Document docProcess, Object objCurrent) throws NotesException {
+		for (Iterator<Definition> itDefinition = m_Definition.iterator(); itDefinition.hasNext();) {
 			Definition defCurrent = itDefinition.next();
-			defCurrent.getBinder().processJava2Domino(docProcess, objCurrent,
-					defCurrent.getNotesField(), defCurrent.getJavaField(), defCurrent.getAdditionalValues());
+			defCurrent.getBinder().processJava2Domino(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(),
+					defCurrent.getAdditionalValues());
 
 		}
 	}

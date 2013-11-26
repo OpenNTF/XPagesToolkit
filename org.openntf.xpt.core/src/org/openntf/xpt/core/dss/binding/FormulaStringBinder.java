@@ -39,13 +39,10 @@ public class FormulaStringBinder implements IBinder<String>, IFormulaBinder {
 		return null;
 	}
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField,
-					String.class);
-			Vector<?> vecString = docCurrent.getParentDatabase().getParent()
-					.evaluate(strNotesField, docCurrent);
+			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, String.class);
+			Vector<?> vecString = docCurrent.getParentDatabase().getParent().evaluate(strNotesField, docCurrent);
 			if (vecString.size() > 0) {
 				String strCurrent = (String) vecString.elementAt(0);
 				mt.invoke(objCurrent, strCurrent);
@@ -55,8 +52,14 @@ public class FormulaStringBinder implements IBinder<String>, IFormulaBinder {
 
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String JavaField, HashMap<String, Object> addValues) {
+	public String[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String JavaField, HashMap<String, Object> addValues) {
+		return null;
+	}
+
+	@Override
+	public String getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

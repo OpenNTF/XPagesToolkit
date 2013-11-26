@@ -29,16 +29,18 @@ public class BooleanBinder extends BaseBooleanBinder implements IBinder<Boolean>
 	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Boolean.TYPE);
-			String strValue = docCurrent.getItemValueString(strNotesField);
-			mt.invoke(objCurrent, "1".equals(strValue));
+			mt.invoke(objCurrent, getValueFromStore(docCurrent, strNotesField, addValues).booleanValue());
 		} catch (Exception e) {
 		}
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public Boolean[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+		Boolean[] blRC = new Boolean[2];
 		try {
 			boolean blValue = getValue(objCurrent, strJavaField).booleanValue();
-
+			boolean blOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			blRC[0] = blOldValue;
+			blRC[1] = blValue;
 			if (blValue) {
 				docCurrent.replaceItemValue(strNotesField, "1");
 			} else {
@@ -46,6 +48,7 @@ public class BooleanBinder extends BaseBooleanBinder implements IBinder<Boolean>
 			}
 		} catch (Exception e) {
 		}
+		return blRC;
 
 	}
 
@@ -56,8 +59,19 @@ public class BooleanBinder extends BaseBooleanBinder implements IBinder<Boolean>
 		return m_Binder;
 	}
 
-	private BooleanBinder(){
-		
+	private BooleanBinder() {
+
+	}
+
+	@Override
+	public Boolean getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> addValues) {
+		try {
+			String strValue = docCurrent.getItemValueString(strNotesField);
+			return "1".equals(strValue) ? Boolean.TRUE : Boolean.FALSE;
+		} catch (Exception e) {
+
+		}
+		return false;
 	}
 
 }

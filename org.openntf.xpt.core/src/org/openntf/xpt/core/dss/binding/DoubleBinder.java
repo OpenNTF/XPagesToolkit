@@ -26,26 +26,28 @@ public class DoubleBinder extends BaseDoubleBinder implements IBinder<Double> {
 
 	private static DoubleBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Double.TYPE);
-			double nValue = docCurrent.getItemValueDouble(strNotesField);
-			mt.invoke(objCurrent, nValue);
+			Double dblVal = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (dblVal != null) {
+				mt.invoke(objCurrent, dblVal.doubleValue());
+			}
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+	public Double[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+		Double[] dblRC = new Double[2];
 		try {
+			double nOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
 			double nValue = getValue(objCurrent, strJavaField).doubleValue();
+			dblRC[0] = nOldValue;
+			dblRC[1] = nValue;
 			docCurrent.replaceItemValue(strNotesField, nValue);
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
-
+		return dblRC;
 	}
 
 	public static IBinder<Double> getInstance() {
@@ -57,5 +59,15 @@ public class DoubleBinder extends BaseDoubleBinder implements IBinder<Double> {
 
 	private DoubleBinder() {
 
+	}
+
+	@Override
+	public Double getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		try {
+			double nValue = docCurrent.getItemValueDouble(strNotesField);
+			return new Double(nValue);
+		} catch (Exception e) {
+		}
+		return null;
 	}
 }

@@ -27,48 +27,43 @@ public class StringArrayBinder implements IBinder<String[]> {
 
 	private static StringArrayBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField,
-					new Class[] { String[].class });
-			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);
-			//String[] strValues = (String[]) vecResult.toArray(new String[vecResult.size()]);
-			String[] strValues = new String[vecResult.size()];
-				
-			int i = 0;
-			for(Object strValue: vecResult){
-				strValues[i] = NamesProcessor.getInstance().getPerson(addValues, strValue.toString());
-				i += 1;
+			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, new Class[] { String[].class });
+			String[] strValues = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (strValues != null) {
+				mt.invoke(objCurrent, new Object[] { strValues });
 			}
-			
-			mt.invoke(objCurrent, new Object[] { strValues });
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public String[][] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+		String[][] strRC = new String[2][];
 		try {
+			String[] strOldValues = getValueFromStore(docCurrent, strNotesField, addValues);
 			String[] strValues = getValue(objCurrent, strJavaField);
+			strRC[0] = strOldValues;
+			strRC[1] = strValues;
 			Vector<String> vecValues = new Vector<String>(strValues.length);
-			
+
 			boolean isNamesValue = false;
-			if(addValues != null && addValues.size() > 0){
-				docCurrent.replaceItemValue(strNotesField,"");
+			if (addValues != null && addValues.size() > 0) {
+				docCurrent.replaceItemValue(strNotesField, "");
 				Item iNotesField = docCurrent.getFirstItem(strNotesField);
 				isNamesValue = NamesProcessor.getInstance().setNamesField(addValues, iNotesField);
 			}
-			
+
 			for (String strVal : strValues) {
-				vecValues.addElement(NamesProcessor.getInstance().setPerson(strVal, isNamesValue));	
+				vecValues.addElement(NamesProcessor.getInstance().setPerson(strVal, isNamesValue));
 			}
-			
+
 			docCurrent.replaceItemValue(strNotesField, vecValues);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return strRC;
 
 	}
 
@@ -79,10 +74,10 @@ public class StringArrayBinder implements IBinder<String[]> {
 		return m_Binder;
 	}
 
-	private StringArrayBinder(){
-		
+	private StringArrayBinder() {
+
 	}
-	
+
 	public String[] getValue(Object objCurrent, String strJavaField) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("get" + strJavaField);
@@ -90,6 +85,24 @@ public class StringArrayBinder implements IBinder<String[]> {
 
 		} catch (Exception ex) {
 			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public String[] getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		try {
+			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);
+			String[] strValues = new String[vecResult.size()];
+
+			int i = 0;
+			for (Object strValue : vecResult) {
+				strValues[i] = NamesProcessor.getInstance().getPerson(additionalValues, strValue.toString());
+				i += 1;
+			}
+			return strValues;
+
+		} catch (Exception e) {
 		}
 		return null;
 	}

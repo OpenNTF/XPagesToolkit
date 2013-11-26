@@ -61,10 +61,18 @@ public class FormulaDateBinder implements IBinder<Date>, IFormulaBinder {
 
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String JavaField, HashMap<String, Object> addValues) {
-		// TODO Auto-generated method stub
 
+	@Override
+	public Date getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		// TODO Auto-generated method stub
+		return null;
 	}
+
+	@Override
+	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String JavaField, HashMap<String, Object> additionalValues) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 
 }

@@ -31,35 +31,26 @@ public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 
 	private static DateBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Date.class);
-			Vector<?> vecDates = null;
-			try {
-				vecDates = docCurrent.getItemValueDateTimeArray(strNotesField);
-			} catch (Exception e) {
-				// NIX machen
+			Date dtCurrent = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (dtCurrent != null) {
+				mt.invoke(objCurrent, dtCurrent);
 			}
-			if (vecDates != null && vecDates.size() > 0) {
-				DateTime dtCurrent = (DateTime) vecDates.elementAt(0);
 
-				String strFormat = DateProcessor.getInstance().getDateFormat(addValues, docCurrent.getParentDatabase().getParent());
-
-				// System.out.println("FORMAT = " + strFormat);
-				DateFormat formatter = new SimpleDateFormat(strFormat);
-				mt.invoke(objCurrent, (Date) formatter.parse(dtCurrent.getLocalTime()));
-				// mt.invoke(objCurrent, dtCurrent.toJavaDate());
-			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+		Date[] dtRC = new Date[2];
 		try {
 			Date dtCurrent = getValue(objCurrent, strJavaField);
+			Date dtOld = getValueFromStore(docCurrent, strNotesField, addValues);
+			dtRC[0] = dtOld;
+			dtRC[1] = dtCurrent;
 			if (dtCurrent != null) {
 				DateTime dt = docCurrent.getParentDatabase().getParent().createDateTime(dtCurrent);
 				if (addValues.containsKey("dateOnly")) {
@@ -73,6 +64,7 @@ public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return dtRC;
 
 	}
 
@@ -84,6 +76,28 @@ public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 	}
 
 	private DateBinder() {
+
+	}
+
+	@Override
+	public Date getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		Vector<?> vecDates = null;
+		try {
+			try {
+				vecDates = docCurrent.getItemValueDateTimeArray(strNotesField);
+			} catch (Exception e) {
+			}
+			if (vecDates != null && vecDates.size() > 0) {
+				DateTime dtCurrent = (DateTime) vecDates.elementAt(0);
+
+				String strFormat = DateProcessor.getInstance().getDateFormat(additionalValues, docCurrent.getParentDatabase().getParent());
+
+				DateFormat formatter = new SimpleDateFormat(strFormat);
+				return (Date) formatter.parse(dtCurrent.getLocalTime());
+			}
+		} catch (Exception e) {
+		}
+		return null;
 
 	}
 

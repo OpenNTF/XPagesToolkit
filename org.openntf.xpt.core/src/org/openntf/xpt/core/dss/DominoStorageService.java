@@ -125,7 +125,7 @@ public class DominoStorageService {
 
 	private boolean getObjectFromDocument(DominoStore dsDefinition, Domino2JavaBinder d2j, Object objCurrent, Object pk, Database ndbTarget) {
 		try {
-			if (pk != null){
+			if (pk != null) {
 				setPK2Object(dsDefinition, objCurrent, pk);
 			}
 			Document docCurrent = getDocument(dsDefinition, objCurrent, ndbTarget, false);
@@ -251,7 +251,8 @@ public class DominoStorageService {
 							addValues.put("genericType", fldCurrent.getGenericType());
 						}
 
-						j2dRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, addValues);
+						j2dRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(),
+								addValues);
 					}
 				}
 			}
@@ -269,7 +270,8 @@ public class DominoStorageService {
 					if (de.isFormula()) {
 						IBinder<?> binder = DefinitionFactory.getFormulaBinder(fldCurrent.getType());
 						if (binder != null) {
-							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, null);
+							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(),
+									null);
 						}
 					} else {
 						IBinder<?> binder = DefinitionFactory.getBinder(fldCurrent.getType(), fldCurrent.getGenericType());
@@ -290,7 +292,8 @@ public class DominoStorageService {
 						}
 
 						if (binder != null) {
-							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, addValues);
+							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(),
+									addValues);
 						}
 					}
 				}

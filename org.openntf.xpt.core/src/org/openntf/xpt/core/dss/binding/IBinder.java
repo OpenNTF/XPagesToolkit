@@ -1,4 +1,4 @@
- /*
+/*
  * © Copyright WebGate Consulting AG, 2012
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -20,7 +20,11 @@ import java.util.HashMap;
 import lotus.domino.Document;
 
 public interface IBinder<T> {
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String,Object> additionalValues );
-	public void processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String JavaField, HashMap<String,Object> additionalValues);
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> additionalValues);
+
+	public T[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String JavaField, HashMap<String, Object> additionalValues);
+
 	public T getValue(Object objCurrent, String strJavaField);
+
+	public T getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues);
 }

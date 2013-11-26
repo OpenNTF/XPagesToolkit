@@ -31,9 +31,9 @@ public class Domino2JavaBinder {
 	}
 
 	public void addDefinition(String strNotesField, String strJavaField,
-			IBinder<?> binCurrent, HashMap<String, Object> addValues) {
+			IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues) {
 		m_Definition.add(new Definition(strNotesField, strJavaField,
-				binCurrent, addValues));
+				binCurrent,changeLog, addValues));
 	}
 
 	public void processDocument(Document docProcess, Object objCurrent)

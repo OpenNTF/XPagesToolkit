@@ -24,26 +24,28 @@ public class LongBinder implements IBinder<Long> {
 
 	private static LongBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField,
-					Long.TYPE);
-			long nValue = (long) docCurrent.getItemValueDouble(strNotesField);
-			mt.invoke(objCurrent, nValue);
+			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Long.TYPE);
+			Long nValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (nValue != null) {
+				mt.invoke(objCurrent, nValue.longValue());
+			}
 		} catch (Exception e) {
-			// e.printStackTrace();
 		}
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public Long[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+		Long[] lngRC = new Long[2];
 		try {
+			long nOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
 			long nValue = getValue(objCurrent, strJavaField).longValue();
+			lngRC[0] = nOldValue;
+			lngRC[1] = nValue;
 			docCurrent.replaceItemValue(strNotesField, nValue);
 		} catch (Exception e) {
-		//	 e.printStackTrace();
 		}
+		return lngRC;
 
 	}
 
@@ -54,16 +56,26 @@ public class LongBinder implements IBinder<Long> {
 		return m_Binder;
 	}
 
-	private LongBinder(){
-		
+	private LongBinder() {
+
 	}
-	
+
 	public Long getValue(Object objCurrent, String strJavaField) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("get" + strJavaField);
 			return (Long) mt.invoke(objCurrent);
 		} catch (Exception ex) {
 
+		}
+		return null;
+	}
+
+	@Override
+	public Long getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		try {
+			long nValue = (long) docCurrent.getItemValueDouble(strNotesField);
+			return new Long(nValue);
+		} catch (Exception e) {
 		}
 		return null;
 	}

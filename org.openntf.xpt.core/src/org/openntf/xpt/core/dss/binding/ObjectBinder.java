@@ -42,6 +42,89 @@ public class ObjectBinder implements IBinder<Object> {
 
 	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
+
+			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, (Class<?>) addValues.get("innerClass"));
+
+			mt.invoke(objCurrent, getValueFromStore(docCurrent, strNotesField, addValues));
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Object[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+		Object[] objRC = new Object[2];
+		try {
+			Object oldBody = getValueFromStore(docCurrent, strNotesField, addValues);
+			Object body = getValue(objCurrent, strJavaField);
+			objRC[0] = oldBody;
+			objRC[1] = body;
+			Session session = ExtLibUtil.getCurrentSession();
+
+			boolean convertMime = session.isConvertMime();
+			session.setConvertMime(false);
+
+			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
+			ObjectOutputStream objectStream = new ObjectOutputStream(new GZIPOutputStream(byteStream));
+			objectStream.writeObject(body);
+			objectStream.flush();
+			objectStream.close();
+
+			MIMEEntity entity = null;
+			MIMEEntity previousState = docCurrent.getMIMEEntity(strNotesField);
+			if (previousState == null) {
+				entity = docCurrent.createMIMEEntity(strNotesField);
+			} else {
+				entity = previousState;
+			}
+			Stream mimeStream = session.createStream();
+			ByteArrayInputStream byteIn = new ByteArrayInputStream(byteStream.toByteArray());
+			mimeStream.setContents(byteIn);
+			entity.setContentFromBytes(mimeStream, "application/x-java-serialized-object", MIMEEntity.ENC_NONE);
+
+			MIMEHeader header = entity.getNthHeader("Content-Encoding");
+			if (header == null) {
+				header = entity.createHeader("Content-Encoding");
+			}
+			header.setHeaderVal("gzip");
+
+			header.recycle();
+			entity.recycle();
+			mimeStream.recycle();
+
+			session.setConvertMime(convertMime);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return objRC;
+
+	}
+
+	public static IBinder<Object> getInstance() {
+		if (m_Binder == null) {
+			m_Binder = new ObjectBinder();
+		}
+		return m_Binder;
+	}
+
+	private ObjectBinder() {
+
+	}
+
+	public Object getValue(Object objCurrent, String strJavaField) {
+		try {
+			Method mt = objCurrent.getClass().getMethod("get" + strJavaField);
+			return mt.invoke(objCurrent);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public Object getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		try {
 			Session session = ExtLibUtil.getCurrentSession();
 			boolean convertMime = session.isConvertMime();
 			session.setConvertMime(false);
@@ -84,78 +167,9 @@ public class ObjectBinder implements IBinder<Object> {
 			entity.recycle();
 
 			session.setConvertMime(convertMime);
-
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, (Class<?>) addValues.get("innerClass"));
-
-			mt.invoke(objCurrent, result);
-
+			return result;
 		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	public void processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
-		try {
-
-			Object body = getValue(objCurrent, strJavaField);
-			Session session = ExtLibUtil.getCurrentSession();
-
-			boolean convertMime = session.isConvertMime();
-			session.setConvertMime(false);
-
-			ByteArrayOutputStream byteStream = new ByteArrayOutputStream();
-			ObjectOutputStream objectStream = new ObjectOutputStream(new GZIPOutputStream(byteStream));
-			objectStream.writeObject(body);
-			objectStream.flush();
-			objectStream.close();
-
-			MIMEEntity entity = null;
-			MIMEEntity previousState = docCurrent.getMIMEEntity(strNotesField);
-			if (previousState == null) {
-				entity = docCurrent.createMIMEEntity(strNotesField);
-			} else {
-				entity = previousState;
-			}
-			Stream mimeStream = session.createStream();
-			ByteArrayInputStream byteIn = new ByteArrayInputStream(byteStream.toByteArray());
-			mimeStream.setContents(byteIn);
-			entity.setContentFromBytes(mimeStream, "application/x-java-serialized-object", MIMEEntity.ENC_NONE);
-
-			MIMEHeader header = entity.getNthHeader("Content-Encoding");
-			if (header == null) {
-				header = entity.createHeader("Content-Encoding");
-			}
-			header.setHeaderVal("gzip");
-
-			header.recycle();
-			entity.recycle();
-			mimeStream.recycle();
-
-			session.setConvertMime(convertMime);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-	}
-
-	public static IBinder<Object> getInstance() {
-		if (m_Binder == null) {
-			m_Binder = new ObjectBinder();
-		}
-		return m_Binder;
-	}
-
-	private ObjectBinder() {
-
-	}
-
-	public Object getValue(Object objCurrent, String strJavaField) {
-		try {
-			Method mt = objCurrent.getClass().getMethod("get" + strJavaField);
-			return mt.invoke(objCurrent);
-		} catch (Exception ex) {
-			ex.printStackTrace();
+			// TODO: handle exception
 		}
 		return null;
 	}

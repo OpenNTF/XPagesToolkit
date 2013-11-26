@@ -1,4 +1,4 @@
- /*
+/*
  * © Copyright WebGate Consulting AG, 2012
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
@@ -27,42 +27,41 @@ public class StringBinder extends BaseStringBinder implements IBinder<String> {
 
 	private static StringBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField,
-					String.class);
-			
-			String strValue = docCurrent.getItemValueString(strNotesField);
-			strValue = NamesProcessor.getInstance().getPerson(addValues, strValue);
-			
-			mt.invoke(objCurrent, strValue);
+			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, String.class);
+
+			String strValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (strValue != null) {
+				mt.invoke(objCurrent, strValue);
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public void processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public String[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+		String[] arrRC = new String[2];
 		try {
 			boolean isNamesValue = false;
-			String strValue = getValue(objCurrent,strJavaField);
-			
-			if(addValues != null && addValues.size() > 0){
-				docCurrent.replaceItemValue(strNotesField,"");
+			String strOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			String strValue = getValue(objCurrent, strJavaField);
+			if (addValues != null && addValues.size() > 0) {
+				docCurrent.replaceItemValue(strNotesField, "");
 				Item iNotesField = docCurrent.getFirstItem(strNotesField);
 				isNamesValue = NamesProcessor.getInstance().setNamesField(addValues, iNotesField);
-				strValue = NamesProcessor.getInstance().setPerson(strValue, isNamesValue);	
+				strValue = NamesProcessor.getInstance().setPerson(strValue, isNamesValue);
 			}
+			arrRC[0] = strOldValue;
+			arrRC[1] = strValue;
 			docCurrent.replaceItemValue(strNotesField, strValue);
-						
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		return arrRC;
 	}
 
-	
 	public static IBinder<String> getInstance() {
 		if (m_Binder == null) {
 			m_Binder = new StringBinder();
@@ -70,7 +69,19 @@ public class StringBinder extends BaseStringBinder implements IBinder<String> {
 		return m_Binder;
 	}
 
-	private StringBinder(){
-		
+	private StringBinder() {
+
+	}
+
+	@Override
+	public String getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		try {
+			String strValue = docCurrent.getItemValueString(strNotesField);
+			strValue = NamesProcessor.getInstance().getPerson(additionalValues, strValue);
+			return strValue;
+
+		} catch (Exception e) {
+		}
+		return null;
 	}
 }

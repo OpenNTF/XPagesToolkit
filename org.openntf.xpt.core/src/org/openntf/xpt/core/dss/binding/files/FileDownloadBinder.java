@@ -34,17 +34,80 @@ public class FileDownloadBinder implements IBinder<List<FileHelper>> {
 
 	private static FileDownloadBinder m_Binder;
 
-	@SuppressWarnings("unchecked")
 	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, List.class);
+			List<FileHelper> myFiles = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (myFiles != null) {
+				mt.invoke(objCurrent, myFiles);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
+	}
+
+	public List<FileHelper>[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
+			HashMap<String, Object> addValues) {
+
+		if (docCurrent != null && getValue(objCurrent, strJavaField) == null) {
+			try {
+				String server = docCurrent.getParentDatabase().getServer();
+				String path = docCurrent.getParentDatabase().getFilePath();
+				List<FileHelper> myFiles = new ArrayList<FileHelper>();
+
+				FileHelper fh = new FileHelper();
+				fh.setId(UUID.randomUUID().toString());
+				fh.setDocID(docCurrent.getUniversalID());
+				fh.setServer(server);
+				fh.setPath(path);
+				fh.setFieldName(strNotesField);
+				fh.setNewFile(true);
+
+				myFiles.add(fh);
+
+				Method mt = objCurrent.getClass().getMethod("set" + strJavaField, List.class);
+				mt.invoke(objCurrent, myFiles);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return null;
+
+	}
+
+	public static IBinder<List<FileHelper>> getInstance() {
+		if (m_Binder == null) {
+			m_Binder = new FileDownloadBinder();
+		}
+		return m_Binder;
+	}
+
+	private FileDownloadBinder() {
+
+	}
+
+	@SuppressWarnings("unchecked")
+	public List<FileHelper> getValue(Object objCurrent, String strJavaField) {
+		try {
+			Method mt = objCurrent.getClass().getMethod("get" + strJavaField);
+			return (List<FileHelper>) mt.invoke(objCurrent);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List<FileHelper> getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+		try {
 			String server = docCurrent.getParentDatabase().getServer();
 			String path = docCurrent.getParentDatabase().getFilePath();
 			List<FileHelper> myFiles = new ArrayList<FileHelper>();
 
 			RichTextItem rti = (RichTextItem) docCurrent.getFirstItem(strNotesField);
 			if (rti != null) {
+				@SuppressWarnings("unchecked")
 				Vector<EmbeddedObject> entitys = rti.getEmbeddedObjects();
 
 				for (EmbeddedObject entity : entitys) {
@@ -77,7 +140,8 @@ public class FileDownloadBinder implements IBinder<List<FileHelper>> {
 					file.delete();
 
 					myFiles.add(fh);
-
+					// TEST
+					entity.recycle();
 				}
 			}
 			FileHelper fh = new FileHelper();
@@ -89,58 +153,12 @@ public class FileDownloadBinder implements IBinder<List<FileHelper>> {
 			fh.setNewFile(true);
 
 			myFiles.add(fh);
-			mt.invoke(objCurrent, myFiles);
+			// TEST:
+			rti.recycle();
+			return myFiles;
+
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-
-	}
-
-	public void processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
-
-		if (docCurrent != null && getValue(objCurrent, strJavaField) == null) {
-			try {
-				String server = docCurrent.getParentDatabase().getServer();
-				String path = docCurrent.getParentDatabase().getFilePath();
-				List<FileHelper> myFiles = new ArrayList<FileHelper>();
-
-				FileHelper fh = new FileHelper();
-				fh.setId(UUID.randomUUID().toString());
-				fh.setDocID(docCurrent.getUniversalID());
-				fh.setServer(server);
-				fh.setPath(path);
-				fh.setFieldName(strNotesField);
-				fh.setNewFile(true);
-
-				myFiles.add(fh);
-
-				Method mt = objCurrent.getClass().getMethod("set" + strJavaField, List.class);
-				mt.invoke(objCurrent, myFiles);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
-
-	}
-
-	public static IBinder<List<FileHelper>> getInstance() {
-		if (m_Binder == null) {
-			m_Binder = new FileDownloadBinder();
-		}
-		return m_Binder;
-	}
-
-	private FileDownloadBinder() {
-
-	}
-
-	@SuppressWarnings("unchecked")
-	public List<FileHelper> getValue(Object objCurrent, String strJavaField) {
-		try {
-			Method mt = objCurrent.getClass().getMethod("get" + strJavaField);
-			return (List<FileHelper>) mt.invoke(objCurrent);
-		} catch (Exception ex) {
-			ex.printStackTrace();
 		}
 		return null;
 	}
