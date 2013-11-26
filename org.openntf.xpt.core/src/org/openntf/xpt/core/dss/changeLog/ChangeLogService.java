@@ -2,9 +2,11 @@ package org.openntf.xpt.core.dss.changeLog;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Arrays;
 import java.util.List;
 
 import com.ibm.designer.runtime.Application;
+import com.ibm.jscript.std.ArrayPrototype.Array;
 import com.ibm.xsp.application.ApplicationEx;
 
 public class ChangeLogService {
@@ -44,5 +46,64 @@ public class ChangeLogService {
 			});
 		}
 		return m_CLServices;
+	}
+
+	public boolean checkChangeLog(Object objCurrent, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField) {
+		if (objValueNew == null && objValueNew == null) {
+			return false;
+		}
+		if (objValueNew == null || objValueOld == null) {
+			return processChangeLog(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField);
+		}
+		if (objValueNew instanceof Comparable<?> && objValueOld instanceof Comparable<?>) {
+			@SuppressWarnings("unchecked")
+			Comparable<Object> valO1 = (Comparable<Object>) objValueNew;
+			@SuppressWarnings("unchecked")
+			Comparable<Object> valO2 = (Comparable<Object>) objValueOld;
+			if (valO1.compareTo(valO2) == 0) {
+				return false;
+			}
+			return processChangeLog(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField);
+		}
+		if (objValueNew.getClass().isArray() && objValueOld.getClass().isArray()) {
+			List<?> lstO1 = Arrays.asList(objValueNew);
+			List<?> lstO2 = Arrays.asList(objValueOld);
+			return compareListValues(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField, lstO1, lstO2);
+		}
+		if (objValueNew instanceof List<?> && objValueOld instanceof List<?>) {
+			@SuppressWarnings("unchecked")
+			List<?> lstO1 = (List<Object>) objValueNew;
+			@SuppressWarnings("unchecked")
+			List<?> lstO2 = (List<Object>) objValueOld;
+			return compareListValues(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField, lstO1, lstO2);
+		}
+
+		return false;
+	}
+
+	private boolean compareListValues(Object objCurrent, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField, List<?> lstO1,
+			List<?> lstO2) {
+		if (lstO1.size() == lstO2.size()) {
+			int nCount = 0;
+			for (Object objTest : lstO1) {
+				Object obj2 = lstO2.get(nCount);
+				if (!objTest.equals(obj2)) {
+					return processChangeLog(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField);
+				}
+				nCount++;
+			}
+
+		} else {
+			return processChangeLog(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField);
+
+		}
+		return false;
+	}
+
+	private boolean processChangeLog(Object objCurrent, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField) {
+		for (IChangeLogProcessor processor : getChangeLogProcessors()) {
+			processor.doChangeLog(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField);
+		}
+		return true;
 	}
 }
