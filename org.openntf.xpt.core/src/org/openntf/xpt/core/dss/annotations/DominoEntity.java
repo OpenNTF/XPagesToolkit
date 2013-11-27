@@ -34,5 +34,6 @@ public @interface DominoEntity {
 	String showNameAs() default ""; //CN and ABBREVIATE are implemented in NamesProcessor.java
 	boolean dateOnly() default false;
 	boolean changeLog() default false;
-	
+	boolean encrypt() default false;
+	String[] encRoles() default {};
 }
