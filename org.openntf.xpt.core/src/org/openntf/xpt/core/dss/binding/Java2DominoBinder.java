@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import org.openntf.xpt.core.dss.changeLog.ChangeLogService;
+import org.openntf.xpt.core.dss.changeLog.StorageAction;
 
 import lotus.domino.Document;
 import lotus.domino.NotesException;
@@ -37,12 +38,18 @@ public class Java2DominoBinder {
 	}
 
 	public void processDocument(Document docProcess, Object objCurrent) throws NotesException {
+		StorageAction action = StorageAction.MODIFY;
+		if (docProcess.isNewNote()) {
+			action = StorageAction.CREATE;
+		}
 		for (Iterator<Definition> itDefinition = m_Definition.iterator(); itDefinition.hasNext();) {
 			Definition defCurrent = itDefinition.next();
 			Object[] arrResult = defCurrent.getBinder().processJava2Domino(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(),
 					defCurrent.getAdditionalValues());
 			if (defCurrent.isChangeLog() && arrResult != null) {
-				ChangeLogService.getInstance().checkChangeLog(objCurrent, arrResult[0], arrResult[1], defCurrent.getJavaField(), defCurrent.getNotesField());
+
+				ChangeLogService.getInstance().checkChangeLog(objCurrent, arrResult[0], arrResult[1], defCurrent.getJavaField(), defCurrent.getNotesField(),
+						action);
 			}
 
 		}

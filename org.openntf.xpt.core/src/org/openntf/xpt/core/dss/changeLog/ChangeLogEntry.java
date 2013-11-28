@@ -16,6 +16,7 @@ public class ChangeLogEntry implements Serializable {
 	private Object m_OldValue;
 	private Object m_NewValue;
 	private String m_User;
+	private StorageAction m_Action;
 
 	public String getUser() {
 		return m_User;
@@ -81,6 +82,14 @@ public class ChangeLogEntry implements Serializable {
 	public void setUser(String strUser) {
 		m_User = strUser;
 
+	}
+
+	public StorageAction getAction() {
+		return m_Action;
+	}
+
+	public void setAction(StorageAction action) {
+		m_Action = action;
 	}
 
 }
