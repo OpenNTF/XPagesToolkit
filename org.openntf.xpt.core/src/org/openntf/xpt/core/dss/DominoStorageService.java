@@ -233,6 +233,13 @@ public class DominoStorageService {
 			if (fldCurrent.isAnnotationPresent(DominoEntity.class)) {
 				DominoEntity de = fldCurrent.getAnnotation(DominoEntity.class);
 				if (!de.readOnly()) {
+					if (de.encrypt()){
+						IBinder<?> binder = DefinitionFactory.getEncryptionBinder(fldCurrent.getType());
+						if (binder != null) {
+							j2dRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(),
+									null, de.encrypt(), de.encRoles());
+						}
+					}else{
 					IBinder<?> binder = DefinitionFactory.getBinder(fldCurrent.getType(), fldCurrent.getGenericType());
 					if (binder != null) {
 						HashMap<String, Object> addValues = new HashMap<String, Object>();
@@ -255,6 +262,7 @@ public class DominoStorageService {
 								addValues, de.encrypt(), de.encRoles());
 					}
 				}
+				}
 			}
 		}
 		return j2dRC;
@@ -267,8 +275,15 @@ public class DominoStorageService {
 			if (fldCurrent.isAnnotationPresent(DominoEntity.class)) {
 				DominoEntity de = fldCurrent.getAnnotation(DominoEntity.class);
 				if (!de.writeOnly()) {
-					if (de.isFormula()) {
-						IBinder<?> binder = DefinitionFactory.getFormulaBinder(fldCurrent.getType());
+					if (de.encrypt()){
+						IBinder<?> binder = DefinitionFactory.getEncryptionBinder(fldCurrent.getType());
+						if (binder != null) {
+							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(),
+									null, de.encrypt(), de.encRoles());
+						}
+					}else if (de.isFormula()) {
+						IBinder<?> binder = DefinitionFactory
+								.getFormulaBinder(fldCurrent.getType());
 						if (binder != null) {
 							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(),
 									null, de.encrypt(), de.encRoles());

@@ -111,5 +111,12 @@ public class DefinitionFactory {
 		}
 		return null;
 	}
+	
+	public static IBinder<?> getEncryptionBinder(Class<?> clCurrent){
+		if(clCurrent.equals(String.class)){
+			return StringBinder.getInstance();
+		}
+		return null;
+	}
 
 }

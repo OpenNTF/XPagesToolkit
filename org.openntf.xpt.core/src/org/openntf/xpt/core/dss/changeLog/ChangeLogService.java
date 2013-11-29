@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.ibm.designer.runtime.Application;
-import com.ibm.jscript.std.ArrayPrototype.Array;
 import com.ibm.xsp.application.ApplicationEx;
 
 public class ChangeLogService {
