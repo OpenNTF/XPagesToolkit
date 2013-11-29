@@ -15,6 +15,7 @@
  */
 package org.openntf.xpt.core.dss.binding;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Definition {
@@ -24,13 +25,17 @@ public class Definition {
 	private IBinder<?> m_Binder;
 	private boolean m_ChangeLog;
 	private HashMap<String, Object> m_AdditionalValues;
+	private boolean m_Encrypted;
+	private ArrayList<String> m_EncRoles;
 
-	public Definition(String notesField, String javaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues) {
+	public Definition(String notesField, String javaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues, boolean encrypted, String[] encRoles) {
 		m_NotesField = notesField;
 		m_JavaField = javaField;
 		m_Binder = binCurrent;
 		m_AdditionalValues = addValues;
 		setChangeLog(changeLog);
+		setEncrypted(encrypted);
+		setEncRoles(encRoles);
 	}
 
 	public String getNotesField() {
@@ -72,5 +77,24 @@ public class Definition {
 	public void setChangeLog(boolean changeLog) {
 		m_ChangeLog = changeLog;
 	}
+	
+	public boolean isEncrypted() {
+		return m_Encrypted;
+	}
 
+	public void setEncrypted(boolean encrypted) {
+		m_Encrypted = encrypted;
+	}
+
+	public ArrayList<String> getEncRoles(){
+		return m_EncRoles;
+	}
+	
+	public void setEncRoles(String[] encRoles){
+		ArrayList<String> encRolesAL = new ArrayList<String>();
+		for (String role : encRoles) {
+			encRolesAL.add(role);
+		} 
+		m_EncRoles = encRolesAL;		
+	}
 }

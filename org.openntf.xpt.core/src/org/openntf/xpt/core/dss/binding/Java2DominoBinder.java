@@ -32,8 +32,8 @@ public class Java2DominoBinder {
 		m_Definition = new ArrayList<Definition>();
 	}
 
-	public void addDefinition(String strNotesField, String strJavaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues) {
-		m_Definition.add(new Definition(strNotesField, strJavaField, binCurrent, changeLog, addValues));
+	public void addDefinition(String strNotesField, String strJavaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues, boolean encrypted, String[] encRoles) {
+		m_Definition.add(new Definition(strNotesField, strJavaField, binCurrent, changeLog, addValues, encrypted, encRoles));
 	}
 
 	public void processDocument(Document docProcess, Object objCurrent) throws NotesException {

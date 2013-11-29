@@ -252,7 +252,7 @@ public class DominoStorageService {
 						}
 
 						j2dRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(),
-								addValues);
+								addValues, de.encrypt(), de.encRoles());
 					}
 				}
 			}
@@ -271,7 +271,7 @@ public class DominoStorageService {
 						IBinder<?> binder = DefinitionFactory.getFormulaBinder(fldCurrent.getType());
 						if (binder != null) {
 							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(),
-									null);
+									null, de.encrypt(), de.encRoles());
 						}
 					} else {
 						IBinder<?> binder = DefinitionFactory.getBinder(fldCurrent.getType(), fldCurrent.getGenericType());
@@ -293,7 +293,7 @@ public class DominoStorageService {
 
 						if (binder != null) {
 							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(),
-									addValues);
+									addValues, de.encrypt(), de.encRoles());
 						}
 					}
 				}
