@@ -71,7 +71,6 @@ public class ChangeLogEntry implements Serializable {
 	}
 
 	public Object getNewValue() {
-		// System.out.println(m_NewValue instanceof Vector<?>);
 		return m_NewValue;
 	}
 
