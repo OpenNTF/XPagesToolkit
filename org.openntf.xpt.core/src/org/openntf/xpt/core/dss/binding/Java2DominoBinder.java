@@ -37,7 +37,7 @@ public class Java2DominoBinder {
 		m_Definition.add(new Definition(strNotesField, strJavaField, binCurrent, changeLog, addValues));
 	}
 
-	public void processDocument(Document docProcess, Object objCurrent) throws NotesException {
+	public void processDocument(Document docProcess, Object objCurrent, String strPK) throws NotesException {
 		StorageAction action = StorageAction.MODIFY;
 		if (docProcess.isNewNote()) {
 			action = StorageAction.CREATE;
@@ -48,8 +48,8 @@ public class Java2DominoBinder {
 					defCurrent.getAdditionalValues());
 			if (defCurrent.isChangeLog() && arrResult != null) {
 
-				ChangeLogService.getInstance().checkChangeLog(objCurrent, arrResult[0], arrResult[1], defCurrent.getJavaField(), defCurrent.getNotesField(),
-						action);
+				ChangeLogService.getInstance().checkChangeLog(objCurrent, strPK, arrResult[0], arrResult[1], defCurrent.getJavaField(),
+						defCurrent.getNotesField(), action);
 			}
 
 		}

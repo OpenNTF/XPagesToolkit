@@ -128,7 +128,7 @@ public class DominoStorageService {
 			if (pk != null) {
 				setPK2Object(dsDefinition, objCurrent, pk);
 			}
-			Document docCurrent = getDocument(dsDefinition, objCurrent, ndbTarget, false);
+			Document docCurrent = getDocument(dsDefinition, objCurrent, ndbTarget, false, pk);
 			if (docCurrent == null) {
 				return false;
 			}
@@ -146,8 +146,9 @@ public class DominoStorageService {
 
 	private boolean saveObject2Document(DominoStore ds, Java2DominoBinder j2d, Object obj, Database ndbTarget) {
 		try {
-			Document docCurrent = getDocument(ds, obj, ndbTarget, true);
-			j2d.processDocument(docCurrent, obj);
+			Object objID = getObjectID(ds, obj);
+			Document docCurrent = getDocument(ds, obj, ndbTarget, true, objID);
+			j2d.processDocument(docCurrent, obj, "" + objID);
 			docCurrent.save(true, false, true);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,9 +157,9 @@ public class DominoStorageService {
 		return true;
 	}
 
-	private Document getDocument(DominoStore ds, Object obj, Database ndbTarget, boolean createOnFail) throws NotesException {
+	private Document getDocument(DominoStore ds, Object obj, Database ndbTarget, boolean createOnFail, Object objID) throws NotesException {
 		Document docCurrent = null;
-		Object objID = getObjectID(ds, obj);
+
 		if (objID != null && !"".equals(objID)) {
 			if (UNID_IDENTIFIER.equals(ds.View())) {
 				docCurrent = ndbTarget.getDocumentByUNID("" + objID);
