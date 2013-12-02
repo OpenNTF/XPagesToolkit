@@ -40,11 +40,8 @@ public class Java2DominoBinder {
 		for (Iterator<Definition> itDefinition = m_Definition.iterator(); itDefinition.hasNext();) {
 			Definition defCurrent = itDefinition.next();
 			Object[] arrResult = null;
-			///Entweder hier betreffend Encryption checken == für jede Property Encryption checken || Im EncryptionBinder. If fällt weg aber 2 neue Parameter (encrypted und encroles) Was ist performanter? :)
-			if(defCurrent.isEncrypted() || (defCurrent.isEncrypted())){ /// AND USER IS IN ENCROLES)
-				arrResult = defCurrent.getBinder().processJava2Domino(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(),
+			arrResult = defCurrent.getBinder().processJava2Domino(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(),
 					defCurrent.getAdditionalValues());
-			}
 			if (defCurrent.isChangeLog() && arrResult != null) {
 				ChangeLogService.getInstance().checkChangeLog(objCurrent, arrResult[0], arrResult[1], defCurrent.getJavaField(), defCurrent.getNotesField());
 			}

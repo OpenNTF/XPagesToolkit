@@ -24,6 +24,7 @@ import org.openntf.xpt.core.dss.binding.BooleanBinder;
 import org.openntf.xpt.core.dss.binding.DateBinder;
 import org.openntf.xpt.core.dss.binding.DoubleArrayBinder;
 import org.openntf.xpt.core.dss.binding.DoubleBinder;
+import org.openntf.xpt.core.dss.binding.EncryptionStringBinder;
 import org.openntf.xpt.core.dss.binding.FormulaDateBinder;
 import org.openntf.xpt.core.dss.binding.FormulaDoubleBinder;
 import org.openntf.xpt.core.dss.binding.FormulaStringBinder;
@@ -114,7 +115,7 @@ public class DefinitionFactory {
 	
 	public static IBinder<?> getEncryptionBinder(Class<?> clCurrent){
 		if(clCurrent.equals(String.class)){
-			return StringBinder.getInstance();
+			return EncryptionStringBinder.getInstance();
 		}
 		return null;
 	}

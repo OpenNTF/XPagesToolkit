@@ -78,10 +78,16 @@ public class EncryptionService {
 	}
 	
 	public String encrypt(String strToEncrypt){
-		return EncryptionFactory.encrypt(strToEncrypt, getEncryptionProvider().getKey());
+		if(strToEncrypt != null){
+			return EncryptionFactory.encrypt(strToEncrypt, getEncryptionProvider().getKey());
+		}
+		return null;
 	}
 
 	public String decrypt(String strToDecrypt){
-		return EncryptionFactory.decrypt(strToDecrypt, getEncryptionProvider().getKey());
+		if(strToDecrypt != null){
+			return EncryptionFactory.decrypt(strToDecrypt, getEncryptionProvider().getKey());
+		}
+		return null;
 	}
 }

@@ -4,13 +4,13 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Vector;
 
-import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
+import lotus.domino.Document;
+
+import org.openntf.xpt.core.base.BaseStringBinder;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
-import lotus.domino.Document;
-import lotus.domino.Item;
-
-public class EncryptionStringBinder implements IBinder<String>, IEncryptionBinder{
+public class EncryptionStringBinder extends BaseStringBinder implements IBinder<String>,
+		IEncryptionBinder {
 	private static EncryptionStringBinder m_Binder;
 
 	private EncryptionStringBinder() {
@@ -24,19 +24,27 @@ public class EncryptionStringBinder implements IBinder<String>, IEncryptionBinde
 		return m_Binder;
 	}
 
-	public String getValue(Object objCurrent, String strJavaField) {
-		return null;
-	}
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent,
+			String strNotesField, String strJavaField,
+			HashMap<String, Object> addValues) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, String.class);
-			Vector<?> vecString = docCurrent.getParentDatabase().getParent().evaluate(strNotesField, docCurrent);
-			if (vecString.size() > 0) {		
+			if (addValues != null && addValues.size() > 0) {
+				if (addValues.containsKey("encRoles")) {
+					System.out.println(addValues.get("encRoles")); ///CHECK ROLES
+				}
+			}
+
+			Method mt = objCurrent.getClass().getMethod("set" + strJavaField,
+					String.class);
+			Vector<?> vecString = docCurrent.getParentDatabase().getParent()
+					.evaluate(strNotesField, docCurrent);
+			if (vecString.size() > 0) {
 				String strCurrent = (String) vecString.elementAt(0);
-				
-				String decryptedValue = EncryptionService.getInstance().decrypt(strCurrent);
-						
+
+				String decryptedValue = EncryptionService.getInstance()
+						.decrypt(strCurrent);
+
 				mt.invoke(objCurrent, decryptedValue);
 			}
 		} catch (Exception e) {
@@ -44,21 +52,32 @@ public class EncryptionStringBinder implements IBinder<String>, IEncryptionBinde
 
 	}
 
-	public String[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public String[] processJava2Domino(Document docCurrent, Object objCurrent,
+			String strNotesField, String strJavaField,
+			HashMap<String, Object> addValues) {
 		String[] arrRC = new String[2];
 		try {
-			boolean isNamesValue = false;
-			String strOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
-			String strValue = getValue(objCurrent, strJavaField);
 			if (addValues != null && addValues.size() > 0) {
-				docCurrent.replaceItemValue(strNotesField, "");
-				Item iNotesField = docCurrent.getFirstItem(strNotesField);
-				isNamesValue = NamesProcessor.getInstance().setNamesField(addValues, iNotesField);
-				strValue = NamesProcessor.getInstance().setPerson(strValue, isNamesValue);
+				if (addValues.containsKey("encRoles")) {
+					System.out.println(addValues.get("encRoles")); ///CHECK ROLES
+				}
 			}
-			
-			String encryptedOldValue = EncryptionService.getInstance().encrypt(strOldValue);
-			String encryptedValue = EncryptionService.getInstance().encrypt(strValue);
+			// boolean isNamesValue = false;
+			String strOldValue = getValueFromStore(docCurrent, strNotesField,
+					addValues);
+			String strValue = getValue(objCurrent, strJavaField);
+			/*
+			 * if (addValues != null && addValues.size() > 0) {
+			 * docCurrent.replaceItemValue(strNotesField, ""); Item iNotesField
+			 * = docCurrent.getFirstItem(strNotesField); isNamesValue =
+			 * NamesProcessor.getInstance().setNamesField( addValues,
+			 * iNotesField); strValue =
+			 * NamesProcessor.getInstance().setPerson(strValue, isNamesValue); }
+			 */
+			String encryptedOldValue = EncryptionService.getInstance().encrypt(
+					strOldValue);
+			String encryptedValue = EncryptionService.getInstance().encrypt(
+					strValue);
 			
 			arrRC[0] = encryptedOldValue;
 			arrRC[1] = encryptedValue;
@@ -70,10 +89,14 @@ public class EncryptionStringBinder implements IBinder<String>, IEncryptionBinde
 		return arrRC;
 	}
 
-
 	@Override
-	public String getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
-		// TODO Auto-generated method stub
+	public String getValueFromStore(Document docCurrent, String strNotesField,
+			HashMap<String, Object> additionalValues) {
+		try {
+			String strValue = docCurrent.getItemValueString(strNotesField);
+			return EncryptionService.getInstance().decrypt(strValue);
+		} catch (Exception e) {
+		}
 		return null;
 	}
 }

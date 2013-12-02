@@ -15,7 +15,6 @@
  */
 package org.openntf.xpt.core.dss.binding;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Definition {
@@ -26,7 +25,7 @@ public class Definition {
 	private boolean m_ChangeLog;
 	private HashMap<String, Object> m_AdditionalValues;
 	private boolean m_Encrypted;
-	private ArrayList<String> m_EncRoles;
+	private String[] m_EncRoles;
 
 	public Definition(String notesField, String javaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues, boolean encrypted, String[] encRoles) {
 		m_NotesField = notesField;
@@ -86,15 +85,11 @@ public class Definition {
 		m_Encrypted = encrypted;
 	}
 
-	public ArrayList<String> getEncRoles(){
+	public String[] getEncRoles(){
 		return m_EncRoles;
 	}
 	
 	public void setEncRoles(String[] encRoles){
-		ArrayList<String> encRolesAL = new ArrayList<String>();
-		for (String role : encRoles) {
-			encRolesAL.add(role);
-		} 
-		m_EncRoles = encRolesAL;		
+		m_EncRoles = encRoles;		
 	}
 }

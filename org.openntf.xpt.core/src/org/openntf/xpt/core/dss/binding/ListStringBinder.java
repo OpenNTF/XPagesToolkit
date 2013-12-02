@@ -48,6 +48,7 @@ public class ListStringBinder implements IBinder<List<String>> {
 		try {
 			List<String> lstOldValues = getValueFromStore(docCurrent, strNotesField, addValues);
 			List<String> lstValues = getValue(objCurrent, strJavaField);
+
 			lstRC[0] = lstOldValues;
 			lstRC[1] = lstValues;
 			Vector<String> vValues = new Vector<String>();
