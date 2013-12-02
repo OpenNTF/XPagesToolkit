@@ -143,6 +143,8 @@ public class FileDownloadBinder implements IBinder<List<FileHelper>> {
 					// TEST
 					entity.recycle();
 				}
+				// TEST:
+				rti.recycle();
 			}
 			FileHelper fh = new FileHelper();
 			fh.setId(UUID.randomUUID().toString());
@@ -153,8 +155,7 @@ public class FileDownloadBinder implements IBinder<List<FileHelper>> {
 			fh.setNewFile(true);
 
 			myFiles.add(fh);
-			// TEST:
-			rti.recycle();
+
 			return myFiles;
 
 		} catch (Exception e) {

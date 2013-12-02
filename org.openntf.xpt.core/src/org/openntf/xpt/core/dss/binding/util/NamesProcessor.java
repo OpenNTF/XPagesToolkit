@@ -40,15 +40,19 @@ public class NamesProcessor {
 	public String getPerson(HashMap<String, Object> addValues, String strValue) {
 		String rcValue = strValue;
 		try {
-			if ((addValues.containsKey("isReader") || addValues.containsKey("isAuthor") || addValues.containsKey("isNames"))
-					&& addValues.containsKey("showNameAs")) {
-				if ("ABBREVIATE".equalsIgnoreCase(addValues.get("showNameAs")
-						.toString())) {
-					rcValue = ExtLibUtil.getCurrentSession().createName(
-							strValue).getAbbreviated();
-				} else if ("CN".equals(addValues.get("showNameAs"))) {
-					rcValue = ExtLibUtil.getCurrentSession().createName(
-							strValue).getCommon();
+			if (addValues != null && addValues.size() > 0) {
+				if ((addValues.containsKey("isReader")
+						|| addValues.containsKey("isAuthor") || addValues
+							.containsKey("isNames"))
+						&& addValues.containsKey("showNameAs")) {
+					if ("ABBREVIATE".equalsIgnoreCase(addValues.get(
+							"showNameAs").toString())) {
+						rcValue = ExtLibUtil.getCurrentSession()
+								.createName(strValue).getAbbreviated();
+					} else if ("CN".equals(addValues.get("showNameAs"))) {
+						rcValue = ExtLibUtil.getCurrentSession()
+								.createName(strValue).getCommon();
+					}
 				}
 			}
 		} catch (Exception e) {
@@ -71,7 +75,8 @@ public class NamesProcessor {
 		return rcValue;
 	}
 
-	public boolean setNamesField(HashMap<String, Object> addValues, Item iNotesField) {
+	public boolean setNamesField(HashMap<String, Object> addValues,
+			Item iNotesField) {
 		boolean isNamesValue = false;
 		try {
 			if (addValues != null && addValues.size() > 0) {
