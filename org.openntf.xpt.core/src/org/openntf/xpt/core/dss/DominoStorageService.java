@@ -237,7 +237,7 @@ public class DominoStorageService {
 						IBinder<?> binder = DefinitionFactory.getEncryptionBinder(fldCurrent.getType());
 						if (binder != null) {
 							HashMap<String, Object> addValues = new HashMap<String, Object>();
-							if (de.encRoles() != null){
+							if (de.encRoles() != null && de.encRoles().length > 0){
 								addValues.put("encRoles", de.encRoles());
 							}
 							j2dRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(),
@@ -283,7 +283,7 @@ public class DominoStorageService {
 						IBinder<?> binder = DefinitionFactory.getEncryptionBinder(fldCurrent.getType());
 						if (binder != null) {	
 							HashMap<String, Object> addValues = new HashMap<String, Object>();
-							if (de.encRoles() != null){
+							if (de.encRoles() != null && de.encRoles().length > 0){
 								addValues.put("encRoles", de.encRoles());
 							}
 							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(),

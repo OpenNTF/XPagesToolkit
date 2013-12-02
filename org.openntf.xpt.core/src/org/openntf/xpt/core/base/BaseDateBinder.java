@@ -18,7 +18,7 @@ package org.openntf.xpt.core.base;
 import java.lang.reflect.Method;
 import java.util.Date;
 
-public class BaseDateBinder {
+public class BaseDateBinder extends BaseEncryptionBinder{
 
 	public BaseDateBinder() {
 		super();

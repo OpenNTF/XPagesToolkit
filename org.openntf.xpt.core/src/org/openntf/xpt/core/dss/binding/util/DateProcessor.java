@@ -15,6 +15,8 @@
  */
 package org.openntf.xpt.core.dss.binding.util;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Vector;
 
@@ -96,5 +98,42 @@ public class DateProcessor {
 			e.printStackTrace();
 		}
 		return strDate;
+	}
+	
+	public String getDateAsStringToEncrypt(Date dtCurrent, boolean dtOnly){
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(dtCurrent);
+		int day = cal.get(Calendar.DAY_OF_MONTH);
+		String strDay = "00" + Integer.toString(day);
+		strDay = strDay.substring(strDay.length()-2, strDay.length());
+		int month = cal.get(Calendar.MONTH) + 1;
+		String  strMonth= "00" + Integer.toString(month);
+		strMonth = strMonth.substring(strMonth.length()-2, strMonth.length());
+		int year = cal.get(Calendar.YEAR);
+		String strYear = "0000" + Integer.toString(year);
+		strYear = strYear.substring(strYear.length()-4, strYear.length());
+		int hour = cal.get(Calendar.HOUR) + 1;
+		String strHour = "00" + Integer.toString(hour);
+		strHour = strHour.substring(strHour.length()-2, strHour.length());
+		int min = cal.get(Calendar.MINUTE);
+		String strMin = "00" + Integer.toString(min);
+		strMin = strMin.substring(strMin.length()-2, strMin.length());
+		int sek = cal.get(Calendar.SECOND);
+		String strSek = "00" + Integer.toString(sek);
+		strSek = strSek.substring(strSek.length()-2, strSek.length());
+		
+		if(dtOnly){
+			return strDay + "." + strMonth + "." + strYear;
+		}else{
+			return strDay + "." + strMonth + "." + strYear + " " + strSek + "." + strMin + "." + strHour;
+		}
+	}
+	
+	public String getDateFormatForEncryption(boolean dtOnly){
+		if(dtOnly){
+			return "dd.MM.yyyy";
+		}
+		return "dd.MM.yyyy ss.mm.hh";
+		
 	}
 }

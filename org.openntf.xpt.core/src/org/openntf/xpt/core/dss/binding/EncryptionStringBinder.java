@@ -62,7 +62,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 				String encryptedOldValue = EncryptionService.getInstance().encrypt(strOldValue);
 				String encryptedValue = EncryptionService.getInstance().encrypt(strValue);
 
-				arrRC[0] = encryptedOldValue;
+				arrRC[0] = encryptedOldValue; ///Return Enc Values for the Logger? 
 				arrRC[1] = encryptedValue;
 				docCurrent.replaceItemValue(strNotesField, encryptedValue);
 			}
@@ -75,8 +75,10 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 	@Override
 	public String getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
 		try {
-			String strValue = docCurrent.getItemValueString(strNotesField);
-			return EncryptionService.getInstance().decrypt(strValue);
+			if (hasAccess(additionalValues)) {
+				String strValue = docCurrent.getItemValueString(strNotesField);
+				return EncryptionService.getInstance().decrypt(strValue);
+			}
 		} catch (Exception e) {
 		}
 		return null;
