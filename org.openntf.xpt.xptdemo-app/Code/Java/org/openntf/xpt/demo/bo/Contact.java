@@ -42,17 +42,19 @@ public class Contact implements Serializable {
 	private String m_Email;
 	@DominoEntity(FieldName = "State")
 	private String m_State;
-	@DominoEntity(FieldName = "Observer", isNames = true )
+	@DominoEntity(FieldName = "Observer", isNames = true)
 	private List<String> m_Observers;
-	@DominoEntity(FieldName="Salary")
+
+	// CHANGELOG Demo/TestCase
+	@DominoEntity(FieldName = "Salary", changeLog = true)
 	private double m_Salary;
-	@DominoEntity(FieldName="Salary")
+	@DominoEntity(FieldName = "CompanyCar", changeLog = true)
 	private double m_CompanyCar;
-	@DominoEntity(FieldName="JobFunction")
+	@DominoEntity(FieldName = "JobFunction", changeLog = true)
 	private String m_JobFunction;
-	@DominoEntity(FieldName="Devices")
-	private int	m_Devices;
-	@DominoEntity(FieldName="LastInterview")
+	@DominoEntity(FieldName = "Devices", changeLog = true)
+	private int m_Devices;
+	@DominoEntity(FieldName = "LastInterview", changeLog = true)
 	private Date m_LastInterview;
 
 	public String getID() {

@@ -13,7 +13,7 @@ import com.ibm.xsp.extlib.util.ExtLibUtil;
 public class ChangeLogService {
 	private static final String CL_SERVICE_KEY = "xpt.dss.changelogger"; // $NON-NLS-1$
 
-	private static final String CL_DATAPROVIDER_SERVICE = "org.openntf.core.dss.changelog"; // $NON-NLS-1$
+	private static final String CL_DATAPROVIDER_SERVICE = "org.openntf.core.dss.Changelog"; // $NON-NLS-1$
 
 	private List<IChangeLogProcessor> m_CLServices;
 
@@ -35,14 +35,12 @@ public class ChangeLogService {
 
 	public List<IChangeLogProcessor> getChangeLogProcessors() {
 		if (m_CLServices == null) {
-			AccessController.doPrivileged(new PrivilegedAction<Void>() {
-
+			m_CLServices = AccessController.doPrivileged(new PrivilegedAction<List<IChangeLogProcessor>>() {
 				@SuppressWarnings("unchecked")
 				@Override
-				public Void run() {
-					m_CLServices = ApplicationEx.getInstance().findServices(CL_DATAPROVIDER_SERVICE);
-
-					return null;
+				public List<IChangeLogProcessor> run() {
+					List<IChangeLogProcessor> cl = ApplicationEx.getInstance().findServices(CL_DATAPROVIDER_SERVICE);
+					return cl;
 				}
 			});
 		}

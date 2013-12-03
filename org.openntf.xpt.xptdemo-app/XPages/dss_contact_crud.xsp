@@ -106,6 +106,16 @@ ds.sortList("email", true);}]]></xp:this.action>
 getComponent("dlgContact").show();}]]></xp:this.action>
 										</xp:eventHandler>
 									</xp:link>
+																		&#160;&#160;<xp:link id="link1" text="show changelog">
+										<xp:eventHandler event="onclick"
+											submit="true" refreshMode="partial"
+											refreshId="panContacts">
+											<xp:this.action><![CDATA[#{javascript:viewScope.clPK = contact.ID;
+viewScope.clObject = contact.getBO().getClass().getCanonicalName();
+getComponent("dlgCL").show();}]]></xp:this.action>
+										</xp:eventHandler>
+</xp:link>
+									
 								</xp:td>
 
 							</xp:tr>
@@ -125,7 +135,9 @@ getComponent("dlgContact").show();}]]></xp:this.action>
 							</xe:objectData>
 						</xp:this.data>
 						<xe:formTable id="formTable1"
-							labelPosition="left" disableRowError="true">
+							labelPosition="left" disableRowError="true"
+							formDescription="Salary, Function, Devices and Last Interview are changelogged!"
+							labelWidth="150px">
 							<xe:formRow id="formRow2" for="itFirstName"
 								label="First Name">
 								<xp:inputText id="itFirstName"
@@ -161,6 +173,39 @@ getComponent("dlgContact").show();}]]></xp:this.action>
 									value="#{objContact.city}">
 								</xp:inputText>
 							</xe:formRow>
+							<xe:formRow id="formRow6" for="itSalary"
+								label="Salary" labelPosition="left">
+								<xp:inputText id="itSalary"
+									value="#{objContact.salary}">
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow7"
+								for="itJobFunction" label="Function in Job"
+								labelPosition="left">
+								<xp:inputText id="itJobFunction"
+									value="#{objContact.jobFunction}">
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow8" for="itDevices"
+								label="Devices (count)" labelPosition="left">
+								<xp:inputText id="itDevices"
+									value="#{objContact.devices}">
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow9"
+								for="itLastInterview" label="Last Interview"
+								labelPosition="left">
+								<xp:inputText id="itLastInterview"
+									value="#{objContact.lastInterview}">
+									<xp:this.converter>
+										<xp:convertDateTime
+											type="date">
+										</xp:convertDateTime>
+									</xp:this.converter>
+									<xp:dateTimeHelper></xp:dateTimeHelper>
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow10"></xe:formRow>
 							<xp:this.facets>
 								<xe:dialogButtonBar
 									id="dialogButtonBar1" xp:key="footer">
@@ -181,7 +226,8 @@ ds.refresh();}]]></xp:this.action>
 										<xp:link escape="true"
 											text="cancel" id="lnkClose">
 											<xp:eventHandler
-												event="onclick" submit="true" refreshMode="complete" disableValidators="true">
+												event="onclick" submit="true" refreshMode="complete"
+												disableValidators="true">
 												<xp:this.action><![CDATA[#{javascript:var dlg = getComponent("dlgContact");
 viewScope.conID = "";
 dlg.hide();}]]></xp:this.action>
@@ -193,7 +239,7 @@ dlg.hide();}]]></xp:this.action>
 						</xe:formTable>
 					</xp:panel>
 				</xe:dialog>
-			</xp:panel>
+				<xc:cc_changeLog></xc:cc_changeLog></xp:panel>
 		</xp:this.facets>
 	</xc:cc_application>
 </xp:view>
