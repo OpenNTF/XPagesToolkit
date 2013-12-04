@@ -50,13 +50,14 @@ public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 			Date dtCurrent = getValue(objCurrent, strJavaField);
 			Date dtOld = getValueFromStore(docCurrent, strNotesField, addValues);
 			dtRC[0] = dtOld;
-			dtRC[1] = dtCurrent;
 			if (dtCurrent != null) {
 				DateTime dt = docCurrent.getParentDatabase().getParent().createDateTime(dtCurrent);
 				if (addValues.containsKey("dateOnly")) {
 					dt = docCurrent.getParentDatabase().getParent().createDateTime(dt.getDateOnly());
 				}
 				docCurrent.replaceItemValue(strNotesField, dt);
+				Date dtCurrentNew =getValueFromStore(docCurrent, strNotesField, addValues);
+				dtRC[1] = dtCurrentNew;
 
 			} else {
 				docCurrent.removeItem(strNotesField);
