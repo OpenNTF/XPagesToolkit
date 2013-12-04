@@ -17,6 +17,7 @@ package org.openntf.xpt.demo.bo;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.openntf.xpt.core.dss.annotations.DominoEntity;
@@ -41,8 +42,20 @@ public class Contact implements Serializable {
 	private String m_Email;
 	@DominoEntity(FieldName = "State")
 	private String m_State;
-	@DominoEntity(FieldName = "Observer", isNames = true )
+	@DominoEntity(FieldName = "Observer", isNames = true)
 	private List<String> m_Observers;
+
+	// CHANGELOG Demo/TestCase
+	@DominoEntity(FieldName = "Salary", changeLog = true)
+	private double m_Salary;
+	@DominoEntity(FieldName = "CompanyCar", changeLog = true)
+	private double m_CompanyCar;
+	@DominoEntity(FieldName = "JobFunction", changeLog = true)
+	private String m_JobFunction;
+	@DominoEntity(FieldName = "Devices", changeLog = true)
+	private int m_Devices;
+	@DominoEntity(FieldName = "LastInterview", changeLog = true)
+	private Date m_LastInterview;
 
 	public String getID() {
 		return m_ID;
@@ -114,6 +127,46 @@ public class Contact implements Serializable {
 			m_Observers.remove(effectiveUserName);
 		}
 
+	}
+
+	public void setSalary(double salary) {
+		m_Salary = salary;
+	}
+
+	public double getSalary() {
+		return m_Salary;
+	}
+
+	public void setCompanyCar(double companyCar) {
+		m_CompanyCar = companyCar;
+	}
+
+	public double getCompanyCar() {
+		return m_CompanyCar;
+	}
+
+	public void setJobFunction(String jobFunction) {
+		m_JobFunction = jobFunction;
+	}
+
+	public String getJobFunction() {
+		return m_JobFunction;
+	}
+
+	public void setDevices(int devices) {
+		m_Devices = devices;
+	}
+
+	public int getDevices() {
+		return m_Devices;
+	}
+
+	public void setLastInterview(Date lastInterview) {
+		m_LastInterview = lastInterview;
+	}
+
+	public Date getLastInterview() {
+		return m_LastInterview;
 	}
 
 }

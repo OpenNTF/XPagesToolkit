@@ -15,18 +15,18 @@
  */
 package org.openntf.xpt.core.dss.changeLog;
 
-import java.util.List;
+public enum StorageAction {
+	CREATE, MODIFY, DELETE;
 
-public interface IChangeLogProcessor {
+	public boolean isDelete() {
+		return this == DELETE;
+	}
 
-	/**
-	 * Invokes the changeLogging in the ChangeLogProvider
-	 * @param cle - the current changelog entrie
-	 * @return
-	 */
-	public int doChangeLog(ChangeLogEntry cle);
+	public boolean isModify() {
+		return this == MODIFY;
+	}
 
-	public List<ChangeLogEntry> getAllChangeLogEntries(String strObjectClassName, String strPK);
-
-	public List<ChangeLogEntry> getAllChangeLogEntries4Attribute(String strObjectClassName, String strPK, String strObjectMember);
+	public boolean isCreate() {
+		return this == CREATE;
+	}
 }

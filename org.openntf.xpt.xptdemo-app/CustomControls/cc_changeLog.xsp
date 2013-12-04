@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+
+	<xe:dialog id="dlgCL" title="Change Log">
+		<xp:panel>
+			<xp:this.data>
+				<xpt:objectlistSource ascending="false" scope="view"
+					var="lstChangeLog" sortAttribute="date">
+					<xpt:this.buildValues><![CDATA[#{javascript:var lstProcessor = org.openntf.xpt.core.dss.changeLog.ChangeLogService.getInstance().getChangeLogProcessors();
+print(lstProcessor);
+print (viewScope.clObject +" "+ viewScope.clPK)
+return lstProcessor.get(0).getAllChangeLogEntries(viewScope.clObject, viewScope.clPK)}]]></xpt:this.buildValues>
+				</xpt:objectlistSource>
+			</xp:this.data>
+			<xe:dialogContent id="dialogContent1">
+				<xp:table>
+					<xp:tr>
+						<xp:td>Date</xp:td>
+						<xp:td>Field</xp:td>
+						<xp:td>
+							old value</xp:td>
+						<xp:td>
+							new value</xp:td>
+					</xp:tr>
+					<xp:repeat value="#{javascript:lstChangeLog}" first="0"
+						rows="10" var="cle" indexVar="nCLE">
+						<xp:tr>
+							<xp:td>
+								<xp:text escape="true"
+									id="computedField1" value="#{cle.date}">
+									<xp:this.converter>
+										<xp:convertDateTime type="both"
+											dateStyle="short" timeStyle="short">
+										</xp:convertDateTime>
+									</xp:this.converter>
+								</xp:text>
+							</xp:td>
+							<xp:td>
+								<xp:text escape="true" id="computedField2" value="#{cle.objectField}">
+								</xp:text>
+							</xp:td>
+							<xp:td>
+								<xp:text escape="true" id="computedField3" value="#{cle.oldValue}">
+								</xp:text>
+							</xp:td>
+							<xp:td>
+								<xp:text escape="true" id="computedField4" value="#{cle.newValue}">
+								</xp:text>
+							</xp:td>
+						</xp:tr>
+					</xp:repeat>
+				</xp:table>
+			</xe:dialogContent>
+		</xp:panel>
+	</xe:dialog>
+</xp:view>

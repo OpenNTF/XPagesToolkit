@@ -1,3 +1,18 @@
+/*
+ * © Copyright WebGate Consulting AG, 2013
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at:
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
+ * implied. See the License for the specific language governing 
+ * permissions and limitations under the License.
+ */
 package org.openntf.xpt.core.dss.changeLog;
 
 import java.io.Serializable;
@@ -16,6 +31,7 @@ public class ChangeLogEntry implements Serializable {
 	private Object m_OldValue;
 	private Object m_NewValue;
 	private String m_User;
+	private StorageAction m_Action;
 
 	public String getUser() {
 		return m_User;
@@ -70,7 +86,6 @@ public class ChangeLogEntry implements Serializable {
 	}
 
 	public Object getNewValue() {
-		// System.out.println(m_NewValue instanceof Vector<?>);
 		return m_NewValue;
 	}
 
@@ -81,6 +96,14 @@ public class ChangeLogEntry implements Serializable {
 	public void setUser(String strUser) {
 		m_User = strUser;
 
+	}
+
+	public StorageAction getAction() {
+		return m_Action;
+	}
+
+	public void setAction(StorageAction action) {
+		m_Action = action;
 	}
 
 }

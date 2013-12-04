@@ -1,17 +1,34 @@
+/*
+ * © Copyright WebGate Consulting AG, 2013
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at:
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
+ * implied. See the License for the specific language governing 
+ * permissions and limitations under the License.
+ */
 package org.openntf.xpt.core.dss.changeLog;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 import com.ibm.designer.runtime.Application;
 import com.ibm.xsp.application.ApplicationEx;
+import com.ibm.xsp.extlib.util.ExtLibUtil;
 
 public class ChangeLogService {
 	private static final String CL_SERVICE_KEY = "xpt.dss.changelogger"; // $NON-NLS-1$
 
-	private static final String CL_DATAPROVIDER_SERVICE = "org.openntf.core.dss.changelog"; // $NON-NLS-1$
+	private static final String CL_DATAPROVIDER_SERVICE = "org.openntf.core.dss.Changelog"; // $NON-NLS-1$
 
 	private List<IChangeLogProcessor> m_CLServices;
 
@@ -33,26 +50,25 @@ public class ChangeLogService {
 
 	public List<IChangeLogProcessor> getChangeLogProcessors() {
 		if (m_CLServices == null) {
-			AccessController.doPrivileged(new PrivilegedAction<Void>() {
-
+			m_CLServices = AccessController.doPrivileged(new PrivilegedAction<List<IChangeLogProcessor>>() {
 				@SuppressWarnings("unchecked")
 				@Override
-				public Void run() {
-					m_CLServices = ApplicationEx.getInstance().findServices(CL_DATAPROVIDER_SERVICE);
-
-					return null;
+				public List<IChangeLogProcessor> run() {
+					List<IChangeLogProcessor> cl = ApplicationEx.getInstance().findServices(CL_DATAPROVIDER_SERVICE);
+					return cl;
 				}
 			});
 		}
 		return m_CLServices;
 	}
 
-	public boolean checkChangeLog(Object objCurrent, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField) {
+	public boolean checkChangeLog(Object objCurrent, String strPK, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField,
+			StorageAction action) {
 		if (objValueNew == null && objValueNew == null) {
 			return false;
 		}
 		if (objValueNew == null || objValueOld == null) {
-			return processChangeLog(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField);
+			return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action);
 		}
 		if (objValueNew instanceof Comparable<?> && objValueOld instanceof Comparable<?>) {
 			@SuppressWarnings("unchecked")
@@ -62,46 +78,62 @@ public class ChangeLogService {
 			if (valO1.compareTo(valO2) == 0) {
 				return false;
 			}
-			return processChangeLog(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField);
+			return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action);
 		}
 		if (objValueNew.getClass().isArray() && objValueOld.getClass().isArray()) {
 			List<?> lstO1 = Arrays.asList(objValueNew);
 			List<?> lstO2 = Arrays.asList(objValueOld);
-			return compareListValues(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField, lstO1, lstO2);
+			return compareListValues(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, lstO1, lstO2, action);
 		}
 		if (objValueNew instanceof List<?> && objValueOld instanceof List<?>) {
 			@SuppressWarnings("unchecked")
 			List<?> lstO1 = (List<Object>) objValueNew;
 			@SuppressWarnings("unchecked")
 			List<?> lstO2 = (List<Object>) objValueOld;
-			return compareListValues(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField, lstO1, lstO2);
+			return compareListValues(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, lstO1, lstO2, action);
 		}
 
 		return false;
 	}
 
-	private boolean compareListValues(Object objCurrent, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField, List<?> lstO1,
-			List<?> lstO2) {
+	private boolean compareListValues(Object objCurrent, String strPK, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField,
+			List<?> lstO1, List<?> lstO2, StorageAction action) {
 		if (lstO1.size() == lstO2.size()) {
 			int nCount = 0;
 			for (Object objTest : lstO1) {
 				Object obj2 = lstO2.get(nCount);
 				if (!objTest.equals(obj2)) {
-					return processChangeLog(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField);
+					return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action);
 				}
 				nCount++;
 			}
 
 		} else {
-			return processChangeLog(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField);
+			return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action);
 
 		}
 		return false;
 	}
 
-	private boolean processChangeLog(Object objCurrent, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField) {
+	private boolean processChangeLog(Object objCurrent, String strPK, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField,
+			StorageAction action) {
+		ChangeLogEntry cle = new ChangeLogEntry();
+		cle.setAction(action);
+		cle.setDate(new Date());
+		cle.setNewValue(objValueNew);
+		cle.setObjectClass(objCurrent.getClass().getCanonicalName());
+		cle.setObjectField(strObjectMember);
+		cle.setOldValue(objValueOld);
+		cle.setStorageField(strStorageField);
+		try {
+			cle.setUser(ExtLibUtil.getCurrentSession().getEffectiveUserName());
+		} catch (Exception e) {
+			cle.setUser("<unknown>");
+		}
+		cle.setPrimaryKey(strPK);
+
 		for (IChangeLogProcessor processor : getChangeLogProcessors()) {
-			processor.doChangeLog(objCurrent, objValueOld, objValueNew, strObjectMember, strStorageField);
+			processor.doChangeLog(cle);
 		}
 		return true;
 	}
