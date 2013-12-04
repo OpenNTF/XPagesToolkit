@@ -25,6 +25,7 @@ import org.openntf.xpt.core.dss.binding.DateBinder;
 import org.openntf.xpt.core.dss.binding.DoubleArrayBinder;
 import org.openntf.xpt.core.dss.binding.DoubleBinder;
 import org.openntf.xpt.core.dss.binding.EncryptionDateBinder;
+import org.openntf.xpt.core.dss.binding.EncryptionDoubleBinder;
 import org.openntf.xpt.core.dss.binding.EncryptionStringBinder;
 import org.openntf.xpt.core.dss.binding.FormulaDateBinder;
 import org.openntf.xpt.core.dss.binding.FormulaDoubleBinder;
@@ -120,6 +121,9 @@ public class DefinitionFactory {
 		}
 		if(clCurrent.equals(Date.class)){
 			return EncryptionDateBinder.getInstance();
+		}		
+		if(clCurrent.equals(Double.class) || clCurrent.equals(Double.TYPE)){
+			return EncryptionDoubleBinder.getInstance();
 		}
 		return null;
 	}

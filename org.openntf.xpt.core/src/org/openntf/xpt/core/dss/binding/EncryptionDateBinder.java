@@ -51,7 +51,6 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 				// String encryptedOldValue =
 				// EncryptionService.getInstance().encrypt(dtOld.toString());
 				
-				System.out.println("dtCurrent = " + dtCurrent);
 				dtRC[0] = dtOld; // /EncValue for Logger? Prob with return type
 				dtRC[1] = dtCurrent;
 				if (dtCurrent != null) {
@@ -62,17 +61,13 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 				
 				
 					String dtString = DateProcessor.getInstance().getDateAsStringToEncrypt(dtCurrent, addValues.containsKey("dateOnly"));
-					System.out.println("dt = " + dt.toString());
-					System.out.println("DtString = " + dtString);
 					String encryptedValue = EncryptionService.getInstance().encrypt(dtString);
-					System.out.println("encVal = " + encryptedValue);
-					
+			
 					docCurrent.replaceItemValue(strNotesField, encryptedValue);
 				} else {
 					docCurrent.removeItem(strNotesField);
 				}
 			}
-			System.out.println("Done");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -89,11 +84,9 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 				String decDate;
 
 				encDate = docCurrent.getItemValueString(strNotesField);
-				System.out.println("EncDate = " + encDate);
 				decDate = EncryptionService.getInstance().decrypt(encDate);
-System.out.println("DECDATE=" + decDate);
 				
-				if (decDate != null && decDate != "") {
+				if (decDate != null && !decDate.equals("")) {
 					
 					DateFormat formatter = new SimpleDateFormat(DateProcessor.getInstance().getDateFormatForEncryption(additionalValues.containsKey("dateOnly")));
 					return (Date) formatter.parse(decDate);

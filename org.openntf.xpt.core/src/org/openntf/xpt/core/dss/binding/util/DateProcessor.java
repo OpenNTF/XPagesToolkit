@@ -112,7 +112,7 @@ public class DateProcessor {
 		int year = cal.get(Calendar.YEAR);
 		String strYear = "0000" + Integer.toString(year);
 		strYear = strYear.substring(strYear.length()-4, strYear.length());
-		int hour = cal.get(Calendar.HOUR) + 1;
+		int hour = cal.get(Calendar.HOUR);
 		String strHour = "00" + Integer.toString(hour);
 		strHour = strHour.substring(strHour.length()-2, strHour.length());
 		int min = cal.get(Calendar.MINUTE);
@@ -125,7 +125,7 @@ public class DateProcessor {
 		if(dtOnly){
 			return strDay + "." + strMonth + "." + strYear;
 		}else{
-			return strDay + "." + strMonth + "." + strYear + " " + strSek + "." + strMin + "." + strHour;
+			return strDay + "." + strMonth + "." + strYear + " " + strSek + ":" + strMin + ":" + strHour;
 		}
 	}
 	
@@ -133,7 +133,7 @@ public class DateProcessor {
 		if(dtOnly){
 			return "dd.MM.yyyy";
 		}
-		return "dd.MM.yyyy ss.mm.hh";
+		return "dd.MM.yyyy ss:mm:hh";
 		
 	}
 }
