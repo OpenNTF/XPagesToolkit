@@ -184,6 +184,52 @@ public abstract class AbstractStorageService<T> {
 
 	}
 
+	public ISoftDeletionProvider<T> getSoftDeletionProvider() {
+		return null;
+	}
+
+	public boolean softDelete(T objDelete) throws DSSException {
+		return softDelete(objDelete, ExtLibUtil.getCurrentDatabase());
+	}
+
+	public boolean softDelete(T objDelete, Database ndbTarget) throws DSSException {
+
+		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
+		if (sdProv == null) {
+			throw new DSSException("No softdeletion provider definded");
+		}
+		return sdProv.softDelete(objDelete, ndbTarget, this);
+	}
+
+	public boolean hardDelete(T objDelete, boolean direct) throws DSSException {
+		return hardDelete(objDelete, ExtLibUtil.getCurrentDatabase(), direct);
+	}
+
+	public boolean hardDelete(T objDelete, Database ndbTarget, boolean direct) throws DSSException {
+		if (direct) {
+			return DominoStorageService.getInstance().deleteObject(objDelete, ndbTarget);
+		}
+		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
+		if (sdProv == null) {
+			throw new DSSException("No softdeletion provider definded");
+		}
+		return sdProv.hardDelete(objDelete, ndbTarget, this);
+
+	}
+
+	public boolean undelete(T objDelete) throws DSSException {
+		return undelete(objDelete, ExtLibUtil.getCurrentDatabase());
+	}
+
+	public boolean undelete(T objDelete, Database ndbTarget) throws DSSException {
+
+		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
+		if (sdProv == null) {
+			throw new DSSException("No softdeletion provider definded");
+		}
+		return sdProv.undelete(objDelete, ndbTarget, this);
+	}
+
 	private boolean isDocumentOfIntrest(Document docCurrent, List<String> lstRolesGroups, List<String> lstFieldsToCheck) {
 		try {
 			for (String strField : lstFieldsToCheck) {
