@@ -19,6 +19,11 @@ import java.util.List;
 
 public interface IChangeLogProcessor {
 
+	/**
+	 * Invokes the changeLogging in the ChangeLogProvider
+	 * @param cle - the current changelog entrie
+	 * @return
+	 */
 	public int doChangeLog(ChangeLogEntry cle);
 
 	public List<ChangeLogEntry> getAllChangeLogEntries(String strObjectClassName, String strPK);
