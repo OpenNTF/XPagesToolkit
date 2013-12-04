@@ -28,7 +28,7 @@ import com.ibm.xsp.extlib.util.ExtLibUtil;
 public class ChangeLogService {
 	private static final String CL_SERVICE_KEY = "xpt.dss.changelogger"; // $NON-NLS-1$
 
-	private static final String CL_DATAPROVIDER_SERVICE = "org.openntf.core.dss.Changelog"; // $NON-NLS-1$
+	private static final String CL_DATAPROVIDER_SERVICE = "org.openntf.xpt.core.dss.Changelog"; // $NON-NLS-1$
 
 	private List<IChangeLogProcessor> m_CLServices;
 

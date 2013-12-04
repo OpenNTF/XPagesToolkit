@@ -96,7 +96,7 @@ public abstract class AbstractStorageService<T> {
 		return ret;
 	}
 
-	public List<T> getObjectByForeignId(String foreignId, String viewID) {
+	public List<T> getObjectsByForeignId(String foreignId, String viewID) {
 		return getObjectsByForeignIdFrom(foreignId, viewID, ExtLibUtil.getCurrentDatabase());
 	}
 

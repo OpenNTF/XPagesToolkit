@@ -66,50 +66,37 @@ public class DominoStorageService {
 	}
 
 	public boolean saveObject(Object objCurrent, Database ndbTarget) throws DSSException {
-		if (!objCurrent.getClass().isAnnotationPresent(DominoStore.class)) {
-			throw new DSSException("No @DominoStore defined for " + objCurrent.getClass().getCanonicalName());
-		}
-		if (!m_StoreDefinitions.containsKey(objCurrent.getClass().getCanonicalName())) {
-			prepareBinders(objCurrent);
-		}
-		DominoStore dsDefinition = m_StoreDefinitions.get(objCurrent.getClass().getCanonicalName());
+		DominoStore dsDefinition = checkDominoStoreDefinition(objCurrent);
 		Java2DominoBinder j2d = m_Saver.get(objCurrent.getClass().getCanonicalName());
 		return saveObject2Document(dsDefinition, j2d, objCurrent, ndbTarget);
 	}
 
-	public boolean getObject(Object objCurrent, Object primaryKey, Database ndbTarget) throws DSSException {
-		if (!objCurrent.getClass().isAnnotationPresent(DominoStore.class)) {
-			throw new DSSException("No @DominoStore defined for " + objCurrent.getClass().getCanonicalName());
-		}
-		if (!m_StoreDefinitions.containsKey(objCurrent.getClass().getCanonicalName())) {
-			prepareBinders(objCurrent);
+	public boolean saveObjectWithDocument(Object objCurrent, Document docCurrent) throws DSSException {
+		DominoStore dsDefinition = checkDominoStoreDefinition(objCurrent);
 
+		Java2DominoBinder j2d = m_Saver.get(objCurrent.getClass().getCanonicalName());
+		Object objID = getObjectID(dsDefinition, objCurrent);
+		try {
+			j2d.processDocument(docCurrent, objCurrent, "" + objID);
+			docCurrent.save(true, false, true);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
 		}
-		DominoStore dsDefinition = m_StoreDefinitions.get(objCurrent.getClass().getCanonicalName());
+		return true;
+	}
+
+	public boolean getObject(Object objCurrent, Object primaryKey, Database ndbTarget) throws DSSException {
+		DominoStore dsDefinition = checkDominoStoreDefinition(objCurrent);
 		Domino2JavaBinder d2j = m_Loader.get(objCurrent.getClass().getCanonicalName());
 		return getObjectFromDocument(dsDefinition, d2j, objCurrent, primaryKey, ndbTarget);
 
 	}
 
-	private void prepareBinders(Object objCurrent) {
-		DominoStore dsCurrent = objCurrent.getClass().getAnnotation(DominoStore.class);
-		Domino2JavaBinder d2j = buildLoadBinder(dsCurrent, objCurrent.getClass());
-		Java2DominoBinder j2d = buildSaveBinder(dsCurrent, objCurrent.getClass());
-		m_Loader.put(objCurrent.getClass().getCanonicalName(), d2j);
-		m_Saver.put(objCurrent.getClass().getCanonicalName(), j2d);
-		m_StoreDefinitions.put(objCurrent.getClass().getCanonicalName(), dsCurrent);
-	}
-
-	public boolean getObjectWithDocument(Object objCurrent, Document docCurrent) {
+	public boolean getObjectWithDocument(Object objCurrent, Document docCurrent) throws DSSException {
+		DominoStore dsDefinition = checkDominoStoreDefinition(objCurrent);
 		try {
-			if (!objCurrent.getClass().isAnnotationPresent(DominoStore.class)) {
-				throw new DSSException();
-			}
-			if (!m_StoreDefinitions.containsKey(objCurrent.getClass().getCanonicalName())) {
-				prepareBinders(objCurrent);
-
-			}
-			DominoStore dsDefinition = m_StoreDefinitions.get(objCurrent.getClass().getCanonicalName());
 			Domino2JavaBinder d2j = m_Loader.get(objCurrent.getClass().getCanonicalName());
 			d2j.processDocument(docCurrent, objCurrent);
 			if (UNID_IDENTIFIER.equals(dsDefinition.View())) {
@@ -121,6 +108,29 @@ public class DominoStorageService {
 			return false;
 		}
 		return true;
+	}
+
+	public boolean deleteObject(Object objDelete, Database ndbTarget) throws DSSException {
+		DominoStore dsDefinition = checkDominoStoreDefinition(objDelete);
+		Object objPK = getObjectID(dsDefinition, objDelete);
+		try {
+			Document docDelete = getDocument(dsDefinition, objDelete, ndbTarget, false, objPK);
+			if (docDelete == null) {
+				return false;
+			}
+			docDelete.remove(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+
+	}
+
+	public Object getObjectID(Object objCurrent) throws DSSException {
+		DominoStore dsDefinition = checkDominoStoreDefinition(objCurrent);
+		return getObjectID(dsDefinition, objCurrent);
+
 	}
 
 	private boolean getObjectFromDocument(DominoStore dsDefinition, Domino2JavaBinder d2j, Object objCurrent, Object pk, Database ndbTarget) {
@@ -155,29 +165,6 @@ public class DominoStorageService {
 			return false;
 		}
 		return true;
-	}
-
-	public boolean deleteObject(Object objDelete, Database ndbTarget) throws DSSException {
-		if (!objDelete.getClass().isAnnotationPresent(DominoStore.class)) {
-			throw new DSSException("No @DominoStore defined for " + objDelete.getClass().getCanonicalName());
-		}
-		if (!m_StoreDefinitions.containsKey(objDelete.getClass().getCanonicalName())) {
-			prepareBinders(objDelete);
-		}
-		DominoStore dsDefinition = m_StoreDefinitions.get(objDelete.getClass().getCanonicalName());
-		Object objPK = getObjectID(dsDefinition, objDelete);
-		try {
-			Document docDelete = getDocument(dsDefinition, objDelete, ndbTarget, false, objPK);
-			if (docDelete == null) {
-				return false;
-			}
-			docDelete.remove(true);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-		return true;
-
 	}
 
 	private Document getDocument(DominoStore ds, Object obj, Database ndbTarget, boolean createOnFail, Object objID) throws NotesException {
@@ -219,6 +206,15 @@ public class DominoStorageService {
 			e.printStackTrace();
 		}
 
+	}
+
+	private void prepareBinders(Object objCurrent) {
+		DominoStore dsCurrent = objCurrent.getClass().getAnnotation(DominoStore.class);
+		Domino2JavaBinder d2j = buildLoadBinder(dsCurrent, objCurrent.getClass());
+		Java2DominoBinder j2d = buildSaveBinder(dsCurrent, objCurrent.getClass());
+		m_Loader.put(objCurrent.getClass().getCanonicalName(), d2j);
+		m_Saver.put(objCurrent.getClass().getCanonicalName(), j2d);
+		m_StoreDefinitions.put(objCurrent.getClass().getCanonicalName(), dsCurrent);
 	}
 
 	private Object getObjectID(DominoStore ds, Object obj) {
@@ -345,6 +341,17 @@ public class DominoStorageService {
 			}
 		}
 		return djdRC;
+	}
+
+	private DominoStore checkDominoStoreDefinition(Object objCurrent) throws DSSException {
+		if (!objCurrent.getClass().isAnnotationPresent(DominoStore.class)) {
+			throw new DSSException("No @DominoStore defined for " + objCurrent.getClass().getCanonicalName());
+		}
+		if (!m_StoreDefinitions.containsKey(objCurrent.getClass().getCanonicalName())) {
+			prepareBinders(objCurrent);
+		}
+		DominoStore dsDefinition = m_StoreDefinitions.get(objCurrent.getClass().getCanonicalName());
+		return dsDefinition;
 	}
 
 }
