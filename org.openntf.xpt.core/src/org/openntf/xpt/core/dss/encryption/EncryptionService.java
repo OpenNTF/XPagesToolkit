@@ -10,7 +10,7 @@ import com.ibm.xsp.application.ApplicationEx;
 public class EncryptionService {
 	private static final String ENC_SERVICE_KEY = "xpt.dss.encryption"; // $NON-NLS-1$
 
-	private static final String ENC_DATAPROVIDER_SERVICE = "org.openntf.core.dss.encryption"; // $NON-NLS-1$
+	private static final String ENC_DATAPROVIDER_SERVICE = "org.openntf.xpt.core.dss.Encryption"; // $NON-NLS-1$
 
 	private static final String PREF_PROVIDER = "xpt.dss.encryption.provider";
 	
@@ -58,14 +58,18 @@ public class EncryptionService {
 				public Void run() {
 					String providersProp = ApplicationEx.getInstance()
 							.getApplicationProperty(PREF_PROVIDER, null);
-					List<IEncryptionKeyProvider> allPDFProviders = getEncryptionProviders();
-					for (IEncryptionKeyProvider p:  allPDFProviders) {
+					List<IEncryptionKeyProvider> allEncProviders = getEncryptionProviders();
+					
+					for (IEncryptionKeyProvider p:  allEncProviders) {
 						if (p.getName().equalsIgnoreCase(providersProp)) {
 							m_ENCService = p;
 							break;
 						}
 					}
 					if (m_ENCService == null) {
+						if(allEncProviders.size() == 1){
+							m_ENCService = allEncProviders.get(0);
+						}
 						//"No Provider found. Assign UNID Provider!");
 						m_ENCService = new UNIDKeyProvider();
 					}
