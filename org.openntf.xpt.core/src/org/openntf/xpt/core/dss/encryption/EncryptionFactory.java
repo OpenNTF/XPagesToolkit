@@ -1,7 +1,9 @@
 package org.openntf.xpt.core.dss.encryption;
 
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.spec.SecretKeySpec;
+
 import org.apache.commons.codec.binary.Base64;
 
 public class EncryptionFactory {
@@ -28,6 +30,9 @@ public class EncryptionFactory {
 			byte[] ciphertext = Base64.decodeBase64(strHash);
 			aes.init(Cipher.DECRYPT_MODE, key);
 			strRC = new String(aes.doFinal(ciphertext));
+		} catch (IllegalBlockSizeException e){
+			e.printStackTrace();
+			//System.out.println("- NOT ENCRYPTED IN STORE - " + strHash);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
