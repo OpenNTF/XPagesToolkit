@@ -4,6 +4,8 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.List;
 
+import javax.crypto.spec.SecretKeySpec;
+
 import com.ibm.designer.runtime.Application;
 import com.ibm.xsp.application.ApplicationEx;
 
@@ -18,6 +20,8 @@ public class EncryptionService {
 	
 	private IEncryptionKeyProvider m_ENCService;
 
+	private SecretKeySpec m_Key;
+	
 	public static EncryptionService getInstance() {
 		EncryptionService cls = (EncryptionService) Application.get().getObject(ENC_SERVICE_KEY);
 		if (cls == null) {
@@ -84,15 +88,22 @@ public class EncryptionService {
 	
 	public String encrypt(String strToEncrypt){
 		if(strToEncrypt != null){
-			return EncryptionFactory.encrypt(strToEncrypt, getEncryptionProvider().getKey());
+			return EncryptionFactory.encrypt(strToEncrypt, getMyKey());
 		}
 		return null;
 	}
 
 	public String decrypt(String strToDecrypt){
 		if(strToDecrypt != null){
-			return EncryptionFactory.decrypt(strToDecrypt, getEncryptionProvider().getKey());
+		//	System.out.println("Decypt: " + strToDecrypt);
+			return EncryptionFactory.decrypt(strToDecrypt, getMyKey());
 		}
 		return null;
+	}
+	private SecretKeySpec getMyKey(){
+		if(m_Key == null){
+			 m_Key = getEncryptionProvider().getKey();
+		}
+		return m_Key;
 	}
 }
