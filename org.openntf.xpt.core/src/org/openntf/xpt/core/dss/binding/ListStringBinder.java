@@ -23,6 +23,7 @@ import java.util.Vector;
 
 import lotus.domino.Document;
 import lotus.domino.Item;
+
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 
 public class ListStringBinder implements IBinder<List<String>> {
@@ -64,6 +65,8 @@ public class ListStringBinder implements IBinder<List<String>> {
 				for (String strValue : lstValues) {
 					vValues.add(NamesProcessor.getInstance().setPerson(strValue, isNamesValue));
 				}
+				lstRC[1] = new ArrayList<String>(vValues);
+
 			}
 			docCurrent.replaceItemValue(strNotesField, vValues);
 		} catch (Exception e) {

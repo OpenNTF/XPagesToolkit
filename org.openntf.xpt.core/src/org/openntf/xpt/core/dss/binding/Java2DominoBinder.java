@@ -18,12 +18,16 @@ package org.openntf.xpt.core.dss.binding;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
-
-import org.openntf.xpt.core.dss.changeLog.ChangeLogService;
-import org.openntf.xpt.core.dss.changeLog.StorageAction;
+import java.util.List;
+import java.util.Vector;
 
 import lotus.domino.Document;
 import lotus.domino.NotesException;
+
+import org.openntf.xpt.core.dss.changeLog.ChangeLogEntry;
+import org.openntf.xpt.core.dss.changeLog.ChangeLogService;
+import org.openntf.xpt.core.dss.changeLog.StorageAction;
+import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
 public class Java2DominoBinder {
 
@@ -45,14 +49,77 @@ public class Java2DominoBinder {
 		for (Iterator<Definition> itDefinition = m_Definition.iterator(); itDefinition.hasNext();) {
 			Definition defCurrent = itDefinition.next();
 			Object[] arrResult = null;
-			arrResult = defCurrent.getBinder().processJava2Domino(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(),
-					defCurrent.getAdditionalValues());
+			arrResult = defCurrent.getBinder().processJava2Domino(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(), defCurrent.getAdditionalValues());
+			if (arrResult != null && defCurrent.getBinder() instanceof IEncryptionBinder) {
+				arrResult = ((IEncryptionBinder) defCurrent.getBinder()).getChangeLogValues(arrResult, defCurrent.getAdditionalValues());
+
+			}
 			if (defCurrent.isChangeLog() && arrResult != null) {
 
-				ChangeLogService.getInstance().checkChangeLog(objCurrent, strPK, arrResult[0], arrResult[1], defCurrent.getJavaField(),
-						defCurrent.getNotesField(), action);
+				ChangeLogService.getInstance().checkChangeLog(objCurrent, strPK, arrResult[0], arrResult[1], defCurrent.getJavaField(), defCurrent.getNotesField(), action);
 			}
 
+		}
+	}
+
+	public boolean isFieldAccessable(String strFieldName, List<String> currentRoles) {
+		for (Definition def : m_Definition) {
+			if (def.isEncrypted()) {
+				if (def.getJavaField().equals(strFieldName)) {
+					return ((IEncryptionBinder) def.getBinder()).hasAccess(def.getAdditionalValues(), currentRoles);
+				}
+			}
+		}
+		return true;
+
+	}
+
+	public boolean isFieldAccessable(String strFieldName, List<String> currentRoles, ChangeLogEntry cl) {
+		for (Definition def : m_Definition) {
+			if (def.isEncrypted()) {
+				if (def.getJavaField().equals(strFieldName)) {
+					boolean hasAccess = ((IEncryptionBinder) def.getBinder()).hasAccess(def.getAdditionalValues(), currentRoles);
+					if (hasAccess) {
+						getDecyptedChangeLogWithoutCheck(cl);
+					}
+					return hasAccess;
+				}
+			}
+		}
+		return true;
+
+	}
+
+	@SuppressWarnings("rawtypes")
+	private void getDecyptedChangeLogWithoutCheck(ChangeLogEntry cl) {
+		if (cl.getOldValue() instanceof Vector) {
+			Vector vc = (Vector) cl.getOldValue();
+			if (vc.size() > 0) {
+				if (vc.get(0) instanceof String) {
+					String encVal = (String) vc.get(0);
+					String decVal = EncryptionService.getInstance().decrypt(encVal);
+					if(decVal != null){
+						Vector<String> rc = new Vector<String>();
+						rc.add(decVal);
+						cl.setOldValue(rc);
+					}
+				}
+			}
+		}
+
+		if (cl.getNewValue() instanceof Vector) {
+			Vector vc = (Vector) cl.getNewValue();
+			if (vc.size() > 0) {
+				if (vc.get(0) instanceof String) {
+					String encVal = (String) vc.get(0);
+					String decVal = EncryptionService.getInstance().decrypt(encVal);
+					if(decVal != null){
+					Vector<String> rc = new Vector<String>();
+					rc.add(decVal);
+					cl.setNewValue(rc);
+					}
+				}
+			}
 		}
 	}
 }

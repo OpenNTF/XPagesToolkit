@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.crypto.spec.SecretKeySpec;
 
+import org.openntf.xpt.core.dss.DSSException;
+
 import com.ibm.designer.runtime.Application;
 import com.ibm.xsp.application.ApplicationEx;
 
@@ -95,8 +97,11 @@ public class EncryptionService {
 
 	public String decrypt(String strToDecrypt){
 		if(strToDecrypt != null){
-		//	System.out.println("Decypt: " + strToDecrypt);
-			return EncryptionFactory.decrypt(strToDecrypt, getMyKey());
+			try{
+				return EncryptionFactory.decrypt(strToDecrypt, getMyKey());
+			}catch (DSSException e) {
+				e.getMessage();
+			}
 		}
 		return null;
 	}

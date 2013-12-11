@@ -21,6 +21,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
 
 import lotus.domino.Database;
 import lotus.domino.Document;
@@ -40,6 +41,7 @@ import org.openntf.xpt.core.dss.binding.LongBinder;
 import org.openntf.xpt.core.dss.binding.ObjectBinder;
 import org.openntf.xpt.core.dss.binding.StringArrayBinder;
 import org.openntf.xpt.core.dss.binding.StringBinder;
+import org.openntf.xpt.core.dss.changeLog.ChangeLogEntry;
 import org.openntf.xpt.core.utils.ServiceSupport;
 
 import com.ibm.designer.runtime.Application;
@@ -132,7 +134,20 @@ public class DominoStorageService {
 		return getObjectID(dsDefinition, objCurrent);
 
 	}
+	
+	public boolean isFieldAccessable(Object objCurrent, String strFieldName, List<String> currentRoles) throws DSSException {
+		checkDominoStoreDefinition(objCurrent);
+		Java2DominoBinder d2j = m_Saver.get(objCurrent.getClass().getCanonicalName());
+		return d2j.isFieldAccessable(strFieldName, currentRoles);
+		
+	}
 
+	public boolean isFieldAccessable(Object objCurrent, ChangeLogEntry cl, List<String> currentRoles) throws DSSException {
+		checkDominoStoreDefinition(objCurrent);
+		Java2DominoBinder d2j = m_Saver.get(objCurrent.getClass().getCanonicalName());
+		return d2j.isFieldAccessable(cl.getObjectField(), currentRoles, cl);
+		
+	}
 	private boolean getObjectFromDocument(DominoStore dsDefinition, Domino2JavaBinder d2j, Object objCurrent, Object pk, Database ndbTarget) {
 		try {
 			if (pk != null) {

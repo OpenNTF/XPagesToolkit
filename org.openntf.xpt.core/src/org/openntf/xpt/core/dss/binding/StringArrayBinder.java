@@ -21,6 +21,7 @@ import java.util.Vector;
 
 import lotus.domino.Document;
 import lotus.domino.Item;
+
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 
 public class StringArrayBinder implements IBinder<String[]> {
@@ -58,7 +59,7 @@ public class StringArrayBinder implements IBinder<String[]> {
 			for (String strVal : strValues) {
 				vecValues.addElement(NamesProcessor.getInstance().setPerson(strVal, isNamesValue));
 			}
-
+			strRC[1] = vecValues.toArray(new String[vecValues.size()]);
 			docCurrent.replaceItemValue(strNotesField, vecValues);
 		} catch (Exception e) {
 			e.printStackTrace();

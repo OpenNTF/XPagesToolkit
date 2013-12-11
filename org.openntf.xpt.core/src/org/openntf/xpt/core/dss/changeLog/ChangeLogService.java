@@ -17,6 +17,7 @@ package org.openntf.xpt.core.dss.changeLog;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
@@ -136,5 +137,15 @@ public class ChangeLogService {
 			processor.doChangeLog(cle);
 		}
 		return true;
+	}
+
+	public List<ChangeLogEntry> getChangeLog(String strObjectClass, String strPK) {
+		List<ChangeLogEntry> lstCL = new ArrayList<ChangeLogEntry>();
+		if (getChangeLogProcessors() != null) {
+			for(IChangeLogProcessor processor: m_CLServices) {
+				lstCL.addAll(processor.getAllChangeLogEntries(strObjectClass, strPK));
+			}
+		}
+		return lstCL;
 	}
 }

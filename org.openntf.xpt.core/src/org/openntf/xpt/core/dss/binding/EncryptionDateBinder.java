@@ -27,6 +27,8 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 		return m_Binder;
 	}
 
+	private boolean m_EncryptionFailed = false;
+
 	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
 			if (hasAccess(addValues)) {
@@ -43,30 +45,33 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 
 	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		Date[] dtRC = new Date[2];
-			try {
+		try {
 			if (hasAccess(addValues)) {
 				Date dtCurrent = getValue(objCurrent, strJavaField);
 				Date dtOld = getValueFromStore(docCurrent, strNotesField, addValues);
-
+				if (m_EncryptionFailed) {
+					return null;
+				}
 				// String encryptedOldValue =
 				// EncryptionService.getInstance().encrypt(dtOld.toString());
-				
-				dtRC[0] = dtOld; // /EncValue for Logger? Prob with return type
+
+				dtRC[0] = dtOld; // /EncValue for Logger? Prob with return
+									// type
 				dtRC[1] = dtCurrent;
 				if (dtCurrent != null) {
 					DateTime dt = docCurrent.getParentDatabase().getParent().createDateTime(dtCurrent);
 					if (addValues.containsKey("dateOnly")) {
 						dt = docCurrent.getParentDatabase().getParent().createDateTime(dt.getDateOnly());
 					}
-				
-				
+
 					String dtString = DateProcessor.getInstance().getDateAsStringToEncrypt(dtCurrent, addValues.containsKey("dateOnly"));
 					String encryptedValue = EncryptionService.getInstance().encrypt(dtString);
-			
+
 					docCurrent.replaceItemValue(strNotesField, encryptedValue);
 				} else {
 					docCurrent.removeItem(strNotesField);
 				}
+
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -85,12 +90,14 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 
 				encDate = docCurrent.getItemValueString(strNotesField);
 				decDate = EncryptionService.getInstance().decrypt(encDate);
-				
+				if (decDate == null) {
+					m_EncryptionFailed = true;
+				}
 				if (decDate != null && !decDate.equals("")) {
-					
+
 					DateFormat formatter = new SimpleDateFormat(DateProcessor.getInstance().getDateFormatForEncryption(additionalValues.containsKey("dateOnly")));
 					return (Date) formatter.parse(decDate);
-	
+
 				}
 			}
 		} catch (Exception e) {
@@ -99,4 +106,23 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 		return null;
 
 	}
+
+	@Override
+	public String[] getChangeLogValues(Object[] arrObject, HashMap<String, Object> additionalValues) {
+		String[] strRC = new String[arrObject.length];
+		int i = 0;
+		for (Object object : arrObject) {
+			Date decDate = (Date) object;
+			if (decDate != null) {
+				String decString = DateProcessor.getInstance().getDateAsStringToEncrypt(decDate, additionalValues.containsKey("dateOnly"));
+				String encryptedValue = EncryptionService.getInstance().encrypt(decString);
+				strRC[i] = encryptedValue;
+			} else {
+				strRC[i] = null;
+			}
+			i++;
+		}
+		return strRC;
+	}
+
 }

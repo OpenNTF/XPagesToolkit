@@ -20,8 +20,6 @@
 
 package org.openntf.xpt.core.dss;
 
-import com.ibm.xsp.extlib.util.ExtLibUtil;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -33,9 +31,11 @@ import lotus.domino.DocumentCollection;
 import lotus.domino.View;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.openntf.xpt.core.dss.DSSException;
-import org.openntf.xpt.core.dss.DominoStorageService;
+import org.openntf.xpt.core.dss.changeLog.ChangeLogEntry;
+import org.openntf.xpt.core.dss.changeLog.ChangeLogService;
 import org.openntf.xpt.core.utils.RoleAndGroupProvider;
+
+import com.ibm.xsp.extlib.util.ExtLibUtil;
 
 public abstract class AbstractStorageService<T> {
 
@@ -260,4 +260,27 @@ public abstract class AbstractStorageService<T> {
 
 	protected abstract T createObject();
 
+	
+	public List<ChangeLogEntry> getChangeLog(T objCurrent){
+		return getChangeLog(objCurrent, RoleAndGroupProvider.getInstance().getMyGroupsAndRoles());
+	}
+	public List<ChangeLogEntry> getChangeLog(T objCurrent, List<String> arrMyRoles) {
+		List<ChangeLogEntry> lstRC = null;
+		try {
+			String strObjectClass = objCurrent.getClass().getCanonicalName();
+			String strPK = DominoStorageService.getInstance().getObjectID(objCurrent).toString();
+			lstRC = ChangeLogService.getInstance().getChangeLog(strObjectClass, strPK);
+			for (Iterator<ChangeLogEntry> itCL = lstRC.iterator(); itCL.hasNext();) {
+				ChangeLogEntry cl = itCL.next();
+				if (!DominoStorageService.getInstance().isFieldAccessable(objCurrent,cl, arrMyRoles)) {
+					itCL.remove();
+				}
+
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return lstRC;
+	}
 }

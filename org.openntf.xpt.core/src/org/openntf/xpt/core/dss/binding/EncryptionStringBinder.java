@@ -34,7 +34,6 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 					String strCurrent = (String) vecString.elementAt(0);
 
 					String decryptedValue = EncryptionService.getInstance().decrypt(strCurrent);
-
 					mt.invoke(objCurrent, decryptedValue);
 				}
 			}
@@ -49,21 +48,17 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 			if (hasAccess(addValues)) {
 				// boolean isNamesValue = false;
 				String strOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
+				if (strOldValue == null) {
+					return null;
+				}
 				String strValue = getValue(objCurrent, strJavaField);
-				/*
-				 * if (addValues != null && addValues.size() > 0) {
-				 * docCurrent.replaceItemValue(strNotesField, ""); Item
-				 * iNotesField = docCurrent.getFirstItem(strNotesField);
-				 * isNamesValue = NamesProcessor.getInstance().setNamesField(
-				 * addValues, iNotesField); strValue =
-				 * NamesProcessor.getInstance().setPerson(strValue,
-				 * isNamesValue); }
-				 */
-				String encryptedOldValue = EncryptionService.getInstance().encrypt(strOldValue);
+
+				// String encryptedOldValue =
+				// EncryptionService.getInstance().encrypt(strOldValue);
 				String encryptedValue = EncryptionService.getInstance().encrypt(strValue);
 
-				arrRC[0] = encryptedOldValue; ///Return Enc Values for the Logger? 
-				arrRC[1] = encryptedValue;
+				arrRC[0] = strOldValue;
+				arrRC[1] = strValue;
 				docCurrent.replaceItemValue(strNotesField, encryptedValue);
 			}
 		} catch (Exception e) {
@@ -77,10 +72,30 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 		try {
 			if (hasAccess(additionalValues)) {
 				String strValue = docCurrent.getItemValueString(strNotesField);
-				return EncryptionService.getInstance().decrypt(strValue);
+				String decryptedValue = EncryptionService.getInstance().decrypt(strValue);
+
+				return decryptedValue;
 			}
 		} catch (Exception e) {
 		}
-		return null;
+		return "";
+	}
+
+	@Override
+	public String[] getChangeLogValues(Object[] arrObject, HashMap<String, Object> additionalValues) {
+		String[] strRC = new String[arrObject.length];
+		int i = 0;
+		for (Object object : arrObject) {
+			String decString = (String) object;
+			if (decString != null) {
+				String encryptedValue = EncryptionService.getInstance().encrypt(decString);
+				strRC[i] = encryptedValue;
+
+			} else {
+				strRC[i] = null;
+			}
+			i++;
+		}
+		return strRC;
 	}
 }
