@@ -24,6 +24,7 @@ import java.util.Vector;
 
 import lotus.domino.DateTime;
 import lotus.domino.Document;
+
 import org.openntf.xpt.core.base.BaseDateBinder;
 import org.openntf.xpt.core.dss.binding.util.DateProcessor;
 
@@ -92,7 +93,6 @@ public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 				DateTime dtCurrent = (DateTime) vecDates.elementAt(0);
 
 				String strFormat = DateProcessor.getInstance().getDateFormat(additionalValues, docCurrent.getParentDatabase().getParent());
-
 				DateFormat formatter = new SimpleDateFormat(strFormat);
 				return (Date) formatter.parse(dtCurrent.getLocalTime());
 			}

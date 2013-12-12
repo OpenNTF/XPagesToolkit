@@ -92,7 +92,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 				String encryptedValue = EncryptionService.getInstance().encrypt(decString);
 				strRC[i] = encryptedValue;
 			} else {
-				strRC[i] = null;
+				strRC[i] = "";
 			}
 			i++;
 

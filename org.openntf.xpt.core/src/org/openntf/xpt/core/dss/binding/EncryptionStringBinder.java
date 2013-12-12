@@ -7,6 +7,7 @@ import java.util.Vector;
 import lotus.domino.Document;
 
 import org.openntf.xpt.core.base.BaseStringBinder;
+import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
 public class EncryptionStringBinder extends BaseStringBinder implements IBinder<String>, IEncryptionBinder {
@@ -55,6 +56,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 
 				// String encryptedOldValue =
 				// EncryptionService.getInstance().encrypt(strOldValue);
+				strValue = NamesProcessor.getInstance().setPerson(strValue, true);
 				String encryptedValue = EncryptionService.getInstance().encrypt(strValue);
 
 				arrRC[0] = strOldValue;
@@ -73,7 +75,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 			if (hasAccess(additionalValues)) {
 				String strValue = docCurrent.getItemValueString(strNotesField);
 				String decryptedValue = EncryptionService.getInstance().decrypt(strValue);
-
+				decryptedValue = NamesProcessor.getInstance().getPerson(additionalValues, decryptedValue);
 				return decryptedValue;
 			}
 		} catch (Exception e) {

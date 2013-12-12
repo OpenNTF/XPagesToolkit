@@ -272,9 +272,18 @@ public class DominoStorageService {
 						IBinder<?> binder = DefinitionFactory.getEncryptionBinder(fldCurrent.getType());
 						if (binder != null) {
 							HashMap<String, Object> addValues = new HashMap<String, Object>();
-							if (de.encRoles() != null && de.encRoles().length > 0) {
+							if (de.encRoles() != null && de.encRoles().length > 0)
 								addValues.put("encRoles", de.encRoles());
-							}
+							if (de.isNames())
+								addValues.put("isNames", true);
+							if (de.isAuthor())
+								addValues.put("isAuthor", true);
+							if (de.isReader())
+								addValues.put("isReader", true);
+							if (de.dateOnly())
+								addValues.put("dateOnly", true);
+							if (de.showNameAs() != null)
+								addValues.put("showNameAs", de.showNameAs().toString());
 							j2dRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(), addValues, de.encrypt(), de.encRoles());
 						}
 					} else {
@@ -318,9 +327,18 @@ public class DominoStorageService {
 						IBinder<?> binder = DefinitionFactory.getEncryptionBinder(fldCurrent.getType());
 						if (binder != null) {
 							HashMap<String, Object> addValues = new HashMap<String, Object>();
-							if (de.encRoles() != null && de.encRoles().length > 0) {
+							if (de.encRoles() != null && de.encRoles().length > 0)
 								addValues.put("encRoles", de.encRoles());
-							}
+							if (de.isNames())
+								addValues.put("isNames", true);
+							if (de.isAuthor())
+								addValues.put("isAuthor", true);
+							if (de.isReader())
+								addValues.put("isReader", true);
+							if (de.dateOnly())
+								addValues.put("dateOnly", true);
+							if (de.showNameAs() != null)
+								addValues.put("showNameAs", de.showNameAs().toString());
 							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(), addValues, de.encrypt(), de.encRoles());
 						}
 					} else if (de.isFormula()) {

@@ -6,7 +6,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 
-import lotus.domino.DateTime;
 import lotus.domino.Document;
 
 import org.openntf.xpt.core.base.BaseDateBinder;
@@ -59,12 +58,12 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 									// type
 				dtRC[1] = dtCurrent;
 				if (dtCurrent != null) {
-					DateTime dt = docCurrent.getParentDatabase().getParent().createDateTime(dtCurrent);
-					if (addValues.containsKey("dateOnly")) {
-						dt = docCurrent.getParentDatabase().getParent().createDateTime(dt.getDateOnly());
-					}
-
+					//DateTime dt = docCurrent.getParentDatabase().getParent().createDateTime(dtCurrent);
+					//if (addValues.containsKey("dateOnly")) {
+					//	dt = docCurrent.getParentDatabase().getParent().createDateTime(dt.getDateOnly());
+					//}
 					String dtString = DateProcessor.getInstance().getDateAsStringToEncrypt(dtCurrent, addValues.containsKey("dateOnly"));
+
 					String encryptedValue = EncryptionService.getInstance().encrypt(dtString);
 
 					docCurrent.replaceItemValue(strNotesField, encryptedValue);
@@ -94,10 +93,11 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 					m_EncryptionFailed = true;
 				}
 				if (decDate != null && !decDate.equals("")) {
-
+					if(additionalValues.containsKey("dateOnly")){
+						decDate = decDate.substring(0,10);
+					}
 					DateFormat formatter = new SimpleDateFormat(DateProcessor.getInstance().getDateFormatForEncryption(additionalValues.containsKey("dateOnly")));
 					return (Date) formatter.parse(decDate);
-
 				}
 			}
 		} catch (Exception e) {
