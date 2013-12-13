@@ -65,7 +65,7 @@ public class ChangeLogService {
 
 	public boolean checkChangeLog(Object objCurrent, String strPK, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField,
 			StorageAction action) {
-		if (objValueNew == null && objValueNew == null) {
+		if (objValueNew == null && objValueOld == null) {
 			return false;
 		}
 		if (objValueNew == null || objValueOld == null) {

@@ -104,7 +104,7 @@ public abstract class AbstractStorageService<T> {
 		List<T> ret = new ArrayList<T>();
 		try {
 			View viwDabases = ndbSource.getView(viewId);
-			DocumentCollection documents = viwDabases.getAllDocumentsByKey(foreignId);
+			DocumentCollection documents = viwDabases.getAllDocumentsByKey(foreignId, true);
 			Document docNext = documents.getFirstDocument();
 			while (docNext != null) {
 				Document docCurrent = docNext;
@@ -137,7 +137,7 @@ public abstract class AbstractStorageService<T> {
 			while (docNext != null) {
 				Document docCurrent = docNext;
 				docNext = viwDabases.getNextDocument(docNext);
-				if (isDocumentOfIntrest(docCurrent, lstRolesGroups, lstFieldsToCheck)) {
+				if (isDocumentOfInterest(docCurrent, lstRolesGroups, lstFieldsToCheck)) {
 					T obj = createObject();
 					if (DominoStorageService.getInstance().getObjectWithDocument(obj, docCurrent)) {
 						ret.add(obj);
@@ -167,7 +167,7 @@ public abstract class AbstractStorageService<T> {
 			while (docNext != null) {
 				Document docCurrent = docNext;
 				docNext = viwDabases.getNextDocument(docNext);
-				if (isDocumentOfIntrest(docCurrent, lstRolesGroups, lstFieldsToCheck)) {
+				if (isDocumentOfInterest(docCurrent, lstRolesGroups, lstFieldsToCheck)) {
 					T obj = createObject();
 					if (DominoStorageService.getInstance().getObjectWithDocument(obj, docCurrent)) {
 						ret.add(obj);
@@ -196,7 +196,7 @@ public abstract class AbstractStorageService<T> {
 
 		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
 		if (sdProv == null) {
-			throw new DSSException("No softdeletion provider definded");
+			throw new DSSException("No softdeletion provider defined");
 		}
 		return sdProv.softDelete(objDelete, ndbTarget, this);
 	}
@@ -211,7 +211,7 @@ public abstract class AbstractStorageService<T> {
 		}
 		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
 		if (sdProv == null) {
-			throw new DSSException("No softdeletion provider definded");
+			throw new DSSException("No softdeletion provider defined");
 		}
 		return sdProv.hardDelete(objDelete, ndbTarget, this);
 
@@ -225,12 +225,12 @@ public abstract class AbstractStorageService<T> {
 
 		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
 		if (sdProv == null) {
-			throw new DSSException("No softdeletion provider definded");
+			throw new DSSException("No softdeletion provider defined");
 		}
 		return sdProv.undelete(objDelete, ndbTarget, this);
 	}
 
-	private boolean isDocumentOfIntrest(Document docCurrent, List<String> lstRolesGroups, List<String> lstFieldsToCheck) {
+	private boolean isDocumentOfInterest(Document docCurrent, List<String> lstRolesGroups, List<String> lstFieldsToCheck) {
 		try {
 			for (String strField : lstFieldsToCheck) {
 				if (docCurrent.hasItem(strField)) {
@@ -260,10 +260,10 @@ public abstract class AbstractStorageService<T> {
 
 	protected abstract T createObject();
 
-	
-	public List<ChangeLogEntry> getChangeLog(T objCurrent){
+	public List<ChangeLogEntry> getChangeLog(T objCurrent) {
 		return getChangeLog(objCurrent, RoleAndGroupProvider.getInstance().getMyGroupsAndRoles());
 	}
+
 	public List<ChangeLogEntry> getChangeLog(T objCurrent, List<String> arrMyRoles) {
 		List<ChangeLogEntry> lstRC = null;
 		try {
@@ -272,12 +272,12 @@ public abstract class AbstractStorageService<T> {
 			lstRC = ChangeLogService.getInstance().getChangeLog(strObjectClass, strPK);
 			for (Iterator<ChangeLogEntry> itCL = lstRC.iterator(); itCL.hasNext();) {
 				ChangeLogEntry cl = itCL.next();
-				if (!DominoStorageService.getInstance().isFieldAccessable(objCurrent,cl, arrMyRoles)) {
+				if (!DominoStorageService.getInstance().isFieldAccessable(objCurrent, cl, arrMyRoles)) {
 					itCL.remove();
 				}
 
 			}
-			
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

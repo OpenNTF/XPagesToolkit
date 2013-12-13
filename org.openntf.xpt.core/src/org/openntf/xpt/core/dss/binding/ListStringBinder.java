@@ -112,4 +112,18 @@ public class ListStringBinder implements IBinder<List<String>> {
 		return null;
 	}
 
+	public List<String> getRawValueFormStore(Document docCurrent, String strNotesField) {
+		try {
+			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);
+			ArrayList<String> lstValues = new ArrayList<String>();
+			for (Object strValue : vecResult) {
+				lstValues.add(strValue.toString());
+			}
+			return lstValues;
+		} catch (Exception e) {
+		}
+		return null;
+
+	}
+
 }
