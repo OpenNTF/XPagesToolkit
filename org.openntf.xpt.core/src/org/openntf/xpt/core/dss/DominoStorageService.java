@@ -360,7 +360,7 @@ public class DominoStorageService {
 							addValues.put("dateOnly", true);
 						if (de.showNameAs() != null)
 							addValues.put("showNameAs", de.showNameAs().toString());
-						if (binder.getClass().equals(ObjectBinder.class)) {
+						if (binder != null && binder.getClass().equals(ObjectBinder.class)) {
 							addValues.put("innerClass", fldCurrent.getType());
 							addValues.put("genericType", fldCurrent.getGenericType());
 						}

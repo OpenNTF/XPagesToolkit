@@ -34,7 +34,7 @@ public class XPTLibUtils {
 		try {
 			String s = AccessController.doPrivileged(new PrivilegedAction<String>() {
 				public String run() {
-					Object o = Activator.instance.getBundle().getHeaders().get("Bundle-Version"); // $NON-NLS-1$
+					Object o = Activator.getInstance().getBundle().getHeaders().get("Bundle-Version"); // $NON-NLS-1$
 					if (o != null) {
 						return o.toString();
 					}

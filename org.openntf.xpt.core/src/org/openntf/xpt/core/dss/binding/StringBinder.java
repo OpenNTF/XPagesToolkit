@@ -44,7 +44,7 @@ public class StringBinder extends BaseStringBinder implements IBinder<String> {
 		String[] arrRC = new String[2];
 		try {
 			boolean isNamesValue = false;
-			String strOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			String strOldValue = docCurrent.getItemValueString(strNotesField);
 			String strValue = getValue(objCurrent, strJavaField);
 			if (addValues != null && addValues.size() > 0) {
 				docCurrent.replaceItemValue(strNotesField, "");

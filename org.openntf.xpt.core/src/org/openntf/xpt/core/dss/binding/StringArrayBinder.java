@@ -43,7 +43,7 @@ public class StringArrayBinder implements IBinder<String[]> {
 	public String[][] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		String[][] strRC = new String[2][];
 		try {
-			String[] strOldValues = getValueFromStore(docCurrent, strNotesField, addValues);
+			String[] strOldValues = getRawValueFromStore(docCurrent, strNotesField);
 			String[] strValues = getValue(objCurrent, strJavaField);
 			strRC[0] = strOldValues;
 			strRC[1] = strValues;
@@ -99,6 +99,22 @@ public class StringArrayBinder implements IBinder<String[]> {
 			int i = 0;
 			for (Object strValue : vecResult) {
 				strValues[i] = NamesProcessor.getInstance().getPerson(additionalValues, strValue.toString());
+				i += 1;
+			}
+			return strValues;
+
+		} catch (Exception e) {
+		}
+		return null;
+	}
+	public String[] getRawValueFromStore(Document docCurrent, String strNotesField) {
+		try {
+			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);
+			String[] strValues = new String[vecResult.size()];
+
+			int i = 0;
+			for (Object strValue : vecResult) {
+				strValues[i] = strValue.toString();
 				i += 1;
 			}
 			return strValues;

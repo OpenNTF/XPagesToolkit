@@ -30,7 +30,7 @@ public class BaseBooleanBinder {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return null;
+		return Boolean.FALSE;
 	}
 
 }

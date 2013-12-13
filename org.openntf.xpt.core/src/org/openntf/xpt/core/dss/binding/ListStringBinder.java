@@ -47,7 +47,7 @@ public class ListStringBinder implements IBinder<List<String>> {
 		@SuppressWarnings("unchecked")
 		List<String>[] lstRC = new ArrayList[2];
 		try {
-			List<String> lstOldValues = getValueFromStore(docCurrent, strNotesField, addValues);
+			List<String> lstOldValues = getRawValueFromStore(docCurrent, strNotesField);
 			List<String> lstValues = getValue(objCurrent, strJavaField);
 
 			lstRC[0] = lstOldValues;
@@ -112,7 +112,7 @@ public class ListStringBinder implements IBinder<List<String>> {
 		return null;
 	}
 
-	public List<String> getRawValueFormStore(Document docCurrent, String strNotesField) {
+	public List<String> getRawValueFromStore(Document docCurrent, String strNotesField) {
 		try {
 			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);
 			ArrayList<String> lstValues = new ArrayList<String>();

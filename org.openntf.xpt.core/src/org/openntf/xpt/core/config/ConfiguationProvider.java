@@ -27,7 +27,7 @@ import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class ConfiguationProvider {
 
-	public final String EXT_POINT_ID = "org.openntf.xpt.part";
+	public static final String EXT_POINT_ID = "org.openntf.xpt.part";
 	private static ConfiguationProvider m_Provider;
 
 	private ConfiguationProvider() {
@@ -38,7 +38,7 @@ public class ConfiguationProvider {
 	private List<String> m_FacesConfig;
 	private List<CommandProvider> m_CommandProvider;
 
-	public static ConfiguationProvider getInstance() {
+	public static synchronized ConfiguationProvider getInstance() {
 		if (m_Provider == null) {
 			m_Provider = new ConfiguationProvider();
 		}
