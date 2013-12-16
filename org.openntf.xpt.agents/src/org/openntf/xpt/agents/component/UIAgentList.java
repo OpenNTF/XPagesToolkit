@@ -38,7 +38,7 @@ import com.ibm.commons.util.StringUtil;
 import com.ibm.commons.util.io.json.JsonJavaFactory;
 import com.ibm.commons.util.io.json.JsonJavaObject;
 import com.ibm.commons.util.io.json.JsonParser;
-import com.ibm.commons.util.io.json.util.JsonWriter;
+import com.ibm.domino.services.util.JsonWriter;
 import com.ibm.xsp.ajax.AjaxUtil;
 import com.ibm.xsp.application.UniqueViewIdManager;
 import com.ibm.xsp.component.FacesAjaxComponent;

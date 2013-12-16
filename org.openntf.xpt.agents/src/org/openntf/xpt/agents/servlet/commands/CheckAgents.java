@@ -7,7 +7,7 @@ import org.openntf.xpt.agents.beans.XPTAgentBean;
 import org.openntf.xpt.agents.servlet.IXPTServletCommand;
 import org.openntf.xpt.core.utils.HttpResponseSupport;
 
-import com.ibm.commons.util.io.json.util.JsonWriter;
+import com.ibm.domino.services.util.JsonWriter;
 
 public class CheckAgents implements IXPTServletCommand {
 
