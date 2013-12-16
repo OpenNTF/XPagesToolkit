@@ -20,9 +20,12 @@ import java.util.HashMap;
 
 import lotus.domino.Document;
 import lotus.domino.MIMEEntity;
+import lotus.domino.RichTextItem;
 import lotus.domino.Stream;
 
 import com.ibm.xsp.http.MimeMultipart;
+import com.ibm.xsp.model.domino.wrapped.DominoDocument;
+import com.ibm.xsp.model.domino.wrapped.DominoRichTextItem;
 
 public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 
@@ -96,7 +99,54 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 			if (entity != null) {
 				strValue = MimeMultipart.fromHTML(entity.getContentAsText());
 
+			} else if (docCurrent.hasItem(strNotesField)) {
+
+				if (docCurrent.getFirstItem(strNotesField) != null) {
+					if (docCurrent.getFirstItem(strNotesField).getType() != 1) {
+						strValue = MimeMultipart.fromHTML(docCurrent.getItemValueString(strNotesField));
+					} else {
+						RichTextItem rti = (RichTextItem) docCurrent.getFirstItem(strNotesField);
+						/*
+						if (rti != null) {
+							//System.out.println("UND2222?");
+							HttpServletRequest rq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+							String curURL = rq.getRequestURL().toString();
+							String docid = docCurrent.getUniversalID();
+
+							String notesURL = curURL.substring(0, curURL.indexOf(rq.getContextPath()) + 1) + docCurrent.getParentDatabase().getFilePath() + "/0/" + docid + "/" + strNotesField
+									+ "?OpenField";
+
+							URL docURL = new URL(notesURL);
+							URLConnection uc = docURL.openConnection();
+
+							uc.setRequestProperty("Cookie", rq.getHeader("Cookie"));
+							uc.connect();
+
+							// do the HTTP request
+							BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream(), "UTF-8"));
+
+							// process the data returned
+							StringBuffer strBuf = new StringBuffer();
+							String tmpStr = "";
+							while ((tmpStr = in.readLine()) != null) {
+								strBuf.append(tmpStr);
+							}
+							//System.out.println("UND?");
+							strValue = MimeMultipart.fromHTML(strBuf.toString());
+							//System.out.println("strValue" + strValue);
+						}
+						*/
+						if (rti != null) {
+							DominoDocument dd = new DominoDocument();
+							dd.setDocument(docCurrent);
+							DominoRichTextItem drtCurrent = new DominoRichTextItem(dd, rti);
+							
+							strValue = MimeMultipart.fromHTML(drtCurrent.getHTML());
+						}
+					}
+				}
 			}
+
 			return strValue;
 		} catch (Exception e) {
 
