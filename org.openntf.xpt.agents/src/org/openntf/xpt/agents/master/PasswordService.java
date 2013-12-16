@@ -92,12 +92,9 @@ public class PasswordService {
 			getRequestINIT.addHeader(BasicScheme.authenticate(new UsernamePasswordCredentials(strUser, strPW), "UTF-8", false));
 			HttpResponse hsrINTI = httpClient.execute(getRequestINIT);
 			if (hsrINTI.getStatusLine().getStatusCode() == 200) {
-				// TODO: PARSE RESULT AS JSON!
 				EntityUtils.consume(hsrINTI.getEntity());
 				HttpResponse hsr = httpClient.execute(getRequest);
 				JsonJavaObject json = (JsonJavaObject) JsonParser.fromJson(JsonJavaFactory.instanceEx, EntityUtils.toString(hsr.getEntity()));
-				System.out.println(EntityUtils.toString(hsr.getEntity()));
-			
 				
 				if (json.getString("status").equalsIgnoreCase("ok")) {
 					eupRC.setLoggedIn(true);

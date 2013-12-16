@@ -10,7 +10,7 @@ import org.openntf.xpt.agents.beans.XPTAgentBean;
 import org.openntf.xpt.agents.servlet.IXPTServletCommand;
 import org.openntf.xpt.core.utils.HttpResponseSupport;
 
-import com.ibm.commons.util.io.json.util.JsonWriter;
+import com.ibm.domino.services.util.JsonWriter;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 
 public class CheckLogin implements IXPTServletCommand {

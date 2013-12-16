@@ -25,7 +25,7 @@ import com.ibm.commons.util.io.json.JsonGenerator;
 import com.ibm.commons.util.io.json.JsonJavaFactory;
 import com.ibm.commons.util.io.json.JsonJavaObject;
 import com.ibm.commons.util.io.json.JsonParser;
-import com.ibm.commons.util.io.json.util.JsonWriter;
+import com.ibm.domino.services.util.JsonWriter;
 import com.ibm.jscript.json.JsonJavaScriptFactory;
 import com.ibm.jscript.types.FBSValue;
 import com.ibm.xsp.ajax.AjaxUtil;
@@ -242,14 +242,15 @@ public class UIAgentProgressbar extends UIComponentBase implements FacesAjaxComp
 				}
 
 				// Parsing the Arguments form JavaScript submit
-				if (json.containsKey("arguments")) {
+				Object jsObjArguments = json.getJsonProperty("arguments");
+				if (jsObjArguments instanceof JsonJavaObject) {
 					logCurrent.info("Arguments from the CSJS");
-					JsonJavaObject jsObj = json.getAsObject("arguments");
+					JsonJavaObject jsObj = (JsonJavaObject) jsObjArguments;
 					for (Iterator<String> itProp = jsObj.getProperties(); itProp.hasNext();) {
 						
 						String strProp = itProp.next();
-						logCurrent.info(strProp +" -> "+ jsObj.getAsString(strProp));
-						hmProps.put(strProp, jsObj.getAsString(strProp));
+						logCurrent.info(strProp +" -> "+ jsObj.getString(strProp));
+						hmProps.put(strProp, jsObj.getString(strProp));
 					}
 				}
 

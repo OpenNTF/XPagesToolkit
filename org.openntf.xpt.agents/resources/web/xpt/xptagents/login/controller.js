@@ -106,7 +106,7 @@ dojo.declare("xptagents.login.controller", null, {
 		var context = this;
 		var postData = {
 			"method" : "sort",
-			"prop"	: prop;
+			"prop"	: prop
 		};
 		var xhrArgs = { // submit to server
 			url : this.serviceurl,

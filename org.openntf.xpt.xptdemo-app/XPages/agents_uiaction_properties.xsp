@@ -43,7 +43,7 @@
 				<xp:button
 					value="Run Agent  with Client Side Properties" id="button1">
 					<xp:eventHandler event="onclick" submit="false">
-						<xp:this.script><![CDATA[agentWithProperties2.startJob({"myname": "myName set by CSJS:", "startdate": new Date()});]]></xp:this.script>
+						<xp:this.script><![CDATA[agentWithProperties2.startJob({"myname": "myName set by CSJS:", "startdate": new Date().toJSON()});]]></xp:this.script>
 					</xp:eventHandler>
 				</xp:button>
 				<xp:br></xp:br>
