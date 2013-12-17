@@ -31,10 +31,9 @@ dojo.declare("xptagents.progressbar.agentcontroller", null, {
 		var context = this;
 		var postData = {
 			"method" : "startAgent",
-			"agentname" : this.agentname,
+			"agentname" : this.agentname
 		};
 		if ( argMapping ) {
-			console.log("setting arguments to: " + argMapping);
 			postData["arguments"]= argMapping;
 		}
 		var xhrArgs = { // submit to server
