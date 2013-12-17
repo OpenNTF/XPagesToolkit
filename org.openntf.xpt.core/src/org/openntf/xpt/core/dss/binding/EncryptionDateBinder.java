@@ -71,7 +71,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 									// type
 				dtRC[1] = dtCurrent;
 				if (dtCurrent != null) {
-					//DateTime dt = docCurrent.getParentDatabase().getParent().createDateTime(dtCurrent);
+			 		//DateTime dt = docCurrent.getParentDatabase().getParent().createDateTime(dtCurrent);
 					//if (addValues.containsKey("dateOnly")) {
 					//	dt = docCurrent.getParentDatabase().getParent().createDateTime(dt.getDateOnly());
 					//}
@@ -87,6 +87,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 			}
 		}catch(DSSException e){
 			System.out.println(e.getMessage());
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -135,7 +136,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 				String encryptedValue = EncryptionService.getInstance().encrypt(decString);
 				strRC[i] = encryptedValue;
 			} else {
-				strRC[i] = null;
+				strRC[i] = "";
 			}
 			i++;
 		}

@@ -68,6 +68,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 			}
 		}catch(DSSException e){
 			System.out.println(e.getMessage());
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

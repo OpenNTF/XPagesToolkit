@@ -85,6 +85,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 			}
 		}catch(DSSException e){
 			System.out.println(e.getMessage());
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -121,7 +122,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 				strRC[i] = encryptedValue;
 
 			} else {
-				strRC[i] = null;
+				strRC[i] = "";
 			}
 			i++;
 		}
