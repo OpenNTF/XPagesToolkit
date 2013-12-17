@@ -26,11 +26,12 @@ public class BaseStringBinder extends BaseEncryptionBinder {
 	public String getValue(Object objCurrent, String strJavaField) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("get" + strJavaField);
-			return (String) mt.invoke(objCurrent);
+			String strValue = (String)mt.invoke(objCurrent);
+			return  strValue == null ? "":strValue;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return null;
+		return "";
 	}
 
 }

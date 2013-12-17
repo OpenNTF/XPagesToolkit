@@ -30,7 +30,7 @@ public class BaseIntegerBinder {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return null;
+		return 0;
 	}
 
 }

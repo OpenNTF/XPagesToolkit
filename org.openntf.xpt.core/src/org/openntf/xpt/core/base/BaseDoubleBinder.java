@@ -30,7 +30,7 @@ public class BaseDoubleBinder extends BaseEncryptionBinder{
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return null;
+		return 0.0;
 	}
 
 }

@@ -34,6 +34,6 @@ public class BaseMimeMultipartBinder {
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}
-		return null;
+		return "";
 	}
 }
