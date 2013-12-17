@@ -19,6 +19,8 @@ import java.util.HashMap;
 
 import lotus.domino.Document;
 
+import org.openntf.xpt.core.dss.DSSException;
+
 public interface IBinder<T> {
 	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> additionalValues);
 
@@ -26,5 +28,5 @@ public interface IBinder<T> {
 
 	public T getValue(Object objCurrent, String strJavaField);
 
-	public T getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues);
+	public T getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) throws DSSException;
 }

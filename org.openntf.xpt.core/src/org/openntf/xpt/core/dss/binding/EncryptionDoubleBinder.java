@@ -21,6 +21,7 @@ import java.util.HashMap;
 import lotus.domino.Document;
 
 import org.openntf.xpt.core.base.BaseDoubleBinder;
+import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
 public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<Double>, IEncryptionBinder {
@@ -37,7 +38,6 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 		return m_Binder;
 	}
 
-	private boolean m_EncryptionFailed = false;
 
 	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
@@ -57,9 +57,6 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 		try {
 			if (hasAccess(addValues)) {
 				Double nOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
-				if (m_EncryptionFailed) {
-					return null;
-				}// / TODO
 				double nValue = getValue(objCurrent, strJavaField).doubleValue();
 				// String encryptedOldValue =
 				// EncryptionService.getInstance().encrypt(Double.toString(nOldValue));
@@ -69,7 +66,9 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 
 				docCurrent.replaceItemValue(strNotesField, encryptedValue);
 			}
-
+		}catch(DSSException e){
+			System.out.println(e.getMessage());
+			return null;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -77,19 +76,21 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 	}
 
 	@Override
-	public Double getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public Double getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) throws DSSException {
 		try {
 			if (hasAccess(additionalValues)) {
 				String strDblValue = docCurrent.getItemValueString(strNotesField);
 				String strDblValueDec = EncryptionService.getInstance().decrypt(strDblValue);
 				if (strDblValueDec == null) {
-					m_EncryptionFailed = true;
+					throw new DSSException("Decryption Failed: " + strNotesField);
 				}
-				if (strDblValueDec != null && !strDblValueDec.equals("")) {
+				if (!strDblValueDec.equals("")) {
 					double nValue = new Double(strDblValueDec);
 					return new Double(nValue);
 				}
 			}
+		}catch (DSSException e) {
+				throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
