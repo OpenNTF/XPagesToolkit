@@ -22,7 +22,4 @@
             class="org.openntf.xpt.agents.resources.XPTModulePath" />
    </extension>
 
-<extension point="com.ibm.commons.Extension">
-         <service type="com.ibm.xsp.RequestParameters" class="org.openntf.xpt.agents.resources.XPTRequestCustomizerFactory" />
-   </extension>
 </plugin>

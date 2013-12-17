@@ -45,13 +45,9 @@ public class ExecutorServletFactory implements IServletFactory {
 		m_Module = arg0;
 	}
 
-	public Servlet getExecutorServlet() throws ServletException {
+	public synchronized Servlet getExecutorServlet() throws ServletException {
 		if (m_Servlet == null) {
-			synchronized (this) {
-				if (m_Servlet == null) {
-					m_Servlet = (ExecutorServlet) m_Module.createServlet(new ExecutorServlet(), "XPage Agent Executor", null);
-				}
-			}
+			m_Servlet = (ExecutorServlet) m_Module.createServlet(new ExecutorServlet(), "XPage Agent Executor", null);
 		}
 		return m_Servlet;
 	}

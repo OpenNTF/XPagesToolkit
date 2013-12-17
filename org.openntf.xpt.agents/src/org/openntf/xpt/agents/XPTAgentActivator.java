@@ -27,7 +27,7 @@ public class XPTAgentActivator extends Plugin {
 	private static XPTAgentActivator m_Activator;
 
 	public XPTAgentActivator() {
-		m_Activator = this;
+
 	}
 
 	/*
@@ -39,6 +39,7 @@ public class XPTAgentActivator extends Plugin {
 	 */
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
+		m_Activator = this;
 		try {
 			Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
 			logCurrent.info("XPT AgentManager FrameWork loaded.");

@@ -22,21 +22,19 @@ dojo.declare("xptagents.progressbar.agentcontroller", null, {
 	jobid : null,
 	hidden : true,
 	hideafterjob : true,
-	// The constructor
 	constructor : function(args) {
 		dojo.safeMixin(this, args);
 	},
-
 	startJob : function(argMapping) {
 		var context = this;
 		var postData = {
 			"method" : "startAgent",
 			"agentname" : this.agentname
 		};
-		if ( argMapping ) {
-			postData["arguments"]= argMapping;
+		if (argMapping) {
+			postData["arguments"] = argMapping;
 		}
-		var xhrArgs = { // submit to server
+		var xhrArgs = {
 			url : this.serviceurl,
 			postData : dojo.toJson(postData),
 			handleAs : "json",
@@ -61,7 +59,6 @@ dojo.declare("xptagents.progressbar.agentcontroller", null, {
 		dojo.xhrPost(xhrArgs);
 
 	},
-
 	updatePB : function() {
 		var postData = {
 			"method" : "getStatus",
@@ -126,6 +123,5 @@ dojo.declare("xptagents.progressbar.agentcontroller", null, {
 				});
 			}
 		}).play();
-
 	}
 });

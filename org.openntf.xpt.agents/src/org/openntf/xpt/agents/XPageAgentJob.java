@@ -29,7 +29,6 @@ import org.eclipse.core.runtime.jobs.Job;
 import org.openntf.xpt.agents.annotations.ExecutionMode;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
-
 import com.ibm.domino.xsp.module.nsf.NSFComponentModule;
 import com.ibm.domino.xsp.module.nsf.NotesContext;
 import com.ibm.domino.xsp.module.nsf.SessionCloner;
@@ -128,8 +127,6 @@ public abstract class XPageAgentJob extends Job implements IXPageAgent {
 		return Status.CANCEL_STATUS;
 	}
 
-
-
 	private IStatus executeJob() {
 		NotesContext context = null;
 		Session sesCurrent = null;
@@ -145,11 +142,14 @@ public abstract class XPageAgentJob extends Job implements IXPageAgent {
 			if (strServer != null && m_DatabasePath != null) {
 				ndbCurrent = sesCurrent.getDatabase(strServer, m_DatabasePath);
 			}
+
 			executeCode(sesCurrent, ndbCurrent);
 			if (getAgentTaskStatus() == AgentTaskStatus.RUNNING) {
 				setAgentTaskStatus(AgentTaskStatus.FINISHED);
 			}
-			ndbCurrent.recycle();
+			if (ndbCurrent != null) {
+				ndbCurrent.recycle();
+			}
 			m_Logger.info("Execute Code -> DONE");
 			Thread.sleep(5000);
 
@@ -162,7 +162,7 @@ public abstract class XPageAgentJob extends Job implements IXPageAgent {
 				if (context != null) {
 					NotesContext.termThread();
 					m_Logger.info("NotesContext.termThread");
-				} 
+				}
 				if (sesCurrent != null) {
 					sesCurrent.recycle();
 					m_Logger.info("Session recycled");
