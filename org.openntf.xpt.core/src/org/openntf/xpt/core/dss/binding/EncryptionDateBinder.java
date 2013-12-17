@@ -24,6 +24,7 @@ import java.util.HashMap;
 import lotus.domino.Document;
 
 import org.openntf.xpt.core.base.BaseDateBinder;
+import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.util.DateProcessor;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
@@ -41,7 +42,6 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 		return m_Binder;
 	}
 
-	private boolean m_EncryptionFailed = false;
 
 	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
@@ -63,9 +63,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 			if (hasAccess(addValues)) {
 				Date dtCurrent = getValue(objCurrent, strJavaField);
 				Date dtOld = getValueFromStore(docCurrent, strNotesField, addValues);
-				if (m_EncryptionFailed) {
-					return null;
-				}
+				
 				// String encryptedOldValue =
 				// EncryptionService.getInstance().encrypt(dtOld.toString());
 
@@ -87,6 +85,8 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 				}
 
 			}
+		}catch(DSSException e){
+			System.out.println(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -96,7 +96,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 	}
 
 	@Override
-	public Date getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public Date getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) throws DSSException {
 		try {
 			if (hasAccess(additionalValues)) {
 				String encDate;
@@ -105,9 +105,9 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 				encDate = docCurrent.getItemValueString(strNotesField);
 				decDate = EncryptionService.getInstance().decrypt(encDate);
 				if (decDate == null) {
-					m_EncryptionFailed = true;
+					throw new DSSException("Decryption Failed: " + strNotesField);
 				}
-				if (decDate != null && !decDate.equals("")) {
+				if (!decDate.equals("")) {
 					if(additionalValues.containsKey("dateOnly")){
 						decDate = decDate.substring(0,10);
 					}
@@ -115,8 +115,10 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 					return (Date) formatter.parse(decDate);
 				}
 			}
+		}catch (DSSException e) {
+			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
+		e.printStackTrace();
 		}
 		return null;
 

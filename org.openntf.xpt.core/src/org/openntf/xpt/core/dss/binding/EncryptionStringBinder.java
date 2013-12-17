@@ -22,6 +22,7 @@ import java.util.Vector;
 import lotus.domino.Document;
 
 import org.openntf.xpt.core.base.BaseStringBinder;
+import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
@@ -71,13 +72,19 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 
 				// String encryptedOldValue =
 				// EncryptionService.getInstance().encrypt(strOldValue);
-				strValue = NamesProcessor.getInstance().setPerson(strValue, true);
+				if((addValues.containsKey("isReader")
+						|| addValues.containsKey("isAuthor") || addValues
+						.containsKey("isNames"))){
+					strValue = NamesProcessor.getInstance().setPerson(strValue, true);
+				}
 				String encryptedValue = EncryptionService.getInstance().encrypt(strValue);
 
 				arrRC[0] = strOldValue;
 				arrRC[1] = strValue;
 				docCurrent.replaceItemValue(strNotesField, encryptedValue);
 			}
+		}catch(DSSException e){
+			System.out.println(e.getMessage());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -85,14 +92,19 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 	}
 
 	@Override
-	public String getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public String getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) throws DSSException {
 		try {
 			if (hasAccess(additionalValues)) {
 				String strValue = docCurrent.getItemValueString(strNotesField);
 				String decryptedValue = EncryptionService.getInstance().decrypt(strValue);
+				if (decryptedValue == null) {
+					throw new DSSException("Decryption Failed: " + strNotesField);
+				}
 				decryptedValue = NamesProcessor.getInstance().getPerson(additionalValues, decryptedValue);
 				return decryptedValue;
 			}
+		}catch(DSSException e){
+				throw e;
 		} catch (Exception e) {
 		}
 		return "";
