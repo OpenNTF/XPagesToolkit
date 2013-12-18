@@ -57,7 +57,7 @@ public class StringArrayBinder implements IBinder<String[]> {
 			}
 
 			for (String strVal : strValues) {
-				vecValues.addElement(NamesProcessor.getInstance().setPerson(strVal, isNamesValue));
+				vecValues.addElement(NamesProcessor.getInstance().setPerson(strVal, isNamesValue, docCurrent.getParentDatabase().getParent()));
 			}
 			strRC[1] = vecValues.toArray(new String[vecValues.size()]);
 			docCurrent.replaceItemValue(strNotesField, vecValues);
@@ -98,7 +98,7 @@ public class StringArrayBinder implements IBinder<String[]> {
 
 			int i = 0;
 			for (Object strValue : vecResult) {
-				strValues[i] = NamesProcessor.getInstance().getPerson(additionalValues, strValue.toString());
+				strValues[i] = NamesProcessor.getInstance().getPerson(additionalValues, strValue.toString(), docCurrent.getParentDatabase().getParent());
 				i += 1;
 			}
 			return strValues;
@@ -107,6 +107,7 @@ public class StringArrayBinder implements IBinder<String[]> {
 		}
 		return null;
 	}
+
 	public String[] getRawValueFromStore(Document docCurrent, String strNotesField) {
 		try {
 			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);

@@ -45,7 +45,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 
 	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
-			if (hasAccess(addValues)) {
+			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
 				Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Date.class);
 				Date dtCurrent = getValueFromStore(docCurrent, strNotesField, addValues);
 				if (dtCurrent != null) {
@@ -60,7 +60,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		Date[] dtRC = new Date[2];
 		try {
-			if (hasAccess(addValues)) {
+			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
 				Date dtCurrent = getValue(objCurrent, strJavaField);
 				Date dtOld = getValueFromStore(docCurrent, strNotesField, addValues);
 				
@@ -99,7 +99,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 	@Override
 	public Date getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) throws DSSException {
 		try {
-			if (hasAccess(additionalValues)) {
+			if (hasAccess(additionalValues, docCurrent.getParentDatabase())) {
 				String encDate;
 				String decDate;
 

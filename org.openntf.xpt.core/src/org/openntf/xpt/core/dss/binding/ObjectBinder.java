@@ -34,8 +34,6 @@ import lotus.domino.Stream;
 
 import org.openntf.xpt.core.dss.binding.util.XPTObjectInputStream;
 
-import com.ibm.xsp.extlib.util.ExtLibUtil;
-
 public class ObjectBinder implements IBinder<Object> {
 
 	private static ObjectBinder m_Binder;
@@ -59,7 +57,7 @@ public class ObjectBinder implements IBinder<Object> {
 			Object body = getValue(objCurrent, strJavaField);
 			objRC[0] = oldBody;
 			objRC[1] = body;
-			Session session = ExtLibUtil.getCurrentSession();
+			Session session = docCurrent.getParentDatabase().getParent();
 
 			boolean convertMime = session.isConvertMime();
 			session.setConvertMime(false);
@@ -125,7 +123,7 @@ public class ObjectBinder implements IBinder<Object> {
 	@Override
 	public Object getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
 		try {
-			Session session = ExtLibUtil.getCurrentSession();
+			Session session = docCurrent.getParentDatabase().getParent();
 			boolean convertMime = session.isConvertMime();
 			session.setConvertMime(false);
 

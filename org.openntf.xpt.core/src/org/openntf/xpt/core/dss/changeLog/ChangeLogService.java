@@ -22,9 +22,11 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import lotus.domino.Database;
+import lotus.domino.Session;
+
 import com.ibm.designer.runtime.Application;
 import com.ibm.xsp.application.ApplicationEx;
-import com.ibm.xsp.extlib.util.ExtLibUtil;
 
 public class ChangeLogService {
 	private static final String CL_SERVICE_KEY = "xpt.dss.changelogger"; // $NON-NLS-1$
@@ -64,12 +66,12 @@ public class ChangeLogService {
 	}
 
 	public boolean checkChangeLog(Object objCurrent, String strPK, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField,
-			StorageAction action) {
+			StorageAction action, String strUserName, Session sesCurrent, Database ndbCurrent) {
 		if (objValueNew == null && objValueOld == null) {
 			return false;
 		}
 		if (objValueNew == null || objValueOld == null) {
-			return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action);
+			return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action, strUserName, sesCurrent, ndbCurrent);
 		}
 		if (objValueNew instanceof Comparable<?> && objValueOld instanceof Comparable<?>) {
 			@SuppressWarnings("unchecked")
@@ -79,45 +81,48 @@ public class ChangeLogService {
 			if (valO1.compareTo(valO2) == 0) {
 				return false;
 			}
-			return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action);
+			return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action, strUserName, sesCurrent, ndbCurrent);
 		}
 		if (objValueNew.getClass().isArray() && objValueOld.getClass().isArray()) {
 			List<?> lstO1 = Arrays.asList(objValueNew);
 			List<?> lstO2 = Arrays.asList(objValueOld);
-			return compareListValues(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, lstO1, lstO2, action);
+			return compareListValues(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, lstO1, lstO2, action, strUserName,
+					sesCurrent, ndbCurrent);
 		}
 		if (objValueNew instanceof List<?> && objValueOld instanceof List<?>) {
 			@SuppressWarnings("unchecked")
 			List<?> lstO1 = (List<Object>) objValueNew;
 			@SuppressWarnings("unchecked")
 			List<?> lstO2 = (List<Object>) objValueOld;
-			return compareListValues(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, lstO1, lstO2, action);
+			return compareListValues(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, lstO1, lstO2, action, strUserName,
+					sesCurrent, ndbCurrent);
 		}
 
 		return false;
 	}
 
 	private boolean compareListValues(Object objCurrent, String strPK, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField,
-			List<?> lstO1, List<?> lstO2, StorageAction action) {
+			List<?> lstO1, List<?> lstO2, StorageAction action, String strUserName, Session sesCurrent, Database ndbCurrent) {
 		if (lstO1.size() == lstO2.size()) {
 			int nCount = 0;
 			for (Object objTest : lstO1) {
 				Object obj2 = lstO2.get(nCount);
 				if (!objTest.equals(obj2)) {
-					return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action);
+					return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action, strUserName, sesCurrent,
+							ndbCurrent);
 				}
 				nCount++;
 			}
 
 		} else {
-			return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action);
+			return processChangeLog(objCurrent, strPK, objValueOld, objValueNew, strObjectMember, strStorageField, action, strUserName, sesCurrent, ndbCurrent);
 
 		}
 		return false;
 	}
 
 	private boolean processChangeLog(Object objCurrent, String strPK, Object objValueOld, Object objValueNew, String strObjectMember, String strStorageField,
-			StorageAction action) {
+			StorageAction action, String strUserName, Session sesCurrent, Database ndbCurrent) {
 		ChangeLogEntry cle = new ChangeLogEntry();
 		cle.setAction(action);
 		cle.setDate(new Date());
@@ -126,15 +131,11 @@ public class ChangeLogService {
 		cle.setObjectField(strObjectMember);
 		cle.setOldValue(objValueOld);
 		cle.setStorageField(strStorageField);
-		try {
-			cle.setUser(ExtLibUtil.getCurrentSession().getEffectiveUserName());
-		} catch (Exception e) {
-			cle.setUser("<unknown>");
-		}
+		cle.setUser(strUserName);
 		cle.setPrimaryKey(strPK);
 
 		for (IChangeLogProcessor processor : getChangeLogProcessors()) {
-			processor.doChangeLog(cle);
+			processor.doChangeLog(cle, sesCurrent, ndbCurrent);
 		}
 		return true;
 	}
@@ -142,7 +143,7 @@ public class ChangeLogService {
 	public List<ChangeLogEntry> getChangeLog(String strObjectClass, String strPK) {
 		List<ChangeLogEntry> lstCL = new ArrayList<ChangeLogEntry>();
 		if (getChangeLogProcessors() != null) {
-			for(IChangeLogProcessor processor: m_CLServices) {
+			for (IChangeLogProcessor processor : m_CLServices) {
 				lstCL.addAll(processor.getAllChangeLogEntries(strObjectClass, strPK));
 			}
 		}

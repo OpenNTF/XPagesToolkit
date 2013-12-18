@@ -63,7 +63,7 @@ public class ListStringBinder implements IBinder<List<String>> {
 				}
 
 				for (String strValue : lstValues) {
-					vValues.add(NamesProcessor.getInstance().setPerson(strValue, isNamesValue));
+					vValues.add(NamesProcessor.getInstance().setPerson(strValue, isNamesValue, docCurrent.getParentDatabase().getParent()));
 				}
 				lstRC[1] = new ArrayList<String>(vValues);
 
@@ -104,7 +104,7 @@ public class ListStringBinder implements IBinder<List<String>> {
 			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);
 			ArrayList<String> lstValues = new ArrayList<String>();
 			for (Object strValue : vecResult) {
-				lstValues.add(NamesProcessor.getInstance().getPerson(additionalValues, strValue.toString()));
+				lstValues.add(NamesProcessor.getInstance().getPerson(additionalValues, strValue.toString(),docCurrent.getParentDatabase().getParent()));
 			}
 			return lstValues;
 		} catch (Exception e) {

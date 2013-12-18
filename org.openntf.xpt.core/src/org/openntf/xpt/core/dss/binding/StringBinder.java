@@ -50,7 +50,7 @@ public class StringBinder extends BaseStringBinder implements IBinder<String> {
 				docCurrent.replaceItemValue(strNotesField, "");
 				Item iNotesField = docCurrent.getFirstItem(strNotesField);
 				isNamesValue = NamesProcessor.getInstance().setNamesField(addValues, iNotesField);
-				strValue = NamesProcessor.getInstance().setPerson(strValue, isNamesValue);
+				strValue = NamesProcessor.getInstance().setPerson(strValue, isNamesValue, docCurrent.getParentDatabase().getParent());
 			}
 			arrRC[0] = strOldValue;
 			arrRC[1] = strValue;
@@ -77,7 +77,7 @@ public class StringBinder extends BaseStringBinder implements IBinder<String> {
 	public String getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
 		try {
 			String strValue = docCurrent.getItemValueString(strNotesField);
-			strValue = NamesProcessor.getInstance().getPerson(additionalValues, strValue);
+			strValue = NamesProcessor.getInstance().getPerson(additionalValues, strValue,docCurrent.getParentDatabase().getParent());
 			return strValue;
 
 		} catch (Exception e) {

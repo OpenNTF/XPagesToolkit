@@ -63,7 +63,7 @@ public class RoleAndGroupProvider {
 	public List<String> getGroupsAndRolesOf(String strUser, Database ndbTarget) {
 		List<String> lstRC = new ArrayList<String>();
 		try {
-			Name nonUser = ExtLibUtil.getCurrentSession().createName(strUser);
+			Name nonUser = ndbTarget.getParent().createName(strUser);
 			lstRC.add(nonUser.getCanonical());
 			lstRC.add(nonUser.getAbbreviated());
 			lstRC.add(nonUser.getCommon());

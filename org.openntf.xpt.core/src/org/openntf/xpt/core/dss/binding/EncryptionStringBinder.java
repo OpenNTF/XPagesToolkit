@@ -43,7 +43,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
 
-			if (hasAccess(addValues)) {
+			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
 
 				Method mt = objCurrent.getClass().getMethod("set" + strJavaField, String.class);
 				Vector<?> vecString = docCurrent.getParentDatabase().getParent().evaluate(strNotesField, docCurrent);
@@ -62,7 +62,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 	public String[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		String[] arrRC = new String[2];
 		try {
-			if (hasAccess(addValues)) {
+			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
 				// boolean isNamesValue = false;
 				String strOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
 				if (strOldValue == null) {
@@ -72,10 +72,8 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 
 				// String encryptedOldValue =
 				// EncryptionService.getInstance().encrypt(strOldValue);
-				if((addValues.containsKey("isReader")
-						|| addValues.containsKey("isAuthor") || addValues
-						.containsKey("isNames"))){
-					strValue = NamesProcessor.getInstance().setPerson(strValue, true);
+				if ((addValues.containsKey("isReader") || addValues.containsKey("isAuthor") || addValues.containsKey("isNames"))) {
+					strValue = NamesProcessor.getInstance().setPerson(strValue, true, docCurrent.getParentDatabase().getParent());
 				}
 				String encryptedValue = EncryptionService.getInstance().encrypt(strValue);
 
@@ -83,7 +81,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 				arrRC[1] = strValue;
 				docCurrent.replaceItemValue(strNotesField, encryptedValue);
 			}
-		}catch(DSSException e){
+		} catch (DSSException e) {
 			System.out.println(e.getMessage());
 			return null;
 		} catch (Exception e) {
@@ -95,17 +93,17 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 	@Override
 	public String getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) throws DSSException {
 		try {
-			if (hasAccess(additionalValues)) {
+			if (hasAccess(additionalValues, docCurrent.getParentDatabase())) {
 				String strValue = docCurrent.getItemValueString(strNotesField);
 				String decryptedValue = EncryptionService.getInstance().decrypt(strValue);
 				if (decryptedValue == null) {
 					throw new DSSException("Decryption Failed: " + strNotesField);
 				}
-				decryptedValue = NamesProcessor.getInstance().getPerson(additionalValues, decryptedValue);
+				decryptedValue = NamesProcessor.getInstance().getPerson(additionalValues, decryptedValue, docCurrent.getParentDatabase().getParent());
 				return decryptedValue;
 			}
-		}catch(DSSException e){
-				throw e;
+		} catch (DSSException e) {
+			throw e;
 		} catch (Exception e) {
 		}
 		return "";

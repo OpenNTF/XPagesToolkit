@@ -18,6 +18,8 @@ package org.openntf.xpt.core.base;
 import java.util.HashMap;
 import java.util.List;
 
+import lotus.domino.Database;
+
 import org.openntf.xpt.core.utils.RoleAndGroupProvider;
 
 public class BaseEncryptionBinder {
@@ -26,10 +28,16 @@ public class BaseEncryptionBinder {
 		super();
 	}
 
-	public boolean hasAccess(HashMap<String, Object> addValues) {
-		return hasAccess(addValues, RoleAndGroupProvider.getInstance().getMyGroupsAndRoles());
+	public boolean hasAccess(HashMap<String, Object> addValues, Database ndbSource) {
+		try {
+			String strUser = ndbSource.getParent().getEffectiveUserName();
+			return hasAccess(addValues, RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(strUser, ndbSource));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
-	
+
 	public boolean hasAccess(HashMap<String, Object> addValues, List<String> myRoles) {
 		if (addValues != null && addValues.size() > 0) {
 			if (addValues.containsKey("encRoles")) {

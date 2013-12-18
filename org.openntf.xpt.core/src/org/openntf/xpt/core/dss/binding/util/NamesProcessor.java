@@ -19,9 +19,7 @@ import java.util.HashMap;
 
 import lotus.domino.Item;
 import lotus.domino.Name;
-
-//CHANGE to XPTUtil
-import com.ibm.xsp.extlib.util.ExtLibUtil;
+import lotus.domino.Session;
 
 public class NamesProcessor {
 
@@ -37,23 +35,20 @@ public class NamesProcessor {
 		return instance;
 	}
 
-	public String getPerson(HashMap<String, Object> addValues, String strValue) {
+	public String getPerson(HashMap<String, Object> addValues, String strValue, Session sesCurrent) {
 		String rcValue = strValue;
 		try {
+			Name nonCurrent = sesCurrent.createName(strValue);
 			if (addValues != null && addValues.size() > 0) {
-				if ((addValues.containsKey("isReader")
-						|| addValues.containsKey("isAuthor") || addValues
-							.containsKey("isNames"))
+				if ((addValues.containsKey("isReader") || addValues.containsKey("isAuthor") || addValues.containsKey("isNames"))
 						&& addValues.containsKey("showNameAs")) {
-					if ("ABBREVIATE".equalsIgnoreCase(addValues.get(
-							"showNameAs").toString())) {
-						rcValue = ExtLibUtil.getCurrentSession()
-								.createName(strValue).getAbbreviated();
+					if ("ABBREVIATE".equalsIgnoreCase(addValues.get("showNameAs").toString())) {
+						rcValue = nonCurrent.getAbbreviated();
 					} else if ("CN".equals(addValues.get("showNameAs"))) {
-						rcValue = ExtLibUtil.getCurrentSession()
-								.createName(strValue).getCommon();
+						rcValue = nonCurrent.getCommon();
 					}
 				}
+				nonCurrent.recycle();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,22 +56,21 @@ public class NamesProcessor {
 		return rcValue;
 	}
 
-	public String setPerson(String strValue, boolean isNamesValue) {
+	public String setPerson(String strValue, boolean isNamesValue, Session sesCurrent) {
 		String rcValue = strValue;
 		Name person = null;
 		try {
-			person = ExtLibUtil.getCurrentSession().createName(strValue);
+			person = sesCurrent.createName(strValue);
 			if (person != null && isNamesValue)
 				rcValue = person.getCanonical();
-
+			person.recycle();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return rcValue;
 	}
 
-	public boolean setNamesField(HashMap<String, Object> addValues,
-			Item iNotesField) {
+	public boolean setNamesField(HashMap<String, Object> addValues, Item iNotesField) {
 		boolean isNamesValue = false;
 		try {
 			if (addValues != null && addValues.size() > 0) {

@@ -17,6 +17,9 @@ package org.openntf.xpt.core.dss.changeLog;
 
 import java.util.List;
 
+import lotus.domino.Database;
+import lotus.domino.Session;
+
 public interface IChangeLogProcessor {
 
 	/**
@@ -24,7 +27,7 @@ public interface IChangeLogProcessor {
 	 * @param cle - the current changelog entrie
 	 * @return
 	 */
-	public int doChangeLog(ChangeLogEntry cle);
+	public int doChangeLog(ChangeLogEntry cle, Session sesCurrent, Database ndbSource);
 
 	public List<ChangeLogEntry> getAllChangeLogEntries(String strObjectClassName, String strPK);
 

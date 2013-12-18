@@ -37,7 +37,8 @@ public class Java2DominoBinder {
 		m_Definition = new ArrayList<Definition>();
 	}
 
-	public void addDefinition(String strNotesField, String strJavaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues, boolean encrypted, String[] encRoles) {
+	public void addDefinition(String strNotesField, String strJavaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues,
+			boolean encrypted, String[] encRoles) {
 		m_Definition.add(new Definition(strNotesField, strJavaField, binCurrent, changeLog, addValues, encrypted, encRoles));
 	}
 
@@ -49,14 +50,16 @@ public class Java2DominoBinder {
 		for (Iterator<Definition> itDefinition = m_Definition.iterator(); itDefinition.hasNext();) {
 			Definition defCurrent = itDefinition.next();
 			Object[] arrResult = null;
-			arrResult = defCurrent.getBinder().processJava2Domino(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(), defCurrent.getAdditionalValues());
+			arrResult = defCurrent.getBinder().processJava2Domino(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(),
+					defCurrent.getAdditionalValues());
 			if (arrResult != null && defCurrent.getBinder() instanceof IEncryptionBinder) {
 				arrResult = ((IEncryptionBinder) defCurrent.getBinder()).getChangeLogValues(arrResult, defCurrent.getAdditionalValues());
 
 			}
 			if (defCurrent.isChangeLog() && arrResult != null) {
-
-				ChangeLogService.getInstance().checkChangeLog(objCurrent, strPK, arrResult[0], arrResult[1], defCurrent.getJavaField(), defCurrent.getNotesField(), action);
+				String strUser = docProcess.getParentDatabase().getParent().getEffectiveUserName();
+				ChangeLogService.getInstance().checkChangeLog(objCurrent, strPK, arrResult[0], arrResult[1], defCurrent.getJavaField(),
+						defCurrent.getNotesField(), action, strUser, docProcess.getParentDatabase().getParent(), docProcess.getParentDatabase());
 			}
 
 		}
@@ -98,7 +101,7 @@ public class Java2DominoBinder {
 				if (vc.get(0) instanceof String) {
 					String encVal = (String) vc.get(0);
 					String decVal = EncryptionService.getInstance().decrypt(encVal);
-					if(decVal != null){
+					if (decVal != null) {
 						Vector<String> rc = new Vector<String>();
 						rc.add(decVal);
 						cl.setOldValue(rc);
@@ -113,10 +116,10 @@ public class Java2DominoBinder {
 				if (vc.get(0) instanceof String) {
 					String encVal = (String) vc.get(0);
 					String decVal = EncryptionService.getInstance().decrypt(encVal);
-					if(decVal != null){
-					Vector<String> rc = new Vector<String>();
-					rc.add(decVal);
-					cl.setNewValue(rc);
+					if (decVal != null) {
+						Vector<String> rc = new Vector<String>();
+						rc.add(decVal);
+						cl.setNewValue(rc);
 					}
 				}
 			}

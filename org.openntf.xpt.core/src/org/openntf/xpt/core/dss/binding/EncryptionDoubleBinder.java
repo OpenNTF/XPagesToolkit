@@ -41,7 +41,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 
 	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		try {
-			if (hasAccess(addValues)) {
+			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
 				Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Double.TYPE);
 				Double dblVal = getValueFromStore(docCurrent, strNotesField, addValues);
 				if (dblVal != null) {
@@ -55,7 +55,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 	public Double[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
 		Double[] dblRC = new Double[2];
 		try {
-			if (hasAccess(addValues)) {
+			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
 				Double nOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
 				double nValue = getValue(objCurrent, strJavaField).doubleValue();
 				// String encryptedOldValue =
@@ -78,7 +78,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 	@Override
 	public Double getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) throws DSSException {
 		try {
-			if (hasAccess(additionalValues)) {
+			if (hasAccess(additionalValues, docCurrent.getParentDatabase())) {
 				String strDblValue = docCurrent.getItemValueString(strNotesField);
 				String strDblValueDec = EncryptionService.getInstance().decrypt(strDblValue);
 				if (strDblValueDec == null) {
