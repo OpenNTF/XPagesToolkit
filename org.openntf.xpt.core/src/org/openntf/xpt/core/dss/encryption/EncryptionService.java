@@ -126,4 +126,14 @@ public class EncryptionService {
 		}
 		return m_Key;
 	}
+
+
+	public void agentLoadProvider() {
+		if (m_Key == null) {
+			IEncryptionKeyProvider ikp = getEncryptionProvider();
+			if (ikp != null) {
+				m_Key = ikp.getKey();
+			}
+		}
+	}
 }
