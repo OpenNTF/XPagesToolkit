@@ -30,6 +30,8 @@ import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.openntf.xpt.agents.annotations.XPagesAgent;
 import org.openntf.xpt.agents.registry.AmgrPropertiesHandler;
+import org.openntf.xpt.core.dss.changeLog.ChangeLogService;
+import org.openntf.xpt.core.dss.encryption.EncryptionService;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.designer.runtime.Application;
@@ -107,6 +109,13 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		if (!m_Agents.containsKey(strAgentAlias)) {
 			return "<agent " + strAgentAlias + " not found>";
 		}
+		
+		// CHECK if a possible Encryption Provider is loaded
+		EncryptionService.getInstance().agentLoadProvider();
+		// CHECK if a possible ChangLogProvider is loaded
+		ChangeLogService.getInstance().getChangeLogProcessors();
+
+		
 		XPageAgentEntry en = m_Agents.get(strAgentAlias);
 		try {
 			m_Logger.info("Agent found with alias: " + en.getAlias());
