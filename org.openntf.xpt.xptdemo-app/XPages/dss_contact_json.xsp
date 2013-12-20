@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt"
+	xmlns:xe="http://www.ibm.com/xsp/coreex">
+
+	<xc:cc_application navigationPath="/dss/contacts"
+		pageTitle="DSS Contacts">
+		<xp:this.facets>
+			<xp:panel xp:key="facetRight">
+				<xpt:oneuitps id="oneuitps1" title="Sort the result"
+					text="Click on the column header to sort each column.">
+				</xpt:oneuitps>
+			</xp:panel>
+			<xp:panel xp:key="facetLeft">
+				<xc:cc_nav_dss></xc:cc_nav_dss>
+			</xp:panel>
+			<xp:panel xp:key="facetMiddle">
+				<xp:panel id="panContacts">
+					<xp:this.data>
+						<xpt:objectlistSource var="sourceContacts"
+							ascending="true" scope="view" sortAttribute="firstName">
+							<xpt:this.buildValues><![CDATA[#{javascript:viewScope.SORT="FN_ASC";
+print ("EXEC BUID VALUES");
+contactBean.getAllContacts()}]]></xpt:this.buildValues>
+						</xpt:objectlistSource>
+						<xpt:objectlistSource var="myContacts"
+							ascending="true" scope="view" sortAttribute="firstName">
+							<xpt:this.buildValues><![CDATA[#{javascript:viewScope.SORT_MY="FN_ASC";
+contactBean.getMyContacts()}]]></xpt:this.buildValues>
+						</xpt:objectlistSource>
+
+					</xp:this.data>
+					<xe:restService id="restService1"
+						pathInfo="/contact">
+						<xe:this.service>
+							<xe:customRestService
+								serviceBean="contactBean">
+							</xe:customRestService>
+						</xe:this.service>
+					</xe:restService>
+					<h2>
+						All contacts (as&#160;
+
+						<xp:link escape="true" id="link2" text="JSON">
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="complete">
+								<xp:this.action><![CDATA[#{javascript:facesContext.getExternalContext().getResponse().sendRedirect(@FullUrl("dss_contact_json.xsp/contact/result.json?action=allcontacts"))}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:link>
+						)
+					</h2>
+					<xp:table styleClass="lotusTable">
+						<xp:tr styleClass="lotusFirst lotusSort">
+							<xp:td>
+								<xp:label value="First Name"
+									id="label1">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "FN"
+if (viewScope.SORT == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "firstName";
+var sort = "FN";
+var ds = xptBean.findDataSource("panContacts", "sourceContacts");
+if (viewScope.SORT==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT=sort+"_ASC";
+}}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:label value="Last Name"
+									id="label2">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "LN"
+if (viewScope.SORT == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "lastName";
+var sort = "LN";
+var ds = xptBean.findDataSource("panContacts", "sourceContacts");
+if (viewScope.SORT==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT=sort+"_ASC";
+}}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:label value="State" id="label3">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "STATE"
+if (viewScope.SORT == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "state";
+var sort = "STATE";
+var ds = xptBean.findDataSource("panContacts", "sourceContacts");
+if (viewScope.SORT==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT=sort+"_ASC";
+}
+}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:label value="City" id="label4">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "CITY"
+if (viewScope.SORT == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "city";
+var sort = "CITY";
+var ds = xptBean.findDataSource("panContacts", "sourceContacts");
+if (viewScope.SORT==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT=sort+"_ASC";
+}}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:label value="E-Mail" id="label5">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "EMAIL"
+if (viewScope.SORT == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "email";
+var sort = "EMAIL";
+var ds = xptBean.findDataSource("panContacts", "sourceContacts");
+if (viewScope.SORT==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT=sort+"_ASC";
+}
+}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:pager layout="Previous Group Next"
+									partialRefresh="true" id="pager1" for="rpContacts">
+								</xp:pager>
+							</xp:td>
+						</xp:tr>
+						<xp:repeat value="#{javascript:sourceContacts}"
+							rows="10" var="contact" indexVar="indContact" id="rpContacts">
+							<xp:tr>
+								<xp:td>
+									<xp:text escape="true"
+										id="computedField1" value="#{contact.firstName}">
+									</xp:text>
+								</xp:td>
+								<xp:td>
+									<xp:text escape="true"
+										id="computedField2" value="#{contact.lastName}">
+									</xp:text>
+								</xp:td>
+								<xp:td>
+									<xp:text escape="true"
+										id="computedField3" value="#{contact.state}">
+									</xp:text>
+								</xp:td>
+								<xp:td>
+									<xp:text escape="true"
+										id="computedField4" value="#{contact.city}">
+									</xp:text>
+								</xp:td>
+								<xp:td>
+									<xp:text escape="true"
+										id="computedField5" value="#{contact.email}">
+									</xp:text>
+								</xp:td>
+								<xp:td>
+									<xp:link escape="true" text="JSON"
+										id="lnkAdd">
+										<xp:eventHandler event="onclick"
+											submit="true" refreshMode="complete">
+											<xp:this.action><![CDATA[#{javascript:facesContext.getExternalContext().getResponse().sendRedirect(@FullUrl("dss_contact_json.xsp/contact/result.json?action=entry&id="+contact.ID))}]]></xp:this.action>
+										</xp:eventHandler>
+									</xp:link>
+								</xp:td>
+							</xp:tr>
+						</xp:repeat>
+					</xp:table>
+					<xp:br></xp:br>
+					<xp:br></xp:br>
+					<xp:br></xp:br>
+					<h2>
+						My watch list (as&#160;
+
+						<xp:link escape="true" id="lnkMyContact"
+							text="JSON">
+							<xp:eventHandler event="onclick"
+								submit="true" refreshMode="complete">
+								<xp:this.action><![CDATA[#{javascript:facesContext.getExternalContext().getResponse().sendRedirect(@FullUrl("dss_contact_json.xsp/contact/result.json?action=mycontacts"))}]]></xp:this.action>
+							</xp:eventHandler>
+						</xp:link>
+						)
+					</h2>
+					<xp:table styleClass="lotusTable">
+						<xp:tr styleClass="lotusFirst lotusSort">
+							<xp:td>
+								<xp:label value="First Name"
+									id="label6">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "FN"
+if (viewScope.SORT_MY == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT_MY == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "firstName";
+var sort = "FN";
+var ds = xptBean.findDataSource("panContacts", "myContacts");
+if (viewScope.SORT_MY==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT_MY=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT_MY=sort+"_ASC";
+}}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:label value="Last Name"
+									id="label7">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "LN"
+if (viewScope.SORT_MY == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT_MY == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "lastName";
+var sort = "LN";
+var ds = xptBean.findDataSource("panContacts", "myContacts");
+if (viewScope.SORT_MY==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT_MY=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT_MY=sort+"_ASC";
+}}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:label value="State" id="label8">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "STATE"
+if (viewScope.SORT_MY == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT_MY == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "state";
+var sort = "STATE";
+var ds = xptBean.findDataSource("panContacts", "myContacts");
+if (viewScope.SORT_MY==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT_MY=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT_MY=sort+"_ASC";
+}}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:label value="City" id="label9">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "CITY"
+if (viewScope.SORT_MY == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT_MY == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "city";
+var sort = "CITY";
+var ds = xptBean.findDataSource("panContacts", "myContacts");
+if (viewScope.SORT_MY==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT_MY=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT_MY=sort+"_ASC";
+}}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:label value="E-Mail" id="label10">
+									<xp:this.styleClass><![CDATA[#{javascript:var sorder = "EMAIL"
+if (viewScope.SORT_MY == sorder+"_ASC") {
+	return "lotusActiveSort lotusAscending";
+}
+if (viewScope.SORT_MY == sorder+"_DES") {
+	return "lotusActiveSort lotusDescending";
+}
+return "";}]]></xp:this.styleClass>
+									<xp:eventHandler event="onclick"
+										submit="true" refreshMode="partial" refreshId="panContacts">
+										<xp:this.action><![CDATA[#{javascript:var attr = "email";
+var sort = "EMAIL";
+var ds = xptBean.findDataSource("panContacts", "myContacts");
+if (viewScope.SORT_MY==sort +"_ASC") {
+   ds.sortList(attr, false);
+   viewScope.SORT_MY=sort+"_DES";
+} else {
+   ds.sortList(attr, true);
+   viewScope.SORT_MY=sort+"_ASC";
+}}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:pager layout="Previous Group Next"
+									partialRefresh="true" id="pager2" for="rpMyContacts">
+								</xp:pager>
+							</xp:td>
+						</xp:tr>
+						<xp:repeat value="#{javascript:myContacts}"
+							rows="10" var="contact" indexVar="indContact"
+							id="rpMyContacts">
+							<xp:tr>
+								<xp:td>
+									<xp:text escape="true"
+										id="computedField6" value="#{contact.firstName}">
+									</xp:text>
+								</xp:td>
+								<xp:td>
+									<xp:text escape="true"
+										id="computedField7" value="#{contact.lastName}">
+									</xp:text>
+								</xp:td>
+								<xp:td>
+									<xp:text escape="true"
+										id="computedField8" value="#{contact.state}">
+									</xp:text>
+								</xp:td>
+								<xp:td>
+									<xp:text escape="true"
+										id="computedField9" value="#{contact.city}">
+									</xp:text>
+								</xp:td>
+								<xp:td>
+									<xp:text escape="true"
+										id="computedField10" value="#{contact.email}">
+									</xp:text>
+								</xp:td>
+								<xp:td>
+								
+								</xp:td>
+							</xp:tr>
+						</xp:repeat>
+					</xp:table>
+
+				</xp:panel>
+			</xp:panel>
+		</xp:this.facets>
+	</xc:cc_application>
+</xp:view>

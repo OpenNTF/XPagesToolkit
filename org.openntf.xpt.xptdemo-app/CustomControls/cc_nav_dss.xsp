@@ -12,6 +12,11 @@
 			<xe:pageTreeNode label="CRUD with DSS"
 				page="/dss_contact_crud.xsp">
 			</xe:pageTreeNode>
+			<xe:separatorTreeNode></xe:separatorTreeNode>
+
+			<xe:pageTreeNode label="Render Object as JSON"
+				page="/dss_contact_json.xsp">
+			</xe:pageTreeNode>
 
 			<xe:pageTreeNode label="User Profiles "
 				page="/dss_userprofile.xsp" rendered="false">
