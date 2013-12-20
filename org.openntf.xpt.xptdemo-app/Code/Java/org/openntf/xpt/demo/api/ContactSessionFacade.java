@@ -21,10 +21,15 @@ import java.util.List;
 
 import org.openntf.xpt.demo.bo.Contact;
 import org.openntf.xpt.demo.bo.ContactStorageService;
+import org.openntf.xpt.demo.rest.RestGenerator;
 
+import com.ibm.domino.services.ServiceException;
+import com.ibm.domino.services.rest.RestServiceEngine;
+import com.ibm.xsp.extlib.component.rest.CustomService;
+import com.ibm.xsp.extlib.component.rest.CustomServiceBean;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 
-public class ContactSessionFacade implements Serializable {
+public class ContactSessionFacade extends CustomServiceBean implements Serializable {
 
 	/**
 	 * 
@@ -57,6 +62,7 @@ public class ContactSessionFacade implements Serializable {
 			e.printStackTrace();
 		}
 	}
+
 	public void removeObserver(Contact conCurrent) {
 		try {
 			conCurrent.removeObserver(ExtLibUtil.getCurrentSession().getEffectiveUserName());
@@ -66,4 +72,8 @@ public class ContactSessionFacade implements Serializable {
 		}
 	}
 
+	@Override
+	public void renderService(CustomService cs, RestServiceEngine engine) throws ServiceException {
+		RestGenerator.INSTANCE.handleRequest(engine);
+	}
 }

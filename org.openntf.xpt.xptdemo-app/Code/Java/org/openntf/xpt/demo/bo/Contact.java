@@ -22,7 +22,10 @@ import java.util.List;
 
 import org.openntf.xpt.core.dss.annotations.DominoEntity;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
+import org.openntf.xpt.core.json.annotations.JSONEntity;
+import org.openntf.xpt.core.json.annotations.JSONObject;
 
+@JSONObject
 @DominoStore(Form = "Contact", PrimaryFieldClass = String.class, PrimaryKeyField = "ID", View = "LUPContactByID")
 public class Contact implements Serializable {
 
@@ -30,18 +33,25 @@ public class Contact implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	@JSONEntity(jsonproperty = "id")
 	@DominoEntity(FieldName = "ID")
 	private String m_ID;
+	@JSONEntity(jsonproperty = "firstname")
 	@DominoEntity(FieldName = "FirstName")
 	private String m_FirstName;
+	@JSONEntity(jsonproperty = "lastname")
 	@DominoEntity(FieldName = "LastName")
 	private String m_LastName;
+	@JSONEntity(jsonproperty = "city")
 	@DominoEntity(FieldName = "City")
 	private String m_City;
+	@JSONEntity(jsonproperty = "email")
 	@DominoEntity(FieldName = "Email")
 	private String m_Email;
+	@JSONEntity(jsonproperty = "state")
 	@DominoEntity(FieldName = "State")
 	private String m_State;
+	@JSONEntity(jsonproperty = "observer")
 	@DominoEntity(FieldName = "Observer", isNames = true)
 	private List<String> m_Observers;
 
@@ -50,6 +60,7 @@ public class Contact implements Serializable {
 	private double m_Salary;
 	@DominoEntity(FieldName = "CompanyCar", changeLog = true)
 	private double m_CompanyCar;
+	@JSONEntity(jsonproperty="jobfunction")
 	@DominoEntity(FieldName = "JobFunction", changeLog = true)
 	private String m_JobFunction;
 	@DominoEntity(FieldName = "Devices", changeLog = true)
