@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: RSS Feature for XPages Toolkit
 Bundle-SymbolicName: org.openntf.xpt.rss;singleton:=true
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.1.0.qualifier
 Bundle-Activator: org.openntf.xpt.rss.XPTRSSActivator
 Bundle-Vendor: WebGate Consulting AG
 Require-Bundle: org.eclipse.core.runtime,
