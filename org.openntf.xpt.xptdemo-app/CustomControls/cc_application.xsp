@@ -45,7 +45,7 @@
 				</xe:this.footerLinks>
 				<xe:this.titleBarTabs>
 					<xe:pageTreeNode label="Home" page="/home.xsp"
-						selected="/home/.*">
+						selection="/home/.*">
 
 					</xe:pageTreeNode>
 					<xe:pageTreeNode label="DSS / JSON"

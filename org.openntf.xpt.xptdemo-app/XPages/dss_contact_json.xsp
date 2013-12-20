@@ -4,8 +4,8 @@
 	xmlns:xpt="http://www.openntf.org/xsp/xpt"
 	xmlns:xe="http://www.ibm.com/xsp/coreex">
 
-	<xc:cc_application navigationPath="/dss/contacts"
-		pageTitle="DSS Contacts">
+	<xc:cc_application navigationPath="/dss/contacts_json"
+		pageTitle="Contacts as JSON">
 		<xp:this.facets>
 			<xp:panel xp:key="facetRight">
 				<xpt:oneuitps id="oneuitps1" title="Sort the result"
@@ -407,7 +407,7 @@ if (viewScope.SORT_MY==sort +"_ASC") {
 									</xp:text>
 								</xp:td>
 								<xp:td>
-								
+
 								</xp:td>
 							</xp:tr>
 						</xp:repeat>
