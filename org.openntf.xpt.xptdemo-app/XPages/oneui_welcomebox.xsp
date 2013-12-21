@@ -33,7 +33,8 @@ print("wcbSess is ->" +sessionScope.wcbSes)}]]></xp:this.afterPageLoad>
 				<xpt:oneuiwelcome closeable="true" id="oneuiwelcome3"
 					title="Closable WelcomeBox - with sessionScope - binding"
 					showBoxTitle="open this box"><xp:this.facets>
-	<xp:panel xp:key="welcomeText">This welcomebox is closable and saves its state in the sessionScope Variable wcbSes. The Welcomebox will during the session of the user alway get the state from the session.<xp:br></xp:br>onStateChange is executed on any close/open click and isClosed is filled with a boolean attribute. In the onStateChange is in this example the following Code:<xp:br></xp:br>
+	<xp:panel xp:key="welcomeText">This welcome box is closable and saves its state in the session scope variable wcbSes. During the user session, the welcome box will always get the state from the session.
+<xp:br></xp:br><xp:br></xp:br>onStateChange is executed on any close/open click and isClosed is filled with a boolean attribute. In this example the onStateChange contains the following code:<xp:br></xp:br>
 		<xp:br></xp:br>print (&quot;Calling onStateChange&quot;);<xp:br></xp:br>
 print (&quot;wcbSes has the following state: &quot;+ sessionScope.wcbSes);
 <xp:br></xp:br>print (&quot;isClosed has the following value -&gt;&quot; + isClosed);
@@ -56,11 +57,8 @@ print ("wcbSes is after onStateChange -> "+ sessionScope.wcbSes);}]]></xpt:this.
 		<xp:link escape="true" text="See DSS for more information" id="link1" target="_self"
 			value="/dss_userprofile.xsp">
 		</xp:link>
-		. The Welcomebox will get its state from the
-		object and the object saves the state in a document. So the
-		state is saved over sessions.
-		<xp:br></xp:br>onStateChange is executed on any close/open click and isClosed is filled with a boolean attribute. In the onStateChange is in this example the following Code:<xp:br></xp:br>
-		<xp:br></xp:br>var user =userProfileBean.getMyUser();
+		.The Welcomebox will get its state from the object and the object saves the state in a document. So the state is saved over sessions.
+<xp:br></xp:br><xp:br></xp:br>onStateChange is executed on any close/open click and isClosed is filled with a boolean attribute. In the onStateChange is in this example the following Code:<xp:br></xp:br><xp:br></xp:br>var user =userProfileBean.getMyUser();
 <xp:br></xp:br>user.setShowWelcomeBox(isClosed);
 <xp:br></xp:br>userProfileBean.saveUser( user );</xp:panel></xp:this.facets>
 					<xpt:this.onStateChange><![CDATA[#{javascript:var user =userProfileBean.getMyUser();

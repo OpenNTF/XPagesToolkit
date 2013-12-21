@@ -18,7 +18,7 @@
 
 			<xpt:this.leftColumnBlocks>
 				<xpt:oneuiAboutBlock title="DSS / JSON"
-					text="It was never so easy to store your business object directly to documents only by declaration. Use the same pattern for json."
+					text="It was never so easier to store your business object directly to documents only by declaration. Use the same pattern for json."
 					linkTitle="learn more">
 					<xpt:this.link><![CDATA[#{javascript: return context.getUrl().toString().split(view.getPageName())[0] +"/dss_contact.xsp"}]]></xpt:this.link>
 				</xpt:oneuiAboutBlock>
@@ -30,7 +30,7 @@
 			</xpt:this.leftColumnBlocks>
 			<xpt:this.rightColumnBlocks>
 				<xpt:oneuiAboutBlock title="XPages Agents"
-					text="Long running tasks? Constantly update the user interface while the agent is running in the background."
+					text="Long running tasks in the background? Inform your users with a nice looking progress bar, while the agent is running in the background."
 					linkTitle="Learn more">
 					<xpt:this.link><![CDATA[#{javascript: return	context.getUrl().toString().split(view.getPageName())[0] +"/agent_overview.xsp"}]]></xpt:this.link>
 				</xpt:oneuiAboutBlock>

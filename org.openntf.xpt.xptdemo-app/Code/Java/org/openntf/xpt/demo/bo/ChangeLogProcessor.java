@@ -7,8 +7,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
+import lotus.domino.Database;
 import lotus.domino.DateTime;
 import lotus.domino.Document;
+import lotus.domino.Session;
 import lotus.domino.View;
 import lotus.domino.DocumentCollection;
 
@@ -20,10 +22,10 @@ import com.ibm.xsp.extlib.util.ExtLibUtil;
 
 public class ChangeLogProcessor implements IChangeLogProcessor {
 
-	public int doChangeLog(ChangeLogEntry cle) {
+	public int doChangeLog(ChangeLogEntry cle, Session sesCurrent, Database ndbCurrent) {
 		System.out.println("Calling CLF");
 		try {
-			Document docResult = ExtLibUtil.getCurrentDatabase().createDocument();
+			Document docResult = ndbCurrent.createDocument();
 			docResult.replaceItemValue("Form", "changeLog");
 			docResult.replaceItemValue("ChangeAction", cle.getAction().toString());
 			docResult.replaceItemValue("ChangeDate", ExtLibUtil.getCurrentSession().createDateTime(cle.getDate()));

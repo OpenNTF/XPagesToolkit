@@ -12,7 +12,7 @@
 
 
 
-			<xe:pageTreeNode label="OneUI Welcombox"
+			<xe:pageTreeNode label="OneUI Welcomebox"
 				page="oneui_welcomebox">
 			</xe:pageTreeNode>
 
