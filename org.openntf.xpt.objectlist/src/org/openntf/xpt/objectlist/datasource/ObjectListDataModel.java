@@ -19,7 +19,7 @@ import java.io.Serializable;
 
 import com.ibm.xsp.model.TabularDataModel;
 
-public class ObjectListDataModel extends TabularDataModel implements Serializable{
+public class ObjectListDataModel extends TabularDataModel implements Serializable {
 	/**
 	 * 
 	 */
@@ -66,6 +66,36 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 
 	public void setContainer(ObjectListDataContainer container) {
 		m_Container = container;
+	}
+
+	@Override
+	public boolean isCategorized() {
+		return false;
+	}
+
+	@Override
+	public boolean isColumnSortable(String arg0) {
+		return true;
+	}
+
+	@Override
+	public boolean isRowTotal() {
+		return false;
+	}
+
+	@Override
+	public boolean isRowLeaf() {
+		return true;
+	}
+
+	@Override
+	public boolean isColumnCategorized(String arg0) {
+		return false;
+	}
+
+	@Override
+	public boolean isRowCategory() {
+		return false;
 	}
 
 }
