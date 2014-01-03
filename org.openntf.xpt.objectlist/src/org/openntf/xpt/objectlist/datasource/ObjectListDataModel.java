@@ -98,4 +98,8 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 		return false;
 	}
 
+	@Override
+	public String getRowPosition() {
+		return ""+getRowIndex();
+	}
 }
