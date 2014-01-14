@@ -17,6 +17,7 @@ package org.openntf.xpt.core.utils;
 
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.component.UIComponent;
@@ -81,28 +82,46 @@ public class XPTLibUtils {
 		}
 	}
 
-	public static AbstractDataSource getDatasource(String compName, String dsName) {
+	public static AbstractDataSource getDatasource(String compName, String dsName, boolean deep) {
 		UIComponent uiTop = FacesContext.getCurrentInstance().getViewRoot();
 		UIComponent uiFound = ExtLibUtil.getComponentFor(uiTop, compName);
 		if (uiFound == null) {
 			return null;
 		}
-		return getDatasourceFromUIComp(uiFound, dsName);
+		return getDatasourceFromUIComp(uiFound, dsName, deep);
 	}
 
-
-	private static AbstractDataSource getDatasourceFromUIComp(UIComponent uic, String dsName) {
-		List<?> lstDS = (List<?>) uic.getAttributes().get("data");
-		if (lstDS == null) {
-			return null;
+	private static AbstractDataSource getDatasourceFromUIComp(UIComponent uic, String dsName, boolean deep) {
+		Object obj = uic.getAttributes().get("data");
+		if (obj != null && obj instanceof AbstractDataSource) {
+			return (AbstractDataSource) obj;
 		}
-		for (Object obj : lstDS) {
-			if (obj instanceof AbstractDataSource) {
-				AbstractDataSource as = (AbstractDataSource) obj;
-				if (as.getVar().equals(dsName)) {
-					return as;
+		if (obj != null && obj instanceof List<?>) {
+			List<?> lstDS = (List<?>) obj;
+			for (Object obj2 : lstDS) {
+				if (obj2 instanceof AbstractDataSource) {
+					AbstractDataSource as = (AbstractDataSource) obj2;
+					if (as.getVar().equals(dsName)) {
+						return as;
+					}
 				}
 			}
+		}
+		if (!deep) {
+			return null;
+		}
+		if (uic.getChildCount() > 0) {
+			for (Iterator<?> itChild = uic.getChildren().iterator(); itChild.hasNext();) {
+				Object objChild = itChild.next();
+				if (objChild instanceof UIComponent) {
+					UIComponent uicChild = (UIComponent) objChild;
+					AbstractDataSource adsRC = getDatasourceFromUIComp(uicChild, dsName, deep);
+					if (adsRC != null) {
+						return adsRC;
+					}
+				}
+			}
+
 		}
 		return null;
 	}
