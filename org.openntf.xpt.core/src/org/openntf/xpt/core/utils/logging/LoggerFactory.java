@@ -50,10 +50,15 @@ public class LoggerFactory {
 			} catch (Exception e) {
 				//System.out.println("Context has no Database... :"+e.getMessage());
 			}
+			Logger logRC = null; 
 			if (m_RegistredLoggers.containsKey(strDB + strName)) {
-				return m_RegistredLoggers.get(strDB + strName);
+				logRC = m_RegistredLoggers.get(strDB + strName);
+				if (!strDB.equals(XPT_CORE_LOGGER)) {
+					return logRC;
+				}
+			} else {
+				logRC = java.util.logging.Logger.getAnonymousLogger();
 			}
-			Logger logRC = java.util.logging.Logger.getAnonymousLogger();
 			if (strDB.equals(XPT_CORE_LOGGER)) {
 				if (m_logLevel == -1) {
 					checkLogLevel();

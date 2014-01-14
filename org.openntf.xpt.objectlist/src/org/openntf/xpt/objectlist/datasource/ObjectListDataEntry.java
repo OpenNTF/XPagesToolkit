@@ -77,5 +77,6 @@ public class ObjectListDataEntry implements ViewRowData, Serializable {
 	@Override
 	public void setColumnValue(String arg0, Object arg1) {
 	}
+	
 
 }

@@ -1,0 +1,3 @@
+Version 1.1.1
+- Correction of a Issue with the ObjectList Datasource - The datasource works now with the DataView
+- Additional Handling for m_logLevel

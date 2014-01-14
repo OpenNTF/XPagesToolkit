@@ -45,7 +45,11 @@ public class XPTBean {
 	}
 
 	public AbstractDataSource findDataSource(String strCompID, String strDSId) {
-		return XPTLibUtils.getDatasource(strCompID, strDSId);
+		return XPTLibUtils.getDatasource(strCompID, strDSId, false);
+	}
+
+	public AbstractDataSource findDataSourceDeep(String strCompID, String strDSId) {
+		return XPTLibUtils.getDatasource(strCompID, strDSId, true);
 	}
 
 	public List<String> getMyGroupsAndRoles() {
