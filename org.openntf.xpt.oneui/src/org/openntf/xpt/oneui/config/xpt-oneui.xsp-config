@@ -281,6 +281,73 @@
   	</component>
 	
 	
+	   <component>
+    	<description>NamePicker</description>
+    	<display-name>Name Picker</display-name>
+    	<component-type>org.openntf.xpt.oneui.component.uinamepicker</component-type>
+    	<component-class>org.openntf.xpt.oneui.component.UINamePicker</component-class>
+    	
+    	<group-type-ref>com.ibm.xsp.group.core.prop.style</group-type-ref>
+    	<group-type-ref>com.ibm.xsp.group.core.prop.styleClass</group-type-ref>
+
+    	<property>
+      		<property-name>database</property-name>
+      		<property-class>string</property-class>
+      		<display-name>Database</display-name>
+    	</property>
+    	<property>
+      		<property-name>view</property-name>
+      		<property-class>string</property-class>
+      		<display-name>View</display-name>
+    	</property>
+   		<property>
+      		<property-name>searchQuery</property-name>
+      		<property-class>string</property-class>
+      		<display-name>SearchQuery</display-name>
+    	</property>
+    	<property>
+      		<property-name>multiValue</property-name>
+      		<property-class>boolean</property-class>
+      		<property-extension>
+        		<designer-extension>
+          			<editor/>
+          			<default-value>false</default-value>
+          			<category>basic</category>
+        		</designer-extension>
+      		</property-extension>
+      		<display-name>MultiValue</display-name>
+    	</property> 
+   		<property>
+      		<property-name>multiValueSeparator</property-name>
+      		<property-class>string</property-class>
+      		<display-name>MultiValue Separator</display-name>
+    	</property>   
+    	<property>
+      		<property-name>refreshId</property-name>
+      		<property-class>string</property-class>
+      		<display-name>Refresh Id</display-name>
+    	</property>  	
+    	<component-extension>
+      		<component-family>org.openntf.xpt.oneui.component.uinamepicker</component-family>
+      		<renderer-type>org.openntf.xpt.oneui.component.uinampicker</renderer-type>
+      		<tag-name>oneuinamepicker</tag-name>
+      		<designer-extension>
+ 				<in-palette>true</in-palette>
+        		<category>XPages Toolkit</category>
+        		<render-markup>
+        		&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+				&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+				&#xd;
+				&lt;xp:panel style="background-color:#fffabc"&gt;&#xd;
+				&lt;h3&gt;&lt;%=this.title %&gt;&lt;/h3&gt;&#xd;
+				&lt;p&gt;&lt;%=this.text %&gt;&lt;/p&gt;&#xd;
+				&lt;/xp:panel&gt;&#xd;
+				&lt;/xp:view&gt;&#xd;
+				</render-markup>
+      		</designer-extension>
+    	</component-extension>
+	</component>
+	
 	  <complex-type>
   		<description>About Block</description>
   		<display-name>About Block</display-name>
