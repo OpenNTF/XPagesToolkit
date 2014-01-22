@@ -1,11 +1,12 @@
 package org.openntf.xpt.oneui.component;
 
-import javax.faces.component.UIComponentBase;
 import javax.faces.el.ValueBinding;
 
 import org.openntf.xpt.core.utils.ValueBindingSupport;
 
-public class UINamePicker  extends UIComponentBase{
+import com.ibm.xsp.component.UIInputEx;
+
+public class UINamePicker extends UIInputEx{
 	
 	public static final String COMPONENT_TYPE = "org.openntf.xpt.oneui.component.uinamepicker"; //$NON-NLS-1$
 	public static final String COMPONENT_FAMILY = "org.openntf.xpt.oneui.component.uinamepicker"; //$NON-NLS-1$

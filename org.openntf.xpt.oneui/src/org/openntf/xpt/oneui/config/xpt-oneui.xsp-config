@@ -282,11 +282,12 @@
 	
 	
 	   <component>
-    	<description>NamePicker</description>
+    	<description>OneUI NamePicker</description>
     	<display-name>Name Picker</display-name>
     	<component-type>org.openntf.xpt.oneui.component.uinamepicker</component-type>
     	<component-class>org.openntf.xpt.oneui.component.UINamePicker</component-class>
     	
+    	 
     	<group-type-ref>com.ibm.xsp.group.core.prop.style</group-type-ref>
     	<group-type-ref>com.ibm.xsp.group.core.prop.styleClass</group-type-ref>
 
@@ -327,23 +328,19 @@
       		<property-class>string</property-class>
       		<display-name>Refresh Id</display-name>
     	</property>  	
+    	
+    	
+
+
+    	
     	<component-extension>
-      		<component-family>org.openntf.xpt.oneui.component.uinamepicker</component-family>
+      		<base-component-type>com.ibm.xsp.UIInputEx</base-component-type>
+      		<component-family>javax.faces.Input</component-family>
       		<renderer-type>org.openntf.xpt.oneui.component.uinampicker</renderer-type>
       		<tag-name>oneuinamepicker</tag-name>
       		<designer-extension>
  				<in-palette>true</in-palette>
         		<category>XPages Toolkit</category>
-        		<render-markup>
-        		&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
-				&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
-				&#xd;
-				&lt;xp:panel style="background-color:#fffabc"&gt;&#xd;
-				&lt;h3&gt;&lt;%=this.title %&gt;&lt;/h3&gt;&#xd;
-				&lt;p&gt;&lt;%=this.text %&gt;&lt;/p&gt;&#xd;
-				&lt;/xp:panel&gt;&#xd;
-				&lt;/xp:view&gt;&#xd;
-				</render-markup>
       		</designer-extension>
     	</component-extension>
 	</component>
