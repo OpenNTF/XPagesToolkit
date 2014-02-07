@@ -61,9 +61,10 @@ public class NamesProcessor {
 		Name person = null;
 		try {
 			person = sesCurrent.createName(strValue);
-			if (person != null && isNamesValue)
+			if (person != null && isNamesValue){
 				rcValue = person.getCanonical();
-			person.recycle();
+				person.recycle();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
