@@ -32,15 +32,17 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 				return;
 			}
 			ResponseWriter writer = context.getResponseWriter();
-			writeMainFrame(context, writer, uit);
+			writeInputField(context, writer, uit);
 			super.encodeBegin(context, component);
 		}
 	    
-		private void writeMainFrame(FacesContext context, ResponseWriter writer, UINamePicker uit) throws IOException {
+		private void writeInputField(FacesContext context, ResponseWriter writer, UINamePicker uit) throws IOException {
 			
 			 String name = getNameAttribute(context, uit);
+			 String jsUitId = uit.getClientId(context).replace(":","_");
+			 
 	            writer.startElement("input", uit); //$NON-NLS-1$
-	           // writer.writeAttribute("type", "hidden", null); //$NON-NLS-1$ //$NON-NLS-2$
+	            writer.writeAttribute("type", "hidden", null); //$NON-NLS-1$ //$NON-NLS-2$
 	            writer.writeAttribute("id", uit.getClientId(context)+HIDDEN_SUFFIX, "id"); //$NON-NLS-1$ //$NON-NLS-2$
 	            writer.writeAttribute("name", name, "name"); //$NON-NLS-1$ //$NON-NLS-2$
 	            // Write the actual value
@@ -50,8 +52,25 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 	            writer.endElement("input"); //$NON-NLS-1$
 	            // If some script is needed...
 	           // renderJavaScriptBinding(context, writer, uiInput);
-
-		}
-		
+	            
+	            writer.startElement("span", uit);
+	            writer.writeAttribute("id", uit.getClientId(context) + "_store", "id"); //$NON-NLS-1$ //$NON-NLS-2$
+	            writer.writeAttribute("dojoType","ibm.xsp.widget.layout.data.TypeAheadReadStore","dojoType");
+	            writer.writeAttribute("jsId",jsUitId + "_store","jsId"); 
+	            writer.writeAttribute("ajaxId", uit.getClientId(context), null);
+	            writer.writeAttribute("axtarget", uit.getClientId(context), null);
+	            writer.writeAttribute("mode","partial","mode");
+	            writer.endElement("span");
+	            
+	            writer.startElement("input", uit); //$NON-NLS-1$
+	            writer.writeAttribute("id", uit.getClientId(context) + "_typeahead", "id");
+	            writer.writeAttribute("name", uit.getClientId(context) + "_typeahead", "name"); //$NON-NLS-1$ //$NON-NLS-2$
+	            writer.writeAttribute("type","text", "type");
+	            writer.writeAttribute("dojoType","ibm.xsp.widget.layout.TypeAhead", "dojoType");
+	            writer.writeAttribute("class","xspInputFieldEditBox", null);
+	            writer.writeAttribute("store", jsUitId + "_store","store");
+	            writer.endElement("input"); //$NON-NLS-1$
+	             
+	      		}
 	
 }
