@@ -4,17 +4,24 @@ import java.io.IOException;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
+import javax.faces.el.MethodBinding;
 import javax.faces.el.ValueBinding;
 import javax.servlet.http.HttpServletResponse;
 
+import lotus.domino.Document;
+
 import org.openntf.xpt.core.utils.ValueBindingSupport;
+import org.openntf.xpt.oneui.kernel.NameEntry;
 import org.openntf.xpt.oneui.kernel.NamePickerProcessor;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.FacesExceptionEx;
 import com.ibm.xsp.ajax.AjaxUtil;
+import com.ibm.xsp.binding.MethodBindingEx;
 import com.ibm.xsp.component.FacesAjaxComponent;
 import com.ibm.xsp.component.UIInputEx;
+import com.ibm.xsp.extlib.util.ExtLibUtil;
+import com.ibm.xsp.model.domino.wrapped.DominoDocument;
 import com.ibm.xsp.util.HtmlUtil;
 
 public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
@@ -23,12 +30,18 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 	public static final String COMPONENT_FAMILY = "org.openntf.xpt.oneui.component.uinamepicker"; //$NON-NLS-1$
 	public static final String RENDERER_TYPE = "org.openntf.xpt.oneui.component.uinamepicker"; //$NON-NLS-1$
 
+	private static final String[] VAR_METHOD = { "docName" };
+
 	private String m_Database;
 	private String m_View;
 	private String m_SearchQuery;
 	private Boolean m_MultiValue;
 	private String m_MultiValueSeparator;
 	private String m_RefreshId;
+
+	private MethodBinding m_BuildLabel;
+	private MethodBinding m_BuildValue;
+	private MethodBinding m_BuildLine;
 
 	// private IValuePickerData dataProvider;
 	// private String m_ReturnFieldValue;
@@ -108,6 +121,30 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		m_MultiValueSeparator = multiValueSeparator;
 	}
 
+	public MethodBinding getBuildLabel() {
+		return m_BuildLabel;
+	}
+
+	public void setBuildLabel(MethodBinding buildLabel) {
+		m_BuildLabel = buildLabel;
+	}
+
+	public MethodBinding getBuildValue() {
+		return m_BuildValue;
+	}
+
+	public void setBuildValue(MethodBinding buildValue) {
+		m_BuildValue = buildValue;
+	}
+
+	public MethodBinding getBuildLine() {
+		return m_BuildLine;
+	}
+
+	public void setBuildLine(MethodBinding buildLine) {
+		m_BuildLine = buildLine;
+	}
+
 	@Override
 	public boolean handles(FacesContext arg0) {
 		System.out.println("test1");
@@ -117,57 +154,52 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 
 	@Override
 	public void processAjaxRequest(FacesContext context) throws IOException {
-		
-		
-		
-		 try
-		    {
-		      HttpServletResponse localHttpServletResponse = (HttpServletResponse)context.getExternalContext().getResponse();
-		      localHttpServletResponse.setContentType("text/xml; charset=UTF-8");
-		      localHttpServletResponse.setHeader("Cache-Control", "no-cache");
-		      localHttpServletResponse.setStatus(200);
 
-		      boolean bool = AjaxUtil.isRendering(context);
-		      try {
-		        AjaxUtil.setRendering(context, true);
+		try {
+			HttpServletResponse localHttpServletResponse = (HttpServletResponse) context.getExternalContext().getResponse();
+			localHttpServletResponse.setContentType("text/xml; charset=UTF-8");
+			localHttpServletResponse.setHeader("Cache-Control", "no-cache");
+			localHttpServletResponse.setStatus(200);
 
-		   //     ViewHandlerEx localViewHandlerEx = (ViewHandlerEx)context.getApplication().getViewHandler();
-		   //     localViewHandlerEx.doInitRender(context);
+			boolean bool = AjaxUtil.isRendering(context);
+			try {
+				AjaxUtil.setRendering(context, true);
 
-		        ResponseWriter localResponseWriter = context.getResponseWriter();
-		        try {
-		        	/*
-		        	StringBuilder b = new StringBuilder();
-					b.append("<ul>"); // $NON-NLS-1$
-					for (int i = 0; i < 5; i++) {
+				// ViewHandlerEx localViewHandlerEx =
+				// (ViewHandlerEx)context.getApplication().getViewHandler();
+				// localViewHandlerEx.doInitRender(context);
 
-						b.append("<li>"); // $NON-NLS-1$
+				ResponseWriter localResponseWriter = context.getResponseWriter();
+				try {
+					/*
+					 * StringBuilder b = new StringBuilder(); b.append("<ul>");
+					 * // $NON-NLS-1$ for (int i = 0; i < 5; i++) {
+					 * 
+					 * b.append("<li>"); // $NON-NLS-1$
+					 * 
+					 * // Note, use double-quotes instead of single-quotes for
+					 * // attributes, so as to be XHTML-compliant.
+					 * b.append("<span class=\"informal\">"); // $NON-NLS-1$
+					 * b.append(TextUtil.toXMLString("Label" + i));
+					 * b.append("</span>"); // $NON-NLS-1$
+					 * b.append(TextUtil.toXMLString("Value" + i));
+					 * b.append("</li>"); // $NON-NLS-1$
+					 * 
+					 * } b.append("</ul>"); // $NON-NLS-1$
+					 */
+					String b = NamePickerProcessor.INSTANCE.getTypeAhead(this, "test");
+					localResponseWriter.write(b);
+				} finally {
+					localResponseWriter.endDocument();
+					context.responseComplete();
+				}
+			} finally {
+				AjaxUtil.setRendering(context, bool);
+			}
+		} catch (IOException localIOException) {
+			throw new FacesExceptionEx(localIOException);
+		}
 
-						// Note, use double-quotes instead of single-quotes for
-						// attributes, so as to be XHTML-compliant.
-						b.append("<span class=\"informal\">"); // $NON-NLS-1$
-						b.append(TextUtil.toXMLString("Label" + i));
-						b.append("</span>"); // $NON-NLS-1$
-						b.append(TextUtil.toXMLString("Value" + i));
-						b.append("</li>"); // $NON-NLS-1$
-
-					}
-					b.append("</ul>"); // $NON-NLS-1$
-					*/
-		        	StringBuilder b = NamePickerProcessor.INSTANCE.getTypeAhead(this, "test");
-		            localResponseWriter.write(b.toString());
-		        } finally {
-		          localResponseWriter.endDocument();
-		          context.responseComplete();
-		        }
-		      } finally {
-		        AjaxUtil.setRendering(context, bool);
-		      }
-		    } catch (IOException localIOException) {
-		      throw new FacesExceptionEx(localIOException);
-		    }
-
-		
 	}
 
 	/*
@@ -201,6 +233,69 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		}
 
 	}
-	
-	
+
+	public NameEntry getDocumentEntryRepresentation(Document docSearch) {
+		try {
+
+			String strDbPath = docSearch.getParentDatabase().getServer() + "!!" + docSearch.getParentDatabase().getFilePath();
+			DominoDocument dDoc = DominoDocument.wrap(strDbPath, docSearch, "", "", false, "", "");
+
+			Object[] objExec = { dDoc };
+			String strLine = computeValueMB(m_BuildLine, objExec);
+			if (strLine == null) {
+				strLine = getField(docSearch, "InternetAddress");
+			}
+			String strValue = computeValueMB(m_BuildValue, objExec);
+			if (strValue == null) {
+				strValue = getField(docSearch, "FullName");
+			}
+
+			String strLabel = computeValueMB(m_BuildLabel, objExec);
+			if (strLabel == null) {
+				strLabel = getField(docSearch, "InternetAddress");
+			}
+
+			return new NameEntry(strValue, strLabel, strLine);
+
+		} catch (Exception ex) {
+
+		}
+		return null;
+	}
+
+	private String getField(Document docSearch, String strFieldName) {
+		try {
+			return docSearch.getItemValueString(strFieldName);
+		} catch (Exception ex) {
+			return "";
+		}
+	}
+
+	private String computeValueMB(MethodBinding mb, Object[] objExec) {
+		String strRC = null;
+		if (mb != null) {
+			if (mb instanceof MethodBindingEx) {
+				((MethodBindingEx) mb).setComponent(this);
+				((MethodBindingEx) mb).setParamNames(VAR_METHOD);
+			}
+			Object objRC = mb.invoke(getFacesContext(), objExec);
+			strRC = "" + objRC;
+		}
+		return strRC;
+	}
+
+	public String buildJSFunctionCall(NameEntry nam) {
+		StringBuffer sb = new StringBuffer(buildJSFunctionName());
+		sb.append("('");
+		sb.append(nam.getLabel());
+		sb.append("','");
+		sb.append(nam.getValue());
+		sb.append("');");
+		return sb.toString();
+	}
+
+	public String buildJSFunctionName() {
+		String strID = getClientId(getFacesContext());
+		return "addName_" + ExtLibUtil.encodeJSFunctionName(strID);
+	}
 }

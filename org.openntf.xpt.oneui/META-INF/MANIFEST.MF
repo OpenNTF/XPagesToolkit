@@ -10,10 +10,12 @@ Require-Bundle: org.eclipse.core.runtime,
  com.ibm.commons,
  org.openntf.xpt.core,
  com.ibm.xsp.extsn,
- com.ibm.xsp.extlib
+ com.ibm.xsp.extlib,
+ com.ibm.xsp.domino
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openntf.xpt.oneui,
  org.openntf.xpt.oneui.component,
  org.openntf.xpt.oneui.config,
  org.openntf.xpt.oneui.renderkit.html_extended
+Import-Package: lotus.domino
