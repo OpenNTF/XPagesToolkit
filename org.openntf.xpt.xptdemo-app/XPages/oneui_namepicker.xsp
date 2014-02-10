@@ -3,7 +3,7 @@
 	xmlns:xpt="http://www.openntf.org/xsp/xpt">
 
 	<xp:this.beforeRenderResponse><![CDATA[#{javascript:if (sessionScope.nameFromNamesALIAS == null || sessionScope.nameFromNamesALIAS == "") {
-	sessionScope.nameFromNamesALIAS = "joe.sample@acme.com|Joe Sample/ACME";
+	sessionScope.nameFromNamesALIAS = "Christian Guedemann/WGC/CH";
 }}]]></xp:this.beforeRenderResponse>
 	<xc:cc_application navigationPath="/oneui/uitips"
 		pageTitle="Tips Box">
@@ -14,18 +14,17 @@
 					<xp:tr>
 						<xp:td>Name from Names.nsf</xp:td>
 						<xp:td>
-							<xpt:oneuinamepicker multiValue="false"
-								id="oneuinamepicker1" value="#{sessionScope.nameFromNames}"
-								database="names.nsf" view="($Users)">
+							<xpt:oneuinamepicker id="oneuinamepicker1"
+								value="#{sessionScope.nameFromNames}" database="names.nsf" view="($Users)">
 							</xpt:oneuinamepicker>
 						</xp:td>
 					</xp:tr>
 					<xp:tr>
 						<xp:td>Name from Names.nsf with Alias</xp:td>
 						<xp:td>
-							<xpt:oneuinamepicker multiValue="false"
-								id="oneuinamepicker2" value="#{sessionScope.nameFromNamesALIAS}"
-								database="names.nsf" view="($Users)">
+							<xpt:oneuinamepicker id="oneuinamepicker2"
+								value="#{sessionScope.nameFromNamesALIAS}" database="names.nsf"
+								view="($Users)" DisplayLabel="true">
 							</xpt:oneuinamepicker>
 						</xp:td>
 					</xp:tr>

@@ -103,7 +103,7 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 			sb.append("if(!dj.labels[value]) {");
 			sb.append("dj.labels[value]=label;");
 			sb.append("}");
-			sb.append("var oldVal = dj.value;");
+			sb.append("var oldValue = dj.value;");
 			sb.append("if (oldValue != '') {");
 			sb.append("dj._setValueAttr(oldValue +'" + strMVSep + "' +value,true);");
 			sb.append("} else {");
