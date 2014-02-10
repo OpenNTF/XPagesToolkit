@@ -295,34 +295,44 @@
       		<property-name>database</property-name>
       		<property-class>string</property-class>
       		<display-name>Database</display-name>
+      		<property-extension>
+        		<designer-extension>
+          			<category>namePicker</category>
+        		</designer-extension>
+      		</property-extension>
     	</property>
     	<property>
       		<property-name>view</property-name>
       		<property-class>string</property-class>
       		<display-name>View</display-name>
+      		<property-extension>
+        		<designer-extension>
+          			<category>namePicker</category>
+        		</designer-extension>
+      		</property-extension>
     	</property>
    		<property>
       		<property-name>searchQuery</property-name>
       		<property-class>string</property-class>
       		<display-name>SearchQuery</display-name>
+      		<property-extension>
+        		<designer-extension>
+          			<category>namePicker</category>
+        		</designer-extension>
+      		</property-extension>
     	</property>
     	<property>
-      		<property-name>multiValue</property-name>
+      		<property-name>DisplayLabel</property-name>
       		<property-class>boolean</property-class>
       		<property-extension>
         		<designer-extension>
           			<editor/>
           			<default-value>false</default-value>
-          			<category>basic</category>
+          			<category>namePicker</category>
         		</designer-extension>
       		</property-extension>
-      		<display-name>MultiValue</display-name>
+      		<display-name>DisplayLabel</display-name>
     	</property> 
-   		<property>
-      		<property-name>multiValueSeparator</property-name>
-      		<property-class>string</property-class>
-      		<display-name>MultiValue Separator</display-name>
-    	</property>   
     	<property>
       		<property-name>refreshId</property-name>
       		<property-class>string</property-class>

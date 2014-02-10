@@ -1,14 +1,15 @@
 package org.openntf.xpt.oneui.component;
 
 import java.io.IOException;
+import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 import javax.faces.el.MethodBinding;
-import javax.faces.el.ValueBinding;
 import javax.servlet.http.HttpServletResponse;
 
 import lotus.domino.Document;
+import lotus.domino.Name;
 
 import org.openntf.xpt.core.utils.ValueBindingSupport;
 import org.openntf.xpt.oneui.kernel.NameEntry;
@@ -23,6 +24,8 @@ import com.ibm.xsp.component.UIInputEx;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 import com.ibm.xsp.model.domino.wrapped.DominoDocument;
 import com.ibm.xsp.util.HtmlUtil;
+import com.ibm.xsp.util.StateHolderUtil;
+import com.ibm.xsp.util.TypedUtil;
 
 public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 
@@ -35,9 +38,10 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 	private String m_Database;
 	private String m_View;
 	private String m_SearchQuery;
-	private Boolean m_MultiValue;
-	private String m_MultiValueSeparator;
+	// private Boolean m_MultiValue;
+	// private String m_MultiValueSeparator;
 	private String m_RefreshId;
+	private boolean m_DisplayLabel;
 
 	private MethodBinding m_BuildLabel;
 	private MethodBinding m_BuildValue;
@@ -89,20 +93,12 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		m_SearchQuery = searchQuery;
 	}
 
-	public boolean isMultiValue() {
-		if (m_MultiValue != null) {
-			return m_MultiValue;
-		}
-		ValueBinding vb = getValueBinding("multiValue"); //$NON-NLS-1$
-		if (vb != null) {
-			return (Boolean) vb.getValue(getFacesContext());
-		} else {
-			return true;
-		}
+	public boolean isDisplayLabel() {
+		return m_DisplayLabel;
 	}
 
-	public void setMultiValue(boolean multiValue) {
-		m_MultiValue = multiValue;
+	public void setDisplayLabel(boolean displayLabel) {
+		m_DisplayLabel = displayLabel;
 	}
 
 	public String getRefreshId() {
@@ -111,14 +107,6 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 
 	public void setRefreshId(String refreshId) {
 		m_RefreshId = refreshId;
-	}
-
-	public String getMultiValueSeparator() {
-		return ValueBindingSupport.getValue(m_MultiValueSeparator, "multiValueSeparator", this, null, getFacesContext());
-	}
-
-	public void setMultiValueSeparator(String multiValueSeparator) {
-		m_MultiValueSeparator = multiValueSeparator;
 	}
 
 	public MethodBinding getBuildLabel() {
@@ -145,10 +133,36 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		m_BuildLine = buildLine;
 	}
 
+	// SAVE & RESTORE of the Values
+	public void restoreState(FacesContext context, Object state) {
+		Object[] values = (Object[]) state;
+		super.restoreState(context, values[0]);
+		m_Database = (String) values[1];
+		m_View = (String) values[2];
+		m_RefreshId = (String) values[3];
+		m_SearchQuery = (String) values[4];
+		m_BuildLabel = StateHolderUtil.restoreMethodBinding(context, this, values[5]);
+		m_BuildLine = StateHolderUtil.restoreMethodBinding(context, this, values[6]);
+		m_BuildValue = StateHolderUtil.restoreMethodBinding(context, this, values[7]);
+	}
+
+	@Override
+	public Object saveState(FacesContext context) {
+		Object[] values = new Object[8];
+		values[0] = super.saveState(context);
+		values[1] = m_Database;
+		values[2] = m_View;
+		values[3] = m_RefreshId;
+		values[4] = m_SearchQuery;
+		values[5] = StateHolderUtil.saveMethodBinding(context, m_BuildLabel);
+		values[6] = StateHolderUtil.saveMethodBinding(context, m_BuildLine);
+		values[7] = StateHolderUtil.saveMethodBinding(context, m_BuildValue);
+
+		return values;
+	}
+
 	@Override
 	public boolean handles(FacesContext arg0) {
-		System.out.println("test1");
-		// TODO Auto-generated method stub
 		return true;
 	}
 
@@ -187,8 +201,13 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 					 * 
 					 * } b.append("</ul>"); // $NON-NLS-1$
 					 */
-					String b = NamePickerProcessor.INSTANCE.getTypeAhead(this, "test");
-					localResponseWriter.write(b);
+					Map<String, String> localMap = TypedUtil.getRequestParameterMap(context.getExternalContext());
+					String strSearch = localMap.get("$$value");
+					if (strSearch != null) {
+						strSearch = strSearch.trim();
+						String b = NamePickerProcessor.INSTANCE.getTypeAhead(this, strSearch);
+						localResponseWriter.write(b);
+					}
 				} finally {
 					localResponseWriter.endDocument();
 					context.responseComplete();
@@ -234,6 +253,24 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 
 	}
 
+	public String getDisplayLableValue(Document docSearch) {
+		String strLabel = "";
+
+		try {
+			String strDbPath = docSearch.getParentDatabase().getServer() + "!!" + docSearch.getParentDatabase().getFilePath();
+			DominoDocument dDoc = DominoDocument.wrap(strDbPath, docSearch, "", "", false, "", "");
+
+			Object[] objExec = { dDoc };
+			strLabel = computeValueMB(m_BuildLabel, objExec);
+			if (strLabel == null) {
+				strLabel = getField(docSearch, "InternetAddress");
+			}
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return strLabel;
+	}
+
 	public NameEntry getDocumentEntryRepresentation(Document docSearch) {
 		try {
 
@@ -248,13 +285,26 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 			String strValue = computeValueMB(m_BuildValue, objExec);
 			if (strValue == null) {
 				strValue = getField(docSearch, "FullName");
+				Name non = docSearch.getParentDatabase().getParent().createName(strValue);
+				strValue = non.getAbbreviated();
+				non.recycle();
 			}
 
 			String strLabel = computeValueMB(m_BuildLabel, objExec);
 			if (strLabel == null) {
 				strLabel = getField(docSearch, "InternetAddress");
 			}
-
+			if (StringUtil.isEmpty(strValue)) {
+				return null;
+			}
+			if (StringUtil.isEmpty(strLine)) {
+				if (StringUtil.isEmpty(strLabel)) {
+					strLine = strValue;
+					strLabel = strValue;
+				} else {
+					strLine = strLabel;
+				}
+			}
 			return new NameEntry(strValue, strLabel, strLine);
 
 		} catch (Exception ex) {

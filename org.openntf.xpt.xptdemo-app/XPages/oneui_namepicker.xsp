@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+
+	<xp:this.beforeRenderResponse><![CDATA[#{javascript:if (sessionScope.nameFromNamesALIAS == null || sessionScope.nameFromNamesALIAS == "") {
+	sessionScope.nameFromNamesALIAS = "joe.sample@acme.com|Joe Sample/ACME";
+}}]]></xp:this.beforeRenderResponse>
+	<xc:cc_application navigationPath="/oneui/uitips"
+		pageTitle="Tips Box">
+		<xp:this.facets>
+			<xc:cc_nav_oneui xp:key="facetLeft"></xc:cc_nav_oneui>
+			<xp:panel xp:key="facetMiddle">
+				<xp:table>
+					<xp:tr>
+						<xp:td>Name from Names.nsf</xp:td>
+						<xp:td>
+							<xpt:oneuinamepicker multiValue="false"
+								id="oneuinamepicker1" value="#{sessionScope.nameFromNames}"
+								database="names.nsf" view="($Users)">
+							</xpt:oneuinamepicker>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>Name from Names.nsf with Alias</xp:td>
+						<xp:td>
+							<xpt:oneuinamepicker multiValue="false"
+								id="oneuinamepicker2" value="#{sessionScope.nameFromNamesALIAS}"
+								database="names.nsf" view="($Users)">
+							</xpt:oneuinamepicker>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td></xp:td>
+						<xp:td></xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td></xp:td>
+						<xp:td></xp:td>
+					</xp:tr>
+				</xp:table>
+			</xp:panel>
+		</xp:this.facets>
+	</xc:cc_application>
+</xp:view>

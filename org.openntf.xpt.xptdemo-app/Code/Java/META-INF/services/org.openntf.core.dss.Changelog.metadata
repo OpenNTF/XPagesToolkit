@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="3a2" sequence="6" unid="34FD627276B80E4AC1257C36006C3AE5">
+<noteinfo noteid="3a2" sequence="13" unid="34FD627276B80E4AC1257C36006C3AE5">
 <created><datetime>20131203T204209,65+01</datetime></created>
-<modified><datetime>20131203T214133,54+01</datetime></modified>
-<revised><datetime>20131203T214133,53+01</datetime></revised>
-<lastaccessed><datetime>20131203T214133,54+01</datetime></lastaccessed>
+<modified><datetime>20140208T104904,44+01</datetime></modified>
+<revised><datetime>20140208T104904,43+01</datetime></revised>
+<lastaccessed><datetime>20140208T104904,44+01</datetime></lastaccessed>
 <addedtofile><datetime>20131203T204209,66+01</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
@@ -12,4 +12,4 @@
 <item name="$DesignerVersion"><text>8.5.3</text></item>
 
 
-<item name="$FileNames" sign="true"><text>META-INF/services/org.openntf.core.dss.Changelog</text></item></note>
+<item name="$FileNames" sign="true"><text>META-INF/services/org.openntf.xpt.core.dss.Changelog</text></item></note>
