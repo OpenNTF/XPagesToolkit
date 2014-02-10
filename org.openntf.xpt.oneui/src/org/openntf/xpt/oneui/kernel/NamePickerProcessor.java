@@ -82,7 +82,7 @@ public enum NamePickerProcessor {
 					sb.insert(stop, "</b>");
 				}
 
-				bRC.append("<li><a onclick=\"" + uiNp.buildJSFunctionCall(nam) + "\"><p>" + sb + "</span></p></a></li>");
+				bRC.append("<li><a onclick=\"" + uiNp.buildJSFunctionCall(nam) + "\">" + sb + "</a></li>");
 			}
 			bRC.append("</ul>"); // $NON-NLS-1$
 		} catch (Exception e) {

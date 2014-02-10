@@ -55,18 +55,18 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 
 	private void writeInputField(FacesContext context, ResponseWriter writer, UINamePicker uit) throws IOException {
 
-		String name = getNameAttribute(context, uit);
+		//String name = getNameAttribute(context, uit);
 		String jsUitId = uit.getClientId(context).replace(":", "_");
 
-		writer.startElement("input", uit); //$NON-NLS-1$
-		writer.writeAttribute("type", "hidden", null); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("id", uit.getClientId(context) + HIDDEN_SUFFIX, "id"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("name", name, "name"); //$NON-NLS-1$ //$NON-NLS-2$
+		//writer.startElement("input", uit); //$NON-NLS-1$
+		//writer.writeAttribute("type", "hidden", null); //$NON-NLS-1$ //$NON-NLS-2$
+		//writer.writeAttribute("id", uit.getClientId(context) + HIDDEN_SUFFIX, "id"); //$NON-NLS-1$ //$NON-NLS-2$
+		//writer.writeAttribute("name", name, "name"); //$NON-NLS-1$ //$NON-NLS-2$
 		// Write the actual value
 		// For an input tag, it is passed as a parameter
 		// String currentValue = getCurrentValue(context, uiInput);
 		// writeValueAttribute(context, uiInput, writer, currentValue);
-		writer.endElement("input"); //$NON-NLS-1$
+		//writer.endElement("input"); //$NON-NLS-1$
 		// If some script is needed...
 		// renderJavaScriptBinding(context, writer, uiInput);
 
@@ -166,5 +166,4 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 		}
 		return null;
 	}
-
 }

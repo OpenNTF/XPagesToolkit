@@ -33,8 +33,22 @@
 						<xp:td></xp:td>
 					</xp:tr>
 					<xp:tr>
-						<xp:td></xp:td>
-						<xp:td></xp:td>
+						<xp:td>Names (MulitValue) from Names.nsf</xp:td>
+						<xp:td>
+							<xpt:oneuinamepicker id="oneuinamepicker3"
+								value="#{sessionScope.nameFromNamesMV}" database="names.nsf"
+								view="($Users)" multipleSeparator=",">
+							</xpt:oneuinamepicker>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>Names (MulitValue) and Alias from Names.nsf</xp:td>
+						<xp:td>
+							<xpt:oneuinamepicker id="oneuinamepicker4"
+								value="#{sessionScope.nameFromNamesAliasMV}" database="names.nsf"
+								view="($Users)" multipleSeparator="," DisplayLabel="true">
+							</xpt:oneuinamepicker>
+						</xp:td>
 					</xp:tr>
 				</xp:table>
 			</xp:panel>

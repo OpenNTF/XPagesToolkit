@@ -322,7 +322,7 @@
       		</property-extension>
     	</property>
     	<property>
-      		<property-name>DisplayLabel</property-name>
+      		<property-name>displayLabel</property-name>
       		<property-class>boolean</property-class>
       		<property-extension>
         		<designer-extension>
