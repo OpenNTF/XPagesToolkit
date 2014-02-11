@@ -10,7 +10,7 @@ import javax.faces.context.ResponseWriter;
 
 import org.openntf.xpt.oneui.component.UINamePicker;
 import org.openntf.xpt.oneui.kernel.NamePickerProcessor;
-import org.openntf.xpt.oneui.ressources.XPTONUIResourceProvider;
+import org.openntf.xpt.oneui.ressources.XPTONEUIResourceProvider;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.domino.services.util.JsonBuilder;
@@ -43,8 +43,8 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 		ResponseWriter writer = context.getResponseWriter();
 
 		UIViewRootEx rootEx = (UIViewRootEx) context.getViewRoot();
-		rootEx.addEncodeResource(context, XPTONUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE);
-		rootEx.addEncodeResource(context, XPTONUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET);
+		rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE);
+		rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET);
 		rootEx.setDojoParseOnLoad(true);
 		// MVSEP und MV Check
 		rootEx.addScriptOnce(buildScript(uit.buildJSFunctionName(), uit.getClientId(context), !StringUtil.isEmpty(uit.getMultipleSeparator()),
@@ -72,7 +72,7 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 
 		writer.startElement("span", uit);
 		writer.writeAttribute("id", uit.getClientId(context) + "_store", "id"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("dojoType", "ibm.xsp.widget.layout.data.TypeAheadReadStore", "dojoType");
+		writer.writeAttribute("dojoType", "xptoneui.typeahead.ReadStore", "dojoType");
 		writer.writeAttribute("jsId", jsUitId + "_store", "jsId");
 		writer.writeAttribute("ajaxId", uit.getClientId(context), null);
 		writer.writeAttribute("axtarget", uit.getClientId(context), null);
@@ -83,7 +83,7 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 		writer.writeAttribute("id", uit.getClientId(context) + "_typeahead", "id");
 		writer.writeAttribute("name", uit.getClientId(context) + "_typeahead", "name"); //$NON-NLS-1$ //$NON-NLS-2$
 		writer.writeAttribute("type", "text", "type");
-		writer.writeAttribute("dojoType", "ibm.xsp.widget.layout.TypeAhead", "dojoType");
+		writer.writeAttribute("dojoType", "xptoneui.typeahead.widget", "dojoType");
 		writer.writeAttribute("class", "xspInputFieldEditBox", null);
 		writer.writeAttribute("store", jsUitId + "_store", "store");
 		writer.endElement("input"); //$NON-NLS-1$

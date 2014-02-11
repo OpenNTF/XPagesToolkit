@@ -9,5 +9,19 @@
             class="org.openntf.xpt.oneui.config.OneUIConfig">
       </PartConfiguration>
    </extension>
+   <extension
+         point="com.ibm.commons.Extension">
+      <service
+            class="org.openntf.xpt.oneui.ressources.XPTONEUIResourceProvider"
+            type="com.ibm.xsp.GlobalResourceProvider">
+      </service>
+   </extension>
+   <extension
+         point="com.ibm.commons.Extension">
+      <service
+            class="org.openntf.xpt.oneui.ressources.XPTONEUIModulePath"
+            type="com.ibm.xsp.resource.DojoModulePathResource">
+      </service>
+   </extension>
 
 </plugin>
