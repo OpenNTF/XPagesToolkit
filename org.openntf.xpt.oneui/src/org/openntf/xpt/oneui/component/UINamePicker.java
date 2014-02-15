@@ -1,31 +1,34 @@
 package org.openntf.xpt.oneui.component;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.faces.context.FacesContext;
-import javax.faces.context.ResponseWriter;
 import javax.faces.el.MethodBinding;
 import javax.servlet.http.HttpServletResponse;
 
 import lotus.domino.Document;
 import lotus.domino.Name;
 
+import org.openntf.xpt.core.json.JSONService;
+import org.openntf.xpt.core.utils.ErrorJSONBuilder;
 import org.openntf.xpt.core.utils.ValueBindingSupport;
+import org.openntf.xpt.oneui.kernel.JsonResult;
 import org.openntf.xpt.oneui.kernel.NameEntry;
 import org.openntf.xpt.oneui.kernel.NamePickerProcessor;
 
 import com.ibm.commons.util.StringUtil;
-import com.ibm.xsp.FacesExceptionEx;
-import com.ibm.xsp.ajax.AjaxUtil;
+import com.ibm.domino.services.util.JsonWriter;
 import com.ibm.xsp.binding.MethodBindingEx;
 import com.ibm.xsp.component.FacesAjaxComponent;
 import com.ibm.xsp.component.UIInputEx;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 import com.ibm.xsp.model.domino.wrapped.DominoDocument;
-import com.ibm.xsp.util.HtmlUtil;
 import com.ibm.xsp.util.StateHolderUtil;
 import com.ibm.xsp.util.TypedUtil;
+import com.ibm.xsp.webapp.XspHttpServletResponse;
 
 public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 
@@ -169,56 +172,30 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 	@Override
 	public void processAjaxRequest(FacesContext context) throws IOException {
 
-		try {
-			HttpServletResponse localHttpServletResponse = (HttpServletResponse) context.getExternalContext().getResponse();
-			localHttpServletResponse.setContentType("text/xml; charset=UTF-8");
-			localHttpServletResponse.setHeader("Cache-Control", "no-cache");
-			localHttpServletResponse.setStatus(200);
+		HttpServletResponse httpResponse = (HttpServletResponse) context.getExternalContext().getResponse();
 
-			boolean bool = AjaxUtil.isRendering(context);
-			try {
-				AjaxUtil.setRendering(context, true);
-
-				// ViewHandlerEx localViewHandlerEx =
-				// (ViewHandlerEx)context.getApplication().getViewHandler();
-				// localViewHandlerEx.doInitRender(context);
-
-				ResponseWriter localResponseWriter = context.getResponseWriter();
-				try {
-					/*
-					 * StringBuilder b = new StringBuilder(); b.append("<ul>");
-					 * // $NON-NLS-1$ for (int i = 0; i < 5; i++) {
-					 * 
-					 * b.append("<li>"); // $NON-NLS-1$
-					 * 
-					 * // Note, use double-quotes instead of single-quotes for
-					 * // attributes, so as to be XHTML-compliant.
-					 * b.append("<span class=\"informal\">"); // $NON-NLS-1$
-					 * b.append(TextUtil.toXMLString("Label" + i));
-					 * b.append("</span>"); // $NON-NLS-1$
-					 * b.append(TextUtil.toXMLString("Value" + i));
-					 * b.append("</li>"); // $NON-NLS-1$
-					 * 
-					 * } b.append("</ul>"); // $NON-NLS-1$
-					 */
-					Map<String, String> localMap = TypedUtil.getRequestParameterMap(context.getExternalContext());
-					String strSearch = localMap.get("$$value");
-					if (strSearch != null) {
-						strSearch = strSearch.trim();
-						String b = NamePickerProcessor.INSTANCE.getTypeAhead(this, strSearch);
-						localResponseWriter.write(b);
-					}
-				} finally {
-					localResponseWriter.endDocument();
-					context.responseComplete();
-				}
-			} finally {
-				AjaxUtil.setRendering(context, bool);
-			}
-		} catch (IOException localIOException) {
-			throw new FacesExceptionEx(localIOException);
+		if (httpResponse instanceof XspHttpServletResponse) {
+			XspHttpServletResponse r = (XspHttpServletResponse) httpResponse;
+			r.setCommitted(true);
+			httpResponse = r.getDelegate();
 		}
+		try {
+			httpResponse.setContentType("text/json");
+			httpResponse.setCharacterEncoding("utf-8");
 
+			JsonWriter jsWriter = new JsonWriter(httpResponse.getWriter(), true);
+			Map<String, String> localMap = TypedUtil.getRequestParameterMap(context.getExternalContext());
+			String strSearch = localMap.get("$$value");
+			List<NameEntry> lstEntries = new ArrayList<NameEntry>();
+			if (strSearch != null) {
+				lstEntries = NamePickerProcessor.INSTANCE.getTypeAheaderNE(this, strSearch);
+			}
+			JsonResult jsResult = JsonResult.generateOKResult(lstEntries);
+			JSONService.getInstance().process2JSON(jsWriter, jsResult);
+			jsWriter.close();
+		} catch (Exception e) {
+			ErrorJSONBuilder.getInstance().processError2JSON(httpResponse, 9999, "Error during parsing!", e);
+		}
 	}
 
 	/*
@@ -228,31 +205,26 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 	 * this.dataProvider = dataProvider; }
 	 */
 
-	public void encodeBegin(FacesContext paramFacesContext) throws IOException {
-		if (AjaxUtil.isAjaxPartialRefresh(paramFacesContext)) {
-			String str1 = AjaxUtil.getAjaxMode(paramFacesContext);
-			if (StringUtil.equals(str1, "typeahead")) {
-				String str2 = getClientId(paramFacesContext);
-				if (StringUtil.equals(AjaxUtil.getAjaxComponentId(paramFacesContext), str2)) {
-					processAjaxRequest(paramFacesContext);
-					HtmlUtil.storeEncodeParameter(paramFacesContext, this, "processAjaxRequest", Boolean.TRUE);
-					return;
-				}
-			}
-		}
-
-		super.encodeBegin(paramFacesContext);
-	}
-
-	public void encodeEnd(FacesContext paramFacesContext) throws IOException {
-		boolean bool = true;
-		Object localObject = HtmlUtil.readEncodeParameter(paramFacesContext, this, "processAjaxRequest", bool);
-		if (localObject == null) {
-			super.encodeEnd(paramFacesContext);
-		}
-
-	}
-
+	/*
+	 * public void encodeBegin(FacesContext paramFacesContext) throws
+	 * IOException { if (AjaxUtil.isAjaxPartialRefresh(paramFacesContext)) {
+	 * String str1 = AjaxUtil.getAjaxMode(paramFacesContext); if
+	 * (StringUtil.equals(str1, "typeahead")) { String str2 =
+	 * getClientId(paramFacesContext); if
+	 * (StringUtil.equals(AjaxUtil.getAjaxComponentId(paramFacesContext), str2))
+	 * { processAjaxRequest(paramFacesContext);
+	 * HtmlUtil.storeEncodeParameter(paramFacesContext, this,
+	 * "processAjaxRequest", Boolean.TRUE); return; } } }
+	 * 
+	 * super.encodeBegin(paramFacesContext); } /* /* public void
+	 * encodeEnd(FacesContext paramFacesContext) throws IOException { boolean
+	 * bool = true; Object localObject =
+	 * HtmlUtil.readEncodeParameter(paramFacesContext, this,
+	 * "processAjaxRequest", bool); if (localObject == null) {
+	 * super.encodeEnd(paramFacesContext); }
+	 * 
+	 * }
+	 */
 	public String getDisplayLableValue(Document docSearch) {
 		String strLabel = "";
 

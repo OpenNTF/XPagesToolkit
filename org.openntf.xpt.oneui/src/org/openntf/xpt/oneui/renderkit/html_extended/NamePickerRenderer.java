@@ -80,12 +80,13 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 		writer.endElement("span");
 
 		writer.startElement("input", uit); //$NON-NLS-1$
-		writer.writeAttribute("id", uit.getClientId(context) + "_typeahead", "id");
-		writer.writeAttribute("name", uit.getClientId(context) + "_typeahead", "name"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("type", "text", "type");
-		writer.writeAttribute("dojoType", "xptoneui.typeahead.widget", "dojoType");
+		writer.writeAttribute("id", uit.getClientId(context) + "_typeahead", null);
+		writer.writeAttribute("name", uit.getClientId(context) + "_typeahead", null); //$NON-NLS-1$ //$NON-NLS-2$
+		writer.writeAttribute("type", "text", null);
+		writer.writeAttribute("dojoType", "xptoneui.typeahead.widget", null);
 		writer.writeAttribute("class", "xspInputFieldEditBox", null);
-		writer.writeAttribute("store", jsUitId + "_store", "store");
+		writer.writeAttribute("store", jsUitId + "_store", null);
+		writer.writeAttribute("jsCallback", uit.buildJSFunctionName(), null);
 		writer.endElement("input"); //$NON-NLS-1$
 
 	}

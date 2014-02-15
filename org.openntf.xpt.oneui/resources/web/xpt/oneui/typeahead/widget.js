@@ -15,17 +15,20 @@
  */
 
 define("xptoneui.typeahead.widget", [ "dijit", "dojo", "dojo/dom-attr", "dojo/require!xptoneui/typeahead/ReadStore,dijit/form/ComboBox" ],
-		function(_1, _2, _3) {
-			_2.provide("xptoneui.typeahead.widget");
-			_2.require("xptoneui.typeahead.ReadStore");
-			_2.require("dijit.form.ComboBox");
-			_2.declare("xptoneui.typeahead.widget", _1.form.ComboBox, {
+		function(_dijit, _dojo, _domattr) {
+			_dojo.provide("xptoneui.typeahead.widget");
+			_dojo.require("xptoneui.typeahead.ReadStore");
+			_dojo.require("dijit.form.ComboBox");
+			_dojo.declare("xptoneui.typeahead.widget", _dijit.form.ComboBox, {
 				hasDownArrow : false,
 				autoComplete : false,
 				queryExpr : "${0}",
 				searchDelay : 400,
 				separators : null,
+				jscallback : "",
+				myresult: null,
 				constructor : function ta_ctor(_4, _5) {
+					this.jscallback = _4.jsCallback;
 				},
 				postMixInProperties : function ta_pmip() {
 					if (!this.store) {
@@ -36,7 +39,7 @@ define("xptoneui.typeahead.widget", [ "dijit", "dojo", "dojo/dom-attr", "dojo/re
 				startup : function ta_s() {
 					var n = this._buttonNode;
 					if (n != null) {
-						_2.style(n, "display", "none");
+						_dojo.style(n, "display", "none");
 					}
 				},
 				_getMenuLabelFromItem : function ta_gmlfi(_6) {
@@ -48,7 +51,7 @@ define("xptoneui.typeahead.widget", [ "dijit", "dojo", "dojo/dom-attr", "dojo/re
 				_getQueryString : function ta_gqs(_7) {
 					var _8 = this._indexAfterLastSeparator(_7);
 					var _9 = (-1 == _8) ? _7 : _7.substring(_8);
-					return _2.string.substitute(this.queryExpr, [ _9 ]);
+					return _dojo.string.substitute(this.queryExpr, [ _9 ]);
 				},
 				_startSearch : function ta_ss(_a) {
 					var _b = this._getQueryString(_a);
@@ -61,6 +64,10 @@ define("xptoneui.typeahead.widget", [ "dijit", "dojo", "dojo/dom-attr", "dojo/re
 					}
 					this._setCaretPos(this.focusNode, this.focusNode.value.length);
 					this._handleOnChange(this.value, true);
+					if (this.myresult) {
+						eval( this.jscallback+"('"+ this.myresult.label +"','"+ this.myresult.value +"')");
+						//_dojo.hitch(_dojo.document, this.jscallback, this.myresult.label, this.myresult.value);
+					}
 				},
 				_getCombinedOldAndItemValue : function ta_gact(_d, _e) {
 					var _f = this._indexAfterLastSeparator(_d);
@@ -125,9 +132,13 @@ define("xptoneui.typeahead.widget", [ "dijit", "dojo", "dojo/dom-attr", "dojo/re
 								_1c = _1c + this.separators[0];
 							}
 						}
+						if (_1c && _1c != "") {
+							var _node = this.store.getValueNodeJSON( _1c );
+							this.myresult = _node;
+						}
 						this.set("item", _1d, false, _1c);
 					}
-					this.focusNode.setAttribute("aria-activedescendant", _3.get(_17, "id"));
+					this.focusNode.setAttribute("aria-activedescendant", _domattr.get(_17, "id"));
 					this._autoCompleteText(_1c);
 				}
 			});
