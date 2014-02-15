@@ -27,8 +27,8 @@ define("xptoneui.typeahead.widget", [ "dijit", "dojo", "dojo/dom-attr", "dojo/re
 				separators : null,
 				jscallback : "",
 				myresult: null,
-				constructor : function ta_ctor(_4, _5) {
-					this.jscallback = _4.jsCallback;
+				constructor : function ta_ctor(_node, _values) {
+					this.jscallback = _node.jsCallback;
 				},
 				postMixInProperties : function ta_pmip() {
 					if (!this.store) {
@@ -42,104 +42,103 @@ define("xptoneui.typeahead.widget", [ "dijit", "dojo", "dojo/dom-attr", "dojo/re
 						_dojo.style(n, "display", "none");
 					}
 				},
-				_getMenuLabelFromItem : function ta_gmlfi(_6) {
+				_getMenuLabelFromItem : function ta_gmlfi(_it) {
 					return {
 						html : true,
-						label : this.store.getLabel(_6, this.searchAttr)
+						label : this.store.getLabel(_it, this.searchAttr)
 					};
 				},
-				_getQueryString : function ta_gqs(_7) {
-					var _8 = this._indexAfterLastSeparator(_7);
-					var _9 = (-1 == _8) ? _7 : _7.substring(_8);
-					return _dojo.string.substitute(this.queryExpr, [ _9 ]);
+				_getQueryString : function ta_gqs(_search) {
+					var _ind = this._indexAfterLastSeparator(_search);
+					var _pos = (-1 == _ind) ? _search : _search.substring(_ind);
+					return _dojo.string.substitute(this.queryExpr, [ _pos ]);
 				},
-				_startSearch : function ta_ss(_a) {
-					var _b = this._getQueryString(_a);
-					this.inherited("_startSearch", [ _b ]);
+				_startSearch : function ta_ss(_search) {
+					var _start = this._getQueryString(_search);
+					this.inherited("_startSearch", [ _start ]);
 				},
-				_selectOption : function ta_so(_c) {
+				_selectOption : function ta_so(_it) {
 					this.closeDropDown();
-					if (_c) {
-						this._announceOption(_c, true);
+					if (_it) {
+						this._announceOption(_it, true);
 					}
 					this._setCaretPos(this.focusNode, this.focusNode.value.length);
 					this._handleOnChange(this.value, true);
 					if (this.myresult) {
 						eval( this.jscallback+"('"+ this.myresult.label +"','"+ this.myresult.value +"')");
-						//_dojo.hitch(_dojo.document, this.jscallback, this.myresult.label, this.myresult.value);
 					}
 				},
-				_getCombinedOldAndItemValue : function ta_gact(_d, _e) {
-					var _f = this._indexAfterLastSeparator(_d);
-					if (-1 == _f) {
-						return _e;
+				_getCombinedOldAndItemValue : function ta_gact(_search, _for) {
+					var _ind = this._indexAfterLastSeparator(_search);
+					if (-1 == _ind) {
+						return _for;
 					}
-					var _10 = _d.substring(0, _f);
-					var _11 = _10 + _e;
-					return _11;
+					var _pos = _search.substring(0, _ind);
+					var _rc = _pos + _for;
+					return _rc;
 				},
-				_indexAfterLastSeparator : function ta_ials(_12) {
+				_indexAfterLastSeparator : function ta_ials(_search) {
 					if (!this.separators || 0 == this.separators.length) {
 						return -1;
 					}
-					var _13 = -1;
+					var _rc = -1;
 					for (var i = 0; i < this.separators.length; i++) {
-						var _14 = this.separators[i];
-						var _15 = _12.lastIndexOf(_14);
-						if (-1 != _15) {
-							_15 = _15 + _14.length;
-							if (_15 > _13) {
-								_13 = _15;
+						var _point = this.separators[i];
+						var _p2 = _search.lastIndexOf(_point);
+						if (-1 != _p2) {
+							_p2 = _p2 + _14.length;
+							if (_p2 > _rc) {
+								_rc = _p2;
 							}
 						}
 					}
-					return _13;
+					return _rc;
 				},
 				compositionend : function ta_ce(evt) {
-					var _16 = {
+					var _rc = {
 						charOrCode : 229
 					};
 					if (this.onkeypress) {
-						this.onkeypress(_16);
+						this.onkeypress(_rc);
 					} else {
-						this._onKeyPress(_16);
+						this._onKeyPress(_rc);
 					}
 				},
-				_announceOption : function ta_ao(_17, _18) {
-					if (!_17) {
+				_announceOption : function ta_ao(_it, _mv) {
+					if (!_it) {
 						return;
 					}
-					var _19 = this.focusNode.value;
-					var _1a = this._lastInput.length;
-					var _1b = this._indexAfterLastSeparator(_19);
-					if (-1 != _1b) {
-						_1a = _1b + _1a;
+					var _value = this.focusNode.value;
+					var _lenght = this._lastInput.length;
+					var _pos = this._indexAfterLastSeparator(_value);
+					if (-1 != _pos) {
+						_lenght = _pos + _lenght;
 					}
-					this.focusNode.value = this.focusNode.value.substring(0, _1a);
-					var _1c;
-					if (_17 == this.dropDown.nextButton || _17 == this.dropDown.previousButton) {
-						_1c = _17.innerHTML;
+					this.focusNode.value = this.focusNode.value.substring(0, _lenght);
+					var _rc;
+					if (_it == this.dropDown.nextButton || _it == this.dropDown.previousButton) {
+						_rc = _it.innerHTML;
 						this.item = undefined;
 						this.value = "";
 					} else {
-						var _1d = this.dropDown.items[_17.getAttribute("item")];
-						var _1e = (this.store._oldAPI ? this.store.getValue(_1d, this.searchAttr) : _1d[this.searchAttr]).toString();
-						var _1c = _1e;
+						var _itm = this.dropDown.items[_it.getAttribute("item")];
+						var _rvalue = (this.store._oldAPI ? this.store.getValue(_itm, this.searchAttr) : _itm[this.searchAttr]).toString();
+						var _rc = _rvalue;
 						if (this.separators && 0 < this.separators.length) {
-							var _1f = this.focusNode.value;
-							_1c = this._getCombinedOldAndItemValue(_1f, _1e);
-							if (_18 != "undefined" && _18) {
-								_1c = _1c + this.separators[0];
+							var _val2 = this.focusNode.value;
+							_rc = this._getCombinedOldAndItemValue(_val2, _rvalue);
+							if (_mv != "undefined" && _mv) {
+								_rc = _rc + this.separators[0];
 							}
 						}
-						if (_1c && _1c != "") {
-							var _node = this.store.getValueNodeJSON( _1c );
+						if (_rc && _rc != "") {
+							var _node = this.store.getValueNodeJSON( _rc );
 							this.myresult = _node;
 						}
-						this.set("item", _1d, false, _1c);
+						this.set("item", _itm, false, _rc);
 					}
-					this.focusNode.setAttribute("aria-activedescendant", _domattr.get(_17, "id"));
-					this._autoCompleteText(_1c);
+					this.focusNode.setAttribute("aria-activedescendant", _domattr.get(_it, "id"));
+					this._autoCompleteText(_rc);
 				}
 			});
 		});
