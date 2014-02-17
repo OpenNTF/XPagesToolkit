@@ -386,6 +386,11 @@
       		<designer-extension>
  				<in-palette>true</in-palette>
         		<category>XPages Toolkit</category>
+        		<render-markup>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+				&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+				&lt;xp:image url="/icons/oneui_namepicker.png" id="oneui_namepicker"&gt;&lt;/xp:image&gt;&#xd;
+				&lt;/xp:view&gt;&#xd;
+			</render-markup>
       		</designer-extension>
     	</component-extension>
 	</component>
