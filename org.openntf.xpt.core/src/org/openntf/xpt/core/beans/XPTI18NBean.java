@@ -69,7 +69,9 @@ public class XPTI18NBean {
 	}
 
 	public String getValue(String strKey, String strLanguage) {
+
 		return I18NServiceProvider.getInstance().getValue(strKey, strLanguage);
+
 	}
 	
 }

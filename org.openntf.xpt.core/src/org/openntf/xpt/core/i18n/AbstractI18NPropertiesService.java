@@ -1,5 +1,6 @@
 package org.openntf.xpt.core.i18n;
 
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -61,4 +62,5 @@ public abstract class AbstractI18NPropertiesService implements II18NService {
 			return null;
 		}
 	}
+
 }
