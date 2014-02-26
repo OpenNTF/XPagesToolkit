@@ -6,7 +6,6 @@ import javax.faces.context.FacesContext;
 
 import org.openntf.xpt.core.i18n.I18NServiceProvider;
 
-import com.ibm.xsp.context.FacesContextEx;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 
 public class XPTI18NBean {
@@ -26,18 +25,23 @@ public class XPTI18NBean {
 	
 
 	public String getCurrentLanguage(){
-		String strLanguage = getDefaultLanguage();
+		String strLanguage = null;
 		String strEffectiveUserName = null;
 		try {
-				strLanguage =ExtLibUtil.getXspContext().getLocaleString();
-				strLanguage = FacesContextEx.getCurrentInstance().getExternalContext().getRequestLocale().getLanguage();
+				
+				String strLocLang = ExtLibUtil.getXspContext().getLocaleString();
+			//	System.out.println(strLocLang);
+			//	System.out.println("UND: " + FacesContextEx.getCurrentInstance().getExternalContext().getRequestLocale().getLanguage());
+				//String strLocLang = FacesContextEx.getCurrentInstance().getExternalContext().getRequestLocale().getLanguage();
 				for (String strLngTest : getAllLanguages()) {
-					if (strLanguage.toLowerCase().startsWith(strLngTest.toLowerCase())) {
+					if (strLocLang.toLowerCase().startsWith(strLngTest.toLowerCase())) {
 						strLanguage = setLanguageForUser(strEffectiveUserName, strLngTest);
 						break;
 					}
 				}
-
+				if(strLanguage == null){
+					strLanguage = setLanguageForUser(strEffectiveUserName, getDefaultLanguage());
+				}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

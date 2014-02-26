@@ -12,7 +12,7 @@ import com.ibm.xsp.application.ApplicationEx;
 public class I18NServiceProvider  {
 	private static final String I18N_SERVICE_KEY = "xpt.core.i18n"; // $NON-NLS-1$
 
-	private static final String I18N_DATAPROVIDER_SERVICE = "org.openntf.xpt.core.i18n"; // $NON-NLS-1$
+	private static final String I18N_DATAPROVIDER_SERVICE = "org.openntf.xpt.core.I18n"; // $NON-NLS-1$
 
 //	private static final String PREF_PROVIDER = "xpt.dss.i18n.provider";
 	
@@ -53,6 +53,8 @@ public class I18NServiceProvider  {
 				}
 			});
 		}
+		System.out.println("Services = " + m_I18NServices);
+		System.out.println("Size= " + m_I18NServices.size());
 		return m_I18NServices;
 	}
 	
