@@ -30,8 +30,7 @@ public class XPTONEUIResourceProvider extends BundleResourceProvider {
 	public XPTONEUIResourceProvider() {
 		super(XPTOneUIActivator.getInstance().getBundle(), XPT_PREFIX);
 	}
-	
-	
+
 	protected URL getResourceURL(HttpServletRequest arg0, String name) {
 		String path = RESOURCES_WEB_XPT + name; // $NON-NLS-1$
 		int fileNameIndex = path.lastIndexOf('/');
@@ -50,9 +49,10 @@ public class XPTONEUIResourceProvider extends BundleResourceProvider {
 
 	}
 
-	
 	public static final DojoModuleResource XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE = new DojoModuleResource("xptoneui.typeahead.ReadStore");
 	public static final DojoModuleResource XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET = new DojoModuleResource("xptoneui.typeahead.widget");
+	public static final DojoModuleResource XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE_161 = new DojoModuleResource("xptoneui.typeahead.pre17.ReadStore");
+	public static final DojoModuleResource XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET_161 = new DojoModuleResource("xptoneui.typeahead.pre17.widget");
 	private static final String RESOURCES_WEB_XPT = "/resources/web/xpt/oneui/";
 	public static final String XPT_PREFIX = ".xptoneui";
 }

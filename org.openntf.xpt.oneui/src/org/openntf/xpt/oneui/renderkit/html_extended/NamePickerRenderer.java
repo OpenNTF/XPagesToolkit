@@ -15,6 +15,8 @@ import org.openntf.xpt.oneui.ressources.XPTONEUIResourceProvider;
 import com.ibm.commons.util.StringUtil;
 import com.ibm.domino.services.util.JsonBuilder;
 import com.ibm.xsp.component.UIViewRootEx;
+import com.ibm.xsp.context.DojoLibrary;
+import com.ibm.xsp.context.DojoLibraryFactory;
 import com.ibm.xsp.dojo.FacesDojoComponent;
 import com.ibm.xsp.extlib.renderkit.dojo.DojoRendererUtil;
 import com.ibm.xsp.extlib.renderkit.dojo.form.DojoFormWidgetRenderer;
@@ -43,36 +45,34 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 		ResponseWriter writer = context.getResponseWriter();
 
 		UIViewRootEx rootEx = (UIViewRootEx) context.getViewRoot();
-		rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE);
-		rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET);
+		DojoLibrary djLib = DojoLibraryFactory.getDefaultLibrary();
+		boolean pre17 = djLib.getVersionNumber() < 107000;
+		if (pre17) {
+			rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE_161);
+			rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET_161);
+
+		} else {
+			rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE);
+			rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET);
+		}
 		rootEx.setDojoParseOnLoad(true);
 		// MVSEP und MV Check
 		rootEx.addScriptOnce(buildScript(uit.buildJSFunctionName(), uit.getClientId(context), !StringUtil.isEmpty(uit.getMultipleSeparator()),
 				uit.getMultipleSeparator()));
-		writeInputField(context, writer, uit);
+		writeInputField(context, writer, uit, pre17);
 		super.encodeBegin(context, component);
 	}
 
-	private void writeInputField(FacesContext context, ResponseWriter writer, UINamePicker uit) throws IOException {
+	private void writeInputField(FacesContext context, ResponseWriter writer, UINamePicker uit, boolean pre17) throws IOException {
 
-		//String name = getNameAttribute(context, uit);
 		String jsUitId = uit.getClientId(context).replace(":", "_");
-
-		//writer.startElement("input", uit); //$NON-NLS-1$
-		//writer.writeAttribute("type", "hidden", null); //$NON-NLS-1$ //$NON-NLS-2$
-		//writer.writeAttribute("id", uit.getClientId(context) + HIDDEN_SUFFIX, "id"); //$NON-NLS-1$ //$NON-NLS-2$
-		//writer.writeAttribute("name", name, "name"); //$NON-NLS-1$ //$NON-NLS-2$
-		// Write the actual value
-		// For an input tag, it is passed as a parameter
-		// String currentValue = getCurrentValue(context, uiInput);
-		// writeValueAttribute(context, uiInput, writer, currentValue);
-		//writer.endElement("input"); //$NON-NLS-1$
-		// If some script is needed...
-		// renderJavaScriptBinding(context, writer, uiInput);
-
 		writer.startElement("span", uit);
 		writer.writeAttribute("id", uit.getClientId(context) + "_store", "id"); //$NON-NLS-1$ //$NON-NLS-2$
-		writer.writeAttribute("dojoType", "xptoneui.typeahead.ReadStore", "dojoType");
+		if (pre17) {
+			writer.writeAttribute("dojoType", "xptoneui.typeahead.pre17.ReadStore", "dojoType");
+		} else {
+			writer.writeAttribute("dojoType", "xptoneui.typeahead.ReadStore", "dojoType");
+		}
 		writer.writeAttribute("jsId", jsUitId + "_store", "jsId");
 		writer.writeAttribute("ajaxId", uit.getClientId(context), null);
 		writer.writeAttribute("axtarget", uit.getClientId(context), null);
@@ -83,7 +83,11 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 		writer.writeAttribute("id", uit.getClientId(context) + "_typeahead", null);
 		writer.writeAttribute("name", uit.getClientId(context) + "_typeahead", null); //$NON-NLS-1$ //$NON-NLS-2$
 		writer.writeAttribute("type", "text", null);
-		writer.writeAttribute("dojoType", "xptoneui.typeahead.widget", null);
+		if (pre17) {
+			writer.writeAttribute("dojoType", "xptoneui.typeahead.pre17.widget", null);
+		} else {
+			writer.writeAttribute("dojoType", "xptoneui.typeahead.widget", null);
+		}
 		writer.writeAttribute("class", "xspInputFieldEditBox", null);
 		writer.writeAttribute("store", jsUitId + "_store", null);
 		writer.writeAttribute("jsCallback", uit.buildJSFunctionName(), null);
@@ -119,7 +123,7 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 			sb.append("dj._setValueAttr(value,true);");
 			// SINGLE Value Code End
 		}
-		sb.append("window.setTimeout(\"dojo.byId('"+strID +"_typeahead"+"').value ='';\", 500);");
+		sb.append("window.setTimeout(\"dojo.byId('" + strID + "_typeahead" + "').value ='';\", 500);");
 		sb.append("}");
 		sb.append("}");
 		sb.append("}");
