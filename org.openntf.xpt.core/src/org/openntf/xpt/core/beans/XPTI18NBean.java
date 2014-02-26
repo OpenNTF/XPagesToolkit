@@ -1,8 +1,6 @@
 package org.openntf.xpt.core.beans;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import javax.faces.context.FacesContext;
 
@@ -27,8 +25,8 @@ public class XPTI18NBean {
 	}
 	
 
-	private String getCurrentLanguage(){
-		String strLanguage = null;
+	public String getCurrentLanguage(){
+		String strLanguage = getDefaultLanguage();
 		String strEffectiveUserName = null;
 		try {
 				strLanguage =ExtLibUtil.getXspContext().getLocaleString();
@@ -52,16 +50,12 @@ public class XPTI18NBean {
 	}
 	
 	public List<String> getAllLanguages(){
-		List<String> languages = new ArrayList<String>();
-		FacesContext.getCurrentInstance().getApplication().getDefaultLocale();
-		for(Locale lang : Locale.getAvailableLocales()){
-			languages.add(lang.getLanguage());
-		}
-		return languages;
+		return I18NServiceProvider.getInstance().getAllLanguages();
 	}
 	
 	public String getDefaultLanguage(){
-		return FacesContext.getCurrentInstance().getApplication().getDefaultLocale().getLanguage();
+		//return FacesContext.getCurrentInstance().getApplication().getDefaultLocale().getLanguage();
+		return I18NServiceProvider.getInstance().getDefaultLanguage();
 	}
 	
 	public String getValue(String strKey) {
@@ -69,7 +63,6 @@ public class XPTI18NBean {
 	}
 
 	public String getValue(String strKey, String strLanguage) {
-
 		return I18NServiceProvider.getInstance().getValue(strKey, strLanguage);
 
 	}
