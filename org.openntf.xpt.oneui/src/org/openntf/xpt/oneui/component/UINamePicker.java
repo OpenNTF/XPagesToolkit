@@ -40,22 +40,14 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 
 	private String m_Database;
 	private String m_View;
+	private String m_LookupView;
 	private String m_SearchQuery;
-	// private Boolean m_MultiValue;
-	// private String m_MultiValueSeparator;
 	private String m_RefreshId;
 	private boolean m_DisplayLabel;
 
 	private MethodBinding m_BuildLabel;
 	private MethodBinding m_BuildValue;
 	private MethodBinding m_BuildLine;
-
-	// private IValuePickerData dataProvider;
-	// private String m_ReturnFieldValue;
-	// private String m_ReturnFieldAlias;
-	// private String m_SearchQueryAll;
-	// private String[] m_DisplayFields;
-	// @Formulas?
 
 	public UINamePicker() {
 		setRendererType(RENDERER_TYPE);
@@ -68,11 +60,6 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 
 	public String getDatabase() {
 
-		/*
-		 * if (m_Database != null) { return m_Database; } ValueBinding vb =
-		 * getValueBinding("database"); //$NON-NLS-1$ if (vb != null) { return
-		 * (String) vb.getValue(getFacesContext()); } else { return null; }
-		 */
 		return ValueBindingSupport.getValue(m_Database, "database", this, null, getFacesContext());
 	}
 
@@ -86,6 +73,14 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 
 	public void setView(String view) {
 		m_View = view;
+	}
+
+	public String getLookupView() {
+		return m_LookupView;
+	}
+
+	public void setLookupView(String lookupView) {
+		m_LookupView = lookupView;
 	}
 
 	public String getSearchQuery() {
@@ -147,11 +142,12 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		m_BuildLabel = StateHolderUtil.restoreMethodBinding(context, this, values[5]);
 		m_BuildLine = StateHolderUtil.restoreMethodBinding(context, this, values[6]);
 		m_BuildValue = StateHolderUtil.restoreMethodBinding(context, this, values[7]);
+		m_LookupView = (String) values[8];
 	}
 
 	@Override
 	public Object saveState(FacesContext context) {
-		Object[] values = new Object[8];
+		Object[] values = new Object[9];
 		values[0] = super.saveState(context);
 		values[1] = m_Database;
 		values[2] = m_View;
@@ -160,7 +156,7 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		values[5] = StateHolderUtil.saveMethodBinding(context, m_BuildLabel);
 		values[6] = StateHolderUtil.saveMethodBinding(context, m_BuildLine);
 		values[7] = StateHolderUtil.saveMethodBinding(context, m_BuildValue);
-
+		values[8] = m_LookupView;
 		return values;
 	}
 
@@ -198,33 +194,6 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		}
 	}
 
-	/*
-	 * public IValuePickerData getDataProvider() { return this.dataProvider; }
-	 * 
-	 * public void setDataProvider(IValuePickerData dataProvider) {
-	 * this.dataProvider = dataProvider; }
-	 */
-
-	/*
-	 * public void encodeBegin(FacesContext paramFacesContext) throws
-	 * IOException { if (AjaxUtil.isAjaxPartialRefresh(paramFacesContext)) {
-	 * String str1 = AjaxUtil.getAjaxMode(paramFacesContext); if
-	 * (StringUtil.equals(str1, "typeahead")) { String str2 =
-	 * getClientId(paramFacesContext); if
-	 * (StringUtil.equals(AjaxUtil.getAjaxComponentId(paramFacesContext), str2))
-	 * { processAjaxRequest(paramFacesContext);
-	 * HtmlUtil.storeEncodeParameter(paramFacesContext, this,
-	 * "processAjaxRequest", Boolean.TRUE); return; } } }
-	 * 
-	 * super.encodeBegin(paramFacesContext); } /* /* public void
-	 * encodeEnd(FacesContext paramFacesContext) throws IOException { boolean
-	 * bool = true; Object localObject =
-	 * HtmlUtil.readEncodeParameter(paramFacesContext, this,
-	 * "processAjaxRequest", bool); if (localObject == null) {
-	 * super.encodeEnd(paramFacesContext); }
-	 * 
-	 * }
-	 */
 	public String getDisplayLableValue(Document docSearch) {
 		String strLabel = "";
 
@@ -319,5 +288,13 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 	public String buildJSFunctionName() {
 		String strID = getClientId(getFacesContext());
 		return "addName_" + ExtLibUtil.encodeJSFunctionName(strID);
+	}
+
+	public String buildFTSearch(String strSearch) {
+		String strPattern = getSearchQuery();
+		if (StringUtil.isEmpty(strPattern)) {
+			return null;
+		}
+		return strPattern.replaceAll("###VALUE###", strSearch);
 	}
 }

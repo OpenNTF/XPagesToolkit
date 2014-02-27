@@ -311,7 +311,18 @@
         		</designer-extension>
       		</property-extension>
     	</property>
+    	<property>
+      		<property-name>lookupView</property-name>
+      		<property-class>string</property-class>
+      		<display-name>LookupView</display-name>
+      		<property-extension>
+        		<designer-extension>
+          			<category>namePicker</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
    		<property>
+   			<description>FT search query. Use ###VALUE### as placeholder</description>
       		<property-name>searchQuery</property-name>
       		<property-class>string</property-class>
       		<display-name>SearchQuery</display-name>

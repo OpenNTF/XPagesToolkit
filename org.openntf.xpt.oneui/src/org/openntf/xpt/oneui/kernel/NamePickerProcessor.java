@@ -16,10 +16,11 @@ import lotus.domino.ViewEntryCollection;
 
 import org.openntf.xpt.oneui.component.UINamePicker;
 
+import com.ibm.commons.util.StringUtil;
+
 public enum NamePickerProcessor {
 	INSTANCE;
 
-	
 	public String getTypeAhead(UINamePicker uiNp, String strSearch) {
 
 		StringBuilder bRC = new StringBuilder();
@@ -51,11 +52,12 @@ public enum NamePickerProcessor {
 		Database db = DatabaseProvider.INSTANCE.getDatabase(uiNp.getDatabase());
 		View vw = db.getView(uiNp.getView());
 		DocumentCollection docCollection;
-		if (db.isFTIndexed()) {
+		String strFTSearch = uiNp.buildFTSearch(strSearch);
+		if (db.isFTIndexed() && !StringUtil.isEmpty(strFTSearch)) {
 			try {
 
 				db.updateFTIndex(true);
-				vw.FTSearch(strSearch);
+				vw.FTSearch(strFTSearch);
 
 				ViewEntryCollection vecEntries = vw.getAllEntries();
 				ViewEntry entryNext = vecEntries.getFirstEntry();
@@ -104,7 +106,13 @@ public enum NamePickerProcessor {
 		HashMap<String, String> hsRC = new HashMap<String, String>();
 		try {
 			Database db = DatabaseProvider.INSTANCE.getDatabase(uiNp.getDatabase());
-			View vw = db.getView(uiNp.getView());
+			View vw = null;
+			if (StringUtil.isEmpty(uiNp.getLookupView())) {
+				vw = db.getView(uiNp.getView());
+			} else {
+				vw = db.getView(uiNp.getLookupView());
+
+			}
 			for (String strValue : values) {
 				// Assign a default value
 				hsRC.put(strValue, strValue);
@@ -125,7 +133,6 @@ public enum NamePickerProcessor {
 			ex.printStackTrace();
 			return null;
 		}
-		// TODO Auto-generated method stub
 		return hsRC;
 	}
 }
