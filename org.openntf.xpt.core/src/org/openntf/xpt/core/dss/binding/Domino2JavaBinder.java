@@ -58,15 +58,28 @@ public class Domino2JavaBinder {
 	private void _processDocument(Document docProcess, Object objCurrent) throws NotesException {
 		for (Iterator<Definition> itDefinition = m_Definition.iterator(); itDefinition.hasNext();) {
 			Definition defCurrent = itDefinition.next();
-			if (defCurrent.getBinder() instanceof IFormulaBinder) {
+			if (Profiler.isEnabled()) {
+				ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDefinition - " +defCurrent.getBinder().getClass().getCanonicalName());
+				long startTime = Profiler.getCurrentTime();
+				try {
+					_processDefinition(docProcess, objCurrent, defCurrent);
+				} finally {
+					Profiler.endProfileBlock(pa, startTime);
+				}
+			} else {
+				_processDefinition(docProcess, objCurrent, defCurrent);
+			}
+		}
+	}
+
+	private void _processDefinition(Document docProcess, Object objCurrent, Definition defCurrent) throws NotesException {
+		if (defCurrent.getBinder() instanceof IFormulaBinder) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(),
+					defCurrent.getAdditionalValues());
+		} else {
+			if (docProcess.hasItem(defCurrent.getNotesField()) || defCurrent.getBinder().getClass().getSimpleName().equals("FileDownloadBinder")) {
 				defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(),
 						defCurrent.getAdditionalValues());
-
-			} else {
-				if (docProcess.hasItem(defCurrent.getNotesField()) || defCurrent.getBinder().getClass().getSimpleName().equals("FileDownloadBinder")) {
-					defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(),
-							defCurrent.getAdditionalValues());
-				}
 			}
 		}
 	}
