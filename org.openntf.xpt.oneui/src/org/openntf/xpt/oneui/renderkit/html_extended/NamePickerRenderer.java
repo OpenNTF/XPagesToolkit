@@ -46,7 +46,7 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 
 		UIViewRootEx rootEx = (UIViewRootEx) context.getViewRoot();
 		DojoLibrary djLib = DojoLibraryFactory.getDefaultLibrary();
-		boolean pre17 = djLib.getVersionNumber() < 107000;
+		boolean pre17 = djLib.getVersionNumber() < 10700;
 		if (pre17) {
 			rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE_161);
 			rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET_161);

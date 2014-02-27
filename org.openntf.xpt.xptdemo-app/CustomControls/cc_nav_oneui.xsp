@@ -25,5 +25,8 @@
 			<xe:pageTreeNode label="OneUI Tips"
 				page="/oneui_tips.xsp">
 			</xe:pageTreeNode>
+			<xe:pageTreeNode label="Name Picker"
+				page="/oneui_namepicker.xsp">
+			</xe:pageTreeNode>
 		</xe:this.treeNodes>
 	</xe:navigator></xp:view>
