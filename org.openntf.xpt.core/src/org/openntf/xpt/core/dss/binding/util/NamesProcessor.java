@@ -38,17 +38,19 @@ public class NamesProcessor {
 	public String getPerson(HashMap<String, Object> addValues, String strValue, Session sesCurrent) {
 		String rcValue = strValue;
 		try {
-			Name nonCurrent = sesCurrent.createName(strValue);
 			if (addValues != null && addValues.size() > 0) {
 				if ((addValues.containsKey("isReader") || addValues.containsKey("isAuthor") || addValues.containsKey("isNames"))
 						&& addValues.containsKey("showNameAs")) {
+					Name nonCurrent = sesCurrent.createName(strValue);
+
 					if ("ABBREVIATE".equalsIgnoreCase(addValues.get("showNameAs").toString())) {
 						rcValue = nonCurrent.getAbbreviated();
 					} else if ("CN".equals(addValues.get("showNameAs"))) {
 						rcValue = nonCurrent.getCommon();
 					}
+					nonCurrent.recycle();
+
 				}
-				nonCurrent.recycle();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -61,9 +63,10 @@ public class NamesProcessor {
 		Name person = null;
 		try {
 			person = sesCurrent.createName(strValue);
-			if (person != null && isNamesValue)
+			if (person != null && isNamesValue) {
 				rcValue = person.getCanonical();
-			person.recycle();
+				person.recycle();
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
