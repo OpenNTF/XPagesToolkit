@@ -45,11 +45,11 @@ public class ListStringBinder implements IBinder<List<String>> {
 	public List<String>[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
 			HashMap<String, Object> addValues) {
 		@SuppressWarnings("unchecked")
-		List<String>[] lstRC = new ArrayList[2];
+		List<String>[] lstRC = new List[2];
 		try {
 			List<String> lstOldValues = getRawValueFromStore(docCurrent, strNotesField);
 			List<String> lstValues = getValue(objCurrent, strJavaField);
-
+			
 			lstRC[0] = lstOldValues;
 			lstRC[1] = lstValues;
 			Vector<String> vValues = new Vector<String>();
