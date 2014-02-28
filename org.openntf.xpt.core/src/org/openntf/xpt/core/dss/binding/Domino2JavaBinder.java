@@ -16,8 +16,9 @@
 package org.openntf.xpt.core.dss.binding;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Vector;
+
+import org.openntf.xpt.core.dss.binding.files.FileDownloadBinder;
 
 import lotus.domino.Document;
 import lotus.domino.NotesException;
@@ -29,7 +30,7 @@ import com.ibm.commons.util.profiler.ProfilerType;
 public class Domino2JavaBinder {
 
 	private ArrayList<Definition> m_Definition;
-	private static final ProfilerType pt = new ProfilerType("XPT.DSS.Domion2JavaBinder");
+	private static final ProfilerType pt = new ProfilerType("XPT.DSS.Domino2JavaBinder");
 
 	public Domino2JavaBinder() {
 		m_Definition = new ArrayList<Definition>();
@@ -56,8 +57,7 @@ public class Domino2JavaBinder {
 	}
 
 	private void _processDocument(Document docProcess, Object objCurrent) throws NotesException {
-		for (Iterator<Definition> itDefinition = m_Definition.iterator(); itDefinition.hasNext();) {
-			Definition defCurrent = itDefinition.next();
+		for (Definition defCurrent: m_Definition) {
 			if (Profiler.isEnabled()) {
 				ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDefinition - " +defCurrent.getBinder().getClass().getCanonicalName());
 				long startTime = Profiler.getCurrentTime();
@@ -77,7 +77,7 @@ public class Domino2JavaBinder {
 			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null,defCurrent);
 		} else {
 			Vector<?> vecValues = docProcess.getItemValue(defCurrent.getNotesField());
-			if (!vecValues.isEmpty() || defCurrent.getBinder().getClass().getSimpleName().equals("FileDownloadBinder")) {
+			if (!vecValues.isEmpty() || defCurrent.getBinder() instanceof FileDownloadBinder ) {
 				defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, vecValues, defCurrent);
 			}
 		}

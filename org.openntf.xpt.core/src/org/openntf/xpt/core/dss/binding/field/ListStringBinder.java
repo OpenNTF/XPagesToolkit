@@ -27,14 +27,30 @@ import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 
-public class ListStringBinder implements IBinder<List<String>> {
+import com.ibm.commons.util.profiler.Profiler;
+import com.ibm.commons.util.profiler.ProfilerAggregator;
+import com.ibm.commons.util.profiler.ProfilerType;
 
+public class ListStringBinder implements IBinder<List<String>> {
+	private static final ProfilerType pt = new ProfilerType("XPT.DSS.ListStringBinder");
 	private static ListStringBinder m_Binder;
 
 	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), List.class);
-			List<String> lstValues = getValueFromStore(docCurrent, vecCurrent, def);
+			List<String> lstValues = null;
+			if (Profiler.isEnabled()) {
+				ProfilerAggregator pa = Profiler.startProfileBlock(pt, "getValueFormStore");
+				long startTime = Profiler.getCurrentTime();
+				try {
+					lstValues = getValueFromStore(docCurrent, vecCurrent, def);
+				} finally {
+					Profiler.endProfileBlock(pa, startTime);
+				}
+			} else {
+				lstValues = getValueFromStore(docCurrent, vecCurrent, def);
+			}
+
 			if (lstValues != null) {
 				mt.invoke(objCurrent, lstValues);
 			}
@@ -104,9 +120,9 @@ public class ListStringBinder implements IBinder<List<String>> {
 	public List<String> getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
 		if (!vecCurrent.isEmpty()) {
 			try {
-				List<String> lstValues = new ArrayList<String>();
+				List<String> lstValues = new ArrayList<String>(vecCurrent.size());
 				for (Object strValue : vecCurrent) {
-					lstValues.add(NamesProcessor.getInstance().getPerson(def, strValue.toString(), docCurrent.getParentDatabase().getParent()));
+					lstValues.add(NamesProcessor.getInstance().getPerson(def, (String) strValue, docCurrent.getParentDatabase().getParent()));
 				}
 				return lstValues;
 			} catch (Exception e) {
@@ -119,7 +135,7 @@ public class ListStringBinder implements IBinder<List<String>> {
 	public List<String> getRawValueFromStore(Document docCurrent, String strNotesField) {
 		try {
 			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);
-			ArrayList<String> lstValues = new ArrayList<String>();
+			ArrayList<String> lstValues = new ArrayList<String>(vecResult.size());
 			for (Object strValue : vecResult) {
 				lstValues.add(strValue.toString());
 			}
