@@ -13,23 +13,25 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.field;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-
-import org.openntf.xpt.core.base.BaseDoubleBinder;
+import java.util.Vector;
 
 import lotus.domino.Document;
+
+import org.openntf.xpt.core.base.BaseDoubleBinder;
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
 
 public class DoubleBinder extends BaseDoubleBinder implements IBinder<Double> {
 
 	private static DoubleBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Double.TYPE);
-			Double dblVal = getValueFromStore(docCurrent, strNotesField, addValues);
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), Double.TYPE);
+			Double dblVal = getValueFromStore(docCurrent, vecCurrent, def);
 			if (dblVal != null) {
 				mt.invoke(objCurrent, dblVal.doubleValue());
 			}
@@ -37,14 +39,14 @@ public class DoubleBinder extends BaseDoubleBinder implements IBinder<Double> {
 		}
 	}
 
-	public Double[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public Double[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Double[] dblRC = new Double[2];
 		try {
-			double nOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
-			double nValue = getValue(objCurrent, strJavaField).doubleValue();
+			double nOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
+			double nValue = getValue(objCurrent, def.getJavaField()).doubleValue();
 			dblRC[0] = nOldValue;
 			dblRC[1] = nValue;
-			docCurrent.replaceItemValue(strNotesField, nValue);
+			docCurrent.replaceItemValue(def.getNotesField(), nValue);
 		} catch (Exception e) {
 		}
 		return dblRC;
@@ -62,11 +64,9 @@ public class DoubleBinder extends BaseDoubleBinder implements IBinder<Double> {
 	}
 
 	@Override
-	public Double getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
-		try {
-			double nValue = docCurrent.getItemValueDouble(strNotesField);
-			return new Double(nValue);
-		} catch (Exception e) {
+	public Double getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
+		if (!vecCurrent.isEmpty()) {
+			return (Double) vecCurrent.get(0);
 		}
 		return null;
 	}

@@ -13,27 +13,28 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.field;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
 
 import lotus.domino.Document;
 import lotus.domino.Item;
 
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 
 public class ListStringBinder implements IBinder<List<String>> {
 
 	private static ListStringBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, List.class);
-			List<String> lstValues = getValueFromStore(docCurrent, strNotesField, addValues);
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), List.class);
+			List<String> lstValues = getValueFromStore(docCurrent, vecCurrent, def);
 			if (lstValues != null) {
 				mt.invoke(objCurrent, lstValues);
 			}
@@ -42,24 +43,25 @@ public class ListStringBinder implements IBinder<List<String>> {
 		}
 	}
 
-	public List<String>[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+	public List<String>[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		@SuppressWarnings("unchecked")
 		List<String>[] lstRC = new List[2];
 		try {
-			List<String> lstOldValues = getRawValueFromStore(docCurrent, strNotesField);
-			List<String> lstValues = getValue(objCurrent, strJavaField);
-			
+			List<String> lstOldValues = getRawValueFromStore(docCurrent, def.getNotesField());
+			List<String> lstValues = getValue(objCurrent, def.getJavaField());
+
 			lstRC[0] = lstOldValues;
 			lstRC[1] = lstValues;
 			Vector<String> vValues = new Vector<String>();
 
 			if (lstValues != null) {
 				boolean isNamesValue = false;
-				if (addValues != null && addValues.size() > 0) {
-					docCurrent.replaceItemValue(strNotesField, "");
-					Item iNotesField = docCurrent.getFirstItem(strNotesField);
-					isNamesValue = NamesProcessor.getInstance().setNamesField(addValues, iNotesField);
+				if (def.isAuthor() || def.isReader() || def.isNames()) {
+					// Changed to a one call
+					Item iNotesField = docCurrent.replaceItemValue(def.getNotesField(), "");
+					// Item iNotesField =
+					// docCurrent.getFirstItem(strNotesField);
+					isNamesValue = NamesProcessor.getInstance().setNamesField(def, iNotesField);
 				}
 
 				for (String strValue : lstValues) {
@@ -68,7 +70,7 @@ public class ListStringBinder implements IBinder<List<String>> {
 				lstRC[1] = new ArrayList<String>(vValues);
 
 			}
-			docCurrent.replaceItemValue(strNotesField, vValues);
+			docCurrent.replaceItemValue(def.getNotesField(), vValues);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -99,15 +101,17 @@ public class ListStringBinder implements IBinder<List<String>> {
 	}
 
 	@Override
-	public List<String> getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
-		try {
-			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);
-			ArrayList<String> lstValues = new ArrayList<String>();
-			for (Object strValue : vecResult) {
-				lstValues.add(NamesProcessor.getInstance().getPerson(additionalValues, strValue.toString(),docCurrent.getParentDatabase().getParent()));
+	public List<String> getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
+		if (!vecCurrent.isEmpty()) {
+			try {
+				List<String> lstValues = new ArrayList<String>();
+				for (Object strValue : vecCurrent) {
+					lstValues.add(NamesProcessor.getInstance().getPerson(def, strValue.toString(), docCurrent.getParentDatabase().getParent()));
+				}
+				return lstValues;
+			} catch (Exception e) {
+
 			}
-			return lstValues;
-		} catch (Exception e) {
 		}
 		return null;
 	}

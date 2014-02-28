@@ -13,38 +13,40 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.field;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
-
-import org.openntf.xpt.core.base.BaseBooleanBinder;
+import java.util.Vector;
 
 import lotus.domino.Document;
+
+import org.openntf.xpt.core.base.BaseBooleanBinder;
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
 
 public class BooleanBinder extends BaseBooleanBinder implements IBinder<Boolean> {
 
 	private static BooleanBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecValues, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Boolean.TYPE);
-			mt.invoke(objCurrent, getValueFromStore(docCurrent, strNotesField, addValues).booleanValue());
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), Boolean.TYPE);
+			mt.invoke(objCurrent, getValueFromStore(docCurrent, vecValues, def));
 		} catch (Exception e) {
 		}
 	}
 
-	public Boolean[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public Boolean[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Boolean[] blRC = new Boolean[2];
 		try {
-			boolean blValue = getValue(objCurrent, strJavaField).booleanValue();
-			boolean blOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			boolean blValue = getValue(objCurrent, def.getJavaField()).booleanValue();
+			boolean blOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
 			blRC[0] = blOldValue;
 			blRC[1] = blValue;
 			if (blValue) {
-				docCurrent.replaceItemValue(strNotesField, "1");
+				docCurrent.replaceItemValue(def.getNotesField(), "1");
 			} else {
-				docCurrent.replaceItemValue(strNotesField, "");
+				docCurrent.replaceItemValue(def.getNotesField(), "");
 			}
 		} catch (Exception e) {
 		}
@@ -64,12 +66,10 @@ public class BooleanBinder extends BaseBooleanBinder implements IBinder<Boolean>
 	}
 
 	@Override
-	public Boolean getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> addValues) {
-		try {
-			String strValue = docCurrent.getItemValueString(strNotesField);
+	public Boolean getValueFromStore(Document docCurrent, Vector<?> vecValues, Definition def) {
+		if (!vecValues.isEmpty()) {
+			String strValue = (String) vecValues.get(0);
 			return "1".equals(strValue) ? Boolean.TRUE : Boolean.FALSE;
-		} catch (Exception e) {
-
 		}
 		return false;
 	}

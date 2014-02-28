@@ -13,25 +13,28 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.field;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.Vector;
 
 import lotus.domino.Document;
 import lotus.domino.Item;
+
 import org.openntf.xpt.core.base.BaseStringBinder;
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 
 public class StringBinder extends BaseStringBinder implements IBinder<String> {
 
 	private static StringBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, String.class);
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), String.class);
 
-			String strValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			String strValue = getValueFromStore(docCurrent, vecCurrent, def);
 			if (strValue != null) {
 				mt.invoke(objCurrent, strValue);
 			}
@@ -40,21 +43,22 @@ public class StringBinder extends BaseStringBinder implements IBinder<String> {
 		}
 	}
 
-	public String[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public String[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		String[] arrRC = new String[2];
 		try {
 			boolean isNamesValue = false;
-			String strOldValue = docCurrent.getItemValueString(strNotesField);
-			String strValue = getValue(objCurrent, strJavaField);
-			if (addValues != null && addValues.size() > 0) {
-				docCurrent.replaceItemValue(strNotesField, "");
-				Item iNotesField = docCurrent.getFirstItem(strNotesField);
-				isNamesValue = NamesProcessor.getInstance().setNamesField(addValues, iNotesField);
+			String strOldValue = docCurrent.getItemValueString(def.getNotesField());
+			String strValue = getValue(objCurrent, def.getJavaField());
+			if (def.isAuthor() || def.isReader() || def.isNames()) {
+				// Changed to a oneLine Call
+				Item iNotesField = docCurrent.replaceItemValue(def.getNotesField(), "");
+				// Item iNotesField = docCurrent.getFirstItem(strNotesField);
+				isNamesValue = NamesProcessor.getInstance().setNamesField(def, iNotesField);
 				strValue = NamesProcessor.getInstance().setPerson(strValue, isNamesValue, docCurrent.getParentDatabase().getParent());
 			}
 			arrRC[0] = strOldValue;
 			arrRC[1] = strValue;
-			docCurrent.replaceItemValue(strNotesField, strValue);
+			docCurrent.replaceItemValue(def.getNotesField(), strValue);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -74,10 +78,10 @@ public class StringBinder extends BaseStringBinder implements IBinder<String> {
 	}
 
 	@Override
-	public String getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public String getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			String strValue = docCurrent.getItemValueString(strNotesField);
-			strValue = NamesProcessor.getInstance().getPerson(additionalValues, strValue,docCurrent.getParentDatabase().getParent());
+			String strValue = (String) vecCurrent.get(0);
+			strValue = NamesProcessor.getInstance().getPerson(def, strValue, docCurrent.getParentDatabase().getParent());
 			return strValue;
 
 		} catch (Exception e) {

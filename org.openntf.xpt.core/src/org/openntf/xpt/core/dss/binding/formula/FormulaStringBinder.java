@@ -13,13 +13,16 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.formula;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Vector;
 
 import lotus.domino.Document;
+
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.dss.binding.IFormulaBinder;
 
 public class FormulaStringBinder implements IBinder<String>, IFormulaBinder {
 	private static FormulaStringBinder m_Binder;
@@ -39,10 +42,10 @@ public class FormulaStringBinder implements IBinder<String>, IFormulaBinder {
 		return null;
 	}
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, String.class);
-			Vector<?> vecString = docCurrent.getParentDatabase().getParent().evaluate(strNotesField, docCurrent);
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), String.class);
+			Vector<?> vecString = docCurrent.getParentDatabase().getParent().evaluate(def.getNotesField(), docCurrent);
 			if (vecString.size() > 0) {
 				String strCurrent = (String) vecString.elementAt(0);
 				mt.invoke(objCurrent, strCurrent);
@@ -52,12 +55,12 @@ public class FormulaStringBinder implements IBinder<String>, IFormulaBinder {
 
 	}
 
-	public String[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String JavaField, HashMap<String, Object> addValues) {
+	public String[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		return null;
 	}
 
 	@Override
-	public String getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public String getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
 		// TODO Auto-generated method stub
 		return null;
 	}

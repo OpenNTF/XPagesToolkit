@@ -20,32 +20,32 @@ import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 
-import org.openntf.xpt.core.dss.binding.BooleanBinder;
-import org.openntf.xpt.core.dss.binding.DateBinder;
-import org.openntf.xpt.core.dss.binding.DoubleArrayBinder;
-import org.openntf.xpt.core.dss.binding.DoubleBinder;
-import org.openntf.xpt.core.dss.binding.EncryptionDateBinder;
-import org.openntf.xpt.core.dss.binding.EncryptionDoubleBinder;
-import org.openntf.xpt.core.dss.binding.EncryptionStringBinder;
-import org.openntf.xpt.core.dss.binding.FormulaDateBinder;
-import org.openntf.xpt.core.dss.binding.FormulaDoubleBinder;
-import org.openntf.xpt.core.dss.binding.FormulaStringBinder;
 import org.openntf.xpt.core.dss.binding.IBinder;
-import org.openntf.xpt.core.dss.binding.IntBinder;
-import org.openntf.xpt.core.dss.binding.ListStringBinder;
-import org.openntf.xpt.core.dss.binding.LongBinder;
-import org.openntf.xpt.core.dss.binding.MimeMultipartBinder;
-import org.openntf.xpt.core.dss.binding.ObjectBinder;
-import org.openntf.xpt.core.dss.binding.StringArrayBinder;
-import org.openntf.xpt.core.dss.binding.StringBinder;
+import org.openntf.xpt.core.dss.binding.encryption.EncryptionDateBinder;
+import org.openntf.xpt.core.dss.binding.encryption.EncryptionDoubleBinder;
+import org.openntf.xpt.core.dss.binding.encryption.EncryptionStringBinder;
+import org.openntf.xpt.core.dss.binding.field.BooleanBinder;
+import org.openntf.xpt.core.dss.binding.field.DateBinder;
+import org.openntf.xpt.core.dss.binding.field.DoubleArrayBinder;
+import org.openntf.xpt.core.dss.binding.field.DoubleBinder;
+import org.openntf.xpt.core.dss.binding.field.IntBinder;
+import org.openntf.xpt.core.dss.binding.field.ListStringBinder;
+import org.openntf.xpt.core.dss.binding.field.LongBinder;
+import org.openntf.xpt.core.dss.binding.field.MimeMultipartBinder;
+import org.openntf.xpt.core.dss.binding.field.ObjectBinder;
+import org.openntf.xpt.core.dss.binding.field.StringArrayBinder;
+import org.openntf.xpt.core.dss.binding.field.StringBinder;
 import org.openntf.xpt.core.dss.binding.files.FileDownloadBinder;
 import org.openntf.xpt.core.dss.binding.files.FileUploadBinder;
+import org.openntf.xpt.core.dss.binding.formula.FormulaDateBinder;
+import org.openntf.xpt.core.dss.binding.formula.FormulaDoubleBinder;
+import org.openntf.xpt.core.dss.binding.formula.FormulaStringBinder;
 import org.openntf.xpt.core.dss.binding.util.FileHelper;
 
 import com.ibm.xsp.component.UIFileuploadEx.UploadedFile;
 import com.ibm.xsp.http.MimeMultipart;
 
-public class DefinitionFactory {
+public class BinderFactory {
 
 	public static IBinder<?> getBinder(Class<?> clCurrent, Type gtCurrent) {
 		// System.out.println(clCurrent);

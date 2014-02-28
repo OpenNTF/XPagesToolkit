@@ -16,15 +16,15 @@
 package org.openntf.xpt.core.dss.binding;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Vector;
+
+import lotus.domino.Document;
+import lotus.domino.NotesException;
 
 import com.ibm.commons.util.profiler.Profiler;
 import com.ibm.commons.util.profiler.ProfilerAggregator;
 import com.ibm.commons.util.profiler.ProfilerType;
-
-import lotus.domino.Document;
-import lotus.domino.NotesException;
 
 public class Domino2JavaBinder {
 
@@ -35,11 +35,11 @@ public class Domino2JavaBinder {
 		m_Definition = new ArrayList<Definition>();
 	}
 
-	public void addDefinition(String strNotesField, String strJavaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues,
-			boolean encrypted, String[] encRoles) {
-		m_Definition.add(new Definition(strNotesField, strJavaField, binCurrent, changeLog, addValues, encrypted, encRoles));
+	
+	public void addDefinition(Definition def) {
+		m_Definition.add(def);
 	}
-
+	
 	public void processDocument(Document docProcess, Object objCurrent) throws NotesException {
 		if (Profiler.isEnabled()) {
 			ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDocument");
@@ -74,12 +74,11 @@ public class Domino2JavaBinder {
 
 	private void _processDefinition(Document docProcess, Object objCurrent, Definition defCurrent) throws NotesException {
 		if (defCurrent.getBinder() instanceof IFormulaBinder) {
-			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(),
-					defCurrent.getAdditionalValues());
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null,defCurrent);
 		} else {
-			if (docProcess.hasItem(defCurrent.getNotesField()) || defCurrent.getBinder().getClass().getSimpleName().equals("FileDownloadBinder")) {
-				defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, defCurrent.getNotesField(), defCurrent.getJavaField(),
-						defCurrent.getAdditionalValues());
+			Vector<?> vecValues = docProcess.getItemValue(defCurrent.getNotesField());
+			if (!vecValues.isEmpty() || defCurrent.getBinder().getClass().getSimpleName().equals("FileDownloadBinder")) {
+				defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, vecValues, defCurrent);
 			}
 		}
 	}
