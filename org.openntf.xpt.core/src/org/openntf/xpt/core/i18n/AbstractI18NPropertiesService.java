@@ -23,16 +23,17 @@ public abstract class AbstractI18NPropertiesService implements II18NService {
 		if (!m_LangContainer.containsKey(strLanguage)) {
 			
 				 for(String strFile : getPropertyFileNames()){
+					 String strPropFileName =  "";
 					 if (strLanguage.equals(XPTI18NBean.get().getDefaultLanguage())) {
-							strFile += PROPERTIES;
+						 strPropFileName = strFile +  PROPERTIES;
 						} else {
-							strFile += "_" + strLanguage + PROPERTIES;
+							strPropFileName = strFile +  "_" + strLanguage + PROPERTIES;
 						}
 						Properties prop = null;
-					 	prop = getPropertiesFromFile(strFile);
+					 	prop = getPropertiesFromFile(strPropFileName);
 						if (prop != null) {
 							for(String key : prop.stringPropertyNames()){
-								propValues.put(key, prop.getProperty(key));
+								propValues.put(strFile + "." + key, prop.getProperty(key));
 							}
 						}
 				 

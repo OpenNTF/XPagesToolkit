@@ -53,8 +53,6 @@ public class I18NServiceProvider  {
 				}
 			});
 		}
-		System.out.println("Services = " + m_I18NServices);
-		System.out.println("Size= " + m_I18NServices.size());
 		return m_I18NServices;
 	}
 	
