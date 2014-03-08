@@ -30,7 +30,7 @@ public class XPTAgentResourceProvider extends BundleResourceProvider {
 
 	private static final String CSS_PROGRESSBAR = "/.ibmxspres/.xptagents/css/progressbar.css";
 	private static final String CSS_AGENTLIST = "/.ibmxspres/.xptagents/css/agentlist.css";
-	private static final String RESOURCES_WEB_XPT = "/resources/web/xpt/xptagents/";
+	public static final String RESOURCES_WEB_XPT = "/resources/web/xpt/xptagents/";
 	public static final String XPT_PREFIX = ".xptagents";
 
 	public static final String DOJO_XPT_PROGRESSBAR_AGENTCONTROLlER = "xptagents.progressbar.agentcontroller";

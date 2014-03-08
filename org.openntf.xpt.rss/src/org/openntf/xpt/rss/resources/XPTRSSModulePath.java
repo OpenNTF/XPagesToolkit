@@ -19,7 +19,9 @@ import com.ibm.xsp.resource.DojoModulePathResource;
 
 public class XPTRSSModulePath extends DojoModulePathResource {
 
+	public static final String XPT_RSS_MODUL_PATH = "/.ibmxspres/"+XPTRSSResourceProvider.XPT_PREFIX;
+
 	public XPTRSSModulePath() {
-		super("xptrss","/.ibmxspres/"+XPTRSSResourceProvider.XPT_PREFIX);
+		super("xptrss",XPT_RSS_MODUL_PATH);
 	}
 }
