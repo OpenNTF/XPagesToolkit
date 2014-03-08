@@ -19,7 +19,9 @@ import com.ibm.xsp.resource.DojoModulePathResource;
 
 public class XPTModulePath extends DojoModulePathResource {
 
+	public static final String XPT_AGENTS_MODUL_PATH = "/.ibmxspres/"+XPTAgentResourceProvider.XPT_PREFIX;
+
 	public XPTModulePath() {
-		super("xptagents","/.ibmxspres/"+XPTAgentResourceProvider.XPT_PREFIX);
+		super("xptagents",XPT_AGENTS_MODUL_PATH);
 	}
 }

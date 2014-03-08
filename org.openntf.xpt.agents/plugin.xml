@@ -21,5 +21,12 @@
             type="com.ibm.xsp.resource.DojoModulePathResource"
             class="org.openntf.xpt.agents.resources.XPTModulePath" />
    </extension>
+   <extension
+         point="com.ibm.commons.Extension">
+      <service
+            class="org.openntf.xpt.agents.minifier.AgentsLoader"
+            type="com.ibm.xsp.minifier.loader">
+      </service>
+   </extension>
 
 </plugin>
