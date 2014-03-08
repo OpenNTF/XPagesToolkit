@@ -13,15 +13,18 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.formula;
 
 import java.lang.reflect.Method;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Vector;
 
 import lotus.domino.DateTime;
 import lotus.domino.Document;
+
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.dss.binding.IFormulaBinder;
 
 public class FormulaDateBinder implements IBinder<Date>, IFormulaBinder {
 
@@ -43,14 +46,11 @@ public class FormulaDateBinder implements IBinder<Date>, IFormulaBinder {
 		return null;
 	}
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		// Im notes Field ist die Formel drin (nicht so toll aber es wird tun)
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField,
-					Date.class);
-			Vector<?> vecDates = docCurrent.getParentDatabase().getParent()
-					.evaluate(strNotesField, docCurrent);
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), Date.class);
+			Vector<?> vecDates = docCurrent.getParentDatabase().getParent().evaluate(def.getNotesField(), docCurrent);
 			if (vecDates.size() > 0) {
 				DateTime dtCurrent = (DateTime) vecDates.elementAt(0);
 				mt.invoke(objCurrent, dtCurrent.toJavaDate());
@@ -61,18 +61,16 @@ public class FormulaDateBinder implements IBinder<Date>, IFormulaBinder {
 
 	}
 
-
 	@Override
-	public Date getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public Date getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String JavaField, HashMap<String, Object> additionalValues) {
+	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
 
 }

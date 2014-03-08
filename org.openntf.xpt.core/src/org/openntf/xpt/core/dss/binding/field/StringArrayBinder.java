@@ -13,25 +13,26 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.field;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Vector;
 
 import lotus.domino.Document;
 import lotus.domino.Item;
 
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 
 public class StringArrayBinder implements IBinder<String[]> {
 
 	private static StringArrayBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, new Class[] { String[].class });
-			String[] strValues = getValueFromStore(docCurrent, strNotesField, addValues);
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), new Class[] { String[].class });
+			String[] strValues = getValueFromStore(docCurrent, vecCurrent, def);
 			if (strValues != null) {
 				mt.invoke(objCurrent, new Object[] { strValues });
 			}
@@ -40,27 +41,28 @@ public class StringArrayBinder implements IBinder<String[]> {
 		}
 	}
 
-	public String[][] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public String[][] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		String[][] strRC = new String[2][];
 		try {
-			String[] strOldValues = getRawValueFromStore(docCurrent, strNotesField);
-			String[] strValues = getValue(objCurrent, strJavaField);
+			String[] strOldValues = getRawValueFromStore(docCurrent, def.getNotesField());
+			String[] strValues = getValue(objCurrent, def.getJavaField());
 			strRC[0] = strOldValues;
 			strRC[1] = strValues;
 			Vector<String> vecValues = new Vector<String>(strValues.length);
 
 			boolean isNamesValue = false;
-			if (addValues != null && addValues.size() > 0) {
-				docCurrent.replaceItemValue(strNotesField, "");
-				Item iNotesField = docCurrent.getFirstItem(strNotesField);
-				isNamesValue = NamesProcessor.getInstance().setNamesField(addValues, iNotesField);
+			if (def.isAuthor() || def.isReader() || def.isNames()) {
+				// Changed to a oneLine Call
+				Item iNotesField = docCurrent.replaceItemValue(def.getNotesField(), "");
+				// Item iNotesField = docCurrent.getFirstItem(strNotesField);
+				isNamesValue = NamesProcessor.getInstance().setNamesField(def, iNotesField);
 			}
 
 			for (String strVal : strValues) {
 				vecValues.addElement(NamesProcessor.getInstance().setPerson(strVal, isNamesValue, docCurrent.getParentDatabase().getParent()));
 			}
 			strRC[1] = vecValues.toArray(new String[vecValues.size()]);
-			docCurrent.replaceItemValue(strNotesField, vecValues);
+			docCurrent.replaceItemValue(def.getNotesField(), vecValues);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -91,14 +93,12 @@ public class StringArrayBinder implements IBinder<String[]> {
 	}
 
 	@Override
-	public String[] getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public String[] getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			Vector<?> vecResult = docCurrent.getItemValue(strNotesField);
-			String[] strValues = new String[vecResult.size()];
-
+			String[] strValues = new String[vecCurrent.size()];
 			int i = 0;
-			for (Object strValue : vecResult) {
-				strValues[i] = NamesProcessor.getInstance().getPerson(additionalValues, strValue.toString(), docCurrent.getParentDatabase().getParent());
+			for (Object strValue : vecCurrent) {
+				strValues[i] = NamesProcessor.getInstance().getPerson(def, strValue.toString(), docCurrent.getParentDatabase().getParent());
 				i += 1;
 			}
 			return strValues;

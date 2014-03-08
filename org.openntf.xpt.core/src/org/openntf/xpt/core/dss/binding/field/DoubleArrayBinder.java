@@ -13,22 +13,24 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.field;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Vector;
 
 import lotus.domino.Document;
+
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
 
 public class DoubleArrayBinder implements IBinder<Double[]> {
 
 	private static DoubleArrayBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, new Class[] { Double[].class });
-			Double[] nValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), new Class[] { Double[].class });
+			Double[] nValue = getValueFromStore(docCurrent, vecCurrent, def);
 			if (nValue != null) {
 				mt.invoke(objCurrent, new Object[] { nValue });
 			}
@@ -36,18 +38,18 @@ public class DoubleArrayBinder implements IBinder<Double[]> {
 		}
 	}
 
-	public Double[][] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public Double[][] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Double[][] dblRC = new Double[2][];
 		try {
-			Double[] nOldValues = getValueFromStore(docCurrent, strNotesField, addValues);
-			Double[] nValues = getValue(objCurrent, strJavaField);
+			Double[] nOldValues = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
+			Double[] nValues = getValue(objCurrent, def.getJavaField());
 			dblRC[0] = nOldValues;
 			dblRC[1] = nValues;
 			Vector<Double> vecValues = new Vector<Double>(nValues.length);
 			for (Double nVal : nValues) {
 				vecValues.addElement(nVal);
 			}
-			docCurrent.replaceItemValue(strNotesField, vecValues);
+			docCurrent.replaceItemValue(def.getNotesField(), vecValues);
 		} catch (Exception e) {
 		}
 		return dblRC;
@@ -75,13 +77,13 @@ public class DoubleArrayBinder implements IBinder<Double[]> {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
-	public Double[] getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
-		try {
-			Vector<Double[]> vecResult = docCurrent.getItemValue(strNotesField);
-			return (Double[]) vecResult.toArray(new Double[vecResult.size()]);
-		} catch (Exception e) {
+	public Double[] getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
+		if (!vecCurrent.isEmpty()) {
+			try {
+				return (Double[]) vecCurrent.toArray(new Double[vecCurrent.size()]);
+			} catch (Exception e) {
+			}
 		}
 		return null;
 	}

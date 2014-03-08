@@ -13,13 +13,16 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.formula;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Vector;
 
 import lotus.domino.Document;
+
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.dss.binding.IFormulaBinder;
 
 public class FormulaDoubleBinder implements IBinder<Double>, IFormulaBinder {
 	private static FormulaDoubleBinder m_Binder;
@@ -39,13 +42,10 @@ public class FormulaDoubleBinder implements IBinder<Double>, IFormulaBinder {
 		return null;
 	}
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent,
-			String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField,
-					Double.class);
-			Vector<?> vecDouble = docCurrent.getParentDatabase().getParent()
-					.evaluate(strNotesField, docCurrent);
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), Double.class);
+			Vector<?> vecDouble = docCurrent.getParentDatabase().getParent().evaluate(def.getNotesField(), docCurrent);
 			if (vecDouble.size() > 0) {
 				Double dblCurrent = (Double) vecDouble.elementAt(0);
 				mt.invoke(objCurrent, dblCurrent);
@@ -54,13 +54,12 @@ public class FormulaDoubleBinder implements IBinder<Double>, IFormulaBinder {
 		}
 	}
 
-	public Double[] processJava2Domino(Document docCurrent, Object objCurrent,
-			String strNotesField, String JavaField, HashMap<String, Object> addValues) {
+	public Double[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		return null;
 	}
 
 	@Override
-	public Double getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public Double getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -18,7 +18,6 @@ package org.openntf.xpt.core.dss.binding.files;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 import java.util.Vector;
@@ -26,6 +25,9 @@ import java.util.Vector;
 import lotus.domino.Document;
 import lotus.domino.EmbeddedObject;
 import lotus.domino.RichTextItem;
+
+import org.openntf.xpt.core.dss.DSSException;
+import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.FileHelper;
 import org.openntf.xpt.core.utils.MimeTypeService;
@@ -34,10 +36,10 @@ public class FileDownloadBinder implements IBinder<List<FileHelper>> {
 
 	private static FileDownloadBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, List.class);
-			List<FileHelper> myFiles = getValueFromStore(docCurrent, strNotesField, addValues);
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), List.class);
+			List<FileHelper> myFiles = getRawValueFromStore(docCurrent, def.getNotesField());
 			if (myFiles != null) {
 				mt.invoke(objCurrent, myFiles);
 			}
@@ -47,10 +49,9 @@ public class FileDownloadBinder implements IBinder<List<FileHelper>> {
 
 	}
 
-	public List<FileHelper>[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+	public List<FileHelper>[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 
-		if (docCurrent != null && getValue(objCurrent, strJavaField) == null) {
+		if (docCurrent != null && getValue(objCurrent, def.getJavaField()) == null) {
 			try {
 				String server = docCurrent.getParentDatabase().getServer();
 				String path = docCurrent.getParentDatabase().getFilePath();
@@ -61,12 +62,12 @@ public class FileDownloadBinder implements IBinder<List<FileHelper>> {
 				fh.setDocID(docCurrent.getUniversalID());
 				fh.setServer(server);
 				fh.setPath(path);
-				fh.setFieldName(strNotesField);
+				fh.setFieldName(def.getNotesField());
 				fh.setNewFile(true);
 
 				myFiles.add(fh);
 
-				Method mt = objCurrent.getClass().getMethod("set" + strJavaField, List.class);
+				Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), List.class);
 				mt.invoke(objCurrent, myFiles);
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -98,8 +99,7 @@ public class FileDownloadBinder implements IBinder<List<FileHelper>> {
 		return null;
 	}
 
-	@Override
-	public List<FileHelper> getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public List<FileHelper> getRawValueFromStore(Document docCurrent, String strNotesField) {
 		try {
 			String server = docCurrent.getParentDatabase().getServer();
 			String path = docCurrent.getParentDatabase().getFilePath();
@@ -161,6 +161,11 @@ public class FileDownloadBinder implements IBinder<List<FileHelper>> {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		return null;
+	}
+
+	@Override
+	public List<FileHelper> getValueFromStore(Document docCurrent, Vector<?> vecValues, Definition def) throws DSSException {
 		return null;
 	}
 

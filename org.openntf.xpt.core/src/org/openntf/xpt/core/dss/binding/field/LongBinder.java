@@ -13,21 +13,24 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.field;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.Vector;
 
 import lotus.domino.Document;
+
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
 
 public class LongBinder implements IBinder<Long> {
 
 	private static LongBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Long.TYPE);
-			Long nValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), Long.TYPE);
+			Long nValue = getValueFromStore(docCurrent, vecCurrent, def);
 			if (nValue != null) {
 				mt.invoke(objCurrent, nValue.longValue());
 			}
@@ -35,14 +38,14 @@ public class LongBinder implements IBinder<Long> {
 		}
 	}
 
-	public Long[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public Long[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Long[] lngRC = new Long[2];
 		try {
-			long nOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
-			long nValue = getValue(objCurrent, strJavaField).longValue();
+			long nOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
+			long nValue = getValue(objCurrent, def.getJavaField()).longValue();
 			lngRC[0] = nOldValue;
 			lngRC[1] = nValue;
-			docCurrent.replaceItemValue(strNotesField, nValue);
+			docCurrent.replaceItemValue(def.getNotesField(), nValue);
 		} catch (Exception e) {
 		}
 		return lngRC;
@@ -71,11 +74,10 @@ public class LongBinder implements IBinder<Long> {
 	}
 
 	@Override
-	public Long getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
-		try {
-			long nValue = (long) docCurrent.getItemValueDouble(strNotesField);
-			return new Long(nValue);
-		} catch (Exception e) {
+	public Long getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
+		if (!vecCurrent.isEmpty()) {
+			Double dblCurrent = (Double) vecCurrent.get(0);
+			return Long.valueOf(dblCurrent.longValue());
 		}
 		return null;
 	}

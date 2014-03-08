@@ -13,16 +13,18 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.encryption;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Vector;
 
 import lotus.domino.Document;
 
 import org.openntf.xpt.core.base.BaseStringBinder;
 import org.openntf.xpt.core.dss.DSSException;
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.dss.binding.IEncryptionBinder;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
@@ -40,46 +42,38 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 		return m_Binder;
 	}
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
 
-			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
+			if (hasAccess(def, docCurrent.getParentDatabase())) {
 
-				Method mt = objCurrent.getClass().getMethod("set" + strJavaField, String.class);
-				Vector<?> vecString = docCurrent.getParentDatabase().getParent().evaluate(strNotesField, docCurrent);
-				if (vecString.size() > 0) {
-					String strCurrent = (String) vecString.elementAt(0);
-
-					String decryptedValue = EncryptionService.getInstance().decrypt(strCurrent);
-					mt.invoke(objCurrent, decryptedValue);
-				}
+				Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), String.class);
+				mt.invoke(objCurrent, getValueFromStore(docCurrent, vecCurrent, def));
 			}
+
 		} catch (Exception e) {
 		}
 
 	}
 
-	public String[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public String[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		String[] arrRC = new String[2];
 		try {
-			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
-				// boolean isNamesValue = false;
-				String strOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (hasAccess(def, docCurrent.getParentDatabase())) {
+				String strOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
 				if (strOldValue == null) {
 					return null;
 				}
-				String strValue = getValue(objCurrent, strJavaField);
+				String strValue = getValue(objCurrent, def.getJavaField());
 
-				// String encryptedOldValue =
-				// EncryptionService.getInstance().encrypt(strOldValue);
-				if ((addValues.containsKey("isReader") || addValues.containsKey("isAuthor") || addValues.containsKey("isNames"))) {
+				if (def.isReader() || def.isAuthor() || def.isAuthor()) {
 					strValue = NamesProcessor.getInstance().setPerson(strValue, true, docCurrent.getParentDatabase().getParent());
 				}
 				String encryptedValue = EncryptionService.getInstance().encrypt(strValue);
 
 				arrRC[0] = strOldValue;
 				arrRC[1] = strValue;
-				docCurrent.replaceItemValue(strNotesField, encryptedValue);
+				docCurrent.replaceItemValue(def.getNotesField(), encryptedValue);
 			}
 		} catch (DSSException e) {
 			System.out.println(e.getMessage());
@@ -91,15 +85,15 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 	}
 
 	@Override
-	public String getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) throws DSSException {
+	public String getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) throws DSSException {
 		try {
-			if (hasAccess(additionalValues, docCurrent.getParentDatabase())) {
-				String strValue = docCurrent.getItemValueString(strNotesField);
+			if (hasAccess(def, docCurrent.getParentDatabase()) && !vecCurrent.isEmpty()) {
+				String strValue = (String) vecCurrent.get(0);
 				String decryptedValue = EncryptionService.getInstance().decrypt(strValue);
 				if (decryptedValue == null) {
-					throw new DSSException("Decryption Failed: " + strNotesField);
+					throw new DSSException("Decryption Failed: " + def.getJavaField() +" / "+ def.getNotesField());
 				}
-				decryptedValue = NamesProcessor.getInstance().getPerson(additionalValues, decryptedValue, docCurrent.getParentDatabase().getParent());
+				decryptedValue = NamesProcessor.getInstance().getPerson(def, decryptedValue, docCurrent.getParentDatabase().getParent());
 				return decryptedValue;
 			}
 		} catch (DSSException e) {
@@ -110,7 +104,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 	}
 
 	@Override
-	public String[] getChangeLogValues(Object[] arrObject, HashMap<String, Object> additionalValues) {
+	public String[] getChangeLogValues(Object[] arrObject, Definition def) {
 		String[] strRC = new String[arrObject.length];
 		int i = 0;
 		for (Object object : arrObject) {

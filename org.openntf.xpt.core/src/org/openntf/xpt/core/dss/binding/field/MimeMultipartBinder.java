@@ -13,15 +13,19 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.field;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.Vector;
 
 import lotus.domino.Document;
 import lotus.domino.MIMEEntity;
 import lotus.domino.RichTextItem;
 import lotus.domino.Stream;
+
+import org.openntf.xpt.core.dss.DSSException;
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
 
 import com.ibm.xsp.http.MimeMultipart;
 import com.ibm.xsp.model.domino.wrapped.DominoDocument;
@@ -31,21 +35,21 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 
 	private static MimeMultipartBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, MimeMultipart.class);
-			mt.invoke(objCurrent, getValueFromStore(docCurrent, strNotesField, addValues));
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), MimeMultipart.class);
+			mt.invoke(objCurrent, getRawValueFromStore(docCurrent, def.getNotesField()));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public MimeMultipart[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public MimeMultipart[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		MimeMultipart[] mpRC = new MimeMultipart[2];
 		try {
 
-			MimeMultipart oldBody = getValueFromStore(docCurrent, strNotesField, addValues);
-			MimeMultipart body = getValue(objCurrent, strJavaField);
+			MimeMultipart oldBody = getRawValueFromStore(docCurrent, def.getNotesField());
+			MimeMultipart body = getValue(objCurrent, def.getJavaField());
 			mpRC[0] = oldBody;
 			mpRC[1] = body;
 			Stream stream = docCurrent.getParentDatabase().getParent().createStream();
@@ -54,14 +58,13 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 			else
 				return null;
 
-			MIMEEntity entity = docCurrent.getMIMEEntity(strNotesField);
+			MIMEEntity entity = docCurrent.getMIMEEntity(def.getNotesField());
 			if (entity == null) {
-				docCurrent.removeItem(strNotesField);
-				entity = docCurrent.createMIMEEntity(strNotesField);
+				docCurrent.removeItem(def.getNotesField());
+				entity = docCurrent.createMIMEEntity(def.getNotesField());
 			}
 			entity.setContentFromText(stream, "text/html;charset=UTF-8", 1725);
 			stream.close();
-			// docCurrent.replaceItemValue(strNotesField, strValue);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -92,62 +95,35 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 	}
 
 	@Override
-	public MimeMultipart getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public MimeMultipart getValueFromStore(Document docCurrent, Vector<?> vecValues, Definition def) throws DSSException {
+		return null;
+	}
+
+	public MimeMultipart getRawValueFromStore(Document docCurrent, String strNotesField) {
 		try {
-			MimeMultipart strValue = null;
+			MimeMultipart mimeValue = null;
 			MIMEEntity entity = docCurrent.getMIMEEntity(strNotesField);
 			if (entity != null) {
-				strValue = MimeMultipart.fromHTML(entity.getContentAsText());
+				mimeValue = MimeMultipart.fromHTML(entity.getContentAsText());
 
 			} else if (docCurrent.hasItem(strNotesField)) {
 
 				if (docCurrent.getFirstItem(strNotesField) != null) {
 					if (docCurrent.getFirstItem(strNotesField).getType() != 1) {
-						strValue = MimeMultipart.fromHTML(docCurrent.getItemValueString(strNotesField));
+						mimeValue = MimeMultipart.fromHTML(docCurrent.getItemValueString(strNotesField));
 					} else {
 						RichTextItem rti = (RichTextItem) docCurrent.getFirstItem(strNotesField);
-						/*
-						if (rti != null) {
-							//System.out.println("UND2222?");
-							HttpServletRequest rq = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-							String curURL = rq.getRequestURL().toString();
-							String docid = docCurrent.getUniversalID();
-
-							String notesURL = curURL.substring(0, curURL.indexOf(rq.getContextPath()) + 1) + docCurrent.getParentDatabase().getFilePath() + "/0/" + docid + "/" + strNotesField
-									+ "?OpenField";
-
-							URL docURL = new URL(notesURL);
-							URLConnection uc = docURL.openConnection();
-
-							uc.setRequestProperty("Cookie", rq.getHeader("Cookie"));
-							uc.connect();
-
-							// do the HTTP request
-							BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream(), "UTF-8"));
-
-							// process the data returned
-							StringBuffer strBuf = new StringBuffer();
-							String tmpStr = "";
-							while ((tmpStr = in.readLine()) != null) {
-								strBuf.append(tmpStr);
-							}
-							//System.out.println("UND?");
-							strValue = MimeMultipart.fromHTML(strBuf.toString());
-							//System.out.println("strValue" + strValue);
-						}
-						*/
 						if (rti != null) {
 							DominoDocument dd = new DominoDocument();
 							dd.setDocument(docCurrent);
 							DominoRichTextItem drtCurrent = new DominoRichTextItem(dd, rti);
-							
-							strValue = MimeMultipart.fromHTML(drtCurrent.getHTML());
+							mimeValue = MimeMultipart.fromHTML(drtCurrent.getHTML());
 						}
 					}
 				}
 			}
 
-			return strValue;
+			return mimeValue;
 		} catch (Exception e) {
 
 		}

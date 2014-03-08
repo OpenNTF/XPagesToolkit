@@ -19,7 +19,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 
@@ -30,17 +29,17 @@ import lotus.domino.View;
 
 import org.openntf.xpt.core.dss.annotations.DominoEntity;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
-import org.openntf.xpt.core.dss.binding.DateBinder;
+import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.Domino2JavaBinder;
-import org.openntf.xpt.core.dss.binding.DoubleArrayBinder;
-import org.openntf.xpt.core.dss.binding.DoubleBinder;
 import org.openntf.xpt.core.dss.binding.IBinder;
-import org.openntf.xpt.core.dss.binding.IntBinder;
 import org.openntf.xpt.core.dss.binding.Java2DominoBinder;
-import org.openntf.xpt.core.dss.binding.LongBinder;
-import org.openntf.xpt.core.dss.binding.ObjectBinder;
-import org.openntf.xpt.core.dss.binding.StringArrayBinder;
-import org.openntf.xpt.core.dss.binding.StringBinder;
+import org.openntf.xpt.core.dss.binding.field.DateBinder;
+import org.openntf.xpt.core.dss.binding.field.DoubleArrayBinder;
+import org.openntf.xpt.core.dss.binding.field.DoubleBinder;
+import org.openntf.xpt.core.dss.binding.field.IntBinder;
+import org.openntf.xpt.core.dss.binding.field.LongBinder;
+import org.openntf.xpt.core.dss.binding.field.StringArrayBinder;
+import org.openntf.xpt.core.dss.binding.field.StringBinder;
 import org.openntf.xpt.core.dss.changeLog.ChangeLogEntry;
 import org.openntf.xpt.core.utils.ServiceSupport;
 
@@ -269,44 +268,14 @@ public class DominoStorageService {
 				DominoEntity de = fldCurrent.getAnnotation(DominoEntity.class);
 				if (!de.readOnly()) {
 					if (de.encrypt()) {
-						IBinder<?> binder = DefinitionFactory.getEncryptionBinder(fldCurrent.getType());
+						IBinder<?> binder = BinderFactory.getEncryptionBinder(fldCurrent.getType());
 						if (binder != null) {
-							HashMap<String, Object> addValues = new HashMap<String, Object>();
-							if (de.encRoles() != null && de.encRoles().length > 0)
-								addValues.put("encRoles", de.encRoles());
-							if (de.isNames())
-								addValues.put("isNames", true);
-							if (de.isAuthor())
-								addValues.put("isAuthor", true);
-							if (de.isReader())
-								addValues.put("isReader", true);
-							if (de.dateOnly())
-								addValues.put("dateOnly", true);
-							if (de.showNameAs() != null)
-								addValues.put("showNameAs", de.showNameAs().toString());
-							j2dRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(), addValues, de.encrypt(), de.encRoles());
+							j2dRC.addDefinition(Definition.buildDefiniton(dsStore, de, binder, fldCurrent));
 						}
 					} else {
-						IBinder<?> binder = DefinitionFactory.getBinder(fldCurrent.getType(), fldCurrent.getGenericType());
+						IBinder<?> binder = BinderFactory.getBinder(fldCurrent.getType(), fldCurrent.getGenericType());
 						if (binder != null) {
-							HashMap<String, Object> addValues = new HashMap<String, Object>();
-							if (de.isNames())
-								addValues.put("isNames", true);
-							if (de.isAuthor())
-								addValues.put("isAuthor", true);
-							if (de.isReader())
-								addValues.put("isReader", true);
-							if (de.dateOnly())
-								addValues.put("dateOnly", true);
-							if (de.showNameAs() != null)
-								addValues.put("showNameAs", de.showNameAs().toString());
-							if (binder.getClass().equals(ObjectBinder.class)) {
-								addValues.put("innerClass", fldCurrent.getType());
-								addValues.put("genericType", fldCurrent.getGenericType());
-							}
-
-							j2dRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(), addValues, de.encrypt(), de.encRoles());
-
+							j2dRC.addDefinition(Definition.buildDefiniton(dsStore, de, binder, fldCurrent));
 						}
 					}
 				}
@@ -322,52 +291,21 @@ public class DominoStorageService {
 			if (fldCurrent.isAnnotationPresent(DominoEntity.class)) {
 				DominoEntity de = fldCurrent.getAnnotation(DominoEntity.class);
 				if (!de.writeOnly()) {
-
 					if (de.encrypt()) {
-						IBinder<?> binder = DefinitionFactory.getEncryptionBinder(fldCurrent.getType());
+						IBinder<?> binder = BinderFactory.getEncryptionBinder(fldCurrent.getType());
 						if (binder != null) {
-							HashMap<String, Object> addValues = new HashMap<String, Object>();
-							if (de.encRoles() != null && de.encRoles().length > 0)
-								addValues.put("encRoles", de.encRoles());
-							if (de.isNames())
-								addValues.put("isNames", true);
-							if (de.isAuthor())
-								addValues.put("isAuthor", true);
-							if (de.isReader())
-								addValues.put("isReader", true);
-							if (de.dateOnly())
-								addValues.put("dateOnly", true);
-							if (de.showNameAs() != null)
-								addValues.put("showNameAs", de.showNameAs().toString());
-							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(), addValues, de.encrypt(), de.encRoles());
+							djdRC.addDefinition(Definition.buildDefiniton(dsStore, de, binder, fldCurrent));
 						}
 					} else if (de.isFormula()) {
-						IBinder<?> binder = DefinitionFactory.getFormulaBinder(fldCurrent.getType());
+						IBinder<?> binder = BinderFactory.getFormulaBinder(fldCurrent.getType());
 						if (binder != null) {
-							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(), null, de.encrypt(), de.encRoles());
+							djdRC.addDefinition(Definition.buildDefiniton(dsStore, de, binder, fldCurrent));
 
 						}
 					} else {
-						IBinder<?> binder = DefinitionFactory.getBinder(fldCurrent.getType(), fldCurrent.getGenericType());
-						HashMap<String, Object> addValues = new HashMap<String, Object>();
-						if (de.isNames())
-							addValues.put("isNames", true);
-						if (de.isAuthor())
-							addValues.put("isAuthor", true);
-						if (de.isReader())
-							addValues.put("isReader", true);
-						if (de.dateOnly())
-							addValues.put("dateOnly", true);
-						if (de.showNameAs() != null)
-							addValues.put("showNameAs", de.showNameAs().toString());
-						if (binder != null && binder.getClass().equals(ObjectBinder.class)) {
-							addValues.put("innerClass", fldCurrent.getType());
-							addValues.put("genericType", fldCurrent.getGenericType());
-						}
-
+						IBinder<?> binder = BinderFactory.getBinder(fldCurrent.getType(), fldCurrent.getGenericType());
 						if (binder != null) {
-							djdRC.addDefinition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(dsStore, fldCurrent.getName()), binder, de.changeLog(), addValues, de.encrypt(), de.encRoles());
-
+							djdRC.addDefinition(Definition.buildDefiniton(dsStore, de, binder, fldCurrent));
 						}
 					}
 				}

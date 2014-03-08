@@ -13,29 +13,30 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.field;
 
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Vector;
 
 import lotus.domino.DateTime;
 import lotus.domino.Document;
 
 import org.openntf.xpt.core.base.BaseDateBinder;
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.DateProcessor;
 
 public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 
 	private static DateBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecValues, Definition def) {
 		try {
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Date.class);
-			Date dtCurrent = getValueFromStore(docCurrent, strNotesField, addValues);
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), Date.class);
+			Date dtCurrent = getValueFromStore(docCurrent, vecValues, def);
 			if (dtCurrent != null) {
 				mt.invoke(objCurrent, dtCurrent);
 			}
@@ -45,23 +46,23 @@ public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 		}
 	}
 
-	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Date[] dtRC = new Date[2];
 		try {
-			Date dtCurrent = getValue(objCurrent, strJavaField);
-			Date dtOld = getValueFromStore(docCurrent, strNotesField, addValues);
+			Date dtCurrent = getValue(objCurrent, def.getJavaField());
+			Date dtOld = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
 			dtRC[0] = dtOld;
 			if (dtCurrent != null) {
 				DateTime dt = docCurrent.getParentDatabase().getParent().createDateTime(dtCurrent);
-				if (addValues.containsKey("dateOnly")) {
+				if (def.isDateOnly()) {
 					dt = docCurrent.getParentDatabase().getParent().createDateTime(dt.getDateOnly());
 				}
-				docCurrent.replaceItemValue(strNotesField, dt);
-				Date dtCurrentNew =getValueFromStore(docCurrent, strNotesField, addValues);
+				docCurrent.replaceItemValue(def.getNotesField(), dt);
+				Date dtCurrentNew = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
 				dtRC[1] = dtCurrentNew;
 
 			} else {
-				docCurrent.removeItem(strNotesField);
+				docCurrent.removeItem(def.getNotesField());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -82,21 +83,17 @@ public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 	}
 
 	@Override
-	public Date getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
-		Vector<?> vecDates = null;
-		try {
+	public Date getValueFromStore(Document docCurrent, Vector<?> vecValues, Definition def) {
+		if (!vecValues.isEmpty()) {
 			try {
-				vecDates = docCurrent.getItemValueDateTimeArray(strNotesField);
+				DateTime dtCurrent = (DateTime) vecValues.elementAt(0);
+				String strFormat = DateProcessor.getInstance().getDateFormat(def, docCurrent.getParentDatabase().getParent());
+				DateFormat formatter = new SimpleDateFormat(strFormat);
+				Date dtRC = formatter.parse(dtCurrent.getLocalTime());
+				dtCurrent.recycle();
+				return dtRC;
 			} catch (Exception e) {
 			}
-			if (vecDates != null && vecDates.size() > 0) {
-				DateTime dtCurrent = (DateTime) vecDates.elementAt(0);
-
-				String strFormat = DateProcessor.getInstance().getDateFormat(additionalValues, docCurrent.getParentDatabase().getParent());
-				DateFormat formatter = new SimpleDateFormat(strFormat);
-				return (Date) formatter.parse(dtCurrent.getLocalTime());
-			}
-		} catch (Exception e) {
 		}
 		return null;
 

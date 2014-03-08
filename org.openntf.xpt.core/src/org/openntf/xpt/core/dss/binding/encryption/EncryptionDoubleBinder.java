@@ -13,15 +13,18 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.encryption;
 
 import java.lang.reflect.Method;
-import java.util.HashMap;
+import java.util.Vector;
 
 import lotus.domino.Document;
 
 import org.openntf.xpt.core.base.BaseDoubleBinder;
 import org.openntf.xpt.core.dss.DSSException;
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.dss.binding.IEncryptionBinder;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
 public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<Double>, IEncryptionBinder {
@@ -38,12 +41,11 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 		return m_Binder;
 	}
 
-
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
-				Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Double.TYPE);
-				Double dblVal = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (hasAccess(def, docCurrent.getParentDatabase())) {
+				Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), Double.TYPE);
+				Double dblVal = getValueFromStore(docCurrent, vecCurrent, def);
 				if (dblVal != null) {
 					mt.invoke(objCurrent, dblVal.doubleValue());
 				}
@@ -52,21 +54,21 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 		}
 	}
 
-	public Double[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public Double[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Double[] dblRC = new Double[2];
 		try {
-			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
-				Double nOldValue = getValueFromStore(docCurrent, strNotesField, addValues);
-				double nValue = getValue(objCurrent, strJavaField).doubleValue();
+			if (hasAccess(def, docCurrent.getParentDatabase())) {
+				Double nOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
+				double nValue = getValue(objCurrent, def.getNotesField()).doubleValue();
 				// String encryptedOldValue =
 				// EncryptionService.getInstance().encrypt(Double.toString(nOldValue));
 				String encryptedValue = EncryptionService.getInstance().encrypt(Double.toString(nValue));
 				dblRC[0] = nOldValue;
 				dblRC[1] = nValue;
 
-				docCurrent.replaceItemValue(strNotesField, encryptedValue);
+				docCurrent.replaceItemValue(def.getNotesField(), encryptedValue);
 			}
-		}catch(DSSException e){
+		} catch (DSSException e) {
 			System.out.println(e.getMessage());
 			return null;
 		} catch (Exception e) {
@@ -76,21 +78,20 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 	}
 
 	@Override
-	public Double getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) throws DSSException {
+	public Double getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) throws DSSException {
 		try {
-			if (hasAccess(additionalValues, docCurrent.getParentDatabase())) {
-				String strDblValue = docCurrent.getItemValueString(strNotesField);
+			if (hasAccess(def, docCurrent.getParentDatabase()) && vecCurrent.isEmpty()) {
+				String strDblValue = (String) vecCurrent.get(0);
 				String strDblValueDec = EncryptionService.getInstance().decrypt(strDblValue);
 				if (strDblValueDec == null) {
-					throw new DSSException("Decryption Failed: " + strNotesField);
+					throw new DSSException("Decryption Failed: " + def.getJavaField() + " / " + def.getNotesField());
 				}
 				if (!strDblValueDec.equals("")) {
-					double nValue = new Double(strDblValueDec);
-					return new Double(nValue);
+					return Double.valueOf(strDblValueDec);
 				}
 			}
-		}catch (DSSException e) {
-				throw e;
+		} catch (DSSException e) {
+			throw e;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -98,7 +99,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 	}
 
 	@Override
-	public String[] getChangeLogValues(Object[] arrObject, HashMap<String, Object> additionalValues) {
+	public String[] getChangeLogValues(Object[] arrObject, Definition def) {
 		String[] strRC = new String[arrObject.length];
 		int i = 0;
 		for (Object object : arrObject) {

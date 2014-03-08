@@ -13,18 +13,21 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.encryption;
 
 import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.Vector;
 
 import lotus.domino.Document;
 
 import org.openntf.xpt.core.base.BaseDateBinder;
 import org.openntf.xpt.core.dss.DSSException;
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.dss.binding.IEncryptionBinder;
 import org.openntf.xpt.core.dss.binding.util.DateProcessor;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
@@ -42,12 +45,11 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 		return m_Binder;
 	}
 
-
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
-				Method mt = objCurrent.getClass().getMethod("set" + strJavaField, Date.class);
-				Date dtCurrent = getValueFromStore(docCurrent, strNotesField, addValues);
+			if (hasAccess(def, docCurrent.getParentDatabase())) {
+				Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), Date.class);
+				Date dtCurrent = getValueFromStore(docCurrent, vecCurrent, def);
 				if (dtCurrent != null) {
 					mt.invoke(objCurrent, dtCurrent);
 				}
@@ -57,35 +59,29 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 		}
 	}
 
-	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Date[] dtRC = new Date[2];
 		try {
-			if (hasAccess(addValues, docCurrent.getParentDatabase())) {
-				Date dtCurrent = getValue(objCurrent, strJavaField);
-				Date dtOld = getValueFromStore(docCurrent, strNotesField, addValues);
-				
-				// String encryptedOldValue =
-				// EncryptionService.getInstance().encrypt(dtOld.toString());
+			if (hasAccess(def, docCurrent.getParentDatabase())) {
+				Date dtCurrent = getValue(objCurrent, def.getJavaField());
+				Date dtOld = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
+
 
 				dtRC[0] = dtOld; // /EncValue for Logger? Prob with return
 									// type
 				dtRC[1] = dtCurrent;
 				if (dtCurrent != null) {
-			 		//DateTime dt = docCurrent.getParentDatabase().getParent().createDateTime(dtCurrent);
-					//if (addValues.containsKey("dateOnly")) {
-					//	dt = docCurrent.getParentDatabase().getParent().createDateTime(dt.getDateOnly());
-					//}
-					String dtString = DateProcessor.getInstance().getDateAsStringToEncrypt(dtCurrent, addValues.containsKey("dateOnly"));
+					String dtString = DateProcessor.getInstance().getDateAsStringToEncrypt(dtCurrent, def.isDateOnly());
 
 					String encryptedValue = EncryptionService.getInstance().encrypt(dtString);
 
-					docCurrent.replaceItemValue(strNotesField, encryptedValue);
+					docCurrent.replaceItemValue(def.getNotesField(), encryptedValue);
 				} else {
-					docCurrent.removeItem(strNotesField);
+					docCurrent.removeItem(def.getNotesField());
 				}
 
 			}
-		}catch(DSSException e){
+		} catch (DSSException e) {
 			System.out.println(e.getMessage());
 			return null;
 		} catch (Exception e) {
@@ -97,42 +93,42 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 	}
 
 	@Override
-	public Date getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) throws DSSException {
+	public Date getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) throws DSSException {
 		try {
-			if (hasAccess(additionalValues, docCurrent.getParentDatabase())) {
+			if (hasAccess(def, docCurrent.getParentDatabase()) && !vecCurrent.isEmpty()) {
 				String encDate;
 				String decDate;
 
-				encDate = docCurrent.getItemValueString(strNotesField);
+				encDate = (String) vecCurrent.get(0);
 				decDate = EncryptionService.getInstance().decrypt(encDate);
 				if (decDate == null) {
-					throw new DSSException("Decryption Failed: " + strNotesField);
+					throw new DSSException("Decryption Failed!"+ def.getJavaField() +" / "+ def.getNotesField());
 				}
 				if (!decDate.equals("")) {
-					if(additionalValues.containsKey("dateOnly")){
-						decDate = decDate.substring(0,10);
+					if (def.isDateOnly()) {
+						decDate = decDate.substring(0, 10);
 					}
-					DateFormat formatter = new SimpleDateFormat(DateProcessor.getInstance().getDateFormatForEncryption(additionalValues.containsKey("dateOnly")));
+					DateFormat formatter = new SimpleDateFormat(DateProcessor.getInstance().getDateFormatForEncryption(def.isDateOnly()));
 					return (Date) formatter.parse(decDate);
 				}
 			}
-		}catch (DSSException e) {
+		} catch (DSSException e) {
 			throw e;
 		} catch (Exception e) {
-		e.printStackTrace();
+			e.printStackTrace();
 		}
 		return null;
 
 	}
 
 	@Override
-	public String[] getChangeLogValues(Object[] arrObject, HashMap<String, Object> additionalValues) {
+	public String[] getChangeLogValues(Object[] arrObject, Definition def) {
 		String[] strRC = new String[arrObject.length];
 		int i = 0;
 		for (Object object : arrObject) {
 			Date decDate = (Date) object;
 			if (decDate != null) {
-				String decString = DateProcessor.getInstance().getDateAsStringToEncrypt(decDate, additionalValues.containsKey("dateOnly"));
+				String decString = DateProcessor.getInstance().getDateAsStringToEncrypt(decDate, def.isDateOnly());
 				String encryptedValue = EncryptionService.getInstance().encrypt(decString);
 				strRC[i] = encryptedValue;
 			} else {

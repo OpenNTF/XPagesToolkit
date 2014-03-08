@@ -15,11 +15,11 @@
  */
 package org.openntf.xpt.core.base;
 
-import java.util.HashMap;
 import java.util.List;
 
 import lotus.domino.Database;
 
+import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.utils.RoleAndGroupProvider;
 
 public class BaseEncryptionBinder {
@@ -28,27 +28,25 @@ public class BaseEncryptionBinder {
 		super();
 	}
 
-	public boolean hasAccess(HashMap<String, Object> addValues, Database ndbSource) {
+	public boolean hasAccess(Definition def, Database ndbSource) {
 		try {
 			String strUser = ndbSource.getParent().getEffectiveUserName();
-			return hasAccess(addValues, RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(strUser, ndbSource));
+			return hasAccess(def, RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(strUser, ndbSource));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return false;
 	}
 
-	public boolean hasAccess(HashMap<String, Object> addValues, List<String> myRoles) {
-		if (addValues != null && addValues.size() > 0) {
-			if (addValues.containsKey("encRoles")) {
-				String[] roles = (String[]) addValues.get("encRoles");
-				for (String role : roles) {
-					if (myRoles.contains(role)) {
-						return true;
-					}
+	public boolean hasAccess(Definition def, List<String> myRoles) {
+		if (def.getEncRoles() != null) {
+			String[] roles = def.getEncRoles();
+			for (String role : roles) {
+				if (myRoles.contains(role)) {
+					return true;
 				}
-				return false;
 			}
+			return false;
 		}
 		return true;
 	}

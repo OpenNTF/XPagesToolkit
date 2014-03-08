@@ -13,7 +13,7 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
-package org.openntf.xpt.core.dss.binding;
+package org.openntf.xpt.core.dss.binding.field;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -22,7 +22,7 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.HashMap;
+import java.util.Vector;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 
@@ -32,29 +32,31 @@ import lotus.domino.MIMEHeader;
 import lotus.domino.Session;
 import lotus.domino.Stream;
 
+import org.openntf.xpt.core.dss.DSSException;
+import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.XPTObjectInputStream;
 
 public class ObjectBinder implements IBinder<Object> {
 
 	private static ObjectBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
 
-			Method mt = objCurrent.getClass().getMethod("set" + strJavaField, (Class<?>) addValues.get("innerClass"));
-
-			mt.invoke(objCurrent, getValueFromStore(docCurrent, strNotesField, addValues));
+			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), (Class<?>) def.getInnerClass());
+			mt.invoke(objCurrent, getRawValueFromStore(docCurrent, def.getNotesField()));
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public Object[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public Object[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Object[] objRC = new Object[2];
 		try {
-			Object oldBody = getValueFromStore(docCurrent, strNotesField, addValues);
-			Object body = getValue(objCurrent, strJavaField);
+			Object oldBody = getRawValueFromStore(docCurrent, def.getNotesField());
+			Object body = getValue(objCurrent, def.getJavaField());
 			objRC[0] = oldBody;
 			objRC[1] = body;
 			Session session = docCurrent.getParentDatabase().getParent();
@@ -69,9 +71,9 @@ public class ObjectBinder implements IBinder<Object> {
 			objectStream.close();
 
 			MIMEEntity entity = null;
-			MIMEEntity previousState = docCurrent.getMIMEEntity(strNotesField);
+			MIMEEntity previousState = docCurrent.getMIMEEntity(def.getNotesField());
 			if (previousState == null) {
-				entity = docCurrent.createMIMEEntity(strNotesField);
+				entity = docCurrent.createMIMEEntity(def.getNotesField());
 			} else {
 				entity = previousState;
 			}
@@ -120,8 +122,7 @@ public class ObjectBinder implements IBinder<Object> {
 		return null;
 	}
 
-	@Override
-	public Object getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public Object getRawValueFromStore(Document docCurrent, String strNotesField) {
 		try {
 			Session session = docCurrent.getParentDatabase().getParent();
 			boolean convertMime = session.isConvertMime();
@@ -169,6 +170,11 @@ public class ObjectBinder implements IBinder<Object> {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
+		return null;
+	}
+
+	@Override
+	public Object getValueFromStore(Document docCurrent, Vector<?> vecValues, Definition def) throws DSSException {
 		return null;
 	}
 
