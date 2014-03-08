@@ -23,5 +23,12 @@
             type="com.ibm.xsp.resource.DojoModulePathResource">
       </service>
    </extension>
+   <extension
+         point="com.ibm.commons.Extension">
+      <service
+            class="org.openntf.xpt.oneui.minifier.ONEUILoader"
+            type="com.ibm.xsp.minifier.loader">
+      </service>
+   </extension>
 
 </plugin>
