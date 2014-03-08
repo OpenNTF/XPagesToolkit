@@ -29,7 +29,7 @@ import com.ibm.xsp.webapp.resources.BundleResourceProvider;
 public class XPTRSSResourceProvider extends BundleResourceProvider {
 
 	private static final String CSS_STYLE = "/.ibmxspres/.xptrss/css/rss.css";
-	private static final String RESOURCES_WEB_XPT = "/resources/web/xpt/xptrss/";
+	public static final String RESOURCES_WEB_XPT = "/resources/web/xpt/xptrss/";
 	public static final String XPT_PREFIX = ".xptrss";
 
 	public static final String DOJO_XPT_RSSCONROLLER = "xptrss.list.feedcontroller";
