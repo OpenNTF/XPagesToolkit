@@ -1,6 +1,9 @@
 package org.openntf.xpt.core.i18n;
 
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
@@ -55,7 +58,11 @@ public abstract class AbstractI18NPropertiesService implements II18NService {
 		Properties prop = new Properties();
 
 		try {
-			prop.load(FacesContextEx.getCurrentInstance().getExternalContext().getResourceAsStream(fileName));
+
+			InputStream is = FacesContextEx.getCurrentInstance().getExternalContext().getResourceAsStream(fileName);
+			BufferedReader r = new BufferedReader(
+		                new InputStreamReader(is, "UTF-8"));
+			prop.load(r);
 			return prop;
 
 		} catch (Exception e) {

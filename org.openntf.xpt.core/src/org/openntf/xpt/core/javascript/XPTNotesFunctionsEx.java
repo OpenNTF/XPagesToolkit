@@ -82,9 +82,7 @@ public class XPTNotesFunctionsEx extends com.ibm.xsp.extlib.javascript.NotesFunc
 
 				switch (index) {
 				case FCT_XPTI18NAllLang: {
-					System.out.println("Start");
 					if (args.size() < 1) {
-						System.out.println("Do");
 						List<String> allLanguages = XPTI18NBean.get().getAllLanguages();
 						if (allLanguages.size() > 0) {
 							return FBSUtility.wrap(context.getJSContext(), allLanguages);

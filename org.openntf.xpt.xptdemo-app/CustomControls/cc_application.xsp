@@ -13,23 +13,27 @@
 		<xe:this.configuration>
 			<xe:oneuiApplication productLogoAlt="XPages ToolToolkit"
 				titleBarName="XPages Toolkit" productLogoHeight="20px"
-				productLogoWidth="100px" placeBarName="#{javascript:compositeData.pageTitle}"
+				productLogoWidth="100px"
+				placeBarName="#{javascript:compositeData.pageTitle}"
 				navigationPath="#{javascript:compositeData.navigationPath}"
-				legalText="(c) by WebGate Consulting AG, 2012" productLogo="/XPT_HeaderLogo.png">
+				legalText="(c) by WebGate Consulting AG, 2012"
+				productLogo="/XPT_HeaderLogo.png">
 				<xe:this.footerLinks>
 					<xe:basicContainerNode label="Container 1">
 						<xe:this.children>
 							<xe:basicLeafNode label="Documentation"
 								href="http://my.webgate.biz/xpt.documentation">
 							</xe:basicLeafNode>
-							<xe:basicLeafNode label="WebGate Consulting AG"
-								href="http://www.webgate.biz">
+							<xe:basicLeafNode
+								label="WebGate Consulting AG" href="http://www.webgate.biz">
 							</xe:basicLeafNode>
-							<xe:basicLeafNode label="Project on OpenNTF">
+							<xe:basicLeafNode
+								label="Project on OpenNTF">
 
 								<xe:this.href><![CDATA[http://www.openntf.org/Internal/home.nsf/project.xsp?action=openDocument&name=XPages%20Toolkit]]></xe:this.href>
 							</xe:basicLeafNode>
-							<xe:basicLeafNode label="OpenNTF.org" href="http://www.openntf.org">
+							<xe:basicLeafNode label="OpenNTF.org"
+								href="http://www.openntf.org">
 							</xe:basicLeafNode>
 						</xe:this.children>
 					</xe:basicContainerNode>
@@ -42,34 +46,38 @@
 						selection="/home/.*">
 
 					</xe:pageTreeNode>
-					<xe:pageTreeNode label="DSS / JSON" page="/dss_contact.xsp"
-						selection="/dss/.*">
+					<xe:pageTreeNode label="DSS / JSON"
+						page="/dss_contact.xsp" selection="/dss/.*">
 					</xe:pageTreeNode>
 
-					<xe:pageTreeNode label="OneUI" page="/oneui_aboutpage.xsp"
-						selection="/oneui/.*">
+					<xe:pageTreeNode label="OneUI"
+						page="/oneui_aboutpage.xsp" selection="/oneui/.*">
 					</xe:pageTreeNode>
 
-					<xe:pageTreeNode label="XPagesAgents" selection="/agent/.*"
-						page="/agent_overview.xsp">
-					</xe:pageTreeNode>
-
-
-
-					<xe:pageTreeNode selection="/rss/.*" page="/rss_overview.xsp"
-						label="RSS Feeds">
+					<xe:pageTreeNode label="XPagesAgents"
+						selection="/agent/.*" page="/agent_overview.xsp">
 					</xe:pageTreeNode>
 
 
 
+					<xe:pageTreeNode selection="/rss/.*"
+						page="/rss_overview.xsp" label="RSS Feeds">
+					</xe:pageTreeNode>
 
 
 
 
 
+
+
+
+					<xe:pageTreeNode label="I18N Multi Language"
+						page="/i18n_contact.xsp" selection="/i18n/.*">
+					</xe:pageTreeNode>
 				</xe:this.titleBarTabs>
 				<xe:this.bannerApplicationLinks>
-					<xe:basicLeafNode label="OpenNTF" href="http://www.openntf.org">
+					<xe:basicLeafNode label="OpenNTF"
+						href="http://www.openntf.org">
 					</xe:basicLeafNode>
 					<xe:basicLeafNode label="WebGate Consulting AG"
 						href="http://www.webgate.biz">
@@ -86,16 +94,16 @@
 }]]></xe:this.label>
 						<xe:this.children>
 
-							<xe:basicLeafNode label="Deutsch" submitValue="de"
-								image="/de.gif">
+							<xe:basicLeafNode label="Deutsch"
+								submitValue="de" image="/de.gif">
 								<xe:this.rendered><![CDATA[#{javascript:if (context.getLocale().getLanguage() == "de"){
 	return false;
 }
 return true;}]]></xe:this.rendered>
 
 							</xe:basicLeafNode>
-							<xe:basicLeafNode label="Englisch" submitValue="en"
-								image="/gb.gif">
+							<xe:basicLeafNode label="Englisch"
+								submitValue="en" image="/gb.gif">
 								<xe:this.rendered><![CDATA[#{javascript:if (context.getLocale().getLanguage() == "en"){
 	return false;
 }
@@ -109,7 +117,8 @@ return true;}]]></xe:this.rendered>
 					</xe:basicContainerNode>
 				</xe:this.bannerUtilityLinks>
 				<xe:this.placeBarActions>
-					<xe:pageTreeNode label="Administration" page="/admin_home.xsp">
+					<xe:pageTreeNode label="Administration"
+						page="/admin_home.xsp">
 					</xe:pageTreeNode>
 				</xe:this.placeBarActions>
 
