@@ -1,13 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <note default='true' class='icon' xmlns='http://www.lotus.com/dxl' version='9.0'
- replicaid='C1257B95007265C6'>
-<noteinfo noteid='122' unid='43CA7C23CC5C458EC1257B580049345A' sequence='24'>
+ maintenanceversion='1.0' replicaid='C1257C4400357124'>
+<noteinfo noteid='122' unid='43CA7C23CC5C458EC1257B580049345A' sequence='40'>
 <created><datetime dst='true'>20130425T151935,30+02</datetime></created>
-<modified><datetime dst='true'>20130921T211858,94+02</datetime></modified>
-<revised><datetime dst='true'>20130921T211858,93+02</datetime></revised>
-<lastaccessed><datetime dst='true'>20130921T211858,94+02</datetime></lastaccessed>
-<addedtofile><datetime dst='true'>20130625T224931,66+02</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
+<modified><datetime>20140225T102008,84+01</datetime></modified>
+<revised><datetime>20140225T102008,83+01</datetime></revised>
+<lastaccessed><datetime>20140225T102008,84+01</datetime></lastaccessed>
+<addedtofile><datetime>20131217T104343,88+01</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Lena Troxler/O=WGC/C=CH</name></updatedby>
 <item name='$Daos'><text>0</text></item>
 <item name='IconBitmap' summary='true'>
 <rawitemdata type='6'>

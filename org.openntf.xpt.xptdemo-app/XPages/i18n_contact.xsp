@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+
+	<xc:cc_application navigationPath="/i18n/contacts"
+		pageTitle="I18N Contacts">
+		<xp:this.facets>
+			<xp:panel xp:key="facetRight"></xp:panel>
+			<xp:panel xp:key="facetLeft">
+				<xc:cc_nav_i18n></xc:cc_nav_i18n>
+			</xp:panel>
+			<xp:panel xp:key="facetMiddle">
+				<xp:panel>
+					<xp:table>
+						<xp:tr>
+							<xp:td>
+								<xp:text escape="true"
+									id="computedField2">
+									<xp:this.value><![CDATA[#{javascript:xptI18NBean.getValue("general.SwitchLanguage")
+}]]></xp:this.value>
+								</xp:text>
+							</xp:td>
+							<xp:td>
+								<xp:comboBox id="cbSwitchLanguage"
+									defaultValue="#{javascript:xptI18NBean.getCurrentLanguage()}">
+									<xp:selectItems>
+										<xp:this.value><![CDATA[#{javascript:xptI18NBean.getAllLanguages()}]]></xp:this.value>
+									</xp:selectItems>
+									<xp:eventHandler event="onchange"
+										submit="true" refreshMode="complete">
+										<xp:this.action><![CDATA[#{javascript:var sv = getComponent("cbSwitchLanguage").getValue()
+if(sv != null && sv != "") {
+	var locSet:Locale = new Locale(sv);
+	context.setLocale(locSet);
+	context.reloadPage();
+}}]]></xp:this.action>
+									</xp:eventHandler>
+								</xp:comboBox>
+
+
+							</xp:td>
+
+						</xp:tr>
+						<xp:tr>
+							<xp:td>
+								<xp:label id="lblLastName">
+									<xp:this.value><![CDATA[#{javascript:xptI18NBean.getValue("contact.LastName")}]]></xp:this.value>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:inputText id="inputText1"
+									value="#{requestScope.lastName}">
+								</xp:inputText>
+							</xp:td>
+						</xp:tr>
+						<xp:tr>
+							<xp:td>
+								<xp:label id="lblFirstName">
+									<xp:this.value><![CDATA[#{javascript:xptI18NBean.getValue("contact.FirstName")}]]></xp:this.value>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:inputText id="inputText2"
+									value="#{requestScope.firstName}">
+								</xp:inputText>
+							</xp:td>
+						</xp:tr>
+						<xp:tr>
+							<xp:td>
+								<xp:label id="lblGender">
+									<xp:this.value><![CDATA[#{javascript:xptI18NBean.getValue("contact.Gender")}]]></xp:this.value>
+								</xp:label>
+							</xp:td>
+							<xp:td>
+								<xp:comboBox id="comboBox1"
+									value="#{requestScope.gender}">
+
+
+									<xp:selectItems>
+										<xp:this.value><![CDATA[#{javascript:xptI18NBean.getValue("general.NotAvailable") + "|na"}]]></xp:this.value>
+									</xp:selectItems>
+									<xp:selectItems>
+										<xp:this.value><![CDATA[#{javascript:xptI18NBean.getValue("keywords.Male") + "|m"
+}]]></xp:this.value>
+									</xp:selectItems>
+
+									<xp:selectItems>
+										<xp:this.value><![CDATA[#{javascript:xptI18NBean.getValue("keywords.Female") + "|f"}]]></xp:this.value>
+									</xp:selectItems>
+
+
+
+								</xp:comboBox>
+							</xp:td>
+						</xp:tr>
+					</xp:table>
+				</xp:panel>
+			</xp:panel>
+		</xp:this.facets>
+	</xc:cc_application>
+</xp:view>
