@@ -55,7 +55,7 @@ public class ObjectListDataEntry implements ViewRowData, Serializable {
 
 	@Override
 	public String getOpenPageURL(String arg0, boolean arg1) {
-		return "#";
+		return null;
 	}
 
 	@Override
