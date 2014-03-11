@@ -43,23 +43,24 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 			return;
 		}
 		ResponseWriter writer = context.getResponseWriter();
+		// Only if the control is not readOnyl
+		if (!isReadOnly(uit)) {
+			UIViewRootEx rootEx = (UIViewRootEx) context.getViewRoot();
+			DojoLibrary djLib = DojoLibraryFactory.getDefaultLibrary();
+			boolean pre17 = djLib.getVersionNumber() < 10700;
+			if (pre17) {
+				rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE_161);
+				rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET_161);
 
-		UIViewRootEx rootEx = (UIViewRootEx) context.getViewRoot();
-		DojoLibrary djLib = DojoLibraryFactory.getDefaultLibrary();
-		boolean pre17 = djLib.getVersionNumber() < 10700;
-		if (pre17) {
-			rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE_161);
-			rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET_161);
-
-		} else {
-			rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE);
-			rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET);
+			} else {
+				rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_DATASTORE);
+				rootEx.addEncodeResource(context, XPTONEUIResourceProvider.XPTONEUI_NAMEPICKER_TYPEAHED_WIDGET);
+			}
+			rootEx.setDojoParseOnLoad(true);
+			// MVSEP und MV Check
+			rootEx.addScriptOnce(buildScript(uit.buildJSFunctionName(), uit.getClientId(context), !StringUtil.isEmpty(uit.getMultipleSeparator()), uit.getMultipleSeparator()));
+			writeInputField(context, writer, uit, pre17);
 		}
-		rootEx.setDojoParseOnLoad(true);
-		// MVSEP und MV Check
-		rootEx.addScriptOnce(buildScript(uit.buildJSFunctionName(), uit.getClientId(context), !StringUtil.isEmpty(uit.getMultipleSeparator()),
-				uit.getMultipleSeparator()));
-		writeInputField(context, writer, uit, pre17);
 		super.encodeBegin(context, component);
 	}
 

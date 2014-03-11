@@ -65,12 +65,9 @@ public abstract class AbstractResourceLoader extends ResourceLoader {
 	}
 
 	public CSSResource loadCSSResource(String name, DojoLibrary dojoLibrary) {
-		System.out.println("CSS: " + name);
 		if (name.startsWith(m_ModulPath)) { // $NON-NLS-1$
 			String path = m_ResourcePath + name.substring(m_ModulPath.length() + 1); // $NON-NLS-1$
-			System.out.println(path);
 			URL u = ExtLibUtil.getResourceURL(m_Plugin.getBundle(), path);
-			System.out.println(u);
 			if (u != null) {
 				return new XPTCSSResource(dojoLibrary, name, u);
 			}
@@ -100,10 +97,8 @@ public abstract class AbstractResourceLoader extends ResourceLoader {
 	}
 
 	protected DojoResource loadDojoResource(String name, DojoLibrary dojoLibrary) {
-		System.out.println("load Name: " +name);
 		if (name.startsWith(m_Prefix)) { // $NON-NLS-1$
 			String dojoName = name.substring(m_Prefix.length());
-			System.out.println(dojoName);
 			String path = m_ResourcePath + StringUtil.replace(dojoName, '.', '/') + ".js"; // $NON-NLS-1$
 			URL u = ExtLibUtil.getResourceURL(m_Plugin.getBundle(), path);
 			if (u != null) {

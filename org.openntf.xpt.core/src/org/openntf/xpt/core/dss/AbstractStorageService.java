@@ -62,7 +62,9 @@ public abstract class AbstractStorageService<T> {
 	public T getByIdFrom(String id, Database ndbSource) {
 		try {
 			T ret = createObject();
-			DominoStorageService.getInstance().getObject(ret, id, ndbSource);
+			if (!DominoStorageService.getInstance().getObject(ret, id, ndbSource)) {
+				return null;
+			}
 			return ret;
 		} catch (Exception e) {
 			e.printStackTrace();
