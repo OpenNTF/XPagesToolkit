@@ -133,20 +133,21 @@ public class DominoStorageService {
 		return getObjectID(dsDefinition, objCurrent);
 
 	}
-	
+
 	public boolean isFieldAccessable(Object objCurrent, String strFieldName, List<String> currentRoles) throws DSSException {
 		checkDominoStoreDefinition(objCurrent);
 		Java2DominoBinder d2j = m_Saver.get(objCurrent.getClass().getCanonicalName());
 		return d2j.isFieldAccessable(strFieldName, currentRoles);
-		
+
 	}
 
 	public boolean isFieldAccessable(Object objCurrent, ChangeLogEntry cl, List<String> currentRoles) throws DSSException {
 		checkDominoStoreDefinition(objCurrent);
 		Java2DominoBinder d2j = m_Saver.get(objCurrent.getClass().getCanonicalName());
 		return d2j.isFieldAccessable(cl.getObjectField(), currentRoles, cl);
-		
+
 	}
+
 	private boolean getObjectFromDocument(DominoStore dsDefinition, Domino2JavaBinder d2j, Object objCurrent, Object pk, Database ndbTarget) {
 		try {
 			if (pk != null) {
@@ -233,26 +234,27 @@ public class DominoStorageService {
 
 	private Object getObjectID(DominoStore ds, Object obj) {
 		try {
+			String strPK = ServiceSupport.makeCamelCase(ds.PrimaryKeyField());
 			if (ds.PrimaryFieldClass().equals(String.class)) {
-				return StringBinder.getInstance().getValue(obj, ds.PrimaryKeyField());
+				return StringBinder.getInstance().getValue(obj, strPK);
 			}
 			if (ds.PrimaryFieldClass().equals(Integer.class)) {
-				return IntBinder.getInstance().getValue(obj, ds.PrimaryKeyField());
+				return IntBinder.getInstance().getValue(obj, strPK);
 			}
 			if (ds.PrimaryFieldClass().equals(Double.class)) {
-				return DoubleBinder.getInstance().getValue(obj, ds.PrimaryKeyField());
+				return DoubleBinder.getInstance().getValue(obj, strPK);
 			}
 			if (ds.PrimaryFieldClass().equals(Double[].class)) {
-				return DoubleArrayBinder.getInstance().getValue(obj, ds.PrimaryKeyField());
+				return DoubleArrayBinder.getInstance().getValue(obj, strPK);
 			}
 			if (ds.PrimaryFieldClass().equals(Double.class)) {
-				return LongBinder.getInstance().getValue(obj, ds.PrimaryKeyField());
+				return LongBinder.getInstance().getValue(obj, strPK);
 			}
 			if (ds.PrimaryFieldClass().equals(Date.class)) {
-				return DateBinder.getInstance().getValue(obj, ds.PrimaryKeyField());
+				return DateBinder.getInstance().getValue(obj, strPK);
 			}
 			if (ds.PrimaryFieldClass().equals(String[].class)) {
-				return StringArrayBinder.getInstance().getValue(obj, ds.PrimaryKeyField());
+				return StringArrayBinder.getInstance().getValue(obj, strPK);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
