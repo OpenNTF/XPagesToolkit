@@ -1,15 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257C4400357124" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="2ea" sequence="6" unid="1A2B0E70A379783CC1257C8D00270039">
-<created><datetime>20140228T080559,61+01</datetime></created>
-<modified><datetime>20140228T080747,39+01</datetime></modified>
-<revised><datetime>20140228T080747,38+01</datetime></revised>
-<lastaccessed><datetime>20140228T080747,39+01</datetime></lastaccessed>
-<addedtofile><datetime>20140228T080559,63+01</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Lena Troxler/O=WGC/C=CH</name></updatedby>
-<wassignedby><name>CN=Lena Troxler/O=WGC/C=CH</name></wassignedby>
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="40a" sequence="6" unid="62111E200F6519A7C1257C9B005E08F6">
+<created><datetime>20140314T180706,78+01</datetime></created>
+<modified><datetime>20140314T214943,22+01</datetime></modified>
+<revised><datetime>20140314T214943,21+01</datetime></revised>
+<lastaccessed><datetime>20140314T214943,22+01</datetime></lastaccessed>
+<addedtofile><datetime>20140314T180707,33+01</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
+<wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
 <item name="$Flags"><text>34567Cg~[</text></item>
 <item name="$TITLE"><text>org/openntf/xpt/demo/i18n/I18nService.java</text></item>
 <item name="$DesignerVersion"><text>8.5.3</text></item>
 
 
-<item name="$FileNames" sign="true"><text>org/openntf/xpt/demo/i18n/I18nService.java</text></item></note>
+<item name="$FileNames" sign="true"><text>org/openntf/xpt/demo/i18n/I18nService.java</text></item>
+
+
+</note>

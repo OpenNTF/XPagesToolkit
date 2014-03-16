@@ -34,6 +34,16 @@
 			<property-extension>
 			</property-extension>
 		</property>
+		<property>
+      		<property-name>sortableAttributes</property-name>
+      		<property-class>java.util.List</property-class>
+      		<property-extension>
+        		<property-item-class>string</property-item-class>
+        		<collection-property>true</collection-property>
+        		<property-add-method>addSortableAttribute</property-add-method>
+      		</property-extension>
+    	</property>
+		
 		
   		<group-type-ref>com.ibm.xsp.model.group.DataSource</group-type-ref>
     	<complex-extension>

@@ -60,6 +60,9 @@ public class ObjectListDataEntry implements ViewRowData, Serializable {
 
 	@Override
 	public Object getValue(String field) {
+		if (field == null) {
+			return null;
+		}
 		String strGetter = ServiceSupport.makeGetter(field);
 		try {
 			Method mt = m_BO.getClass().getMethod(strGetter);
@@ -77,6 +80,5 @@ public class ObjectListDataEntry implements ViewRowData, Serializable {
 	@Override
 	public void setColumnValue(String arg0, Object arg1) {
 	}
-	
 
 }
