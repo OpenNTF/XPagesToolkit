@@ -26,14 +26,19 @@ contactBean.getMyContacts()}]]></xpt:this.buildValues>
 
 
 					<xp:viewPanel id="vpAll" viewStyle="width:100%" var="contact"
-						rows="25">
+						rows="10">
 						<xp:this.facets>
-							<xp:pager partialRefresh="true" layout="Previous Group Next"
-								xp:key="headerPager" id="pager1">
+							<xp:pager partialRefresh="true"
+								layout="Previous Group Next" xp:key="headerPager" id="pager1">
 							</xp:pager>
-							<xp:pager partialRefresh="true" layout="Previous Group Next"
-								xp:key="footerPager" id="pager3">
+							<xp:pager partialRefresh="true"
+								layout="Previous Group Next" xp:key="footerPager" id="pager3">
 							</xp:pager>
+							<xp:viewTitle xp:key="viewTitle"
+								id="viewTitle1"
+								value="All Contacts (controlled by a ObjectListDataSource)"
+								panelPosition="left">
+							</xp:viewTitle>
 						</xp:this.facets>
 
 
