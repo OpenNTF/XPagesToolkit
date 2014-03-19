@@ -35,7 +35,6 @@ public class AboutPageRenderer extends FacesRenderer {
 
 	@Override
 	public void decode(FacesContext context, UIComponent component) {
-		System.out.println("DECODE");
 	}
 
 	@Override

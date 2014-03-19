@@ -1,0 +1,48 @@
+<faces-config>
+	<faces-config-extension>
+   		<namespace-uri>http://www.openntf.org/xsp/xpt</namespace-uri>
+   		<default-prefix>xpt</default-prefix>
+	</faces-config-extension>
+
+    <component>
+    	<description>I18N Client Side Variable with the values (varname.key)</description>
+    	<display-name>I18N ClientSide JS Block</display-name>
+    	<component-type>org.openntf.xpt.core.component.uii18ncsjs</component-type>
+    	<component-class>org.openntf.xpt.core.component.UII18Ncsjs</component-class>
+    	
+    	<property>
+      		<property-name>varName</property-name>
+      		<property-class>string</property-class>
+      		<display-name>varName</display-name>
+    		<description>Name for the variable with the values (varname.key)</description>
+    	</property>
+    	<property>
+      		<property-name>languageForce</property-name>
+      		<property-class>string</property-class>
+      		<display-name>languageForce</display-name>
+      		<description>Specific language to force</description>
+ 
+    	</property>
+ 
+    	<component-extension>
+      		<component-family>org.openntf.xpt.core.component.uii18ncsjs</component-family>
+      		<renderer-type>org.openntf.xpt.core.component.uii18ncsjs</renderer-type>
+      		<tag-name>i18ncsjs</tag-name>
+      		<designer-extension>
+ 				<in-palette>true</in-palette>
+        		<category>XPages Toolkit</category>
+        		<render-markup>
+        		&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+				&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+				&#xd;
+				&lt;xp:panel&gt;&#xd;
+				&lt;h3&gt;&lt;I18N Script&gt;&lt;/h3&gt;&#xd;
+				&lt;p&gt;&lt;%=this.text %&gt;&lt;/p&gt;&#xd;
+				&lt;/xp:panel&gt;&#xd;
+				&lt;/xp:view&gt;&#xd;
+				</render-markup>
+      		</designer-extension>
+    	</component-extension>
+	</component>
+
+</faces-config>

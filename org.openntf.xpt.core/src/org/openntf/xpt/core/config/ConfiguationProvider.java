@@ -58,6 +58,7 @@ public class ConfiguationProvider {
 		m_FacesConfig = new ArrayList<String>();
 		m_CommandProvider = new ArrayList<CommandProvider>();
 		m_FacesConfig.add("org/openntf/xpt/core/config/xpt-core-faces-config.xml");
+		m_XspConfig.add("org/openntf/xpt/core/config/xpt-i18n.xsp-config");
 		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(EXT_POINT_ID);
 		try {
 			for (IConfigurationElement e : config) {

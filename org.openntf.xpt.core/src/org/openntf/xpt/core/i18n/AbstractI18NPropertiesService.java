@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.openntf.xpt.core.beans.XPTI18NBean;
 
@@ -68,7 +69,11 @@ public abstract class AbstractI18NPropertiesService implements II18NService {
 		}
 		return propValues.get(strKey);
 	}
-	
+
+	@Override
+	public Set<String> getKeys() {
+		return m_LangContainer == null? null:m_LangContainer.keySet();
+	}
 	private Properties getPropertiesFromFile(String fileName) {
 		Properties prop = new Properties();
 
@@ -85,5 +90,6 @@ public abstract class AbstractI18NPropertiesService implements II18NService {
 			return null;
 		}
 	}
+	
 
 }
