@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xe="http://www.ibm.com/xsp/coreex">
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core"
+	xmlns:xe="http://www.ibm.com/xsp/coreex"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
 
 	<xe:applicationLayout id="applicationLayout1">
 		<xp:callback facetName="facetMiddle" id="facetMiddle"></xp:callback>
@@ -7,7 +9,8 @@
 			<xp:callback facetName="facetRight" id="facetRight"
 				xp:key="RightColumn">
 			</xp:callback>
-			<xp:callback facetName="facetLeft" id="facetLeft" xp:key="LeftColumn">
+			<xp:callback facetName="facetLeft" id="facetLeft"
+				xp:key="LeftColumn">
 			</xp:callback>
 		</xe:this.facets>
 		<xe:this.configuration>
@@ -125,13 +128,13 @@ return true;}]]></xe:this.rendered>
 			</xe:oneuiApplication>
 		</xe:this.configuration>
 		<xp:eventHandler event="onItemClick" submit="true"
-				refreshMode="complete" disableValidators="true">
-				<xp:this.action><![CDATA[#{javascript:var sv = context.getSubmittedValue();
+			refreshMode="complete" disableValidators="true">
+			<xp:this.action><![CDATA[#{javascript:var sv = context.getSubmittedValue();
 if(sv != null && sv != "") {
 	var locSet:Locale = new Locale(sv);
 	context.setLocale(locSet);
 	context.reloadPage();
 }}]]></xp:this.action>
-			</xp:eventHandler>
+		</xp:eventHandler>
 	</xe:applicationLayout>
-</xp:view>
+	<xpt:i18ncsjs id="i18ncsjs1" varName="langAll"></xpt:i18ncsjs></xp:view>

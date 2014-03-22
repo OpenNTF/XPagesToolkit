@@ -2,6 +2,8 @@
 <xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom"
 	xmlns:xpt="http://www.openntf.org/xsp/xpt">
 
+	
+	
 	<xc:cc_application navigationPath="/i18n/contacts"
 		pageTitle="I18N Contacts">
 		<xp:this.facets>
@@ -95,7 +97,36 @@ if(sv != null && sv != "") {
 						</xp:tr>
 					</xp:table>
 				</xp:panel>
+				<xp:panel>
+				<xp:br></xp:br>
+				<xp:br></xp:br>
+				<strong>The following object is available for clientside javascript:</strong>
+				<xp:br></xp:br>
+				<xp:br></xp:br>
+				<em>(Be aware! Any "." in the key is replace with a "_" to better support the JSON notation)</em>
+				<xp:br></xp:br>
+				<xp:br></xp:br>
+				var langAll = 
+				<xp:panel id="panLanguageValue"></xp:panel>
+				<xp:br></xp:br>
+				<xp:br></xp:br>
+				Show value of 'general.SwitchLanguage' ->
+				<xp:button id="btLangAlert"
+					value="alert (langAll.general_SwitchLanguage)">
+
+				<xp:eventHandler event="onclick" submit="false">
+					<xp:this.script><![CDATA[alert(langAll.general_SwitchLanguage);]]></xp:this.script>
+				</xp:eventHandler></xp:button>
+				<xp:scriptBlock id="scriptBlock1">
+					<xp:this.value><![CDATA[XSP.addOnLoad(function() {
+	var divID = '#{id:panLanguageValue}';
+	var element = XSP.getElementById(divID);
+	element.innerHTML = dojo.toJson(langAll);
+})]]></xp:this.value>
+				</xp:scriptBlock>
+				
+				</xp:panel>
 			</xp:panel>
 		</xp:this.facets>
 	</xc:cc_application>
-</xp:view>
+	</xp:view>

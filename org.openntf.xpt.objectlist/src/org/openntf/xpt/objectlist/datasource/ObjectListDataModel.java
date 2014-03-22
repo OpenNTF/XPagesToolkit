@@ -140,4 +140,17 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 	public int resetResortState(String arg0) {
 		return RESORT_NONE;
 	}
+
+	@Override
+	public int getResortState(String columnName) {
+		if (!columnName.equals(m_Container.getCurrentSortAttribute())) {
+			return RESORT_NONE;
+		}
+		if (getResortType(columnName) == RESORT_BOTH) {
+			return m_Container.getCurrentAscending() ? RESORT_ASCENDING : RESORT_DESCENDING;
+		} else {
+			return !m_Container.getCurrentAscending() ? RESORT_ASCENDING : RESORT_DESCENDING;
+
+		}
+	}
 }

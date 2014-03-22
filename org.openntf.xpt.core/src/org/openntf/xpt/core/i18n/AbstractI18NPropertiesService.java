@@ -15,7 +15,6 @@
  */
 package org.openntf.xpt.core.i18n;
 
-
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -31,57 +30,57 @@ import com.ibm.xsp.context.FacesContextEx;
 public abstract class AbstractI18NPropertiesService implements II18NService {
 	public abstract List<String> getPropertyFileNames();
 
-	private HashMap<String, HashMap<String,String>> m_LangContainer = new HashMap<String, HashMap<String,String>>();
+	private HashMap<String, HashMap<String, String>> m_LangContainer = new HashMap<String, HashMap<String, String>>();
 
 	private static final String PROPERTIES = ".properties";
-	
+
 	public String getValue(String strKey, String strLanguage) {
+		checkLanguage(strLanguage);
 
-		HashMap<String, String> propValues = new HashMap<String, String>();
-	
-		if (!m_LangContainer.containsKey(strLanguage)) {
-			
-				 for(String strFile : getPropertyFileNames()){
-					 String strPropFileName =  "";
-					 if (strLanguage.equals(XPTI18NBean.get().getDefaultLanguage())) {
-						 strPropFileName = strFile +  PROPERTIES;
-						} else {
-							strPropFileName = strFile +  "_" + strLanguage + PROPERTIES;
-						}
-						Properties prop = null;
-					 	prop = getPropertiesFromFile(strPropFileName);
-						if (prop != null) {
-							for(String key : prop.stringPropertyNames()){
-								propValues.put(strFile + "." + key, prop.getProperty(key));
-							}
-						}
-				 
-				 
-				m_LangContainer.put(strLanguage, propValues);
-			}
-			
-			
-		}
-
-		propValues = m_LangContainer.get(strLanguage);
-		if (propValues == null) {
-			///Shouldnt be!
+		HashMap<String, String> propValues = m_LangContainer.get(strLanguage);
+		if (propValues == null || !propValues.containsKey(strKey)) {
+			return "";
 		}
 		return propValues.get(strKey);
 	}
 
+	private void checkLanguage(String strLanguage) {
+		HashMap<String, String> propValues = new HashMap<String, String>();
+		if (!m_LangContainer.containsKey(strLanguage)) {
+
+			for (String strFile : getPropertyFileNames()) {
+				String strPropFileName = "";
+				if (strLanguage.equals(XPTI18NBean.get().getDefaultLanguage())) {
+					strPropFileName = strFile + PROPERTIES;
+				} else {
+					strPropFileName = strFile + "_" + strLanguage + PROPERTIES;
+				}
+				Properties prop = null;
+				prop = getPropertiesFromFile(strPropFileName);
+				if (prop != null) {
+					for (String key : prop.stringPropertyNames()) {
+						propValues.put(strFile + "." + key, prop.getProperty(key));
+					}
+				}
+				m_LangContainer.put(strLanguage, propValues);
+			}
+
+		}
+	}
+
 	@Override
 	public Set<String> getKeys(String strLanguage) {
-		return !m_LangContainer.containsKey(strLanguage) ? null:m_LangContainer.get(strLanguage).keySet();
+		checkLanguage(strLanguage);
+		return !m_LangContainer.containsKey(strLanguage) ? null : m_LangContainer.get(strLanguage).keySet();
 	}
+
 	private Properties getPropertiesFromFile(String fileName) {
 		Properties prop = new Properties();
 
 		try {
 
 			InputStream is = FacesContextEx.getCurrentInstance().getExternalContext().getResourceAsStream(fileName);
-			BufferedReader r = new BufferedReader(
-		                new InputStreamReader(is, "UTF-8"));
+			BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
 			prop.load(r);
 			return prop;
 
@@ -90,6 +89,5 @@ public abstract class AbstractI18NPropertiesService implements II18NService {
 			return null;
 		}
 	}
-	
 
 }
