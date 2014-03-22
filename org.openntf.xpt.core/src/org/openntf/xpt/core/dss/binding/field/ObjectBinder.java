@@ -161,6 +161,7 @@ public class ObjectBinder implements IBinder<Object> {
 				}
 
 			});
+			finOIS.close();
 			result = restored;
 
 			entity.recycle();

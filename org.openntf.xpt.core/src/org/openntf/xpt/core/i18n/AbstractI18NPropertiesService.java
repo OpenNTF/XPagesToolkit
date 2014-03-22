@@ -71,8 +71,8 @@ public abstract class AbstractI18NPropertiesService implements II18NService {
 	}
 
 	@Override
-	public Set<String> getKeys() {
-		return m_LangContainer == null? null:m_LangContainer.keySet();
+	public Set<String> getKeys(String strLanguage) {
+		return !m_LangContainer.containsKey(strLanguage) ? null:m_LangContainer.get(strLanguage).keySet();
 	}
 	private Properties getPropertiesFromFile(String fileName) {
 		Properties prop = new Properties();

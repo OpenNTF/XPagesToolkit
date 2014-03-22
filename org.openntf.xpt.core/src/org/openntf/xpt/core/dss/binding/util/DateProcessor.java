@@ -17,13 +17,12 @@ package org.openntf.xpt.core.dss.binding.util;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Vector;
-
-import org.openntf.xpt.core.dss.binding.Definition;
 
 import lotus.domino.Document;
 import lotus.domino.Session;
+
+import org.openntf.xpt.core.dss.binding.Definition;
 
 public class DateProcessor {
 	private static DateProcessor instance = null;

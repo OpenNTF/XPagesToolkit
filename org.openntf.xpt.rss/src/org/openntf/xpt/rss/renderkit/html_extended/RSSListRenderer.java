@@ -37,7 +37,7 @@ public class RSSListRenderer extends FacesRenderer {
 
 		// Compose the url
 		String url = rssList.getUrl(context);
-		url = url.replaceAll("\\\\", "/");
+		url = url.replace("\\", "/");
 
 		String strHTMLTemplate = rssList.getHtmlTemplate();
 		String strFeeedURL = rssList.getFeedURL();

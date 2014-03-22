@@ -295,6 +295,6 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		if (StringUtil.isEmpty(strPattern)) {
 			return null;
 		}
-		return strPattern.replaceAll("###VALUE###", strSearch);
+		return strPattern.replace("###VALUE###", strSearch);
 	}
 }

@@ -50,7 +50,7 @@ public class AgentListRenderer extends Renderer {
 			String strClientID = agl.getClientId(context);
 
 			String url = agl.getUrl(context);
-			url = url.replaceAll("\\\\", "/");
+			url = url.replace("\\", "/");
 			UIViewRootEx rootEx = (UIViewRootEx) context.getViewRoot();
 			rootEx.addEncodeResource(context, XPTAgentResourceProvider.XPTAGENTS_AGENTLIST_CONTROLLER);
 			rootEx.addEncodeResource(context, XPTAgentResourceProvider.XPTAGENTS_AGENTLIST_CSS);

@@ -37,7 +37,7 @@
 				&#xd;
 				&lt;xp:panel&gt;&#xd;
 				&lt;h3&gt;&lt;I18N Script&gt;&lt;/h3&gt;&#xd;
-				&lt;p&gt;&lt;%=this.text %&gt;&lt;/p&gt;&#xd;
+				&lt;p&gt;&lt;%=this.varName % = {key:value}&gt;&lt;/p&gt;&#xd;
 				&lt;/xp:panel&gt;&#xd;
 				&lt;/xp:view&gt;&#xd;
 				</render-markup>

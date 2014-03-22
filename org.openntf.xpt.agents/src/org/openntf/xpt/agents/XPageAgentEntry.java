@@ -82,7 +82,7 @@ public class XPageAgentEntry implements Serializable {
 
 	public void setAlias(String alias) {
 		if (alias.contains(" ")) {
-			alias = alias.replaceAll(" ", "");
+			alias = alias.replace(" ", "");
 		}
 		m_Alias = alias;
 	}

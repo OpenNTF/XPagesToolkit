@@ -79,20 +79,21 @@ public class XPTI18NBean {
 	public String getJSRepresentation(String varName, String languageForce) {
 		II18NService service = I18NServiceProvider.getInstance().getI18NProvider();
 		if (service == null) {
-			return "";
+			return "{}";
 		}
-		Set<String> keys = service.getKeys();
+		String strLanguage = StringUtil.isEmpty(languageForce) ? getCurrentLanguage() : languageForce;
+		Set<String> keys = service.getKeys(strLanguage);
 		if (keys == null) {
-			return null;
+			return "{}";
 		}
-		String strLanguage = StringUtil.isEmpty(languageForce) ? getDefaultLanguage() : languageForce;
 		StringWriter strWriter = new StringWriter();
 		try {
 			JsonWriter jsWriter = new JsonWriter(strWriter, true);
 			jsWriter.startObject();
 			for (String strKey : keys) {
-				jsWriter.startProperty(strKey);
-				jsWriter.outStringLiteral(service.getValue(strKey, strLanguage));
+				String strValue = service.getValue(strKey, strLanguage);
+				jsWriter.startProperty(strKey.replace(".", "_"));
+				jsWriter.outStringLiteral(strValue!=null ?strValue : "");
 				jsWriter.endProperty();
 			}
 			jsWriter.endObject();

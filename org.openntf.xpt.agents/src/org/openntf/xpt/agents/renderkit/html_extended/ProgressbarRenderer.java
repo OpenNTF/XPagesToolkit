@@ -78,7 +78,7 @@ public class ProgressbarRenderer extends FacesRenderer {
 
 		// Compose the url
 		String url = pgBar.getUrl(context);
-		url = url.replaceAll("\\\\", "/");
+		url = url.replaceAll("\\", "/");
 
 		// Get the service name
 		String serviceName = pgBar.getServiceName();

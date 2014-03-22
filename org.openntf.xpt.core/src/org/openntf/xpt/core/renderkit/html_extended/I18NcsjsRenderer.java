@@ -30,6 +30,7 @@ public class I18NcsjsRenderer extends FacesRenderer {
 		}
 
 		String strJS = XPTI18NBean.get(context).getJSRepresentation(uics.getVarName(), uics.getLanguageForce());
+		System.out.println(strJS);
 		UIScriptCollector uic = UIScriptCollector.find();
 		uic.addScript(strJS);
 
