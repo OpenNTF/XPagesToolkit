@@ -39,8 +39,8 @@ public class BooleanBinder extends BaseBooleanBinder implements IBinder<Boolean>
 	public Boolean[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Boolean[] blRC = new Boolean[2];
 		try {
-			boolean blValue = getValue(objCurrent, def.getJavaField()).booleanValue();
-			boolean blOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
+			Boolean blValue = getValue(objCurrent, def.getJavaField()).booleanValue();
+			Boolean blOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
 			blRC[0] = blOldValue;
 			blRC[1] = blValue;
 			if (blValue) {

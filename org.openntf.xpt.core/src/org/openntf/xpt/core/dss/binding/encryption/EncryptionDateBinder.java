@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Vector;
 
 import lotus.domino.Document;
@@ -28,6 +29,7 @@ import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.IEncryptionBinder;
+import org.openntf.xpt.core.dss.binding.util.BaseEncryptionBinderSupport;
 import org.openntf.xpt.core.dss.binding.util.DateProcessor;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
@@ -44,10 +46,11 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 		}
 		return m_Binder;
 	}
+	
 
 	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			if (hasAccess(def, docCurrent.getParentDatabase())) {
+			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase())) {
 				Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), Date.class);
 				Date dtCurrent = getValueFromStore(docCurrent, vecCurrent, def);
 				if (dtCurrent != null) {
@@ -62,7 +65,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Date[] dtRC = new Date[2];
 		try {
-			if (hasAccess(def, docCurrent.getParentDatabase())) {
+			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase())) {
 				Date dtCurrent = getValue(objCurrent, def.getJavaField());
 				Date dtOld = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
 
@@ -95,7 +98,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 	@Override
 	public Date getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) throws DSSException {
 		try {
-			if (hasAccess(def, docCurrent.getParentDatabase()) && !vecCurrent.isEmpty()) {
+			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase()) && !vecCurrent.isEmpty()) {
 				String encDate;
 				String decDate;
 
@@ -137,6 +140,11 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 			i++;
 		}
 		return strRC;
+	}
+
+	@Override
+	public boolean hasAccess(Definition def, List<String> arrRoles) {
+		return BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, arrRoles);
 	}
 
 }

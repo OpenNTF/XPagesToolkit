@@ -16,6 +16,7 @@
 package org.openntf.xpt.core.dss.binding.encryption;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Vector;
 
 import lotus.domino.Document;
@@ -25,6 +26,7 @@ import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.IEncryptionBinder;
+import org.openntf.xpt.core.dss.binding.util.BaseEncryptionBinderSupport;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
@@ -45,7 +47,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
 
-			if (hasAccess(def, docCurrent.getParentDatabase())) {
+			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase())) {
 
 				Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), String.class);
 				mt.invoke(objCurrent, getValueFromStore(docCurrent, vecCurrent, def));
@@ -59,7 +61,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 	public String[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		String[] arrRC = new String[2];
 		try {
-			if (hasAccess(def, docCurrent.getParentDatabase())) {
+			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase())) {
 				String strOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
 				if (strOldValue == null) {
 					return null;
@@ -87,7 +89,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 	@Override
 	public String getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) throws DSSException {
 		try {
-			if (hasAccess(def, docCurrent.getParentDatabase()) && !vecCurrent.isEmpty()) {
+			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase()) && !vecCurrent.isEmpty()) {
 				String strValue = (String) vecCurrent.get(0);
 				String decryptedValue = EncryptionService.getInstance().decrypt(strValue);
 				if (decryptedValue == null) {
@@ -120,4 +122,10 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 		}
 		return strRC;
 	}
+	
+	@Override
+	public boolean hasAccess(Definition def, List<String> arrRoles) {
+		return BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, arrRoles);
+	}
+
 }

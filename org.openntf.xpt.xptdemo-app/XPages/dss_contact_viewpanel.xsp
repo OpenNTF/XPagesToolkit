@@ -54,7 +54,7 @@ contactBean.getAllContacts()}]]></xpt:this.buildValues>
 								<xpt:this.sortableAttributes>
 									<xp:value>firstName</xp:value>
 									<xp:value>lastName|DOWN</xp:value>
-									<xp:value>city</xp:value>
+									<xp:value>city|UP</xp:value>
 								</xpt:this.sortableAttributes>
 							</xpt:objectlistSource>
 						</xp:this.data>

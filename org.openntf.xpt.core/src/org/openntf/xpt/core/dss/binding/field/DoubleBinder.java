@@ -42,8 +42,8 @@ public class DoubleBinder extends BaseDoubleBinder implements IBinder<Double> {
 	public Double[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Double[] dblRC = new Double[2];
 		try {
-			double nOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
-			double nValue = getValue(objCurrent, def.getJavaField()).doubleValue();
+			Double nOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
+			Double nValue = getValue(objCurrent, def.getJavaField());
 			dblRC[0] = nOldValue;
 			dblRC[1] = nValue;
 			docCurrent.replaceItemValue(def.getNotesField(), nValue);

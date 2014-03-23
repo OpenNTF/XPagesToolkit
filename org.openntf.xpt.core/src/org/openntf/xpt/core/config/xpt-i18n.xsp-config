@@ -31,17 +31,13 @@
       		<designer-extension>
  				<in-palette>true</in-palette>
         		<category>XPages Toolkit</category>
-        		<render-markup>
-        		&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
-				&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
-				&#xd;
-				&lt;xp:panel&gt;&#xd;
-				&lt;h3&gt;&lt;I18N Script&gt;&lt;/h3&gt;&#xd;
-				&lt;p&gt;&lt;%=this.varName%&gt; = {key:value} &lt;/p&gt;&#xd;
-				&lt;/xp:panel&gt;&#xd;
-				&lt;/xp:view&gt;&#xd;
-				</render-markup>
-      		</designer-extension>
+        		<render-markup>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+					&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+					&lt;xp:panel&gt;&#xd;
+					&amp;lt;script&amp;gt;var &lt;%=this.varName%&gt; = {key:value, key2:value2}&amp;lt;/script&amp;gt;&#xd;
+					&lt;/xp:panel&gt;&lt;/xp:view&gt;
+				</render-markup>      		
+			</designer-extension>
     	</component-extension>
 	</component>
 

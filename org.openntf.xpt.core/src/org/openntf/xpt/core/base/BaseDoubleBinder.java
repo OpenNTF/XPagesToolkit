@@ -17,7 +17,7 @@ package org.openntf.xpt.core.base;
 
 import java.lang.reflect.Method;
 
-public class BaseDoubleBinder extends BaseEncryptionBinder{
+public class BaseDoubleBinder {
 
 	public BaseDoubleBinder() {
 		super();

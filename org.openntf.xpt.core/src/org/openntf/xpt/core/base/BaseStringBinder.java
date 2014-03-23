@@ -17,7 +17,7 @@ package org.openntf.xpt.core.base;
 
 import java.lang.reflect.Method;
 
-public class BaseStringBinder extends BaseEncryptionBinder {
+public class BaseStringBinder {
 
 	public BaseStringBinder() {
 		super();
@@ -26,8 +26,8 @@ public class BaseStringBinder extends BaseEncryptionBinder {
 	public String getValue(Object objCurrent, String strJavaField) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("get" + strJavaField);
-			String strValue = (String)mt.invoke(objCurrent);
-			return  strValue == null ? "":strValue;
+			String strValue = (String) mt.invoke(objCurrent);
+			return strValue == null ? "" : strValue;
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

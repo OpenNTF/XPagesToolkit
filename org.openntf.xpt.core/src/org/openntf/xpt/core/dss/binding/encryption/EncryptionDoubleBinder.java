@@ -16,6 +16,7 @@
 package org.openntf.xpt.core.dss.binding.encryption;
 
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.Vector;
 
 import lotus.domino.Document;
@@ -25,6 +26,7 @@ import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.IEncryptionBinder;
+import org.openntf.xpt.core.dss.binding.util.BaseEncryptionBinderSupport;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
 public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<Double>, IEncryptionBinder {
@@ -43,7 +45,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 
 	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
-			if (hasAccess(def, docCurrent.getParentDatabase())) {
+			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase())) {
 				Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), Double.TYPE);
 				Double dblVal = getValueFromStore(docCurrent, vecCurrent, def);
 				if (dblVal != null) {
@@ -57,7 +59,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 	public Double[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Double[] dblRC = new Double[2];
 		try {
-			if (hasAccess(def, docCurrent.getParentDatabase())) {
+			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase())) {
 				Double nOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
 				double nValue = getValue(objCurrent, def.getNotesField()).doubleValue();
 				// String encryptedOldValue =
@@ -80,7 +82,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 	@Override
 	public Double getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) throws DSSException {
 		try {
-			if (hasAccess(def, docCurrent.getParentDatabase()) && vecCurrent.isEmpty()) {
+			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase()) && vecCurrent.isEmpty()) {
 				String strDblValue = (String) vecCurrent.get(0);
 				String strDblValueDec = EncryptionService.getInstance().decrypt(strDblValue);
 				if (strDblValueDec == null) {
@@ -115,6 +117,10 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 
 		}
 		return strRC;
+	}
+	@Override
+	public boolean hasAccess(Definition def, List<String> arrRoles) {
+		return BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, arrRoles);
 	}
 
 }

@@ -42,8 +42,8 @@ public class IntBinder extends BaseIntegerBinder implements IBinder<Integer> {
 	public Integer[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Integer[] nRC = new Integer[2];
 		try {
-			int nValueOld = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
-			int nValue = getValue(objCurrent, def.getJavaField()).intValue();
+			Integer nValueOld = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
+			Integer nValue = getValue(objCurrent, def.getJavaField());
 			nRC[0] = nValueOld;
 			nRC[1] = nValue;
 			docCurrent.replaceItemValue(def.getNotesField(), nValue);

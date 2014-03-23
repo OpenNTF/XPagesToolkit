@@ -41,8 +41,8 @@ public class LongBinder implements IBinder<Long> {
 	public Long[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Long[] lngRC = new Long[2];
 		try {
-			long nOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
-			long nValue = getValue(objCurrent, def.getJavaField()).longValue();
+			Long nOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
+			Long nValue = getValue(objCurrent, def.getJavaField());
 			lngRC[0] = nOldValue;
 			lngRC[1] = nValue;
 			docCurrent.replaceItemValue(def.getNotesField(), nValue);
