@@ -76,6 +76,10 @@ public class XPTI18NBean {
 
 	}
 
+	public List<String> getKeys() {
+		return I18NServiceProvider.getInstance().getKeys();
+	}
+
 	public String getJSRepresentation(String varName, String languageForce) {
 		II18NService service = I18NServiceProvider.getInstance().getI18NProvider();
 		if (service == null) {
@@ -93,7 +97,7 @@ public class XPTI18NBean {
 			for (String strKey : keys) {
 				String strValue = service.getValue(strKey, strLanguage);
 				jsWriter.startProperty(strKey.replace(".", "_"));
-				jsWriter.outStringLiteral(strValue!=null ?strValue : "");
+				jsWriter.outStringLiteral(strValue != null ? strValue : "");
 				jsWriter.endProperty();
 			}
 			jsWriter.endObject();
