@@ -18,6 +18,7 @@ package org.openntf.xpt.core.i18n;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.ibm.designer.runtime.Application;
@@ -116,7 +117,9 @@ public class I18NServiceProvider {
 
 	public List<String> getKeys() {
 		II18NService i18nProv = getI18NProvider();
-		return new ArrayList<String>(i18nProv.getKeys(i18nProv.getDefaultLanguage()));
+		List<String> lstKeys = new ArrayList<String>(i18nProv.getKeys(i18nProv.getDefaultLanguage()));
+		Collections.sort(lstKeys);
+		return lstKeys;
 	}
 	/*
 	 * private List<String> getPropertyFileNames(){ return null; }

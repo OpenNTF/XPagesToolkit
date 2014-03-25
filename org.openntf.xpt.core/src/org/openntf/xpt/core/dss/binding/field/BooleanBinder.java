@@ -23,6 +23,7 @@ import lotus.domino.Document;
 import org.openntf.xpt.core.base.BaseBooleanBinder;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class BooleanBinder extends BaseBooleanBinder implements IBinder<Boolean> {
 
@@ -33,6 +34,7 @@ public class BooleanBinder extends BaseBooleanBinder implements IBinder<Boolean>
 			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), Boolean.TYPE);
 			mt.invoke(objCurrent, getValueFromStore(docCurrent, vecValues, def));
 		} catch (Exception e) {
+			LoggerFactory.logWarning(getClass(), "Error during processDomino2Java", e);
 		}
 	}
 
@@ -49,6 +51,7 @@ public class BooleanBinder extends BaseBooleanBinder implements IBinder<Boolean>
 				docCurrent.replaceItemValue(def.getNotesField(), "");
 			}
 		} catch (Exception e) {
+			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
 		return blRC;
 

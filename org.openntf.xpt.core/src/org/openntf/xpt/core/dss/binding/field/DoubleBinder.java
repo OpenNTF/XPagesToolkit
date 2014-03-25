@@ -23,6 +23,7 @@ import lotus.domino.Document;
 import org.openntf.xpt.core.base.BaseDoubleBinder;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class DoubleBinder extends BaseDoubleBinder implements IBinder<Double> {
 
@@ -36,6 +37,7 @@ public class DoubleBinder extends BaseDoubleBinder implements IBinder<Double> {
 				mt.invoke(objCurrent, dblVal.doubleValue());
 			}
 		} catch (Exception e) {
+			LoggerFactory.logWarning(getClass(), "Error during processDomino2Java", e);
 		}
 	}
 
@@ -48,6 +50,7 @@ public class DoubleBinder extends BaseDoubleBinder implements IBinder<Double> {
 			dblRC[1] = nValue;
 			docCurrent.replaceItemValue(def.getNotesField(), nValue);
 		} catch (Exception e) {
+			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
 		return dblRC;
 	}

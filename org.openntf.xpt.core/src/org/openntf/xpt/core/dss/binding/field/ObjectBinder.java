@@ -36,6 +36,7 @@ import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.XPTObjectInputStream;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class ObjectBinder implements IBinder<Object> {
 
@@ -48,7 +49,7 @@ public class ObjectBinder implements IBinder<Object> {
 			mt.invoke(objCurrent, getRawValueFromStore(docCurrent, def.getNotesField()));
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during processDomino2Java", e);
 		}
 	}
 
@@ -95,7 +96,7 @@ public class ObjectBinder implements IBinder<Object> {
 			session.setConvertMime(convertMime);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
 		return objRC;
 

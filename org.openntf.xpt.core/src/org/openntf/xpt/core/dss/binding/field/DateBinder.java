@@ -28,6 +28,7 @@ import org.openntf.xpt.core.base.BaseDateBinder;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.DateProcessor;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 
@@ -42,7 +43,7 @@ public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during processDomino2Java", e);
 		}
 	}
 
@@ -65,7 +66,7 @@ public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 				docCurrent.removeItem(def.getNotesField());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
 		return dtRC;
 

@@ -26,6 +26,7 @@ import lotus.domino.Item;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.commons.util.profiler.Profiler;
 import com.ibm.commons.util.profiler.ProfilerAggregator;
@@ -55,7 +56,7 @@ public class ListStringBinder implements IBinder<List<String>> {
 				mt.invoke(objCurrent, lstValues);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during processDomino2Java", e);
 		}
 	}
 
@@ -88,7 +89,7 @@ public class ListStringBinder implements IBinder<List<String>> {
 			}
 			docCurrent.replaceItemValue(def.getNotesField(), vValues);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
 		return lstRC;
 	}

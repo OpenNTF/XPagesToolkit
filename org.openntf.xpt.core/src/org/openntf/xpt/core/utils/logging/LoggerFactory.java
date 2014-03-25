@@ -48,9 +48,9 @@ public class LoggerFactory {
 					strDB = NotesContext.getCurrent().getCurrentDatabase().getFilePath();
 				}
 			} catch (Exception e) {
-				//System.out.println("Context has no Database... :"+e.getMessage());
+				// System.out.println("Context has no Database... :"+e.getMessage());
 			}
-			Logger logRC = null; 
+			Logger logRC = null;
 			if (m_RegistredLoggers.containsKey(strDB + strName)) {
 				logRC = m_RegistredLoggers.get(strDB + strName);
 				if (!strDB.equals(XPT_CORE_LOGGER)) {
@@ -173,4 +173,39 @@ public class LoggerFactory {
 		}
 		return nRC;
 	}
+
+	public static void logFinest(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.FINEST, clCurrent, strMessage, thr);
+	}
+
+	public static void logFiner(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.FINER, clCurrent, strMessage, thr);
+	}
+
+	public static void logFine(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.FINE, clCurrent, strMessage, thr);
+	}
+
+	public static void logInfo(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.INFO, clCurrent, strMessage, thr);
+	}
+
+	public static void logWarning(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.WARNING, clCurrent, strMessage, thr);
+	}
+
+	public static void logError(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.SEVERE, clCurrent, strMessage, thr);
+
+	}
+
+	public static void log(Level level, Class<?> clCurrent, String strMessage, Throwable thr) {
+		Logger log = getLogger(clCurrent.getCanonicalName());
+		if (thr == null) {
+			log.log(level, strMessage);
+		} else {
+			log.log(level, strMessage, thr);
+		}
+	}
+
 }

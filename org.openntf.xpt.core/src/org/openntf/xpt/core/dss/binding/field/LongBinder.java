@@ -22,6 +22,7 @@ import lotus.domino.Document;
 
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class LongBinder implements IBinder<Long> {
 
@@ -35,6 +36,7 @@ public class LongBinder implements IBinder<Long> {
 				mt.invoke(objCurrent, nValue.longValue());
 			}
 		} catch (Exception e) {
+			LoggerFactory.logWarning(getClass(), "Error during processDomino2Java", e);
 		}
 	}
 
@@ -47,6 +49,7 @@ public class LongBinder implements IBinder<Long> {
 			lngRC[1] = nValue;
 			docCurrent.replaceItemValue(def.getNotesField(), nValue);
 		} catch (Exception e) {
+			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
 		return lngRC;
 

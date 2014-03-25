@@ -25,6 +25,7 @@ import org.openntf.xpt.core.base.BaseStringBinder;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class StringBinder extends BaseStringBinder implements IBinder<String> {
 
@@ -39,7 +40,7 @@ public class StringBinder extends BaseStringBinder implements IBinder<String> {
 				mt.invoke(objCurrent, strValue);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during processDomino2Java", e);
 		}
 	}
 
@@ -61,7 +62,7 @@ public class StringBinder extends BaseStringBinder implements IBinder<String> {
 			docCurrent.replaceItemValue(def.getNotesField(), strValue);
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
 		return arrRC;
 	}

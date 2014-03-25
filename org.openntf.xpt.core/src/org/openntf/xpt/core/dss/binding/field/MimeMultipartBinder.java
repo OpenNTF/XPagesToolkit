@@ -26,6 +26,7 @@ import lotus.domino.Stream;
 import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.xsp.http.MimeMultipart;
 import com.ibm.xsp.model.domino.wrapped.DominoDocument;
@@ -40,7 +41,7 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), MimeMultipart.class);
 			mt.invoke(objCurrent, getRawValueFromStore(docCurrent, def.getNotesField()));
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during processDomino2Java", e);
 		}
 	}
 
@@ -67,7 +68,7 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 			stream.close();
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
 		return mpRC;
 

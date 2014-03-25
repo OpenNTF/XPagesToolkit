@@ -25,12 +25,16 @@ import org.openntf.xpt.core.dss.binding.encryption.EncryptionDateBinder;
 import org.openntf.xpt.core.dss.binding.encryption.EncryptionDoubleBinder;
 import org.openntf.xpt.core.dss.binding.encryption.EncryptionStringBinder;
 import org.openntf.xpt.core.dss.binding.field.BooleanBinder;
+import org.openntf.xpt.core.dss.binding.field.BooleanClassBinder;
 import org.openntf.xpt.core.dss.binding.field.DateBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleArrayBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleBinder;
+import org.openntf.xpt.core.dss.binding.field.DoubleClassBinder;
 import org.openntf.xpt.core.dss.binding.field.IntBinder;
+import org.openntf.xpt.core.dss.binding.field.IntClassBinder;
 import org.openntf.xpt.core.dss.binding.field.ListStringBinder;
 import org.openntf.xpt.core.dss.binding.field.LongBinder;
+import org.openntf.xpt.core.dss.binding.field.LongClassBinder;
 import org.openntf.xpt.core.dss.binding.field.MimeMultipartBinder;
 import org.openntf.xpt.core.dss.binding.field.ObjectBinder;
 import org.openntf.xpt.core.dss.binding.field.StringArrayBinder;
@@ -48,23 +52,34 @@ import com.ibm.xsp.http.MimeMultipart;
 public class BinderFactory {
 
 	public static IBinder<?> getBinder(Class<?> clCurrent, Type gtCurrent) {
-		// System.out.println(clCurrent);
-		if (clCurrent.equals(Boolean.class) || clCurrent.equals(Boolean.TYPE)) {
+		if (clCurrent.equals(Boolean.class)) {
+			return BooleanClassBinder.getInstance();
+		}
+		if (clCurrent.equals(Boolean.TYPE)) {
 			return BooleanBinder.getInstance();
 		}
 		if (clCurrent.equals(String.class)) {
 			return StringBinder.getInstance();
 		}
-		if (clCurrent.equals(Integer.class) || clCurrent.equals(Integer.TYPE)) {
+		if (clCurrent.equals(Integer.class) ) {
+			return IntClassBinder.getInstance();
+		}
+		if (clCurrent.equals(Integer.TYPE)) {
 			return IntBinder.getInstance();
 		}
-		if (clCurrent.equals(Double.class) || clCurrent.equals(Double.TYPE)) {
+		if (clCurrent.equals(Double.class)) {
+			return DoubleClassBinder.getInstance();
+		}
+		if ( clCurrent.equals(Double.TYPE)) {
 			return DoubleBinder.getInstance();
 		}
 		if (clCurrent.equals(Double[].class)) {
 			return DoubleArrayBinder.getInstance();
 		}
-		if (clCurrent.equals(Long.class) || clCurrent.equals(Long.TYPE)) {
+		if (clCurrent.equals(Long.class)) {
+			return LongClassBinder.getInstance();
+		}
+		if (clCurrent.equals(Long.TYPE)) {
 			return LongBinder.getInstance();
 		}
 		if (clCurrent.equals(Date.class)) {

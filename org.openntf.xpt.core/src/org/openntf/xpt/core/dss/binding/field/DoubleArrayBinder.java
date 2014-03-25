@@ -22,6 +22,7 @@ import lotus.domino.Document;
 
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class DoubleArrayBinder implements IBinder<Double[]> {
 
@@ -35,6 +36,7 @@ public class DoubleArrayBinder implements IBinder<Double[]> {
 				mt.invoke(objCurrent, new Object[] { nValue });
 			}
 		} catch (Exception e) {
+			LoggerFactory.logWarning(getClass(), "Error during processDomino2Java", e);
 		}
 	}
 
@@ -51,6 +53,7 @@ public class DoubleArrayBinder implements IBinder<Double[]> {
 			}
 			docCurrent.replaceItemValue(def.getNotesField(), vecValues);
 		} catch (Exception e) {
+			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
 		return dblRC;
 	}
