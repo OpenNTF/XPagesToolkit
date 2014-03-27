@@ -15,11 +15,15 @@
  */
 package org.openntf.xpt.core.dss;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Date;
 import java.util.List;
 
+import org.openntf.xpt.core.dss.annotations.DominoEntity;
+import org.openntf.xpt.core.dss.annotations.DominoStore;
+import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.encryption.EncryptionDateBinder;
 import org.openntf.xpt.core.dss.binding.encryption.EncryptionDoubleBinder;
@@ -46,6 +50,7 @@ import org.openntf.xpt.core.dss.binding.formula.FormulaDoubleBinder;
 import org.openntf.xpt.core.dss.binding.formula.FormulaStringBinder;
 import org.openntf.xpt.core.dss.binding.util.FileHelper;
 
+import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.component.UIFileuploadEx.UploadedFile;
 import com.ibm.xsp.http.MimeMultipart;
 
@@ -61,7 +66,7 @@ public class BinderFactory {
 		if (clCurrent.equals(String.class)) {
 			return StringBinder.getInstance();
 		}
-		if (clCurrent.equals(Integer.class) ) {
+		if (clCurrent.equals(Integer.class)) {
 			return IntClassBinder.getInstance();
 		}
 		if (clCurrent.equals(Integer.TYPE)) {
@@ -70,7 +75,7 @@ public class BinderFactory {
 		if (clCurrent.equals(Double.class)) {
 			return DoubleClassBinder.getInstance();
 		}
-		if ( clCurrent.equals(Double.TYPE)) {
+		if (clCurrent.equals(Double.TYPE)) {
 			return DoubleBinder.getInstance();
 		}
 		if (clCurrent.equals(Double[].class)) {
@@ -129,16 +134,44 @@ public class BinderFactory {
 		}
 		return null;
 	}
-	
-	public static IBinder<?> getEncryptionBinder(Class<?> clCurrent){
-		if(clCurrent.equals(String.class)){
+
+	public static IBinder<?> getEncryptionBinder(Class<?> clCurrent) {
+		if (clCurrent.equals(String.class)) {
 			return EncryptionStringBinder.getInstance();
 		}
-		if(clCurrent.equals(Date.class)){
+		if (clCurrent.equals(Date.class)) {
 			return EncryptionDateBinder.getInstance();
-		}		
-		if(clCurrent.equals(Double.class) || clCurrent.equals(Double.TYPE)){
+		}
+		if (clCurrent.equals(Double.class) || clCurrent.equals(Double.TYPE)) {
 			return EncryptionDoubleBinder.getInstance();
+		}
+		return null;
+	}
+
+	public static Definition getDefinition(DominoStore dsStore, DominoEntity de, Field fldCurrent, String prefix, boolean isRead) {
+		if (de.encrypt()) {
+			IBinder<?> binder = BinderFactory.getEncryptionBinder(fldCurrent.getType());
+			if (binder != null) {
+				if (StringUtil.isEmpty(prefix)) {
+					return Definition.buildDefiniton(dsStore, de, binder, fldCurrent);
+				} else {
+					return Definition.buildDefinition4EO(dsStore, de, binder, fldCurrent, prefix);
+				}
+			}
+		} else if (de.isFormula() && isRead) {
+			IBinder<?> binder = BinderFactory.getFormulaBinder(fldCurrent.getType());
+			if (binder != null) {
+				return Definition.buildDefiniton(dsStore, de, binder, fldCurrent);
+			}
+		} else {
+			IBinder<?> binder = BinderFactory.getBinder(fldCurrent.getType(), fldCurrent.getGenericType());
+			if (binder != null) {
+				if (StringUtil.isEmpty(prefix)) {
+					return Definition.buildDefiniton(dsStore, de, binder, fldCurrent);
+				} else {
+					return Definition.buildDefinition4EO(dsStore, de, binder, fldCurrent, prefix);
+				}
+			}
 		}
 		return null;
 	}

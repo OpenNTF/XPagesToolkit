@@ -47,7 +47,11 @@ public class LongClassBinder implements IBinder<Long> {
 			Long nValue = getValue(objCurrent, def.getJavaField());
 			lngRC[0] = nOldValue;
 			lngRC[1] = nValue;
-			docCurrent.replaceItemValue(def.getNotesField(), nValue);
+			if (nValue != null) {
+				docCurrent.replaceItemValue(def.getNotesField(), nValue);
+			} else {
+				docCurrent.removeItem(def.getNotesField());
+			}
 		} catch (Exception e) {
 			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}

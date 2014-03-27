@@ -48,7 +48,11 @@ public class IntClassBinder extends BaseIntegerBinder implements IBinder<Integer
 			Integer nValue = getValue(objCurrent, def.getJavaField());
 			nRC[0] = nValueOld;
 			nRC[1] = nValue;
-			docCurrent.replaceItemValue(def.getNotesField(), nValue);
+			if (nValue != null) {
+				docCurrent.replaceItemValue(def.getNotesField(), nValue);
+			} else {
+				docCurrent.removeItem(def.getNotesField());
+			}
 		} catch (Exception e) {
 			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}

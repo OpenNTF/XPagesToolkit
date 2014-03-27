@@ -9,6 +9,9 @@
 			<xe:pageTreeNode label="Object List DataSource"
 				page="/dss_contact.xsp">
 			</xe:pageTreeNode>
+			<xe:pageTreeNode label="ViewPanle wit Object List DataSource"
+				page="/dss_contact_viewpanel.xsp">
+			</xe:pageTreeNode>
 			<xe:pageTreeNode label="CRUD with DSS"
 				page="/dss_contact_crud.xsp">
 			</xe:pageTreeNode>

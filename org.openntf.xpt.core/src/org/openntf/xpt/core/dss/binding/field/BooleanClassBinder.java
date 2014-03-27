@@ -45,10 +45,14 @@ public class BooleanClassBinder extends BaseBooleanBinder implements IBinder<Boo
 			Boolean blOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
 			blRC[0] = blOldValue;
 			blRC[1] = blValue;
-			if (blValue) {
-				docCurrent.replaceItemValue(def.getNotesField(), "1");
+			if (blValue != null) {
+				if (blValue) {
+					docCurrent.replaceItemValue(def.getNotesField(), "1");
+				} else {
+					docCurrent.replaceItemValue(def.getNotesField(), "");
+				}
 			} else {
-				docCurrent.replaceItemValue(def.getNotesField(), "");
+				docCurrent.removeItem(def.getNotesField());
 			}
 		} catch (Exception e) {
 			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
