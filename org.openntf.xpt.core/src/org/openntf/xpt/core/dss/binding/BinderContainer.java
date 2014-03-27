@@ -43,28 +43,28 @@ public class BinderContainer implements Serializable {
 		m_Prefix = prefix;
 	}
 
-	public Domino2JavaBinder getLoader(DominoStore ds, Class<?> cl) throws DSSException {
+	public Domino2JavaBinder getLoader(Class<?> cl) throws DSSException {
 		checkDominoStoreDefinition(cl);
 		return m_Loader.get(cl.getCanonicalName());
 	}
 
-	public Java2DominoBinder getSaver(DominoStore ds, Class<?> cl) throws DSSException {
+	public Java2DominoBinder getSaver(Class<?> cl) throws DSSException {
 		checkDominoStoreDefinition(cl);
 		return m_Saver.get(cl.getCanonicalName());
 	}
 
-	public DominoStore getStoreDefinitions(DominoStore ds, Class<?> cl) throws DSSException {
+	public DominoStore getStoreDefinitions(Class<?> cl) throws DSSException {
 		checkDominoStoreDefinition(cl);
 		return m_StoreDefinitions.get(cl.getCanonicalName());
 	}
 
 	private void prepareBinders(Class<?> cl) {
-		DominoStore dsCurrent = cl.getClass().getAnnotation(DominoStore.class);
-		Domino2JavaBinder d2j = buildLoadBinder(dsCurrent, cl.getClass());
-		Java2DominoBinder j2d = buildSaveBinder(dsCurrent, cl.getClass());
-		m_Loader.put(cl.getClass().getCanonicalName(), d2j);
-		m_Saver.put(cl.getClass().getCanonicalName(), j2d);
-		m_StoreDefinitions.put(cl.getClass().getCanonicalName(), dsCurrent);
+		DominoStore dsCurrent = cl.getAnnotation(DominoStore.class);
+		Domino2JavaBinder d2j = buildLoadBinder(dsCurrent, cl);
+		Java2DominoBinder j2d = buildSaveBinder(dsCurrent, cl);
+		m_Loader.put(cl.getCanonicalName(), d2j);
+		m_Saver.put(cl.getCanonicalName(), j2d);
+		m_StoreDefinitions.put(cl.getCanonicalName(), dsCurrent);
 	}
 
 	private Java2DominoBinder buildSaveBinder(DominoStore dsStore, Class<?> currentClass) {
@@ -111,5 +111,4 @@ public class BinderContainer implements Serializable {
 		DominoStore dsDefinition = m_StoreDefinitions.get(cl.getCanonicalName());
 		return dsDefinition;
 	}
-
 }

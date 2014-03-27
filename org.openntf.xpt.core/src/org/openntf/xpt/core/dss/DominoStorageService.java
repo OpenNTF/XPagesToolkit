@@ -15,11 +15,8 @@
  */
 package org.openntf.xpt.core.dss;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.List;
 
 import lotus.domino.Database;
@@ -27,11 +24,9 @@ import lotus.domino.Document;
 import lotus.domino.NotesException;
 import lotus.domino.View;
 
-import org.openntf.xpt.core.dss.annotations.DominoEntity;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
-import org.openntf.xpt.core.dss.binding.Definition;
+import org.openntf.xpt.core.dss.binding.BinderContainer;
 import org.openntf.xpt.core.dss.binding.Domino2JavaBinder;
-import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.Java2DominoBinder;
 import org.openntf.xpt.core.dss.binding.field.DateBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleArrayBinder;
@@ -49,15 +44,13 @@ public class DominoStorageService {
 
 	private static final String ORG_OPENNTF_XPT_CORE_DSS_DOMINO_STORE = "org.openntf.xpt.core.dss.DominoStore";
 	private static final String UNID_IDENTIFIER = "@UNID";
-	private Hashtable<String, Domino2JavaBinder> m_Loader = new Hashtable<String, Domino2JavaBinder>();
-	private Hashtable<String, Java2DominoBinder> m_Saver = new Hashtable<String, Java2DominoBinder>();
-	private Hashtable<String, DominoStore> m_StoreDefinitions = new Hashtable<String, DominoStore>();
+	private final BinderContainer m_BinderContainer = new BinderContainer("");
 
 	private DominoStorageService() {
 
 	}
 
-	public static DominoStorageService getInstance() {
+	public static synchronized DominoStorageService getInstance() {
 		DominoStorageService ds = (DominoStorageService) Application.get().getObject(ORG_OPENNTF_XPT_CORE_DSS_DOMINO_STORE);
 		if (ds == null) {
 			ds = new DominoStorageService();
@@ -67,15 +60,15 @@ public class DominoStorageService {
 	}
 
 	public boolean saveObject(Object objCurrent, Database ndbTarget) throws DSSException {
-		DominoStore dsDefinition = checkDominoStoreDefinition(objCurrent);
-		Java2DominoBinder j2d = m_Saver.get(objCurrent.getClass().getCanonicalName());
+		DominoStore dsDefinition = m_BinderContainer.getStoreDefinitions(objCurrent.getClass());
+		Java2DominoBinder j2d = m_BinderContainer.getSaver(objCurrent.getClass());
 		return saveObject2Document(dsDefinition, j2d, objCurrent, ndbTarget);
 	}
 
 	public boolean saveObjectWithDocument(Object objCurrent, Document docCurrent) throws DSSException {
-		DominoStore dsDefinition = checkDominoStoreDefinition(objCurrent);
+		DominoStore dsDefinition = m_BinderContainer.getStoreDefinitions(objCurrent.getClass());
 
-		Java2DominoBinder j2d = m_Saver.get(objCurrent.getClass().getCanonicalName());
+		Java2DominoBinder j2d = m_BinderContainer.getSaver(objCurrent.getClass());
 		Object objID = getObjectID(dsDefinition, objCurrent);
 		try {
 			j2d.processDocument(docCurrent, objCurrent, "" + objID);
@@ -89,16 +82,15 @@ public class DominoStorageService {
 	}
 
 	public boolean getObject(Object objCurrent, Object primaryKey, Database ndbTarget) throws DSSException {
-		DominoStore dsDefinition = checkDominoStoreDefinition(objCurrent);
-		Domino2JavaBinder d2j = m_Loader.get(objCurrent.getClass().getCanonicalName());
-		return getObjectFromDocument(dsDefinition, d2j, objCurrent, primaryKey, ndbTarget);
+		Domino2JavaBinder d2j = m_BinderContainer.getLoader(objCurrent.getClass());
+		return getObjectFromDocument(m_BinderContainer.getStoreDefinitions(objCurrent.getClass()), d2j, objCurrent, primaryKey, ndbTarget);
 
 	}
 
 	public boolean getObjectWithDocument(Object objCurrent, Document docCurrent) throws DSSException {
-		DominoStore dsDefinition = checkDominoStoreDefinition(objCurrent);
+		DominoStore dsDefinition = m_BinderContainer.getStoreDefinitions(objCurrent.getClass());
 		try {
-			Domino2JavaBinder d2j = m_Loader.get(objCurrent.getClass().getCanonicalName());
+			Domino2JavaBinder d2j = m_BinderContainer.getLoader(objCurrent.getClass());
 			d2j.processDocument(docCurrent, objCurrent);
 			if (UNID_IDENTIFIER.equals(dsDefinition.View())) {
 				setUNID2PK(dsDefinition, objCurrent, docCurrent);
@@ -112,7 +104,7 @@ public class DominoStorageService {
 	}
 
 	public boolean deleteObject(Object objDelete, Database ndbTarget) throws DSSException {
-		DominoStore dsDefinition = checkDominoStoreDefinition(objDelete);
+		DominoStore dsDefinition = m_BinderContainer.getStoreDefinitions(objDelete.getClass());
 		Object objPK = getObjectID(dsDefinition, objDelete);
 		try {
 			Document docDelete = getDocument(dsDefinition, objDelete, ndbTarget, false, objPK);
@@ -129,21 +121,19 @@ public class DominoStorageService {
 	}
 
 	public Object getObjectID(Object objCurrent) throws DSSException {
-		DominoStore dsDefinition = checkDominoStoreDefinition(objCurrent);
+		DominoStore dsDefinition = m_BinderContainer.getStoreDefinitions(objCurrent.getClass());
 		return getObjectID(dsDefinition, objCurrent);
 
 	}
 
 	public boolean isFieldAccessable(Object objCurrent, String strFieldName, List<String> currentRoles) throws DSSException {
-		checkDominoStoreDefinition(objCurrent);
-		Java2DominoBinder d2j = m_Saver.get(objCurrent.getClass().getCanonicalName());
+		Java2DominoBinder d2j = m_BinderContainer.getSaver(objCurrent.getClass());
 		return d2j.isFieldAccessable(strFieldName, currentRoles);
 
 	}
 
 	public boolean isFieldAccessable(Object objCurrent, ChangeLogEntry cl, List<String> currentRoles) throws DSSException {
-		checkDominoStoreDefinition(objCurrent);
-		Java2DominoBinder d2j = m_Saver.get(objCurrent.getClass().getCanonicalName());
+		Java2DominoBinder d2j = m_BinderContainer.getSaver(objCurrent.getClass());
 		return d2j.isFieldAccessable(cl.getObjectField(), currentRoles, cl);
 
 	}
@@ -222,16 +212,6 @@ public class DominoStorageService {
 		}
 
 	}
-
-	private void prepareBinders(Object objCurrent) {
-		DominoStore dsCurrent = objCurrent.getClass().getAnnotation(DominoStore.class);
-		Domino2JavaBinder d2j = buildLoadBinder(dsCurrent, objCurrent.getClass());
-		Java2DominoBinder j2d = buildSaveBinder(dsCurrent, objCurrent.getClass());
-		m_Loader.put(objCurrent.getClass().getCanonicalName(), d2j);
-		m_Saver.put(objCurrent.getClass().getCanonicalName(), j2d);
-		m_StoreDefinitions.put(objCurrent.getClass().getCanonicalName(), dsCurrent);
-	}
-
 	private Object getObjectID(DominoStore ds, Object obj) {
 		try {
 			String strPK = ServiceSupport.makeCamelCase(ds.PrimaryKeyField());
@@ -261,70 +241,4 @@ public class DominoStorageService {
 		}
 		return null;
 	}
-
-	private Java2DominoBinder buildSaveBinder(DominoStore dsStore, Class<?> currentClass) {
-		Java2DominoBinder j2dRC = new Java2DominoBinder();
-		Collection<Field> lstFields = ServiceSupport.getClassFields(currentClass);
-		for (Field fldCurrent : lstFields) {
-			if (fldCurrent.isAnnotationPresent(DominoEntity.class)) {
-				DominoEntity de = fldCurrent.getAnnotation(DominoEntity.class);
-				if (!de.readOnly()) {
-					if (de.encrypt()) {
-						IBinder<?> binder = BinderFactory.getEncryptionBinder(fldCurrent.getType());
-						if (binder != null) {
-							j2dRC.addDefinition(Definition.buildDefiniton(dsStore, de, binder, fldCurrent));
-						}
-					} else {
-						IBinder<?> binder = BinderFactory.getBinder(fldCurrent.getType(), fldCurrent.getGenericType());
-						if (binder != null) {
-							j2dRC.addDefinition(Definition.buildDefiniton(dsStore, de, binder, fldCurrent));
-						}
-					}
-				}
-			}
-		}
-		return j2dRC;
-	}
-
-	private Domino2JavaBinder buildLoadBinder(DominoStore dsStore, Class<?> currentClass) {
-		Domino2JavaBinder djdRC = new Domino2JavaBinder();
-		Collection<Field> lstFields = ServiceSupport.getClassFields(currentClass);
-		for (Field fldCurrent : lstFields) {
-			if (fldCurrent.isAnnotationPresent(DominoEntity.class)) {
-				DominoEntity de = fldCurrent.getAnnotation(DominoEntity.class);
-				if (!de.writeOnly()) {
-					if (de.encrypt()) {
-						IBinder<?> binder = BinderFactory.getEncryptionBinder(fldCurrent.getType());
-						if (binder != null) {
-							djdRC.addDefinition(Definition.buildDefiniton(dsStore, de, binder, fldCurrent));
-						}
-					} else if (de.isFormula()) {
-						IBinder<?> binder = BinderFactory.getFormulaBinder(fldCurrent.getType());
-						if (binder != null) {
-							djdRC.addDefinition(Definition.buildDefiniton(dsStore, de, binder, fldCurrent));
-
-						}
-					} else {
-						IBinder<?> binder = BinderFactory.getBinder(fldCurrent.getType(), fldCurrent.getGenericType());
-						if (binder != null) {
-							djdRC.addDefinition(Definition.buildDefiniton(dsStore, de, binder, fldCurrent));
-						}
-					}
-				}
-			}
-		}
-		return djdRC;
-	}
-
-	private DominoStore checkDominoStoreDefinition(Object objCurrent) throws DSSException {
-		if (!objCurrent.getClass().isAnnotationPresent(DominoStore.class)) {
-			throw new DSSException("No @DominoStore defined for " + objCurrent.getClass().getCanonicalName());
-		}
-		if (!m_StoreDefinitions.containsKey(objCurrent.getClass().getCanonicalName())) {
-			prepareBinders(objCurrent);
-		}
-		DominoStore dsDefinition = m_StoreDefinitions.get(objCurrent.getClass().getCanonicalName());
-		return dsDefinition;
-	}
-
 }
