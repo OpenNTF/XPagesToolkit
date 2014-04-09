@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: XPT Testsuite
 Bundle-SymbolicName: org.openntf.xpt.testsuite
-Bundle-Version: 1.0.0.qualifier
+Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: WebGate Consulting AG
 Fragment-Host: org.openntf.xpt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6

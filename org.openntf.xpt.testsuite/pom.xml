@@ -20,4 +20,5 @@
   	<artifactId>xpt.parent</artifactId>
   	<version>1.2.0-SNAPSHOT</version>
   </parent>
+  <packaging>eclipse-test-plugin</packaging>
 </project>

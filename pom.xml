@@ -186,4 +186,24 @@
 			<distribution>manual</distribution>
 		</license>
 	</licenses>
+	<modules>
+		<module>org.openntf.xpt</module>
+		<module>org.openntf.xpt.agents</module>
+		<module>org.openntf.xpt.core</module>
+		<module>org.openntf.xpt.feature</module>
+		<module>org.openntf.xpt.objectlist</module>
+		<module>org.openntf.xpt.oneui</module>
+		<module>org.openntf.xpt.properties</module>
+		<module>org.openntf.xpt.rss</module>
+		<module>org.openntf.xpt.testsuite</module>
+		
+	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.11</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
