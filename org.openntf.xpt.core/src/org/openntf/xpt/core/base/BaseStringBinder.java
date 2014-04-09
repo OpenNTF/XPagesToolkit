@@ -17,6 +17,9 @@ package org.openntf.xpt.core.base;
 
 import java.lang.reflect.Method;
 
+import org.openntf.xpt.core.XPTRuntimeException;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
+
 public class BaseStringBinder {
 
 	public BaseStringBinder() {
@@ -29,9 +32,9 @@ public class BaseStringBinder {
 			String strValue = (String) mt.invoke(objCurrent);
 			return strValue == null ? "" : strValue;
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during do getValue()",ex);
+			throw new XPTRuntimeException("Error during getValue()", ex);
 		}
-		return "";
 	}
 
 }

@@ -68,6 +68,12 @@ public class Contact implements Serializable {
 	@DominoEntity(FieldName = "LastInterview", changeLog = true)
 	private Date m_LastInterview;
 
+	@DominoEntity(FieldName = "Latitude", changeLog = true)
+	private Double m_Latitude;
+	@DominoEntity(FieldName = "Longitude", changeLog = true)
+	private Double m_Longitude;
+	@DominoEntity(FieldName = "Elevation", changeLog = true)
+	private Integer m_Elevation;
 	public String getID() {
 		return m_ID;
 	}
@@ -178,6 +184,30 @@ public class Contact implements Serializable {
 
 	public Date getLastInterview() {
 		return m_LastInterview;
+	}
+
+	public void setLatitude(Double latitude) {
+		m_Latitude = latitude;
+	}
+
+	public Double getLatitude() {
+		return m_Latitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		m_Longitude = longitude;
+	}
+
+	public Double getLongitude() {
+		return m_Longitude;
+	}
+
+	public void setElevation(Integer elevation) {
+		m_Elevation = elevation;
+	}
+
+	public Integer getElevation() {
+		return m_Elevation;
 	}
 
 }

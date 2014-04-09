@@ -17,6 +17,9 @@ package org.openntf.xpt.core.base;
 
 import java.lang.reflect.Method;
 
+import org.openntf.xpt.core.XPTRuntimeException;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
+
 import com.ibm.xsp.http.MimeMultipart;
 
 public class BaseMimeMultipartBinder {
@@ -32,8 +35,9 @@ public class BaseMimeMultipartBinder {
 			return mm.getHTML();
 			
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during do getValue()",ex);
+			throw new XPTRuntimeException("Error during getValue()", ex);
+
 		}
-		return "";
 	}
 }

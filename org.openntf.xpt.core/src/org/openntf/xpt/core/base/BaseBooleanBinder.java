@@ -17,6 +17,9 @@ package org.openntf.xpt.core.base;
 
 import java.lang.reflect.Method;
 
+import org.openntf.xpt.core.XPTRuntimeException;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
+
 public class BaseBooleanBinder {
 
 	public BaseBooleanBinder() {
@@ -28,9 +31,9 @@ public class BaseBooleanBinder {
 			Method mt = objCurrent.getClass().getMethod("is" + strJavaField);
 			return (Boolean) mt.invoke(objCurrent);
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LoggerFactory.logWarning(getClass(), "Error during do getValue()",ex);
+			throw new XPTRuntimeException("Error during getValue()", ex);
 		}
-		return Boolean.FALSE;
 	}
 
 }

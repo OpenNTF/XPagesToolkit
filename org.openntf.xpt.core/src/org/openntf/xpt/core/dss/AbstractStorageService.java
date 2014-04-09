@@ -31,21 +31,45 @@ import lotus.domino.DocumentCollection;
 import lotus.domino.View;
 
 import org.apache.commons.collections.CollectionUtils;
+import org.openntf.xpt.core.XPTRuntimeException;
 import org.openntf.xpt.core.dss.changeLog.ChangeLogEntry;
 import org.openntf.xpt.core.dss.changeLog.ChangeLogService;
 import org.openntf.xpt.core.utils.RoleAndGroupProvider;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 
+
+/**
+ * Abstract Class with all methode's for a Storage Service.
+ * 
+ * You need to define the createObject() to build the object for T
+ * 
+ * @author Christian Guedemann
+ *
+ * @param <T> The Type of the Object you want to store
+ */
 public abstract class AbstractStorageService<T> {
 
 	protected AbstractStorageService() {
 	}
 
+	/**
+	 * Stores the object in the current database.
+	 * @param obj The object to store
+	 * @return true if the save operation was successful
+	 */
+	
 	public boolean save(T obj) {
 		return saveTo(obj, ExtLibUtil.getCurrentDatabase());
 	}
 
+	/**
+	 * Stores the objec in the target database.
+	 * @param obj the object to store
+	 * @param ndbTarget the target database
+	 * @return true if the save operation was successful
+	 */
 	public boolean saveTo(T obj, Database ndbTarget) {
 		try {
 			return DominoStorageService.getInstance().saveObject(obj, ndbTarget);
@@ -67,8 +91,8 @@ public abstract class AbstractStorageService<T> {
 			}
 			return ret;
 		} catch (Exception e) {
-			e.printStackTrace();
-			return null;
+			LoggerFactory.logError(getClass(), "General Error",e);
+			throw new XPTRuntimeException("General Error", e);
 		}
 	}
 
@@ -93,7 +117,8 @@ public abstract class AbstractStorageService<T> {
 			}
 			viwDabases.recycle();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "General Error",e);
+			throw new XPTRuntimeException("General Error", e);
 		}
 		return ret;
 	}
@@ -121,7 +146,8 @@ public abstract class AbstractStorageService<T> {
 			}
 			viwDabases.recycle();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "General Error",e);
+			throw new XPTRuntimeException("General Error", e);
 		}
 		return ret;
 	}
@@ -150,7 +176,8 @@ public abstract class AbstractStorageService<T> {
 			}
 			viwDabases.recycle();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "General Error",e);
+			throw new XPTRuntimeException("General Error", e);
 		}
 		return ret;
 
@@ -180,7 +207,8 @@ public abstract class AbstractStorageService<T> {
 			}
 			viwDabases.recycle();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "General Error",e);
+			throw new XPTRuntimeException("General Error", e);
 		}
 		return ret;
 
@@ -243,7 +271,8 @@ public abstract class AbstractStorageService<T> {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "General Error",e);
+			throw new XPTRuntimeException("General Error", e);
 		}
 		return false;
 	}
@@ -256,6 +285,8 @@ public abstract class AbstractStorageService<T> {
 				lstRC.add("" + itValue.next());
 			}
 		} catch (Exception e) {
+			LoggerFactory.logError(getClass(), "General Error",e);
+			throw new XPTRuntimeException("General Error", e);
 		}
 		return lstRC;
 	}
@@ -281,7 +312,8 @@ public abstract class AbstractStorageService<T> {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "General Error",e);
+			throw new XPTRuntimeException("General Error", e);
 		}
 		return lstRC;
 	}

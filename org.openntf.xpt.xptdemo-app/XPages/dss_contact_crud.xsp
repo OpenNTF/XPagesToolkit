@@ -205,7 +205,24 @@ getComponent("dlgCL").show();}]]></xp:this.action>
 									<xp:dateTimeHelper></xp:dateTimeHelper>
 								</xp:inputText>
 							</xe:formRow>
-							<xe:formRow id="formRow10"></xe:formRow>
+							<xe:formRow id="formRow10" for="inputText1"
+								label="Latitude" labelPosition="left">
+								<xp:inputText id="inputText1"
+									value="#{objContact.latitude}">
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow11" for="inputText2"
+								label="Longitude" labelPosition="left">
+								<xp:inputText id="inputText2"
+									value="#{objContact.longitude}">
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow12" for="inputText3"
+								label="Elevation" labelPosition="left">
+								<xp:inputText id="inputText3"
+									value="#{objContact.elevation}">
+								</xp:inputText>
+							</xe:formRow>
 							<xp:this.facets>
 								<xe:dialogButtonBar
 									id="dialogButtonBar1" xp:key="footer">

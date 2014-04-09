@@ -61,7 +61,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 		try {
 			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase())) {
 				Double nOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
-				double nValue = getValue(objCurrent, def.getNotesField()).doubleValue();
+				double nValue = getValue(objCurrent, def.getJavaField()).doubleValue();
 				// String encryptedOldValue =
 				// EncryptionService.getInstance().encrypt(Double.toString(nOldValue));
 				String encryptedValue = EncryptionService.getInstance().encrypt(Double.toString(nValue));
@@ -82,7 +82,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 	@Override
 	public Double getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) throws DSSException {
 		try {
-			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase()) && vecCurrent.isEmpty()) {
+			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase()) && !vecCurrent.isEmpty()) {
 				String strDblValue = (String) vecCurrent.get(0);
 				String strDblValueDec = EncryptionService.getInstance().decrypt(strDblValue);
 				if (strDblValueDec == null) {

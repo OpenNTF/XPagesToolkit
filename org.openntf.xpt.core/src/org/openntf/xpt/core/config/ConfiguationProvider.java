@@ -23,6 +23,7 @@ import java.util.logging.Logger;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.console.CommandProvider;
+import org.openntf.xpt.core.XPTRuntimeException;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class ConfiguationProvider {
@@ -79,7 +80,8 @@ public class ConfiguationProvider {
 				}
 			}
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			LoggerFactory.logWarning(getClass(), "Error during do getValue()",ex);
+			throw new XPTRuntimeException("Error during initCP()", ex);
 		}
 
 	}
