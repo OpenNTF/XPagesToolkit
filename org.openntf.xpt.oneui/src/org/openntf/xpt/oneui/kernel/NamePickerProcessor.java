@@ -14,6 +14,7 @@ import lotus.domino.View;
 import lotus.domino.ViewEntry;
 import lotus.domino.ViewEntryCollection;
 
+import org.openntf.xpt.core.utils.DatabaseProvider;
 import org.openntf.xpt.oneui.component.UINamePicker;
 
 import com.ibm.commons.util.StringUtil;
@@ -49,7 +50,7 @@ public enum NamePickerProcessor {
 	}
 
 	public List<NameEntry> getTypeAheaderNE(UINamePicker uiNp, String strSearch) throws NotesException {
-		Database db = DatabaseProvider.INSTANCE.getDatabase(uiNp.getDatabase());
+		Database db = DatabaseProvider.INSTANCE.getDatabase(uiNp.getDatabase(), false);
 		View vw = db.getView(uiNp.getView());
 		DocumentCollection docCollection;
 		String strFTSearch = uiNp.buildFTSearch(strSearch);
@@ -105,7 +106,7 @@ public enum NamePickerProcessor {
 	public HashMap<String, String> getDislplayLabels(UINamePicker uiNp, String[] values) {
 		HashMap<String, String> hsRC = new HashMap<String, String>();
 		try {
-			Database db = DatabaseProvider.INSTANCE.getDatabase(uiNp.getDatabase());
+			Database db = DatabaseProvider.INSTANCE.getDatabase(uiNp.getDatabase(), false);
 			View vw = null;
 			if (StringUtil.isEmpty(uiNp.getLookupView())) {
 				vw = db.getView(uiNp.getView());
