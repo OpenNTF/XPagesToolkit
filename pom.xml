@@ -17,6 +17,11 @@
 			<layout>p2</layout>
 			<url>${notes-platform}</url>
 		</repository>
+		<repository>
+			<id>eclipse</id>
+			<layout>p2</layout>
+			<url>http://download.eclipse.org/releases/kepler/</url>
+		</repository>
 	</repositories>
 	<build>
 		<plugins>
@@ -196,14 +201,6 @@
 		<module>org.openntf.xpt.properties</module>
 		<module>org.openntf.xpt.rss</module>
 		<module>org.openntf.xpt.testsuite</module>
-		
+
 	</modules>
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
 </project>
