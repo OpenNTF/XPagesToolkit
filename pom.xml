@@ -202,5 +202,6 @@
 		<module>org.openntf.xpt.rss</module>
 		<module>org.openntf.xpt.testsuite</module>
 
+		<module>org.openntf.xpt.updatesite</module>
 	</modules>
 </project>

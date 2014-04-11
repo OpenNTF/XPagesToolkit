@@ -40,7 +40,7 @@ public class LoggerFactory {
 
 	private static int m_logLevel = -1;
 
-	public static Logger getLogger(String strName) {
+	public static synchronized Logger getLogger(String strName) {
 		try {
 			String strDB = XPT_CORE_LOGGER;
 			try {
@@ -59,6 +59,7 @@ public class LoggerFactory {
 			} else {
 				logRC = java.util.logging.Logger.getAnonymousLogger();
 			}
+			
 			if (strDB.equals(XPT_CORE_LOGGER)) {
 				if (m_logLevel == -1) {
 					checkLogLevel();
@@ -127,6 +128,7 @@ public class LoggerFactory {
 	}
 
 	private static int getAppLogLevel(String strDBPath, String strClassName) {
+		System.out.println("check: " + strDBPath +" / "+ strClassName);
 		if (Application.get() == null) {
 			return -1;
 		}

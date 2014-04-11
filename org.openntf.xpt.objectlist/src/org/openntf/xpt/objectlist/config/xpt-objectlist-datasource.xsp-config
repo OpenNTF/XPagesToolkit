@@ -68,8 +68,8 @@
 		</property>
 		<property>
 			<description>Name of the database</description>
-			<display-name>datebaseName</display-name>
-			<property-name>databaseName/property-name>
+			<display-name>databaseName</display-name>
+			<property-name>databaseName</property-name>
 			<property-class>java.lang.String</property-class>
 			<property-extension>
 			</property-extension>
@@ -94,7 +94,7 @@
 		
   		<group-type-ref>com.ibm.xsp.model.group.DataSource</group-type-ref>
     	<complex-extension>
-    		<tag-name>dssObjectSource/tag-name>
+    		<tag-name>dssObjectSource</tag-name>
     		<base-complex-id>dataInterface</base-complex-id>
     	</complex-extension>
     </complex-type>

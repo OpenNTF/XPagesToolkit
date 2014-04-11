@@ -91,9 +91,8 @@ public class DSSObjectDataSource extends AbstractDataSource {
 		}
 		String strAction = (String) paramMap.get(prefixRequestParam("action"));
 		if (StringUtil.isNotEmpty(strAction)) {
-			m_ObjectId = strAction;
+			m_Action = strAction;
 		}
-
 	}
 
 	@Override
@@ -171,7 +170,7 @@ public class DSSObjectDataSource extends AbstractDataSource {
 		} else {
 			if (!StringUtil.isEmpty(strObjectID)) {
 				obj = sos.getObjectByID(strObjectID, getDatabaseName());
-				if ("editDocument".equals(strAction)) {
+				if ("editObject".equals(strAction)) {
 					isEdit = true;
 				}
 			}

@@ -61,7 +61,7 @@ public class ServiceSupport {
 	}
 	
 	public static String makeSetter(String strFieldClean) {
-		return "get"+ makeCamelCase(strFieldClean);		
+		return "set"+ makeCamelCase(strFieldClean);		
 	}
 	
 	public static String makeGetter(DominoStore dsCurrent, String strField ) {
