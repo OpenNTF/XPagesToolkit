@@ -25,6 +25,7 @@ import lotus.domino.NotesException;
 import lotus.domino.View;
 
 import org.openntf.xpt.core.dss.annotations.DominoStore;
+import org.openntf.xpt.core.dss.annotations.XPTPresentationControl;
 import org.openntf.xpt.core.dss.binding.BinderContainer;
 import org.openntf.xpt.core.dss.binding.Domino2JavaBinder;
 import org.openntf.xpt.core.dss.binding.Java2DominoBinder;
@@ -138,6 +139,10 @@ public class DominoStorageService {
 
 	}
 
+	public XPTPresentationControl getXPTPresentationControl(Object obj, String elField) throws DSSException {
+		return m_BinderContainer.getXPTPresentationControl(obj.getClass(), elField);
+	}
+
 	private boolean getObjectFromDocument(DominoStore dsDefinition, Domino2JavaBinder d2j, Object objCurrent, Object pk, Database ndbTarget) {
 		try {
 			if (pk != null) {
@@ -212,6 +217,7 @@ public class DominoStorageService {
 		}
 
 	}
+
 	private Object getObjectID(DominoStore ds, Object obj) {
 		try {
 			String strPK = ServiceSupport.makeCamelCase(ds.PrimaryKeyField());

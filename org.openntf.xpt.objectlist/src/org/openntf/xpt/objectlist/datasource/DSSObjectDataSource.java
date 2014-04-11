@@ -1,12 +1,31 @@
+/*
+ * © Copyright WebGate Consulting AG, 2014
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at:
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
+ * implied. See the License for the specific language governing 
+ * permissions and limitations under the License.
+ */
 package org.openntf.xpt.objectlist.datasource;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.MethodBinding;
 
+import org.openntf.xpt.core.XPTRuntimeException;
+import org.openntf.xpt.core.dss.SingleObjectStore;
 import org.openntf.xpt.core.utils.ValueBindingSupport;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.FacesExceptionEx;
@@ -21,14 +40,11 @@ public class DSSObjectDataSource extends AbstractDataSource {
 	private String m_Action;
 	private MethodBinding m_ObjectStorageService;
 
-	public DSSObjectDataSource() {
-		// TODO Auto-generated constructor stub
-	}
 
 	@Override
 	protected String composeUniqueId() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("dassObjectDataStore");
+		sb.append("dssObjectDataStore");
 		String strRequestParam = getRequestParamPrefix();
 		if (!StringUtil.isEmpty(strRequestParam)) {
 			sb.append(strRequestParam);
@@ -48,20 +64,19 @@ public class DSSObjectDataSource extends AbstractDataSource {
 
 	@Override
 	public Object getDataObject() {
-		// TODO Auto-generated method stub
-		return null;
+		DSSObjectDataContainer dc = (DSSObjectDataContainer) getDataContainer();
+		return dc == null ? null : dc.getDSSObject();
 	}
 
 	@Override
 	public boolean isReadonly() {
-		// TODO Auto-generated method stub
-		return false;
+		return getDataObject() == null;
 	}
 
 	@Override
-	public DataContainer load(FacesContext arg0) throws IOException {
-		// TODO Auto-generated method stub
-		return null;
+	public DataContainer load(FacesContext context) throws IOException {
+
+		return new DSSObjectDataContainer(getBeanId(), composeUniqueId(), buildDSSObject(context));
 	}
 
 	@Override
@@ -83,8 +98,10 @@ public class DSSObjectDataSource extends AbstractDataSource {
 
 	@Override
 	public boolean save(FacesContext arg0, DataContainer arg1) throws FacesExceptionEx {
-		// TODO Auto-generated method stub
-		return false;
+		DSSObject dssObject = ((DSSObjectDataContainer) arg1).getDSSObject();
+		SingleObjectStore<?> sos = getObjectStore();
+
+		return sos.saveObject(dssObject.getBO(), getDatabaseName());
 	}
 
 	public String getDatabaseName() {
@@ -139,4 +156,46 @@ public class DSSObjectDataSource extends AbstractDataSource {
 		m_Action = (String) values[3];
 		m_ObjectStorageService = StateHolderUtil.restoreMethodBinding(context, getComponent(), values[4]);
 	}
+
+	private DSSObject buildDSSObject(FacesContext context) {
+		String strAction = getAction();
+		String strObjectID = getObjectId();
+		SingleObjectStore<?> sos = getObjectStore();
+		Object obj = null;
+		boolean isEdit = false;
+		boolean isNew = false;
+		if (StringUtil.isEmpty(strAction) || "newObject".equals(strAction)) {
+			obj = sos.newObject();
+			isEdit = true;
+			isNew = true;
+		} else {
+			if (!StringUtil.isEmpty(strObjectID)) {
+				obj = sos.getObjectByID(strObjectID, getDatabaseName());
+				if ("editDocument".equals(strAction)) {
+					isEdit = true;
+				}
+			}
+		}
+		return obj == null ? null : new DSSObject(obj, isEdit, isNew);
+	}
+
+	private SingleObjectStore<?> getObjectStore() {
+		try {
+
+			Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
+			if (m_ObjectStorageService != null) {
+				logCurrent.info("Exectue BuildValues");
+				Object objCurrent = m_ObjectStorageService.invoke(getFacesContext(), null);
+				logCurrent.info(objCurrent.getClass().getCanonicalName());
+				if (objCurrent instanceof SingleObjectStore<?>) {
+					return (SingleObjectStore<?>) objCurrent;
+				}
+			}
+			throw new XPTRuntimeException("No ObjectStorageService defined!");
+
+		} catch (Exception ex) {
+			throw new XPTRuntimeException("Error durintg getSingleObjectStoare", ex);
+		}
+	}
+
 }

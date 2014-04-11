@@ -32,12 +32,13 @@ public class SingleObjectStore<T> {
 		}
 	}
 
-	public boolean saveObject(T obj, String databaseName) {
+	@SuppressWarnings("unchecked")
+	public boolean saveObject(Object obj, String databaseName) {
 		if (StringUtil.isEmpty(databaseName)) {
-			return m_Store.save(obj);
+			return m_Store.save((T)obj);
 		} else {
 			Database ndb = DatabaseProvider.INSTANCE.getDatabase(databaseName, false);
-			boolean rc = m_Store.saveTo(obj, ndb);
+			boolean rc = m_Store.saveTo((T)obj, ndb);
 			DatabaseProvider.INSTANCE.handleRecylce(ndb);
 			return rc;
 		}
