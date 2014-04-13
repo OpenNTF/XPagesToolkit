@@ -91,7 +91,6 @@ public class XPageAgentManager {
 	}
 
 	public void startJob() {
-		System.out.println("CALL START JOB");
 		m_Job = new MainMasterJob("XPagesAMGR");
 		m_Job.schedule(1000);
 	}

@@ -23,6 +23,8 @@ Export-Package: org.openntf.xpt.agents,
  org.openntf.xpt.agents.component,
  org.openntf.xpt.agents.config,
  org.openntf.xpt.agents.master,
+ org.openntf.xpt.agents.minifier,
  org.openntf.xpt.agents.renderkit.html_extended,
  org.openntf.xpt.agents.resources,
- org.openntf.xpt.agents.servlet
+ org.openntf.xpt.agents.servlet,
+ org.openntf.xpt.agents.timer
