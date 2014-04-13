@@ -1,4 +1,4 @@
-package org.openntf.xpt.text.dss;
+package org.openntf.xpt.test.dss;
 
 import static org.junit.Assert.*;
 

@@ -43,21 +43,22 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), MimeMultipart.class);
 			mt.invoke(objCurrent, getRawValueFromStore(docCurrent, def.getNotesField()));
 		} catch (Exception e) {
-			LoggerFactory.logWarning(getClass(), "Error during processDomino2Java", e);
+			LoggerFactory.logWarning(this.getClass(), "Error during processDomino2Java", e);
+			throw new XPTRuntimeException("Error during processDomino2Java", e);
 		}
 	}
 
 	public MimeMultipart[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		MimeMultipart[] mpRC = new MimeMultipart[2];
-		Logger log = LoggerFactory.getLogger(getClass().getCanonicalName());
+		Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName());
 		try {
-			
+
 			MimeMultipart oldBody = getRawValueFromStore(docCurrent, def.getNotesField());
 			MimeMultipart body = getValue(objCurrent, def.getJavaField());
 			mpRC[0] = oldBody;
 			mpRC[1] = body;
-			log.info("oldBody = " +oldBody);
-			log.info("body = "+ body);
+			log.fine("oldBody = " + oldBody);
+			log.fine("body = " + body);
 			Stream stream = docCurrent.getParentDatabase().getParent().createStream();
 			if (body != null)
 				stream.writeText(body.getHTML());
@@ -65,18 +66,20 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 				return null;
 
 			MIMEEntity entity = docCurrent.getMIMEEntity(def.getNotesField());
-			log.info("entity = "+ entity);
+			log.info("entity = " + entity);
 			if (entity == null) {
 				docCurrent.removeItem(def.getNotesField());
+				log.info("creating Entity for "+ def.getNotesField());
 				entity = docCurrent.createMIMEEntity(def.getNotesField());
 				log.info("new entity created");
 			}
+			stream.setPosition(0);
 			entity.setContentFromText(stream, "text/html;charset=UTF-8", 1725);
 			stream.close();
 			log.info("done");
 
 		} catch (Exception e) {
-			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
+			LoggerFactory.logWarning(this.getClass(), "Error during processJava2Domino", e);
 			throw new XPTRuntimeException("Error during processJava2Domino", e);
 		}
 		return mpRC;
@@ -135,9 +138,9 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 
 			return mimeValue;
 		} catch (Exception e) {
-
+			LoggerFactory.logWarning(this.getClass(), "Error during getRawValueFromStore", e);
+			throw new XPTRuntimeException("Error during getRawValueFormStore", e);
 		}
-		return null;
 	}
 
 }

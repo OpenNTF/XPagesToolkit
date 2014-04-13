@@ -88,6 +88,12 @@ return new org.openntf.xpt.core.dss.SingleObjectStore(store);}]]></xpt:this.obje
 							<xp:inputText id="inputText3" value="#{objContact.elevation}">
 							</xp:inputText>
 						</xe:formRow>
+						<xe:formRow id="formRow13" for="inputText3" label="Comment"
+							labelPosition="top">
+
+						<xp:inputRichText id="inputRichText1"
+							value="#{objContact.comment}">
+						</xp:inputRichText></xe:formRow>
 						<xp:this.facets>
 							<xe:dialogButtonBar id="dialogButtonBar1"
 								xp:key="footer">
@@ -99,30 +105,28 @@ return new org.openntf.xpt.core.dss.SingleObjectStore(store);}]]></xpt:this.obje
 
 												<xp:actionGroup>
 
-													<xp:saveDocument var="objContact">
+													<xp:saveDocument
+														var="objContact">
 													</xp:saveDocument>
 
-													<xp:executeScript>
 
-
-														<xp:this.script><![CDATA[#{javascript:var dlg = getComponent("dlgContact");
-viewScope.conID = "";
-dlg.hide("panContacts");
-var ds = xptBean.findDataSource("panContacts", "sourceContacts");
-ds.refresh();}]]></xp:this.script>
-													</xp:executeScript>
+													<xp:openPage
+														name="/dss_contact_crud.xsp">
+													</xp:openPage>
 												</xp:actionGroup>
 											</xp:this.action>
 										</xp:eventHandler>
 									</xp:button>
 									&#160;
 									<xp:link escape="true" text="cancel" id="lnkClose">
-										<xp:eventHandler event="onclick" submit="true"
-											refreshMode="complete" disableValidators="true">
-											<xp:this.action><![CDATA[#{javascript:var dlg = getComponent("dlgContact");
-viewScope.conID = "";
-dlg.hide();}]]></xp:this.action>
-										</xp:eventHandler>
+										<xp:eventHandler event="onclick"
+											submit="true" refreshMode="complete"
+											immediate="true">
+											<xp:this.action>
+												<xp:openPage
+													name="/dss_contact_crud.xsp">
+												</xp:openPage>
+											</xp:this.action></xp:eventHandler>
 									</xp:link>
 								</xp:panel>
 							</xe:dialogButtonBar>

@@ -12,7 +12,12 @@ import org.openntf.xpt.core.dss.DominoStorageService;
 import org.openntf.xpt.core.dss.annotations.XPTPresentationControl;
 import org.openntf.xpt.core.utils.RoleAndGroupProvider;
 import org.openntf.xpt.core.utils.ServiceSupport;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
+import org.openntf.xpt.objectlist.utils.ListProcessor;
+import org.openntf.xpt.objectlist.utils.MIMEMultipartProcessor;
 
+import com.ibm.xsp.component.UIInputRichText;
+import com.ibm.xsp.http.MimeMultipart;
 import com.ibm.xsp.model.DataObject;
 
 public class DSSObject implements DataObject, Serializable {
@@ -86,7 +91,7 @@ public class DSSObject implements DataObject, Serializable {
 					return true;
 				}
 			} catch (Exception ex) {
-				throw new XPTRuntimeException("Error curing isReadOnly for " + field, ex);
+				throw new XPTRuntimeException("Error during isReadOnly for " + field, ex);
 			}
 		} else {
 			return true;
@@ -94,14 +99,29 @@ public class DSSObject implements DataObject, Serializable {
 	}
 
 	@Override
-	public void setValue(Object field, Object arg1) {
+	public void setValue(Object field, Object value) {
 		String elField = "" + field;
+		Object value4setter = value;
+		Class<?> setterClass = null;
 		try {
-			Class<?> setterClass = getType(field);
+			setterClass = getType(field);
+			if (value != null && !setterClass.getCanonicalName().equals(value.getClass().getCanonicalName())) {
+				LoggerFactory.logInfo(this.getClass(), "The class for arg1 is:" + value.getClass() + " but should be: " + setterClass, null);
+				if ("com.ibm.xsp.http.MimeMultipart".equals(setterClass.getCanonicalName()) && value instanceof UIInputRichText.EmbeddedImage) {
+					MimeMultipart mm = MIMEMultipartProcessor.INSTANCE.addEmbeddedImage((UIInputRichText.EmbeddedImage) value, (MimeMultipart) getValue(elField));
+					value4setter = mm;
+				}
+				if (setterClass.equals(List.class) || Arrays.asList(setterClass.getInterfaces()).contains(java.util.List.class)) {
+					value4setter = ListProcessor.INSTANCE.process2List(setterClass, value);
+				}
+			}
 			String strMethode = ServiceSupport.makeSetter(elField);
 			Method mt = m_BO.getClass().getMethod(strMethode, setterClass);
-			mt.invoke(m_BO, arg1);
+			mt.invoke(m_BO, value4setter);
+
 		} catch (Exception ex) {
+			LoggerFactory.logError(this.getClass(), "Error in setValue for " + elField + "-> FIELDCLASS: " + setterClass == null ? "null" : setterClass.getCanonicalName() + " ValueClass: "
+					+ value.getClass().getCanonicalName(), ex);
 			throw new XPTRuntimeException("Error during setValue for " + elField, ex);
 		}
 	}
