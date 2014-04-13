@@ -24,6 +24,7 @@ import org.openntf.xpt.core.dss.BinderFactory;
 import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.annotations.DominoEntity;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
+import org.openntf.xpt.core.dss.annotations.XPTPresentationControl;
 import org.openntf.xpt.core.utils.ServiceSupport;
 
 public class BinderContainer implements Serializable {
@@ -35,6 +36,7 @@ public class BinderContainer implements Serializable {
 	private final Hashtable<String, Domino2JavaBinder> m_Loader = new Hashtable<String, Domino2JavaBinder>();
 	private final Hashtable<String, Java2DominoBinder> m_Saver = new Hashtable<String, Java2DominoBinder>();
 	private final Hashtable<String, DominoStore> m_StoreDefinitions = new Hashtable<String, DominoStore>();
+	private final Hashtable<String, Hashtable<String, XPTPresentationControl>> m_PresentationControl = new Hashtable<String, Hashtable<String, XPTPresentationControl>>();
 
 	private final String m_Prefix;
 
@@ -58,6 +60,14 @@ public class BinderContainer implements Serializable {
 		return m_StoreDefinitions.get(cl.getCanonicalName());
 	}
 
+	public XPTPresentationControl getXPTPresentationControl(Class<?> cl, String elField) throws DSSException {
+		checkDominoStoreDefinition(cl);
+		if (m_PresentationControl.get(cl.getCanonicalName()).containsKey(elField)) {
+			return m_PresentationControl.get(cl.getCanonicalName()).get(elField);
+		}
+		return null;
+	}
+
 	private void prepareBinders(Class<?> cl) {
 		DominoStore dsCurrent = cl.getAnnotation(DominoStore.class);
 		Domino2JavaBinder d2j = buildLoadBinder(dsCurrent, cl);
@@ -65,6 +75,7 @@ public class BinderContainer implements Serializable {
 		m_Loader.put(cl.getCanonicalName(), d2j);
 		m_Saver.put(cl.getCanonicalName(), j2d);
 		m_StoreDefinitions.put(cl.getCanonicalName(), dsCurrent);
+		m_PresentationControl.put(cl.getCanonicalName(), buildXPTPresentationControl(dsCurrent, cl));
 	}
 
 	private Java2DominoBinder buildSaveBinder(DominoStore dsStore, Class<?> currentClass) {
@@ -99,6 +110,18 @@ public class BinderContainer implements Serializable {
 			}
 		}
 		return djdRC;
+	}
+
+	private Hashtable<String, XPTPresentationControl> buildXPTPresentationControl(DominoStore ds, Class<?> cl) {
+		Hashtable<String, XPTPresentationControl> hsRC = new Hashtable<String, XPTPresentationControl>();
+		Collection<Field> lstFields = ServiceSupport.getClassFields(cl);
+		for (Field fldCurrent : lstFields) {
+			if (fldCurrent.isAnnotationPresent(XPTPresentationControl.class)) {
+				String elFieldName = ServiceSupport.buildCleanFieldName(ds, fldCurrent.getName());
+				hsRC.put(elFieldName, fldCurrent.getAnnotation(XPTPresentationControl.class));
+			}
+		}
+		return hsRC;
 	}
 
 	private DominoStore checkDominoStoreDefinition(Class<?> cl) throws DSSException {

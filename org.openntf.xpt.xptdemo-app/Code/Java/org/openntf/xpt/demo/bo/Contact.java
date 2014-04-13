@@ -25,6 +25,8 @@ import org.openntf.xpt.core.dss.annotations.DominoStore;
 import org.openntf.xpt.core.json.annotations.JSONEntity;
 import org.openntf.xpt.core.json.annotations.JSONObject;
 
+import com.ibm.xsp.http.MimeMultipart;
+
 @JSONObject
 @DominoStore(Form = "Contact", PrimaryFieldClass = String.class, PrimaryKeyField = "ID", View = "LUPContactByID")
 public class Contact implements Serializable {
@@ -60,7 +62,7 @@ public class Contact implements Serializable {
 	private double m_Salary;
 	@DominoEntity(FieldName = "CompanyCar", changeLog = true)
 	private double m_CompanyCar;
-	@JSONEntity(jsonproperty="jobfunction")
+	@JSONEntity(jsonproperty = "jobfunction")
 	@DominoEntity(FieldName = "JobFunction", changeLog = true)
 	private String m_JobFunction;
 	@DominoEntity(FieldName = "Devices", changeLog = true)
@@ -74,6 +76,10 @@ public class Contact implements Serializable {
 	private Double m_Longitude;
 	@DominoEntity(FieldName = "Elevation", changeLog = true)
 	private Integer m_Elevation;
+
+	@DominoEntity(FieldName = "Body")
+	private MimeMultipart m_Comment;
+
 	public String getID() {
 		return m_ID;
 	}
@@ -208,6 +214,16 @@ public class Contact implements Serializable {
 
 	public Integer getElevation() {
 		return m_Elevation;
+	}
+
+	public MimeMultipart getComment() {
+		System.out.println("GET Comment");
+		return m_Comment;
+	}
+
+	public void setComment(MimeMultipart comment) {
+		System.out.println("SET comment with" + comment);
+		m_Comment = comment;
 	}
 
 }

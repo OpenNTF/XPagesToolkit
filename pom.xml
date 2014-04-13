@@ -9,6 +9,7 @@
 	<properties>
 		<tycho-version>0.19.0</tycho-version>
 		<compiler>1.6</compiler>
+		<license.failIfMissing>false</license.failIfMissing>
 	</properties>
 
 	<repositories>
@@ -143,6 +144,39 @@
 					<excludePackageNames>com.sun.*:com.ibm.commons.*:com.ibm.sbt.core.*:com.ibm.sbt.plugin.*:com.ibm.sbt.jslibrray.*:com.ibm.sbt.proxy.*:com.ibm.sbt.security.*:*.util.*:com.ibm.sbt.portlet.*:com.ibm.sbt.playground.*:demo.*:acme.*</excludePackageNames>
 				</configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>com.mycila</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<header>LICENSE_HEADER/apacheV2.txt</header>
+					<properties>
+						<owner>WebGate Consulting AG</owner>
+						<email>christian.guedemann@webgate.biz</email>
+					</properties>
+					<excludes>
+						<exclude>LICENSE</exclude>
+						<exclude>**/README</exclude>
+						<exclude>**.txt</exclude>
+						<exclude>**.xsp</exclude>
+						<exclude>**.metadata</exclude>
+						<exclude>**.xml</exclude>
+						<exclude>**/**.xml</exclude>
+						<exclude>org.openntf.xpt.xptdemo-app/**</exclude>
+						<exclude>src/test/resources/**</exclude>
+						<exclude>src/main/resources/**</exclude>
+					</excludes>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>check</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 
 
@@ -202,5 +236,14 @@
 		<module>org.openntf.xpt.rss</module>
 		<module>org.openntf.xpt.testsuite</module>
 
+		<module>org.openntf.xpt.updatesite</module>
 	</modules>
+	<dependencies>
+		<dependency>
+			<groupId>com.mycila</groupId>
+			<artifactId>license-maven-plugin</artifactId>
+			<version>2.6</version>
+			<type>maven-plugin</type>
+		</dependency>
+	</dependencies>
 </project>

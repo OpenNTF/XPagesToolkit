@@ -65,57 +65,65 @@ ds.sortList("email", true);}]]></xp:this.action>
 								</xp:label>
 							</xp:td>
 							<xp:td>
-								<xp:pager layout="Previous Group Next"
-									partialRefresh="true" id="pager1" for="rpContact">
-								</xp:pager></xp:td>
+								<xp:pager layout="Previous Group Next" partialRefresh="true"
+									id="pager1" for="rpContact">
+								</xp:pager>
+							</xp:td>
 						</xp:tr>
-						<xp:repeat value="#{javascript:sourceContacts}"
-							var="contact" indexVar="indContact" id="rpContact" rows="25">
+						<xp:repeat value="#{javascript:sourceContacts}" var="contact"
+							indexVar="indContact" id="rpContact" rows="25">
 							<xp:tr>
 								<xp:td>
-									<xp:text escape="true"
-										id="computedField1" value="#{contact.firstName}">
+									<xp:text escape="true" id="computedField1" value="#{contact.firstName}">
 									</xp:text>
 								</xp:td>
 								<xp:td>
-									<xp:text escape="true"
-										id="computedField2" value="#{contact.lastName}">
+									<xp:text escape="true" id="computedField2" value="#{contact.lastName}">
 									</xp:text>
 								</xp:td>
 								<xp:td>
-									<xp:text escape="true"
-										id="computedField3" value="#{contact.state}">
+									<xp:text escape="true" id="computedField3" value="#{contact.state}">
 									</xp:text>
 								</xp:td>
 								<xp:td>
-									<xp:text escape="true"
-										id="computedField4" value="#{contact.city}">
+									<xp:text escape="true" id="computedField4" value="#{contact.city}">
 									</xp:text>
 								</xp:td>
 								<xp:td>
-									<xp:text escape="true"
-										id="computedField5" value="#{contact.email}">
+									<xp:text escape="true" id="computedField5" value="#{contact.email}">
 									</xp:text>
 								</xp:td>
 								<xp:td>
 									<xp:link id="lnkEdit" text="edit">
-										<xp:eventHandler event="onclick"
-											submit="true" refreshMode="partial"
-											refreshId="panContacts">
+										<xp:eventHandler event="onclick" submit="true"
+											refreshMode="partial" refreshId="panContacts">
 											<xp:this.action><![CDATA[#{javascript:viewScope.conID = contact.ID;
+viewScope.conAction = "editObject";
 getComponent("dlgContact").show();}]]></xp:this.action>
 										</xp:eventHandler>
 									</xp:link>
-																		&#160;&#160;<xp:link id="link1" text="show changelog">
-										<xp:eventHandler event="onclick"
-											submit="true" refreshMode="partial"
-											refreshId="panContacts">
+									&#160;&#160;
+									<xp:link id="link2" text="read">
+										<xp:eventHandler event="onclick" submit="true"
+											refreshMode="partial" refreshId="panContacts">
+											<xp:this.action><![CDATA[#{javascript:viewScope.conID = contact.ID;
+viewScope.conAction = "readObject";
+getComponent("dlgContact").show();}]]></xp:this.action>
+										</xp:eventHandler>
+									</xp:link>
+									&#160;&#160;
+									<xp:link id="link1" text="show changelog">
+										<xp:eventHandler event="onclick" submit="true"
+											refreshMode="partial" refreshId="panContacts">
 											<xp:this.action><![CDATA[#{javascript:viewScope.clPK = contact.ID;
 viewScope.clObject = contact.getBO().getClass().getCanonicalName();
 getComponent("dlgCL").show();}]]></xp:this.action>
 										</xp:eventHandler>
-</xp:link>
-									
+									</xp:link>
+									<xp:br></xp:br>Open on a separate Page:&#160;
+									<xp:link id="lnkEditOnPage"
+										text="edit">
+									<xp:this.value><![CDATA[#{javascript:"dss_contact_detail.xsp?action=editObject&objectId="+contact.ID;}]]></xp:this.value></xp:link>
 								</xp:td>
 
 							</xp:tr>
@@ -126,125 +134,124 @@ getComponent("dlgCL").show();}]]></xp:this.action>
 				<xe:dialog id="dlgContact" title="Contact">
 					<xp:panel>
 						<xp:this.data>
-							<xe:objectData var="objContact" scope="view">
+							<xe:objectData var="objContactOLD" scope="view">
 								<xe:this.createObject><![CDATA[#{javascript:if(viewScope.conID == null || viewScope.conID == "") {
 	return contactBean.createContact();
 } else {
 	return contactBean.getContactByID(viewScope.conID);
 }}]]></xe:this.createObject>
 							</xe:objectData>
+							<xpt:dssObjectSource var="objContact"
+								objectId="#{javascript:viewScope.conID}" scope="view">
+								<xpt:this.action><![CDATA[#{javascript:if (viewScope.conID == null || viewScope.conID == "") {
+	return "newObject";
+} 
+return viewScope.conAction}]]></xpt:this.action>
+								<xpt:this.objectStorageService><![CDATA[#{javascript:var store = org.openntf.xpt.demo.bo.ContactStorageService.getInstance();
+return new org.openntf.xpt.core.dss.SingleObjectStore(store);}]]></xpt:this.objectStorageService>
+							</xpt:dssObjectSource>
 						</xp:this.data>
-						<xe:formTable id="formTable1"
-							labelPosition="left" disableRowError="true"
+						<xe:formTable id="formTable1" labelPosition="left"
+							disableRowError="true"
 							formDescription="Salary, Function, Devices and Last Interview are changelogged!"
 							labelWidth="150px">
-							<xe:formRow id="formRow2" for="itFirstName"
-								label="First Name">
-								<xp:inputText id="itFirstName"
-									value="#{objContact.firstName}">
+							<xe:formRow id="formRow2" for="itFirstName" label="First Name">
+								<xp:inputText id="itFirstName" value="#{objContact.firstName}">
 								</xp:inputText>
 							</xe:formRow>
-							<xe:formRow id="formRow3" for="itLastName"
-								label="Last Name">
-								<xp:inputText id="itLastName"
-									value="#{objContact.lastName}" required="true">
+							<xe:formRow id="formRow3" for="itLastName" label="Last Name">
+								<xp:inputText id="itLastName" value="#{objContact.lastName}"
+									required="true">
 									<xp:this.validators>
-										<xp:validateRequired
-											message="The last name is required">
+										<xp:validateRequired message="The last name is required">
 										</xp:validateRequired>
 									</xp:this.validators>
 								</xp:inputText>
 							</xe:formRow>
-							<xe:formRow id="formRow4" for="itEmail"
-								label="E Mail">
-								<xp:inputText id="itEmail"
-									value="#{objContact.email}">
+							<xe:formRow id="formRow4" for="itEmail" label="E Mail">
+								<xp:inputText id="itEmail" value="#{objContact.email}">
 								</xp:inputText>
 							</xe:formRow>
-							<xe:formRow id="formRow5" for="itState"
-								label="State">
-								<xp:inputText id="itState"
-									value="#{objContact.state}">
+							<xe:formRow id="formRow5" for="itState" label="State">
+								<xp:inputText id="itState" value="#{objContact.state}">
 								</xp:inputText>
 							</xe:formRow>
-							<xe:formRow id="formRow1" for="itCity"
-								label="City">
-								<xp:inputText id="itCity"
-									value="#{objContact.city}">
+							<xe:formRow id="formRow1" for="itCity" label="City">
+								<xp:inputText id="itCity" value="#{objContact.city}">
 								</xp:inputText>
 							</xe:formRow>
-							<xe:formRow id="formRow6" for="itSalary"
-								label="Salary" labelPosition="left">
-								<xp:inputText id="itSalary"
-									value="#{objContact.salary}">
-								</xp:inputText>
-							</xe:formRow>
-							<xe:formRow id="formRow7"
-								for="itJobFunction" label="Function in Job"
+							<xe:formRow id="formRow6" for="itSalary" label="Salary"
 								labelPosition="left">
-								<xp:inputText id="itJobFunction"
-									value="#{objContact.jobFunction}">
+								<xp:inputText id="itSalary" value="#{objContact.salary}">
 								</xp:inputText>
 							</xe:formRow>
-							<xe:formRow id="formRow8" for="itDevices"
-								label="Devices (count)" labelPosition="left">
-								<xp:inputText id="itDevices"
-									value="#{objContact.devices}">
-								</xp:inputText>
-							</xe:formRow>
-							<xe:formRow id="formRow9"
-								for="itLastInterview" label="Last Interview"
+							<xe:formRow id="formRow7" for="itJobFunction" label="Function in Job"
 								labelPosition="left">
-								<xp:inputText id="itLastInterview"
-									value="#{objContact.lastInterview}">
+								<xp:inputText id="itJobFunction" value="#{objContact.jobFunction}">
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow8" for="itDevices" label="Devices (count)"
+								labelPosition="left">
+								<xp:inputText id="itDevices" value="#{objContact.devices}">
+								</xp:inputText>
+							</xe:formRow>
+							<xe:formRow id="formRow9" for="itLastInterview" label="Last Interview"
+								labelPosition="left">
+								<xp:inputText id="itLastInterview" value="#{objContact.lastInterview}">
 									<xp:this.converter>
-										<xp:convertDateTime
-											type="date">
+										<xp:convertDateTime type="date">
 										</xp:convertDateTime>
 									</xp:this.converter>
 									<xp:dateTimeHelper></xp:dateTimeHelper>
 								</xp:inputText>
 							</xe:formRow>
-							<xe:formRow id="formRow10" for="inputText1"
-								label="Latitude" labelPosition="left">
-								<xp:inputText id="inputText1"
-									value="#{objContact.latitude}">
+							<xe:formRow id="formRow10" for="inputText1" label="Latitude"
+								labelPosition="left">
+								<xp:inputText id="inputText1" value="#{objContact.latitude}">
 								</xp:inputText>
 							</xe:formRow>
-							<xe:formRow id="formRow11" for="inputText2"
-								label="Longitude" labelPosition="left">
-								<xp:inputText id="inputText2"
-									value="#{objContact.longitude}">
+							<xe:formRow id="formRow11" for="inputText2" label="Longitude"
+								labelPosition="left">
+								<xp:inputText id="inputText2" value="#{objContact.longitude}">
 								</xp:inputText>
 							</xe:formRow>
-							<xe:formRow id="formRow12" for="inputText3"
-								label="Elevation" labelPosition="left">
-								<xp:inputText id="inputText3"
-									value="#{objContact.elevation}">
+							<xe:formRow id="formRow12" for="inputText3" label="Elevation"
+								labelPosition="left">
+								<xp:inputText id="inputText3" value="#{objContact.elevation}">
 								</xp:inputText>
 							</xe:formRow>
 							<xp:this.facets>
-								<xe:dialogButtonBar
-									id="dialogButtonBar1" xp:key="footer">
+								<xe:dialogButtonBar id="dialogButtonBar1"
+									xp:key="footer">
 									<xp:panel>
-										<xp:button value="save"
-											id="button1">
-											<xp:eventHandler
-												event="onclick" submit="true" refreshMode="complete">
-												<xp:this.action><![CDATA[#{javascript:contactBean.saveContact( objContact);
-var dlg = getComponent("dlgContact");
+										<xp:button value="save" id="button1">
+											<xp:eventHandler event="onclick" submit="true"
+												refreshMode="complete">
+												<xp:this.action>
+
+													<xp:actionGroup>
+
+														<xp:saveDocument
+															var="objContact">
+														</xp:saveDocument>
+
+														<xp:executeScript>
+
+
+															<xp:this.script><![CDATA[#{javascript:var dlg = getComponent("dlgContact");
 viewScope.conID = "";
 dlg.hide("panContacts");
 var ds = xptBean.findDataSource("panContacts", "sourceContacts");
-ds.refresh();}]]></xp:this.action>
+ds.refresh();}]]></xp:this.script>
+														</xp:executeScript>
+													</xp:actionGroup>
+												</xp:this.action>
 											</xp:eventHandler>
 										</xp:button>
 										&#160;
-										<xp:link escape="true"
-											text="cancel" id="lnkClose">
-											<xp:eventHandler
-												event="onclick" submit="true" refreshMode="complete"
-												disableValidators="true">
+										<xp:link escape="true" text="cancel" id="lnkClose">
+											<xp:eventHandler event="onclick" submit="true"
+												refreshMode="complete" disableValidators="true">
 												<xp:this.action><![CDATA[#{javascript:var dlg = getComponent("dlgContact");
 viewScope.conID = "";
 dlg.hide();}]]></xp:this.action>
@@ -256,7 +263,8 @@ dlg.hide();}]]></xp:this.action>
 						</xe:formTable>
 					</xp:panel>
 				</xe:dialog>
-				<xc:cc_changeLog></xc:cc_changeLog></xp:panel>
+				<xc:cc_changeLog></xc:cc_changeLog>
+			</xp:panel>
 		</xp:this.facets>
 	</xc:cc_application>
 </xp:view>

@@ -226,7 +226,7 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 	public void applicationCreated(ApplicationEx app) {
 		try {
 			m_Logger = LoggerFactory.getLogger(this.getClass().getCanonicalName());
-			m_Logger.info("App startetd");
+			m_Logger.info("App started");
 			Application.get().putObject(XPAGEAGENT_SERVICE_KEY, this);
 			initApplication();
 		} catch (Exception e) {
@@ -238,7 +238,7 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		NSFComponentModule moduleCurrent = NotesContext.getCurrent().getModule();
 
 		m_DatabasePath = moduleCurrent.getDatabasePath();
-		m_Logger.info("MODUL - getDatabasePath()" + moduleCurrent.getDatabasePath());
+		m_Logger.info("MODUL - getDatabasePath(): " + moduleCurrent.getDatabasePath());
 		registerAgents();
 
 		if (m_Agents == null) {

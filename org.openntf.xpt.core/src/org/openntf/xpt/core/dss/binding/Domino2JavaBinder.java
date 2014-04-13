@@ -18,6 +18,7 @@ package org.openntf.xpt.core.dss.binding;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import org.openntf.xpt.core.dss.binding.field.MimeMultipartBinder;
 import org.openntf.xpt.core.dss.binding.files.FileDownloadBinder;
 
 import lotus.domino.Document;
@@ -36,11 +37,10 @@ public class Domino2JavaBinder {
 		m_Definition = new ArrayList<Definition>();
 	}
 
-	
 	public void addDefinition(Definition def) {
 		m_Definition.add(def);
 	}
-	
+
 	public void processDocument(Document docProcess, Object objCurrent) throws NotesException {
 		if (Profiler.isEnabled()) {
 			ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDocument");
@@ -57,9 +57,9 @@ public class Domino2JavaBinder {
 	}
 
 	private void _processDocument(Document docProcess, Object objCurrent) throws NotesException {
-		for (Definition defCurrent: m_Definition) {
+		for (Definition defCurrent : m_Definition) {
 			if (Profiler.isEnabled()) {
-				ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDefinition - " +defCurrent.getBinder().getClass().getCanonicalName());
+				ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDefinition - " + defCurrent.getBinder().getClass().getCanonicalName());
 				long startTime = Profiler.getCurrentTime();
 				try {
 					_processDefinition(docProcess, objCurrent, defCurrent);
@@ -74,12 +74,20 @@ public class Domino2JavaBinder {
 
 	private void _processDefinition(Document docProcess, Object objCurrent, Definition defCurrent) throws NotesException {
 		if (defCurrent.getBinder() instanceof IFormulaBinder) {
-			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null,defCurrent);
-		} else {
-			Vector<?> vecValues = docProcess.getItemValue(defCurrent.getNotesField());
-			if (!vecValues.isEmpty() || defCurrent.getBinder() instanceof FileDownloadBinder ) {
-				defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, vecValues, defCurrent);
-			}
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
+			return;
+		}
+		if (defCurrent.getBinder() instanceof MimeMultipartBinder) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
+			return;
+		}
+		if (defCurrent.getBinder() instanceof FileDownloadBinder) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
+			return;
+		}
+		Vector<?> vecValues = docProcess.getItemValue(defCurrent.getNotesField());
+		if (!vecValues.isEmpty() ) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, vecValues, defCurrent);
 		}
 	}
 }

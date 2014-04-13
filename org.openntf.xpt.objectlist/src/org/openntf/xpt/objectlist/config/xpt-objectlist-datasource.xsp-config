@@ -51,4 +51,52 @@
     		<base-complex-id>dataInterface</base-complex-id>
     	</complex-extension>
     </complex-type>
+    
+    <complex-type>
+        <description>Single Object representation for CRUD operations</description>
+        <display-name>DSSObject</display-name>
+        <complex-class>org.openntf.xpt.objectlist.datasource.DSSObjectDataSource</complex-class>
+        <complex-id>org.openntf.xpt.objectlist.datasource.dssobjectdatasource</complex-id>
+		<property>
+			<description>Function to create a SingleObjectStorage</description>
+			<display-name>SingleObjectStorageService</display-name>
+			<property-name>objectStorageService</property-name>
+			<property-class>javax.faces.el.MethodBinding</property-class>
+			<property-extension>
+				<method-binding-property>true</method-binding-property>
+			</property-extension>
+		</property>
+		<property>
+			<description>Name of the database</description>
+			<display-name>databaseName</display-name>
+			<property-name>databaseName</property-name>
+			<property-class>java.lang.String</property-class>
+			<property-extension>
+			</property-extension>
+		</property>
+		<property>
+			<description>ID of the object</description>
+			<display-name>objectId</display-name>
+			<property-name>objectId</property-name>
+			<property-class>java.lang.String</property-class>
+			<property-extension>
+			</property-extension>
+		</property>
+		
+		<property>
+			<description>Action -> newObject, readObject or editObject</description>
+			<display-name>action</display-name>
+			<property-name>action</property-name>
+			<property-class>java.lang.String</property-class>
+			<property-extension>
+			</property-extension>
+		</property>
+		
+  		<group-type-ref>com.ibm.xsp.model.group.DataSource</group-type-ref>
+    	<complex-extension>
+    		<tag-name>dssObjectSource</tag-name>
+    		<base-complex-id>dataInterface</base-complex-id>
+    	</complex-extension>
+    </complex-type>
+    
 </faces-config>

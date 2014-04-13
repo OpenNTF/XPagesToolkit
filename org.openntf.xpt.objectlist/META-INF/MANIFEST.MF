@@ -8,9 +8,12 @@ Bundle-Vendor: WebGate Consulting AG
 Require-Bundle: org.eclipse.core.runtime,
  com.ibm.xsp.core,
  com.ibm.commons,
- org.openntf.xpt.core
+ org.openntf.xpt.core,
+ com.ibm.xsp.extsn
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.openntf.xpt.objectlist,
  org.openntf.xpt.objectlist.config,
- org.openntf.xpt.objectlist.datasource
+ org.openntf.xpt.objectlist.datasource,
+ org.openntf.xpt.objectlist.utils
+Import-Package: org.apache.commons.io
