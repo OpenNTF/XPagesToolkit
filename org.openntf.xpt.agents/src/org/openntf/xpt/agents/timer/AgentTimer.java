@@ -45,6 +45,12 @@ public final class AgentTimer {
 				xpa.execTimeWindowEndMinute(), start);
 	}
 
+	public static AgentTimer buildInitialTimer(XPagesAgent xpa) {
+		Calendar calStart = GregorianCalendar.getInstance();
+		calStart.add(Calendar.MINUTE, xpa.intervall() * -1);
+		return buildTimerWithStart(xpa, calStart);
+	}
+
 	private AgentTimer(String relatedAgentName, int intervall, ExecutionDay[] executionDay, int execTimeWindowStartHour, int execTimeWindowStartMinute, int execTimeWindowEndHour,
 			int execTimeWindowEndMinute, Calendar lastRun) {
 		super();

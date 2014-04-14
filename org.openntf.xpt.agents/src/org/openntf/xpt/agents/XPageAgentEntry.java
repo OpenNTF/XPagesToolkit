@@ -16,6 +16,7 @@
 package org.openntf.xpt.agents;
 
 import java.io.Serializable;
+import java.util.GregorianCalendar;
 
 import org.openntf.xpt.agents.annotations.ExecutionDay;
 import org.openntf.xpt.agents.annotations.ExecutionMode;
@@ -34,6 +35,7 @@ public class XPageAgentEntry implements Serializable {
 	private final String m_Title;
 	private final String m_Alias;
 	private final ExecutionMode m_ExecutionMode;
+	private final XPagesAgent m_XPA;
 
 	// StateControlled
 	private AgentTimer m_Timer;
@@ -41,10 +43,10 @@ public class XPageAgentEntry implements Serializable {
 	private boolean m_Running = false;
 
 	public static XPageAgentEntry buildXPagesAgentEntry(Class<XPageAgentJob> clAgent, XPagesAgent xpa, boolean active) {
-		return new XPageAgentEntry(clAgent, xpa.Name(), xpa.Alias(), xpa.executionMode(), AgentTimer.buildTimer(xpa), active);
+		return new XPageAgentEntry(clAgent, xpa.Name(), xpa.Alias(), xpa.executionMode(), AgentTimer.buildInitialTimer(xpa), active, xpa);
 	}
 
-	private XPageAgentEntry(Class<XPageAgentJob> agent, String title, String alias, ExecutionMode executionMode, AgentTimer timer, boolean active) {
+	private XPageAgentEntry(Class<XPageAgentJob> agent, String title, String alias, ExecutionMode executionMode, AgentTimer timer, boolean active, XPagesAgent xpa) {
 		super();
 
 		m_Agent = agent;
@@ -55,6 +57,7 @@ public class XPageAgentEntry implements Serializable {
 		m_Alias = alias;
 		m_ExecutionMode = executionMode;
 		m_Timer = timer;
+		m_XPA = xpa;
 		m_Active = active;
 		m_Running = false;
 	}
@@ -63,11 +66,17 @@ public class XPageAgentEntry implements Serializable {
 		return m_Running;
 	}
 
-	public void setRunning(boolean running) {
-		if (!running && m_ExecutionMode.isScheduled()) {
+	public void runScheduled() {
+		m_Running = true;
+	}
+
+	public void endSchedules() {
+		m_Running = false;
+		if (m_Timer.getLastRun() == null) {
+			m_Timer = m_Timer.nextTimer(GregorianCalendar.getInstance());
+		} else {
 			m_Timer = m_Timer.nextTimer();
 		}
-		m_Running = running;
 	}
 
 	public Class<XPageAgentJob> getAgent() {
@@ -116,11 +125,11 @@ public class XPageAgentEntry implements Serializable {
 		return m_Timer.getExecTimeWindowEndMinute();
 	}
 
-	public boolean readyToExecute() {
+	public boolean readyToExecuteScheduled() {
 		if (!m_ExecutionMode.isScheduled()) {
 			return false;
 		}
-		return m_Active && m_Timer.isTimeUp();
+		return (m_Active && m_Timer.isTimeUp() || isRunning());
 	}
 
 	public boolean isActive() {
@@ -128,6 +137,7 @@ public class XPageAgentEntry implements Serializable {
 	}
 
 	public void setActive(boolean active) {
+		m_Timer = AgentTimer.buildInitialTimer(m_XPA);
 		m_Active = active;
 	}
 

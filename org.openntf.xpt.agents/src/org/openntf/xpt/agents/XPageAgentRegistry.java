@@ -87,11 +87,11 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		applyARP();
 
 		m_Logger.info("checkSchedule");
-		for (XPageAgentEntry en : m_Agents.values()) {
-			if (en.readyToExecute()) {
+		for (XPageAgentEntry agentEntry : m_Agents.values()) {
+			if (agentEntry.readyToExecuteScheduled()) {
 				nCount++;
-				m_Logger.info("Execute: " + en.getAlias());
-				initExecutionBE(en);
+				m_Logger.info("Execute: " + agentEntry.getAlias());
+				initExecutionBE(agentEntry);
 			}
 		}
 		return nCount;
@@ -146,33 +146,35 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		return "<unkown error>";
 	}
 
-	public XPageAgentJob buildAgentClass(XPageAgentEntry en) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	public XPageAgentJob buildAgentClass(XPageAgentEntry agenEntry) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		XPageAgentJob jbCurrent = null;
 		Class<?>[] clArgs = new Class<?>[1];
 		clArgs[0] = String.class;
-		Constructor<?> ct = en.getAgent().getConstructor(clArgs);
+		Constructor<?> ct = agenEntry.getAgent().getConstructor(clArgs);
 		Object[] obArgs = new Object[1];
-		obArgs[0] = en.getTitle();
+		obArgs[0] = agenEntry.getTitle();
 		jbCurrent = (XPageAgentJob) ct.newInstance(obArgs);
-		jbCurrent.setExecMode(en.getExecutionMode());
+		jbCurrent.setExecMode(agenEntry.getExecutionMode());
 		jbCurrent.setDatabasePath(m_DatabasePath);
 		jbCurrent.initCode(NotesContext.getCurrent().getModule(), SessionCloner.getSessionCloner());
 
 		return jbCurrent;
 	}
 
-	private void initExecutionBE(XPageAgentEntry en) {
+	private void initExecutionBE(final XPageAgentEntry agentEntry) {
 		try {
-			final XPageAgentJob jbCurrent = buildAgentClass(en);
+			final XPageAgentJob jbCurrent = buildAgentClass(agentEntry);
+			agentEntry.runScheduled();
 			m_RunningJobs.put(jbCurrent.getJobID(), jbCurrent);
 			jbCurrent.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
 					m_RunningJobs.remove(jbCurrent.getJobID());
+					agentEntry.endSchedules();
+					;
 				}
 			});
 
-			// jbCurrent.initCode(m_Module, null);
 			AccessController.doPrivileged(new PrivilegedAction<Object>() {
 
 				@Override
@@ -327,10 +329,13 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 	}
 
 	public void activateAgent(String strAgent) {
-		XPageAgentEntry age = m_Agents.get(strAgent);
-		if (age != null) {
-			age.setActive(true);
+		XPageAgentEntry agentEntry = m_Agents.get(strAgent);
+		if (agentEntry != null) {
+			agentEntry.setActive(true);
 			m_AgentRunProperties.setProperty(strAgent, "ON");
+			if (agentEntry.readyToExecuteScheduled()) {
+				initExecutionBE(agentEntry);
+			}
 			saveARP();
 		}
 	}
