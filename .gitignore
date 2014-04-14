@@ -40,4 +40,5 @@ Desktop.ini
 
 # Mac crap
 .DS_Store
-*.jar
+org.openntf.xpt.updatesite/artifacts.jar
+org.openntf.xpt.updatesite/content.jar
