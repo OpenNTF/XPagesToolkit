@@ -51,14 +51,12 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 
 	private static final String XPAGEAGENT_SERVICE_KEY = "xpt.agent.registry"; // $NON-NLS-1$
 
-	private HashMap<String, XPageAgentEntry> m_Agents;
+	private final HashMap<String, XPageAgentEntry> m_Agents = new HashMap<String, XPageAgentEntry>();
 
-	private HashMap<String, XPageAgentJob> m_RunningJobs = new HashMap<String, XPageAgentJob>();
-	private HashMap<String, HashMap<String, String>> m_ExecutionPropertyRegistry = new HashMap<String, HashMap<String, String>>();
+	private final HashMap<String, XPageAgentJob> m_RunningJobs = new HashMap<String, XPageAgentJob>();
+	private final HashMap<String, HashMap<String, String>> m_ExecutionPropertyRegistry = new HashMap<String, HashMap<String, String>>();
 
-	// private Properties m_AgentRunProperties;
 	private AmgrPropertiesHandler m_AgentRunProperties;
-	// private MainSchedulerJob m_Job;
 
 	private Logger m_Logger;;
 
@@ -67,9 +65,6 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 	abstract public void registerAgents();
 
 	public void addXPageAgent(XPageAgentEntry en) {
-		if (m_Agents == null) {
-			m_Agents = new HashMap<String, XPageAgentEntry>();
-		}
 		m_Agents.put(en.getAlias(), en);
 	}
 
@@ -92,11 +87,11 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		applyARP();
 
 		m_Logger.info("checkSchedule");
-		for (XPageAgentEntry en : m_Agents.values()) {
-			if (en.readyToExecute()) {
+		for (XPageAgentEntry agentEntry : m_Agents.values()) {
+			if (agentEntry.readyToExecuteScheduled()) {
 				nCount++;
-				m_Logger.info("Execute: " + en.getAlias());
-				initExecutionBE(en);
+				m_Logger.info("Execute: " + agentEntry.getAlias());
+				initExecutionBE(agentEntry);
 			}
 		}
 		return nCount;
@@ -109,13 +104,12 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		if (!m_Agents.containsKey(strAgentAlias)) {
 			return "<agent " + strAgentAlias + " not found>";
 		}
-		
+
 		// CHECK if a possible Encryption Provider is loaded
 		EncryptionService.getInstance().agentLoadProvider();
 		// CHECK if a possible ChangLogProvider is loaded
 		ChangeLogService.getInstance().getChangeLogProcessors();
 
-		
 		XPageAgentEntry en = m_Agents.get(strAgentAlias);
 		try {
 			m_Logger.info("Agent found with alias: " + en.getAlias());
@@ -152,34 +146,35 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		return "<unkown error>";
 	}
 
-	public XPageAgentJob buildAgentClass(XPageAgentEntry en) throws NoSuchMethodException, InstantiationException, IllegalAccessException,
-			InvocationTargetException {
+	public XPageAgentJob buildAgentClass(XPageAgentEntry agenEntry) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		XPageAgentJob jbCurrent = null;
 		Class<?>[] clArgs = new Class<?>[1];
 		clArgs[0] = String.class;
-		Constructor<?> ct = en.getAgent().getConstructor(clArgs);
+		Constructor<?> ct = agenEntry.getAgent().getConstructor(clArgs);
 		Object[] obArgs = new Object[1];
-		obArgs[0] = en.getTitle();
+		obArgs[0] = agenEntry.getTitle();
 		jbCurrent = (XPageAgentJob) ct.newInstance(obArgs);
-		jbCurrent.setExecMode(en.getExecutionMode());
+		jbCurrent.setExecMode(agenEntry.getExecutionMode());
 		jbCurrent.setDatabasePath(m_DatabasePath);
 		jbCurrent.initCode(NotesContext.getCurrent().getModule(), SessionCloner.getSessionCloner());
 
 		return jbCurrent;
 	}
 
-	private void initExecutionBE(XPageAgentEntry en) {
+	private void initExecutionBE(final XPageAgentEntry agentEntry) {
 		try {
-			final XPageAgentJob jbCurrent = buildAgentClass(en);
+			final XPageAgentJob jbCurrent = buildAgentClass(agentEntry);
+			agentEntry.runScheduled();
 			m_RunningJobs.put(jbCurrent.getJobID(), jbCurrent);
 			jbCurrent.addJobChangeListener(new JobChangeAdapter() {
 				@Override
 				public void done(IJobChangeEvent event) {
 					m_RunningJobs.remove(jbCurrent.getJobID());
+					agentEntry.endSchedules();
+					;
 				}
 			});
 
-			// jbCurrent.initCode(m_Module, null);
 			AccessController.doPrivileged(new PrivilegedAction<Object>() {
 
 				@Override
@@ -198,18 +193,8 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 
 		try {
 			if (aAgent.isAnnotationPresent(XPagesAgent.class)) {
-				XPageAgentEntry age = new XPageAgentEntry();
 				XPagesAgent xag = aAgent.getAnnotation(XPagesAgent.class);
-				age.setAgent((Class<XPageAgentJob>) aAgent);
-				age.setTitle(xag.Name());
-				age.setAlias(xag.Alias());
-				age.setExecutionMode(xag.executionMode());
-				age.setIntervall(xag.intervall());
-				age.setExecutionDay(age.getExecutionDay());
-				age.setExecTimeWindowStartHour(age.getExecTimeWindowStartHour());
-				age.setExecTimeWindowStartMinute(age.getExecTimeWindowStartMinute());
-				age.setExecTimeWindowEndHour(age.getExecTimeWindowEndHour());
-				age.setExecTimeWindowEndMinute(age.getExecTimeWindowEndMinute());
+				XPageAgentEntry age = XPageAgentEntry.buildXPagesAgentEntry((Class<XPageAgentJob>) aAgent, xag, false);
 				addXPageAgent(age);
 			}
 		} catch (Exception e) {
@@ -241,9 +226,6 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		m_Logger.info("MODUL - getDatabasePath(): " + moduleCurrent.getDatabasePath());
 		registerAgents();
 
-		if (m_Agents == null) {
-			m_Agents = new HashMap<String, XPageAgentEntry>();
-		}
 		m_Logger.info(m_Agents.size() + " Agents registered");
 	}
 
@@ -347,10 +329,13 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 	}
 
 	public void activateAgent(String strAgent) {
-		XPageAgentEntry age = m_Agents.get(strAgent);
-		if (age != null) {
-			age.setActive(true);
+		XPageAgentEntry agentEntry = m_Agents.get(strAgent);
+		if (agentEntry != null) {
+			agentEntry.setActive(true);
 			m_AgentRunProperties.setProperty(strAgent, "ON");
+			if (agentEntry.readyToExecuteScheduled()) {
+				initExecutionBE(agentEntry);
+			}
 			saveARP();
 		}
 	}
