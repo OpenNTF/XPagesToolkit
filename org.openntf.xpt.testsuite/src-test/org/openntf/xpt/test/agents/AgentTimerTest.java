@@ -14,7 +14,6 @@ import org.openntf.xpt.agents.timer.AgentTimer;
 
 public class AgentTimerTest {
 
-
 	private XPagesAgent m_XPA55min;
 
 	@Before
@@ -65,4 +64,9 @@ public class AgentTimerTest {
 		assertNotNull("nextRun not created", agtNext);
 	}
 
+	@Test
+	public void testInitialStart() {
+		AgentTimer agt = AgentTimer.buildInitialTimer(m_XPA55min);
+		assertTrue("Timer should be isTimeUp()", agt.isTimeUp());
+	}
 }

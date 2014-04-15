@@ -22,6 +22,7 @@ import org.openntf.xpt.agents.annotations.ExecutionDay;
 import org.openntf.xpt.agents.annotations.ExecutionMode;
 import org.openntf.xpt.agents.annotations.XPagesAgent;
 import org.openntf.xpt.agents.timer.AgentTimer;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 ;
 
@@ -71,12 +72,17 @@ public class XPageAgentEntry implements Serializable {
 	}
 
 	public void endSchedules() {
+		LoggerFactory.logFine(this.getClass(), "endSchedules called!", null);
+		LoggerFactory.logFine(this.getClass(), "Intervall is set to:" + m_Timer.getIntervall(), null);
 		m_Running = false;
 		if (m_Timer.getLastRun() == null) {
+			LoggerFactory.logFine(this.getClass(), "getLastRun is null / nextRun was: " + m_Timer.getNextRun().getTime(), null);
 			m_Timer = m_Timer.nextTimer(GregorianCalendar.getInstance());
 		} else {
+			LoggerFactory.logFine(this.getClass(), "getLast was: " + m_Timer.getLastRun().getTime() + " / nextRun was: " + m_Timer.getNextRun().getTime(), null);
 			m_Timer = m_Timer.nextTimer();
 		}
+		LoggerFactory.logInfo(this.getClass(), "New Timer is set to: " + m_Timer.getNextRun().getTime(), null);
 	}
 
 	public Class<XPageAgentJob> getAgent() {
@@ -129,7 +135,10 @@ public class XPageAgentEntry implements Serializable {
 		if (!m_ExecutionMode.isScheduled()) {
 			return false;
 		}
-		return (m_Active && m_Timer.isTimeUp() || isRunning());
+		if (isRunning()) {
+			return false;
+		}
+		return (m_Active && m_Timer.isTimeUp());
 	}
 
 	public boolean isActive() {

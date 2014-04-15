@@ -47,7 +47,7 @@ public final class AgentTimer {
 
 	public static AgentTimer buildInitialTimer(XPagesAgent xpa) {
 		Calendar calStart = GregorianCalendar.getInstance();
-		calStart.add(Calendar.MINUTE, xpa.intervall() * -1);
+		calStart.add(Calendar.MINUTE, (xpa.intervall() * -1) -1);
 		return buildTimerWithStart(xpa, calStart);
 	}
 

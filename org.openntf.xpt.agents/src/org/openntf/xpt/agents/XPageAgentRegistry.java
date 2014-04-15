@@ -171,7 +171,6 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 				public void done(IJobChangeEvent event) {
 					m_RunningJobs.remove(jbCurrent.getJobID());
 					agentEntry.endSchedules();
-					;
 				}
 			});
 
@@ -190,7 +189,6 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 
 	@SuppressWarnings("unchecked")
 	public void initAgent(Class<?> aAgent) {
-
 		try {
 			if (aAgent.isAnnotationPresent(XPagesAgent.class)) {
 				XPagesAgent xag = aAgent.getAnnotation(XPagesAgent.class);
@@ -311,7 +309,7 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 	private void applyARP() {
 		for (XPageAgentEntry ape : m_Agents.values()) {
 			if (ape.getExecutionMode().isScheduled()) {
-				if ("ON".equalsIgnoreCase(m_AgentRunProperties.getProperty(ape.getAlias()))) {
+				if ("ON".equalsIgnoreCase(m_AgentRunProperties.getProperty(ape.getAlias())) && !ape.isActive()) {
 					ape.setActive(true);
 				}
 			}
