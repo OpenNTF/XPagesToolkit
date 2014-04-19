@@ -26,7 +26,6 @@ import org.openntf.xpt.core.json.annotations.JSONEntity;
 import org.openntf.xpt.core.json.annotations.JSONObject;
 
 import com.ibm.xsp.http.MimeMultipart;
-import com.ibm.xsp.model.domino.wrapped.DominoRichTextItem;
 
 @JSONObject
 @DominoStore(Form = "Contact", PrimaryFieldClass = String.class, PrimaryKeyField = "ID", View = "LUPContactByID")
@@ -79,11 +78,14 @@ public class Contact implements Serializable {
 	private Integer m_Elevation;
 
 	@DominoEntity(FieldName = "BodyMIME")
-	private DominoRichTextItem m_Comment;
+	private MimeMultipart m_Comment;
 
-	@DominoEntity(FieldName= "TagCloud")
+	@DominoEntity(FieldName = "TagCloud")
 	private List<String> m_TagCloud;
-	
+
+	@DominoEntity(FieldName = "contactStatus")
+	private ContactStatus m_Status = ContactStatus.UNKNOWN;
+
 	public String getID() {
 		return m_ID;
 	}
@@ -220,11 +222,11 @@ public class Contact implements Serializable {
 		return m_Elevation;
 	}
 
-	public DominoRichTextItem getComment() {
+	public MimeMultipart getComment() {
 		return m_Comment;
 	}
 
-	public void setComment(DominoRichTextItem comment) {
+	public void setComment(MimeMultipart comment) {
 		m_Comment = comment;
 	}
 
@@ -234,6 +236,22 @@ public class Contact implements Serializable {
 
 	public List<String> getTagCloud() {
 		return m_TagCloud;
+	}
+
+	public void setStatus(ContactStatus status) {
+		m_Status = status;
+	}
+
+	public ContactStatus getStatus() {
+		return m_Status;
+	}
+
+	public void setStatusTXT(String status) {
+		m_Status = ContactStatus.valueOf(status);
+	}
+
+	public String getStatusTXT() {
+		return m_Status.name();
 	}
 
 }

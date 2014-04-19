@@ -35,6 +35,7 @@ import org.openntf.xpt.core.dss.binding.field.DominoRichTextItemBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleArrayBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleClassBinder;
+import org.openntf.xpt.core.dss.binding.field.ENumBinder;
 import org.openntf.xpt.core.dss.binding.field.IntBinder;
 import org.openntf.xpt.core.dss.binding.field.IntClassBinder;
 import org.openntf.xpt.core.dss.binding.field.ListStringBinder;
@@ -121,6 +122,11 @@ public class BinderFactory {
 		if (clCurrent.equals(UploadedFile.class)) {
 			return FileUploadBinder.getInstance();
 		}
+
+		if (clCurrent.isEnum()) {
+			return ENumBinder.getInstance();
+		}
+
 		if (clCurrent instanceof Object) {
 			return ObjectBinder.getInstance();
 		}

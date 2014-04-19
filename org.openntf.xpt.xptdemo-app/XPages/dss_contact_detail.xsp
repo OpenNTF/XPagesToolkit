@@ -93,6 +93,13 @@ return new org.openntf.xpt.core.dss.SingleObjectStore(store);}]]></xpt:this.obje
 								multipleTrim="false">
 							</xp:inputText>
 						</xe:formRow>
+						<xe:formRow id="formRow15" for="inputText4" label="ContactStatus" labelPosition="left">
+						<xp:radioGroup id="radioGroup1"
+							value="#{objContact.statusTXT}">
+							<xp:selectItems>
+								<xp:this.value><![CDATA[#{javascript:return org.openntf.xpt.demo.bo.ContactStatus.values()}]]></xp:this.value>
+							</xp:selectItems>
+						</xp:radioGroup></xe:formRow>
 						<xe:formRow id="formRow13" for="inputText3" label="Comment"
 							labelPosition="top">
 
