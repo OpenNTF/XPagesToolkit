@@ -153,7 +153,6 @@ public class LoggerFactory {
 					propLog.setProperty("level", "1");
 				} else {
 					propLog = StorageService.getInstance().getPropertiesFromFile(strDBPath, XPT_LOG_PROPERTIES);
-					System.out.println("Props found");
 				}
 				Application.get().putObject(APPLICATION_LOGPROP_KEY, propLog);
 			} else {
@@ -168,7 +167,6 @@ public class LoggerFactory {
 			String strLevel = "";
 			String strKeyCaller = "";
 			for (String strKey : arrList) {
-				System.out.println("Check Key: "+ strKey);
 				if (strClassName.startsWith(strKey)) {
 					strLevel = propLog.getProperty(strKey);
 					strKeyCaller = strKey;

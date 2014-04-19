@@ -150,7 +150,6 @@ public class AgentListRenderer extends Renderer {
 		rw.writeText("login and activate", null);
 		rw.endElement("a");
 
-		
 		rw.endElement("div");
 
 		rw.endElement("div");
@@ -286,7 +285,7 @@ public class AgentListRenderer extends Renderer {
 						logCurrent.info("test: " + age.getEntry().getAlias() + " -> " + arrValues[0]);
 						if (age.getEntry().getAlias().equals(arrValues[0])) {
 							if ("on".equalsIgnoreCase(arrValues[1])) {
-								XPageAgentRegistry.getInstance().activateAgent(age.getEntry().getAlias());
+								XPageAgentRegistry.getInstance().activateAgent(age.getEntry().getAlias(), context);
 							} else {
 								XPageAgentRegistry.getInstance().deActivateAgent(age.getEntry().getAlias());
 							}

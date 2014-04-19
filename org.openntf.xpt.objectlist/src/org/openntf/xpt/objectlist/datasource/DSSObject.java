@@ -13,12 +13,16 @@ import org.openntf.xpt.core.dss.annotations.XPTPresentationControl;
 import org.openntf.xpt.core.utils.RoleAndGroupProvider;
 import org.openntf.xpt.core.utils.ServiceSupport;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
+import org.openntf.xpt.objectlist.utils.DominoRichTextItemProcessor;
 import org.openntf.xpt.objectlist.utils.ListProcessor;
 import org.openntf.xpt.objectlist.utils.MIMEMultipartProcessor;
 
+import com.ibm.xsp.component.UIFileuploadEx;
 import com.ibm.xsp.component.UIInputRichText;
+import com.ibm.xsp.http.IMimeMultipart;
 import com.ibm.xsp.http.MimeMultipart;
 import com.ibm.xsp.model.DataObject;
+import com.ibm.xsp.model.domino.wrapped.DominoRichTextItem;
 
 public class DSSObject implements DataObject, Serializable {
 
@@ -57,6 +61,11 @@ public class DSSObject implements DataObject, Serializable {
 		try {
 			Method mt = m_BO.getClass().getMethod(strMethode);
 			m_Fields.put(elField, mt.getReturnType());
+			if (mt.getReturnType().equals(DominoRichTextItem.class)) {
+				DominoRichTextItem dtr = (DominoRichTextItem) mt.invoke(m_BO);
+				dtr.getParent().restoreWrappedDocument();
+				return dtr;
+			}
 			return mt.invoke(m_BO);
 		} catch (Exception ex) {
 			throw new XPTRuntimeException("Error during getValue for " + elField, ex);
@@ -113,6 +122,21 @@ public class DSSObject implements DataObject, Serializable {
 				}
 				if (setterClass.equals(List.class) || Arrays.asList(setterClass.getInterfaces()).contains(java.util.List.class)) {
 					value4setter = ListProcessor.INSTANCE.process2List(setterClass, value);
+				}
+				if (setterClass.equals(DominoRichTextItem.class)) {
+					// EXIT after Execution of the DomionRichTextItemProcessor
+					if (value instanceof UIFileuploadEx.UploadedFile) {
+						DominoRichTextItemProcessor.INSTANCE.addMFileUpload((UIFileuploadEx.UploadedFile) value, (DominoRichTextItem) getValue(elField));
+						return;
+					}
+					if (value instanceof UIInputRichText.EmbeddedImage) {
+						DominoRichTextItemProcessor.INSTANCE.addEmbeddedImage((UIInputRichText.EmbeddedImage) value, (DominoRichTextItem) getValue(elField));
+						return;
+					}
+					if (value instanceof IMimeMultipart) {
+						DominoRichTextItemProcessor.INSTANCE.addMimeMultiPart((IMimeMultipart) value, (DominoRichTextItem) getValue(elField));
+						return;
+					}
 				}
 			}
 			String strMethode = ServiceSupport.makeSetter(elField);

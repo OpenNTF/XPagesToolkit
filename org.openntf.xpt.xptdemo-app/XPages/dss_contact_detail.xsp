@@ -83,9 +83,14 @@ return new org.openntf.xpt.core.dss.SingleObjectStore(store);}]]></xpt:this.obje
 							<xp:inputText id="inputText2" value="#{objContact.longitude}">
 							</xp:inputText>
 						</xe:formRow>
-						<xe:formRow id="formRow12" for="inputText3" label="Elevation"
-							labelPosition="left">
+						<xe:formRow id="formRow12" for="inputText3" label="Elevation" labelPosition="left">
 							<xp:inputText id="inputText3" value="#{objContact.elevation}">
+							</xp:inputText>
+						</xe:formRow>
+						<xe:formRow id="formRow14" for="inputText4" label="TagCloud" labelPosition="left">
+							<xp:inputText id="inputText4"
+								value="#{objContact.tagCloud}" multipleSeparator=","
+								multipleTrim="false">
 							</xp:inputText>
 						</xe:formRow>
 						<xe:formRow id="formRow13" for="inputText3" label="Comment"

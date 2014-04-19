@@ -26,6 +26,8 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import javax.faces.context.FacesContext;
+
 import org.eclipse.core.runtime.jobs.IJobChangeEvent;
 import org.eclipse.core.runtime.jobs.JobChangeAdapter;
 import org.openntf.xpt.agents.annotations.XPagesAgent;
@@ -76,7 +78,7 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		return m_Agents.get(strAlias);
 	}
 
-	public int checkSchedule() {
+	public int checkSchedule(FacesContext fc) {
 		int nCount = 0;
 		if (m_Agents == null) {
 			return nCount;
@@ -91,7 +93,7 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 			if (agentEntry.readyToExecuteScheduled()) {
 				nCount++;
 				m_Logger.info("Execute: " + agentEntry.getAlias());
-				initExecutionBE(agentEntry);
+				initExecutionBE(agentEntry, fc);
 			}
 		}
 		return nCount;
@@ -113,7 +115,7 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		XPageAgentEntry en = m_Agents.get(strAgentAlias);
 		try {
 			m_Logger.info("Agent found with alias: " + en.getAlias());
-			final XPageAgentJob jbCurrent = buildAgentClass(en);
+			final XPageAgentJob jbCurrent = buildAgentClass(en, FacesContext.getCurrentInstance());
 			m_RunningJobs.put(jbCurrent.getJobID(), jbCurrent);
 			jbCurrent.addJobChangeListener(new JobChangeAdapter() {
 				@Override
@@ -146,7 +148,7 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		return "<unkown error>";
 	}
 
-	public XPageAgentJob buildAgentClass(XPageAgentEntry agenEntry) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+	public XPageAgentJob buildAgentClass(XPageAgentEntry agenEntry, FacesContext fc) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
 		XPageAgentJob jbCurrent = null;
 		Class<?>[] clArgs = new Class<?>[1];
 		clArgs[0] = String.class;
@@ -156,14 +158,14 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 		jbCurrent = (XPageAgentJob) ct.newInstance(obArgs);
 		jbCurrent.setExecMode(agenEntry.getExecutionMode());
 		jbCurrent.setDatabasePath(m_DatabasePath);
-		jbCurrent.initCode(NotesContext.getCurrent().getModule(), SessionCloner.getSessionCloner());
+		jbCurrent.initCode(NotesContext.getCurrent().getModule(), SessionCloner.getSessionCloner(), fc);
 
 		return jbCurrent;
 	}
 
-	private void initExecutionBE(final XPageAgentEntry agentEntry) {
+	private void initExecutionBE(final XPageAgentEntry agentEntry, FacesContext fc) {
 		try {
-			final XPageAgentJob jbCurrent = buildAgentClass(agentEntry);
+			final XPageAgentJob jbCurrent = buildAgentClass(agentEntry, fc);
 			agentEntry.runScheduled();
 			m_RunningJobs.put(jbCurrent.getJobID(), jbCurrent);
 			jbCurrent.addJobChangeListener(new JobChangeAdapter() {
@@ -326,13 +328,13 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 
 	}
 
-	public void activateAgent(String strAgent) {
+	public void activateAgent(String strAgent, FacesContext fc) {
 		XPageAgentEntry agentEntry = m_Agents.get(strAgent);
 		if (agentEntry != null) {
 			agentEntry.setActive(true);
 			m_AgentRunProperties.setProperty(strAgent, "ON");
 			if (agentEntry.readyToExecuteScheduled()) {
-				initExecutionBE(agentEntry);
+				initExecutionBE(agentEntry, fc);
 			}
 			saveARP();
 		}

@@ -58,8 +58,8 @@ public class XPTAgentBean {
 		return XPageAgentRegistry.getInstance().getJobStatus(strJobID);
 	}
 
-	public int checkSchedule() {
-		return XPageAgentRegistry.getInstance().checkSchedule();
+	public int checkSchedule(FacesContext fc) {
+		return XPageAgentRegistry.getInstance().checkSchedule(fc);
 	}
 
 	public ExecutionUserProperties registerApplication2Master(String strUser, String strPassword) {

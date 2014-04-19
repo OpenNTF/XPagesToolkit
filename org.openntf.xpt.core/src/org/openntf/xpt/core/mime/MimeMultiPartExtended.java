@@ -1,12 +1,20 @@
 package org.openntf.xpt.core.mime;
 
 import org.openntf.xpt.core.XPTRuntimeException;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
+import lotus.domino.Database;
 import lotus.domino.Document;
+import lotus.domino.Item;
+import lotus.domino.MIMEEntity;
+import lotus.domino.RichTextItem;
 
+import com.ibm.domino.xsp.module.nsf.NotesContext;
 import com.ibm.xsp.http.IMimeMultipart;
 import com.ibm.xsp.http.IMimePart;
 import com.ibm.xsp.http.MimeMultipart;
+import com.ibm.xsp.model.domino.wrapped.DominoDocument;
+import com.ibm.xsp.model.domino.wrapped.DominoRichTextItem;
 
 public class MimeMultiPartExtended implements IMimeMultipart {
 
@@ -37,6 +45,48 @@ public class MimeMultiPartExtended implements IMimeMultipart {
 		if (m_Content != null) {
 			return;
 		}
+		try {
+			Database ndbCurrent = NotesContext.getCurrentUnchecked().getCurrentSession().getDatabase(m_Server, m_Database);
+			if (ndbCurrent == null) {
+				throw new XPTRuntimeException("Database "+ m_Server +"!!"+m_Database +" not accessable");
+			}
+			Document docCurrent = ndbCurrent.getDocumentByUNID(m_DocumentUNID);
+			if (docCurrent == null) {
+				throw new XPTRuntimeException("Document "+ m_Server +"!!"+m_Database +"/"+ m_DocumentUNID+" not accessable");
+				
+			}
+			MIMEEntity mimeCurrent = docCurrent.getMIMEEntity(m_FieldName);
+			if (mimeCurrent == null && !docCurrent.hasItem(m_FieldName)) {
+				m_Content = MimeMultipart.fromHTML("");
+				return;
+			}
+			if (mimeCurrent == null && docCurrent.hasItem(m_FieldName)) {
+				if (docCurrent.getFirstItem(m_FieldName) != null) {
+					Item itField = docCurrent.getFirstItem(m_FieldName);
+					if (itField.getType() != 1) {
+						m_Content = MimeMultipart.fromHTML(docCurrent.getItemValueString(m_FieldName));
+					} else {
+						RichTextItem rti = (RichTextItem) itField;
+						if (rti != null) {
+							DominoDocument dd = new DominoDocument();
+							dd.setDocument(docCurrent);
+							DominoRichTextItem drtCurrent = new DominoRichTextItem(dd, rti);
+							m_Content = MimeMultipart.fromHTML(drtCurrent.getHTML());
+						}
+					}
+					itField.recycle();
+				}
+				docCurrent.recycle();
+				ndbCurrent.recycle();
+			}
+			processMime(mimeCurrent);
+		} catch (Exception ex) {
+			LoggerFactory.logError(this.getClass(), "Error druing checkLoad()", ex);
+			throw new XPTRuntimeException("General Error with: Database "+ m_Server +"!!"+m_Database +" / Field: "+ m_FieldName +" / "+m_DocumentUNID);
+		}
+	}
+
+	private void processMime(MIMEEntity mimeCurrent) {
 	}
 
 	@Override

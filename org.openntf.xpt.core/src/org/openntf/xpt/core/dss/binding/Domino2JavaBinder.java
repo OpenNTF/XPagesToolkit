@@ -18,6 +18,7 @@ package org.openntf.xpt.core.dss.binding;
 import java.util.ArrayList;
 import java.util.Vector;
 
+import org.openntf.xpt.core.dss.binding.field.DominoRichTextItemBinder;
 import org.openntf.xpt.core.dss.binding.field.MimeMultipartBinder;
 import org.openntf.xpt.core.dss.binding.files.FileDownloadBinder;
 
@@ -78,6 +79,10 @@ public class Domino2JavaBinder {
 			return;
 		}
 		if (defCurrent.getBinder() instanceof MimeMultipartBinder) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
+			return;
+		}
+		if (defCurrent.getBinder() instanceof DominoRichTextItemBinder) {
 			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
 			return;
 		}

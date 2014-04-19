@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="42e" sequence="4" unid="0F627631E62E4F42C1257CB7007B3AAF">
+<noteinfo noteid="42e" sequence="7" unid="0F627631E62E4F42C1257CB7007B3AAF">
 <created><datetime dst="true">20140412T002559,51+02</datetime></created>
-<modified><datetime dst="true">20140412T004333,89+02</datetime></modified>
-<revised><datetime dst="true">20140412T004333,88+02</datetime></revised>
-<lastaccessed><datetime dst="true">20140412T004333,89+02</datetime></lastaccessed>
+<modified><datetime dst="true">20140413T100739,23+02</datetime></modified>
+<revised><datetime dst="true">20140413T100739,22+02</datetime></revised>
+<lastaccessed><datetime dst="true">20140413T100739,23+02</datetime></lastaccessed>
 <addedtofile><datetime dst="true">20140412T002602,35+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
 <item name="$Flags"><text>345CgQ</text></item>
 <item name="$MimeCharSet" sign="true"><text>UTF-8</text></item>
+<item name="$TITLE" sign="true"><text>xpt-log.properties</text></item>
+<item name="$DesignerVersion"><text>8.5.3</text></item>
 
 
-<item name="$FileNames" sign="true"><text>xpt.logger.properties</text></item>
-<item name="$TITLE" sign="true"><text>xpt-logger.properties</text></item>
-<item name="$DesignerVersion" sign="true"><text>8.5.3</text></item></note>
+<item name="$FileNames" sign="true"><text>xpt-log.properties</text></item></note>

@@ -31,6 +31,7 @@ import org.openntf.xpt.core.dss.binding.encryption.EncryptionStringBinder;
 import org.openntf.xpt.core.dss.binding.field.BooleanBinder;
 import org.openntf.xpt.core.dss.binding.field.BooleanClassBinder;
 import org.openntf.xpt.core.dss.binding.field.DateBinder;
+import org.openntf.xpt.core.dss.binding.field.DominoRichTextItemBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleArrayBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleClassBinder;
@@ -53,6 +54,7 @@ import org.openntf.xpt.core.dss.binding.util.FileHelper;
 import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.component.UIFileuploadEx.UploadedFile;
 import com.ibm.xsp.http.MimeMultipart;
+import com.ibm.xsp.model.domino.wrapped.DominoRichTextItem;
 
 public class BinderFactory {
 
@@ -112,6 +114,9 @@ public class BinderFactory {
 		}
 		if (clCurrent.equals(MimeMultipart.class)) {
 			return MimeMultipartBinder.getInstance();
+		}
+		if (clCurrent.equals(DominoRichTextItem.class)) {
+			return DominoRichTextItemBinder.getInstance();
 		}
 		if (clCurrent.equals(UploadedFile.class)) {
 			return FileUploadBinder.getInstance();

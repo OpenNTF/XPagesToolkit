@@ -26,6 +26,7 @@ import org.openntf.xpt.core.json.annotations.JSONEntity;
 import org.openntf.xpt.core.json.annotations.JSONObject;
 
 import com.ibm.xsp.http.MimeMultipart;
+import com.ibm.xsp.model.domino.wrapped.DominoRichTextItem;
 
 @JSONObject
 @DominoStore(Form = "Contact", PrimaryFieldClass = String.class, PrimaryKeyField = "ID", View = "LUPContactByID")
@@ -77,9 +78,12 @@ public class Contact implements Serializable {
 	@DominoEntity(FieldName = "Elevation", changeLog = true)
 	private Integer m_Elevation;
 
-	@DominoEntity(FieldName = "Body")
-	private MimeMultipart m_Comment;
+	@DominoEntity(FieldName = "BodyMIME")
+	private DominoRichTextItem m_Comment;
 
+	@DominoEntity(FieldName= "TagCloud")
+	private List<String> m_TagCloud;
+	
 	public String getID() {
 		return m_ID;
 	}
@@ -216,14 +220,20 @@ public class Contact implements Serializable {
 		return m_Elevation;
 	}
 
-	public MimeMultipart getComment() {
-		System.out.println("GET Comment");
+	public DominoRichTextItem getComment() {
 		return m_Comment;
 	}
 
-	public void setComment(MimeMultipart comment) {
-		System.out.println("SET comment with" + comment);
+	public void setComment(DominoRichTextItem comment) {
 		m_Comment = comment;
+	}
+
+	public void setTagCloud(List<String> tagCloud) {
+		m_TagCloud = tagCloud;
+	}
+
+	public List<String> getTagCloud() {
+		return m_TagCloud;
 	}
 
 }
