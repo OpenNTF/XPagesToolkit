@@ -103,9 +103,11 @@ public class BinderFactory {
 				for (Type genericType : genericTypes) {
 					if (String.class.equals(genericType)) {
 						return ListStringBinder.getInstance();
-					} else if (FileHelper.class.equals(genericType)) {
+					}
+					if (FileHelper.class.equals(genericType)) {
 						return FileDownloadBinder.getInstance();
-					} else if (UploadedFile.class.equals(genericType)) {
+					}
+					if (UploadedFile.class.equals(genericType)) {
 						return FileUploadBinder.getInstance();
 					}
 
@@ -121,6 +123,10 @@ public class BinderFactory {
 		}
 		if (clCurrent.equals(UploadedFile.class)) {
 			return FileUploadBinder.getInstance();
+		}
+
+		if (clCurrent.equals(FileHelper.class)) {
+			return FileDownloadBinder.getInstance();
 		}
 
 		if (clCurrent.isEnum()) {
