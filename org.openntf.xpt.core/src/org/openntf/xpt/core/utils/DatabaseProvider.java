@@ -53,6 +53,11 @@ public enum DatabaseProvider {
 			sesCurrent = ExtLibUtil.getCurrentSession();
 		}
 
+		return getDatabaseWithSession(databaseName, sesCurrent);
+
+	}
+
+	public Database getDatabaseWithSession(String databaseName, Session sesCurrent) {
 		Database ndbAccess = null;
 		try {
 			if (StringUtil.isEmpty(databaseName)) {
@@ -73,7 +78,6 @@ public enum DatabaseProvider {
 			throw new XPTRuntimeException("An unexpcted error was occured during getDatabase()", e);
 		}
 		return ndbAccess;
-
 	}
 
 	/**
