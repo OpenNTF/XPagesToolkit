@@ -49,13 +49,13 @@ public class DateProcessor {
 
 				if (sesCurrent.getInternational().isDateDMY()) {
 					m_DateFormatDateOnly = "dd" + strDateSep + "MM" + strDateSep + "yy";
-					m_DateFormat = m_DateFormatDateOnly + " hh" + strTimeSep + "mm" + strTimeSep + "ss" + strHour;
+					m_DateFormat = m_DateFormatDateOnly + " HH" + strTimeSep + "mm" + strTimeSep + "ss" + strHour;
 				} else if (sesCurrent.getInternational().isDateMDY()) {
 					m_DateFormatDateOnly = "MM" + strDateSep + "dd" + strDateSep + "yy";
-					m_DateFormat = m_DateFormatDateOnly + " hh" + strTimeSep + "mm" + strTimeSep + "ss" + strHour;
+					m_DateFormat = m_DateFormatDateOnly + " HH" + strTimeSep + "mm" + strTimeSep + "ss" + strHour;
 				} else if (sesCurrent.getInternational().isDateYMD()) {
 					m_DateFormatDateOnly = "yyyy" + strDateSep + "MM" + strDateSep + "dd";
-					m_DateFormat = m_DateFormatDateOnly + " hh" + strTimeSep + "mm" + strTimeSep + "ss" + strHour;
+					m_DateFormat = m_DateFormatDateOnly + " HH" + strTimeSep + "mm" + strTimeSep + "ss" + strHour;
 				}
 
 			}
@@ -117,7 +117,7 @@ public class DateProcessor {
 		if (dtOnly) {
 			return "dd.MM.yyyy";
 		}
-		return "dd.MM.yyyy ss:mm:hh";
+		return "dd.MM.yyyy ss:mm:HH";
 
 	}
 }
