@@ -16,7 +16,8 @@ Require-Bundle: org.eclipse.core.runtime,
  com.ibm.designer.runtime,
  com.ibm.notes.java.api,
  com.ibm.designer.runtime.directory,
- org.apache.commons.collections
+ org.apache.commons.collections,
+ com.ibm.notes.java.api
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
 Export-Package: org.apache.commons.codec,

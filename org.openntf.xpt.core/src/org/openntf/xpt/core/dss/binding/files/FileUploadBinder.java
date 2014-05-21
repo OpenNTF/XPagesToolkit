@@ -33,25 +33,32 @@ public class FileUploadBinder implements IBinder<UploadedFile> {
 
 	private static FileUploadBinder m_Binder;
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent,
+			Vector<?> vecCurrent, Definition def) {
 
 	}
 
-	public UploadedFile[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
+	public UploadedFile[] processJava2Domino(Document docCurrent,
+			Object objCurrent, Definition def) {
 		try {
 
 			UploadedFile file = getValue(objCurrent, def.getJavaField());
 
-			IUploadedFile FTemp = file.getUploadedFile();
-			File SrFile = FTemp.getServerFile();
+			if (file != null) {
+				IUploadedFile FTemp = file.getUploadedFile();
+				File SrFile = FTemp.getServerFile();
 
-			File FNew = new File(SrFile.getParentFile().getAbsolutePath() + File.separator + FTemp.getClientFileName());
-			SrFile.renameTo(FNew);
-			RichTextItem rt = null;
-			rt = (RichTextItem) docCurrent.getFirstItem(def.getNotesField());
-			if (rt == null)
-				rt = docCurrent.createRichTextItem(def.getNotesField());
-			rt.embedObject(EmbeddedObject.EMBED_ATTACHMENT, "", FNew.getAbsolutePath(), null);
+				File FNew = new File(SrFile.getParentFile().getAbsolutePath()
+						+ File.separator + FTemp.getClientFileName());
+				SrFile.renameTo(FNew);
+				RichTextItem rt = null;
+				rt = (RichTextItem) docCurrent
+						.getFirstItem(def.getNotesField());
+				if (rt == null)
+					rt = docCurrent.createRichTextItem(def.getNotesField());
+				rt.embedObject(EmbeddedObject.EMBED_ATTACHMENT, "",
+						FNew.getAbsolutePath(), null);
+			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -81,7 +88,8 @@ public class FileUploadBinder implements IBinder<UploadedFile> {
 	}
 
 	@Override
-	public UploadedFile getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
+	public UploadedFile getValueFromStore(Document docCurrent,
+			Vector<?> vecCurrent, Definition def) {
 		return null;
 	}
 

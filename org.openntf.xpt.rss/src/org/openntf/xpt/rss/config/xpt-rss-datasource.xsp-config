@@ -63,7 +63,7 @@
       <description>Use description instead of content for the feedentry description</description>
       <display-name>UseDescription</display-name>
       <property-name>useDescription</property-name>
-      <property-class>boolean</property-class>
+      <property-class>java.lang.Boolean</property-class>
       <property-extension>
         <designer-extension>
           <category>basics</category>

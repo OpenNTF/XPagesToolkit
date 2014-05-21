@@ -153,5 +153,9 @@ public class DSSObject implements DataObject, Serializable {
 	public Object getBO() {
 		return m_BO;
 	}
+	
+	public boolean isEditable() {
+		return m_EditMode;
+	}
 
 }

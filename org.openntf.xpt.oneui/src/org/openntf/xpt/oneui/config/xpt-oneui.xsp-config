@@ -18,6 +18,7 @@
       		<property-name>title</property-name>
       		<property-class>string</property-class>
       		<display-name>Title of the Box</display-name>
+      		<property-extension><localizable>true</localizable></property-extension>
     	</property>
     	<property>
       		<property-name>text</property-name>

@@ -84,7 +84,6 @@ public class XPTLibUtils {
 
 	public static AbstractDataSource getDatasource(String compName, String dsName, boolean deep) {
 		UIComponent uiTop = FacesContext.getCurrentInstance().getViewRoot();
-		@SuppressWarnings("deprecation")
 		UIComponent uiFound = ExtLibUtil.getComponentFor(uiTop, compName);
 		if (uiFound == null) {
 			return null;

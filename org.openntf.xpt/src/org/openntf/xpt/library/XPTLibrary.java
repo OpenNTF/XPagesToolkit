@@ -15,11 +15,24 @@
  */
 package org.openntf.xpt.library;
 
+import org.openntf.xpt.agents.config.AgentConfig;
 import org.openntf.xpt.core.config.ConfiguationProvider;
+import org.openntf.xpt.core.config.IPartConfiguration;
+import org.openntf.xpt.objectlist.config.ObjectListConfig;
+import org.openntf.xpt.oneui.config.OneUIConfig;
+import org.openntf.xpt.properties.config.PropertiesConfig;
+import org.openntf.xpt.rss.config.RSSConfig;
 
 import com.ibm.xsp.library.AbstractXspLibrary;
 
 public class XPTLibrary extends AbstractXspLibrary {
+
+	private final IPartConfiguration[] ALL_CONFIG = { new AgentConfig(),
+			new ObjectListConfig(), new OneUIConfig(), new PropertiesConfig(),
+			new RSSConfig() };
+
+	public XPTLibrary() {
+	}
 
 	@Override
 	public String getLibraryId() {
@@ -28,7 +41,7 @@ public class XPTLibrary extends AbstractXspLibrary {
 
 	@Override
 	public String[] getXspConfigFiles() {
-		return ConfiguationProvider.getInstance().getXspConfigFiles();
+		return ConfiguationProvider.getInstance().getXspConfigFiles(ALL_CONFIG);
 	}
 
 	@Override
@@ -37,16 +50,20 @@ public class XPTLibrary extends AbstractXspLibrary {
 	}
 
 	public String[] getFacesConfigFiles() {
-		return ConfiguationProvider.getInstance().getFacesConfigFiles();
+		return ConfiguationProvider.getInstance().getFacesConfigFiles(
+				ALL_CONFIG);
 	}
 
 	public String[] getDependencies() {
-        return new String[] {
-            "com.ibm.xsp.core.library",     // $NON-NLS-1$
-            "com.ibm.xsp.extsn.library",    // $NON-NLS-1$
-            "com.ibm.xsp.domino.library",   // $NON-NLS-1$
-            "com.ibm.xsp.extlib.library",   // $NON-NLS-1$
-        };
-    }
+		return new String[] { "com.ibm.xsp.core.library", // $NON-NLS-1$
+				"com.ibm.xsp.extsn.library", // $NON-NLS-1$
+				"com.ibm.xsp.domino.library", // $NON-NLS-1$
+				"com.ibm.xsp.designer.library", // $NON-NLS-1$
+				"com.ibm.xsp.extlib.library", // $NON-NLS-1$
+		};
+	}
 
+	public IPartConfiguration[] getConfigs() {
+		return ALL_CONFIG;
+	}
 }

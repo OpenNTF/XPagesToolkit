@@ -7,6 +7,8 @@ import static org.junit.Assert.assertTrue;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import lotus.notes.NotesException;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openntf.xpt.agents.annotations.XPagesAgent;
