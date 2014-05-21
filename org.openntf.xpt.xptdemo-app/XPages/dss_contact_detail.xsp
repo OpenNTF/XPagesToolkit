@@ -117,7 +117,8 @@ return new org.openntf.xpt.core.dss.SingleObjectStore(store);}]]></xpt:this.obje
 
 												<xp:actionGroup>
 
-													<xp:saveDocument
+													<xp:executeScript script="#{javascript:objContact.getBO().setModDate(new java.util.Date());}">
+													</xp:executeScript><xp:saveDocument
 														var="objContact">
 													</xp:saveDocument>
 
@@ -125,6 +126,7 @@ return new org.openntf.xpt.core.dss.SingleObjectStore(store);}]]></xpt:this.obje
 													<xp:openPage
 														name="/dss_contact_crud.xsp">
 													</xp:openPage>
+													
 												</xp:actionGroup>
 											</xp:this.action>
 										</xp:eventHandler>

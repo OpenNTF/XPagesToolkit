@@ -132,43 +132,44 @@ public class ObjectBinder implements IBinder<Object> {
 			Serializable result = null;
 			Stream mimeStream = session.createStream();
 			MIMEEntity entity = docCurrent.getMIMEEntity(strNotesField);
-			entity.getContentAsBytes(mimeStream);
+			if (entity != null) {
+				entity.getContentAsBytes(mimeStream);
 
-			ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
-			mimeStream.getContents(streamOut);
-			mimeStream.recycle();
+				ByteArrayOutputStream streamOut = new ByteArrayOutputStream();
+				mimeStream.getContents(streamOut);
+				mimeStream.recycle();
 
-			byte[] stateBytes = streamOut.toByteArray();
-			ByteArrayInputStream byteStream = new ByteArrayInputStream(stateBytes);
-			XPTObjectInputStream objectStream;
-			if (entity.getHeaders().toLowerCase().contains("content-encoding: gzip")) {
-				GZIPInputStream zipStream = new GZIPInputStream(byteStream);
-				objectStream = new XPTObjectInputStream(zipStream);
-			} else {
-				objectStream = new XPTObjectInputStream(byteStream);
-			}
-			final XPTObjectInputStream finOIS = objectStream;
-			Serializable restored = AccessController.doPrivileged(new PrivilegedAction<Serializable>() {
-
-				@Override
-				public Serializable run() {
-					try {
-
-						return (Serializable) finOIS.readObject();
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					return null;
+				byte[] stateBytes = streamOut.toByteArray();
+				ByteArrayInputStream byteStream = new ByteArrayInputStream(stateBytes);
+				XPTObjectInputStream objectStream;
+				if (entity.getHeaders().toLowerCase().contains("content-encoding: gzip")) {
+					GZIPInputStream zipStream = new GZIPInputStream(byteStream);
+					objectStream = new XPTObjectInputStream(zipStream);
+				} else {
+					objectStream = new XPTObjectInputStream(byteStream);
 				}
+				final XPTObjectInputStream finOIS = objectStream;
+				Serializable restored = AccessController.doPrivileged(new PrivilegedAction<Serializable>() {
 
-			});
-			finOIS.close();
-			result = restored;
+					@Override
+					public Serializable run() {
+						try {
 
-			entity.recycle();
+							return (Serializable) finOIS.readObject();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+						return null;
+					}
 
+				});
+				finOIS.close();
+				result = restored;
+
+				entity.recycle();
+			}
 			session.setConvertMime(convertMime);
-			System.out.println("READ:" +result!=null?result.getClass(): "<nulll>");
+			System.out.println("READ:" + result != null ? result.getClass() : "<nulll>");
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();

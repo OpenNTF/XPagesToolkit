@@ -86,6 +86,9 @@ public class Contact implements Serializable {
 	@DominoEntity(FieldName = "contactStatus")
 	private ContactStatus m_Status = ContactStatus.UNKNOWN;
 
+	@DominoEntity(FieldName = "ModDate")
+	private Date m_ModDate;
+
 	public String getID() {
 		return m_ID;
 	}
@@ -252,6 +255,14 @@ public class Contact implements Serializable {
 
 	public String getStatusTXT() {
 		return m_Status.name();
+	}
+
+	public void setModDate(Date modDate) {
+		m_ModDate = modDate;
+	}
+
+	public Date getModDate() {
+		return m_ModDate;
 	}
 
 }

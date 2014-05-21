@@ -6,5 +6,4 @@ Bundle-Version: 1.2.0.qualifier
 Bundle-Vendor: WebGate Consulting AG
 Fragment-Host: org.openntf.xpt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
-Require-Bundle: org.junit;bundle-version="4.11.0",
- com.ibm.notes.java.api;bundle-version="9.0.1"
+Require-Bundle: org.junit;bundle-version="4.11.0"

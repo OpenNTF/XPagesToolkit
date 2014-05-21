@@ -20,7 +20,7 @@ import java.lang.reflect.Type;
 
 import org.openntf.xpt.core.dss.annotations.DominoEntity;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
-import org.openntf.xpt.core.dss.binding.field.EmbeddedObjectBinder;
+import org.openntf.xpt.core.dss.binding.embedded.EmbeddedObjectBinder;
 import org.openntf.xpt.core.utils.ServiceSupport;
 
 public class Definition {
@@ -42,30 +42,37 @@ public class Definition {
 	private final Class<?> m_InnerClass;
 	private final Type m_GenericType;
 	private final BinderContainer m_Container;
+	private final int m_Counter;
 
 	public static Definition buildDefiniton(DominoStore ds, DominoEntity de, IBinder<?> binCurrent, Field fld) {
 		if (binCurrent instanceof EmbeddedObjectBinder) {
 			return new Definition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(ds, fld.getName()), binCurrent, de.changeLog(), de.encrypt(), de.encRoles(), de.dateOnly(), de.isAuthor(),
-					de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(), new BinderContainer(de.FieldName()));
+					de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(), new BinderContainer(de.FieldName()), -1);
 
 		} else {
 			return new Definition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(ds, fld.getName()), binCurrent, de.changeLog(), de.encrypt(), de.encRoles(), de.dateOnly(), de.isAuthor(),
-					de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(), null);
+					de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(), null, -1);
 		}
 	}
 
 	public static Definition buildDefinition4Decryption(String strFieldName, String[] arrRoles, boolean isDateOnly, IBinder<?> binCurrent) {
-		return new Definition(strFieldName, "", binCurrent, false, true, arrRoles, isDateOnly, false, false, false, false, false, "", false, null, null, null);
+		return new Definition(strFieldName, "", binCurrent, false, true, arrRoles, isDateOnly, false, false, false, false, false, "", false, null, null, null, -1);
 
 	}
 
 	public static Definition buildDefinition4EO(DominoStore ds, DominoEntity de, IBinder<?> binCurrent, Field fld, String storePrefix) {
-		return new Definition(storePrefix + "_" + de.FieldName(), ServiceSupport.buildCleanFieldNameCC(ds, fld.getName()), binCurrent, de.changeLog(), de.encrypt(), de.encRoles(), de.dateOnly(),
-				de.isAuthor(), de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(), null);
+		return new Definition(de.embedded() ? de.FieldName() : storePrefix + "_" + de.FieldName(), ServiceSupport.buildCleanFieldNameCC(ds, fld.getName()), binCurrent, de.changeLog(), de.encrypt(),
+				de.encRoles(), de.dateOnly(), de.isAuthor(), de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(),
+				de.embedded() ? new BinderContainer(storePrefix) : null, -1);
+	}
+
+	public static Definition cloneDefinition(Definition def, int nCounter) {
+		return new Definition(def.m_NotesField, def.m_JavaField, def.m_Binder, def.m_ChangeLog, def.m_Encrypted, def.m_EncRoles, def.m_DateOnly, def.m_Author, def.m_Formula, def.m_Names,
+				def.m_Reader, def.m_ReadOnly, def.m_ShowNameAs, def.m_WriteOnly, def.m_InnerClass, def.m_GenericType, def.m_Container, nCounter);
 	}
 
 	private Definition(String notesField, String javaField, IBinder<?> binCurrent, boolean changeLog, boolean encrypted, String[] encRoles, boolean dateOnly, boolean isAuthor, boolean isFormula,
-			boolean isNames, boolean isReader, boolean readOnly, String strShowNameAs, boolean writeOnly, Class<?> innerClass, Type genericType, BinderContainer bc) {
+			boolean isNames, boolean isReader, boolean readOnly, String strShowNameAs, boolean writeOnly, Class<?> innerClass, Type genericType, BinderContainer bc, int counter) {
 		m_NotesField = notesField;
 		m_JavaField = javaField;
 		m_Binder = binCurrent;
@@ -83,9 +90,13 @@ public class Definition {
 		m_InnerClass = innerClass;
 		m_GenericType = genericType;
 		m_Container = bc;
+		m_Counter = counter;
 	}
 
 	public String getNotesField() {
+		if (m_Counter > -1) {
+			return m_NotesField + "_" + m_Counter;
+		}
 		return m_NotesField;
 	}
 
@@ -151,6 +162,10 @@ public class Definition {
 
 	public BinderContainer getContainer() {
 		return m_Container;
+	}
+
+	public int getCounter() {
+		return m_Counter;
 	}
 
 }

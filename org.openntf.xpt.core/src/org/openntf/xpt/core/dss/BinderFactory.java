@@ -25,6 +25,8 @@ import org.openntf.xpt.core.dss.annotations.DominoEntity;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.dss.binding.embedded.EmbeddedListObjectBinder;
+import org.openntf.xpt.core.dss.binding.embedded.EmbeddedObjectBinder;
 import org.openntf.xpt.core.dss.binding.encryption.EncryptionDateBinder;
 import org.openntf.xpt.core.dss.binding.encryption.EncryptionDoubleBinder;
 import org.openntf.xpt.core.dss.binding.encryption.EncryptionStringBinder;
@@ -165,7 +167,21 @@ public class BinderFactory {
 		return null;
 	}
 
+	public static IBinder<?> getEmbededBinder(Class<?> clCurrent) {
+		if (clCurrent.equals(List.class)) {
+			return EmbeddedListObjectBinder.getInstance();
+		}
+		return EmbeddedObjectBinder.getInstance();
+	}
+
 	public static Definition getDefinition(DominoStore dsStore, DominoEntity de, Field fldCurrent, String prefix, boolean isRead) {
+		if (de.embedded()) {
+			IBinder<?> binder = BinderFactory.getEmbededBinder(fldCurrent.getType());
+			if (binder != null) {
+				String endPrefix = StringUtil.isEmpty(prefix) ? de.FieldName() : prefix +"_"+de.FieldName();
+				return Definition.buildDefinition4EO(dsStore, de, binder, fldCurrent, endPrefix);
+			}
+		}
 		if (de.encrypt()) {
 			IBinder<?> binder = BinderFactory.getEncryptionBinder(fldCurrent.getType());
 			if (binder != null) {

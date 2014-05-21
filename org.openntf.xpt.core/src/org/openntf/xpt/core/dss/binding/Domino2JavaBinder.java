@@ -16,6 +16,8 @@
 package org.openntf.xpt.core.dss.binding;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Vector;
 
 import org.openntf.xpt.core.dss.binding.field.DominoRichTextItemBinder;
@@ -96,8 +98,22 @@ public class Domino2JavaBinder {
 			return;
 		}
 		Vector<?> vecValues = docProcess.getItemValue(defCurrent.getNotesField());
-		if (!vecValues.isEmpty() ) {
+		if (!vecValues.isEmpty()) {
 			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, vecValues, defCurrent);
 		}
 	}
+
+	public List<Object> processDocument2List(Document docProcess, Class<?> cl, int nSize) throws Exception {
+		List<Object> lstRC = new LinkedList<Object>();
+		for (int nCounter = 0; nCounter < nSize; nCounter++) {
+			Object obj = cl.newInstance();
+			for (Definition def : m_Definition) {
+				Definition defProcess = Definition.cloneDefinition(def, nCounter);
+				_processDefinition(docProcess, obj, defProcess);
+			}
+			lstRC.add(obj);
+		}
+		return lstRC;
+	}
+
 }

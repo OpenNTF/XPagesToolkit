@@ -39,12 +39,14 @@ public class Java2DominoBinder {
 	public void addDefinition(Definition def) {
 		m_Definition.add(def);
 	}
+
 	/*
-	public void addDefinition(String strNotesField, String strJavaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues,
-			boolean encrypted, String[] encRoles) {
-		m_Definition.add(new Definition(strNotesField, strJavaField, binCurrent, changeLog, addValues, encrypted, encRoles));
-	}
-	*/
+	 * public void addDefinition(String strNotesField, String strJavaField,
+	 * IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object>
+	 * addValues, boolean encrypted, String[] encRoles) { m_Definition.add(new
+	 * Definition(strNotesField, strJavaField, binCurrent, changeLog, addValues,
+	 * encrypted, encRoles)); }
+	 */
 	public void processDocument(Document docProcess, Object objCurrent, String strPK) throws NotesException {
 		StorageAction action = StorageAction.MODIFY;
 		if (docProcess.isNewNote()) {
@@ -60,8 +62,8 @@ public class Java2DominoBinder {
 			}
 			if (defCurrent.isChangeLog() && arrResult != null) {
 				String strUser = docProcess.getParentDatabase().getParent().getEffectiveUserName();
-				ChangeLogService.getInstance().checkChangeLog(objCurrent, strPK, arrResult[0], arrResult[1], defCurrent.getJavaField(),
-						defCurrent.getNotesField(), action, strUser, docProcess.getParentDatabase().getParent(), docProcess.getParentDatabase());
+				ChangeLogService.getInstance().checkChangeLog(objCurrent, strPK, arrResult[0], arrResult[1], defCurrent.getJavaField(), defCurrent.getNotesField(), action, strUser,
+						docProcess.getParentDatabase().getParent(), docProcess.getParentDatabase());
 			}
 
 		}
@@ -127,4 +129,45 @@ public class Java2DominoBinder {
 			}
 		}
 	}
+
+	public void cleanFields(Document docCurrent) throws NotesException {
+		for (Definition def : m_Definition) {
+			if (docCurrent.hasItem(def.getNotesField())) {
+				docCurrent.removeItem(def.getNotesField());
+			}
+		}
+	}
+
+	public void processList2Document(Document docProcess, List<Object> lstCurrent, int nMax) throws NotesException {
+		int nCount = -1;
+		for (Object objCurrent : lstCurrent) {
+			nCount++;
+			for (Definition def : m_Definition) {
+				Definition defCurrent = Definition.cloneDefinition(def, nCount);
+				defCurrent.getBinder().processJava2Domino(docProcess, objCurrent, defCurrent);
+			}
+		}
+		if (nMax > nCount) {
+			for (int nDelete = nCount; nDelete < nMax; nDelete++) {
+				for (Definition def : m_Definition) {
+					Definition defCurrent = Definition.cloneDefinition(def, nCount);
+					if (docProcess.hasItem(defCurrent.getNotesField())) {
+						docProcess.removeItem(defCurrent.getNotesField());
+					}
+				}
+			}
+		}
+	}
+
+	public void cleanFields(Document docCurrent, int nSize) throws NotesException {
+		for (int nCounter = 0; nCounter < nSize; nCounter++) {
+			for (Definition def : m_Definition) {
+				if (docCurrent.hasItem(def.getNotesField() + "_" + nCounter)) {
+					docCurrent.removeItem(def.getNotesField() + "_" + nCounter);
+				}
+			}
+
+		}
+	}
+
 }
