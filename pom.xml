@@ -10,6 +10,7 @@
 		<tycho-version>0.19.0</tycho-version>
 		<compiler>1.6</compiler>
 		<license.failIfMissing>false</license.failIfMissing>
+		<lic.file>${project.basedir}/LICENSE_HEADER/apacheV2.txt</lic.file>
 	</properties>
 
 	<repositories>
@@ -150,7 +151,7 @@
 				<artifactId>license-maven-plugin</artifactId>
 				<version>2.6</version>
 				<configuration>
-					<header>LICENSE_HEADER/apacheV2.txt</header>
+					<header>${lic.file}</header>
 					<properties>
 						<owner>WebGate Consulting AG</owner>
 						<email>christian.guedemann@webgate.biz</email>
@@ -237,6 +238,7 @@
 		<module>org.openntf.xpt.testsuite</module>
 
 		<module>org.openntf.xpt.updatesite</module>
+		<module>xpt.assembly</module>
 	</modules>
 	<dependencies>
 		<dependency>
@@ -244,6 +246,11 @@
 			<artifactId>license-maven-plugin</artifactId>
 			<version>2.6</version>
 			<type>maven-plugin</type>
+		</dependency>
+		<dependency>
+			<groupId>org.codehaus.plexus</groupId>
+			<artifactId>plexus-utils</artifactId>
+			<version>3.0.15</version>
 		</dependency>
 	</dependencies>
 </project>
