@@ -21,25 +21,6 @@
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-assembly-plugin</artifactId>
-				<version>2.4</version>
-				<executions>
-					<execution>
-						<phase>package</phase>
-						<goals>
-							<goal>single</goal>
-						</goals>
-						<configuration>
-							<descriptor>assembly.xml</descriptor>
-							<finalName>org.openntf.xpt-${project.version}</finalName>
-							<appendAssemblyId>false</appendAssemblyId>
-							<outputDirectory>${finalAssemblyFolder}</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
 				<groupId>com.googlecode.maven-download-plugin</groupId>
 				<artifactId>maven-download-plugin</artifactId>
 				<version>1.1.0</version>
@@ -67,8 +48,8 @@
 					</dependency>
 				</dependencies>
 			</plugin>
-			
-						<plugin>
+
+			<plugin>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.7</version>
 				<executions>
@@ -113,16 +94,26 @@
 					</execution>
 				</executions>
 			</plugin>
-			
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.4</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptor>assembly.xml</descriptor>
+							<finalName>org.openntf.xpt-${project.version}</finalName>
+							<appendAssemblyId>false</appendAssemblyId>
+							<outputDirectory>${finalAssemblyFolder}</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
-	<dependencies>
-		<dependency>
-			<groupId>org.openntf.xpt</groupId>
-			<artifactId>org.openntf.xpt.updatesite</artifactId>
-			<version>1.2.0-SNAPSHOT</version>
-			<type>eclipse-update-site</type>
-		</dependency>
-	</dependencies>
-	<groupId>2</groupId>
 </project>

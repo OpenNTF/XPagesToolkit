@@ -27,7 +27,6 @@
 	</repositories>
 	<build>
 		<plugins>
-
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -142,7 +141,7 @@
 				<version>2.9</version>
 				<configuration>
 					<failOnError>false</failOnError>
-					<excludePackageNames>com.sun.*:com.ibm.commons.*:com.ibm.sbt.core.*:com.ibm.sbt.plugin.*:com.ibm.sbt.jslibrray.*:com.ibm.sbt.proxy.*:com.ibm.sbt.security.*:*.util.*:com.ibm.sbt.portlet.*:com.ibm.sbt.playground.*:demo.*:acme.*</excludePackageNames>
+					<excludePackageNames>com.sun.*:lotus.domino.*</excludePackageNames>
 				</configuration>
 			</plugin>
 

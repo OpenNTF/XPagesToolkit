@@ -11,37 +11,14 @@
 
 
 
-	<moduleSets>
-		<moduleSet>
-			<includes>
-				<include>org.openntf.xpt:org.openntf.xpt.updatesite</include>
-			</includes>
-			<binaries>
-				<outputDirectory></outputDirectory>
-				<attachmentClassifier>zip</attachmentClassifier>
-				<outputFileNameMapping>org.openntf.xpt.updatesite.zip</outputFileNameMapping>
-			</binaries>
-		</moduleSet>
-	</moduleSets>
-	<dependencySets>
-		<dependencySet>
-			<includes>
-				<include>org.openntf.xpt:org.openntf.xpt.updatesite</include>
-			</includes>
-			<outputDirectory></outputDirectory>
-			<outputFileNameMapping>org.openntf.xpt.updatesite.zip</outputFileNameMapping>
-
-		</dependencySet>
-
-	</dependencySets>
 
 	<fileSets>
 		<fileSet>
 			<directory>${project.build.directory}/sources</directory>
 			<includes>
-				<include>*.zip</include>
+				<include>org.openntf.xpt*</include>
 			</includes>
-			<outputDirectory></outputDirectory>
+			<outputDirectory>/</outputDirectory>
 		</fileSet>
 		<fileSet>
 			<directory>../</directory>
@@ -51,6 +28,13 @@
 			</includes>
 			<outputDirectory></outputDirectory>
 		</fileSet>
-		
+
+		<fileSet>
+			<directory>../org.openntf.xpt.updatesite/target</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>org.openntf.xpt.updatesite*</include>
+			</includes>
+		</fileSet>
 	</fileSets>
 </assembly>
