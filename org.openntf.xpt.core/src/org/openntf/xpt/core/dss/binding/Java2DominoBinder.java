@@ -139,13 +139,13 @@ public class Java2DominoBinder {
 	}
 
 	public void processList2Document(Document docProcess, List<Object> lstCurrent, int nMax) throws NotesException {
-		int nCount = -1;
+		int nCount = 0;
 		for (Object objCurrent : lstCurrent) {
-			nCount++;
 			for (Definition def : m_Definition) {
 				Definition defCurrent = Definition.cloneDefinition(def, nCount);
 				defCurrent.getBinder().processJava2Domino(docProcess, objCurrent, defCurrent);
 			}
+			nCount++;
 		}
 		if (nMax > nCount) {
 			for (int nDelete = nCount; nDelete < nMax; nDelete++) {

@@ -169,7 +169,6 @@ public class ObjectBinder implements IBinder<Object> {
 				entity.recycle();
 			}
 			session.setConvertMime(convertMime);
-			System.out.println("READ:" + result != null ? result.getClass() : "<nulll>");
 			return result;
 		} catch (Exception e) {
 			e.printStackTrace();
