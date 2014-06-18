@@ -84,7 +84,7 @@ public class BinderContainer implements Serializable {
 		for (Field fldCurrent : lstFields) {
 			if (fldCurrent.isAnnotationPresent(DominoEntity.class)) {
 				DominoEntity de = fldCurrent.getAnnotation(DominoEntity.class);
-				if (!de.readOnly()) {
+				if (!de.readOnly() && !de.isFormula()) {
 					Definition def = BinderFactory.getDefinition(dsStore, de, fldCurrent, m_Prefix, false);
 					if (def != null) {
 						j2dRC.addDefinition(def);
