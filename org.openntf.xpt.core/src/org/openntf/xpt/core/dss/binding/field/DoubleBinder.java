@@ -20,12 +20,12 @@ import java.util.Vector;
 
 import lotus.domino.Document;
 
-import org.openntf.xpt.core.base.BaseDoubleBinder;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
-public class DoubleBinder extends BaseDoubleBinder implements IBinder<Double> {
+public class DoubleBinder extends AbstractBaseBinder<Double> implements IBinder<Double> {
 
 	private static DoubleBinder m_Binder;
 

@@ -44,9 +44,8 @@ public class DSSObject implements DataObject, Serializable {
 		if (m_Fields.containsKey(elField)) {
 			return m_Fields.get(elField);
 		}
-		String strMethode = ServiceSupport.makeGetter(elField);
 		try {
-			Method mt = m_BO.getClass().getMethod(strMethode);
+			Method mt = ServiceSupport.getGetterMethod(m_BO.getClass(), elField);
 			m_Fields.put(elField, mt.getReturnType());
 			return mt.getReturnType();
 		} catch (Exception ex) {
@@ -57,9 +56,8 @@ public class DSSObject implements DataObject, Serializable {
 	@Override
 	public Object getValue(Object field) {
 		String elField = "" + field;
-		String strMethode = ServiceSupport.makeGetter(elField);
 		try {
-			Method mt = m_BO.getClass().getMethod(strMethode);
+			Method mt = ServiceSupport.getGetterMethod(m_BO.getClass(), elField);
 			m_Fields.put(elField, mt.getReturnType());
 			if (mt.getReturnType().equals(DominoRichTextItem.class)) {
 				DominoRichTextItem dtr = (DominoRichTextItem) mt.invoke(m_BO);
@@ -153,7 +151,7 @@ public class DSSObject implements DataObject, Serializable {
 	public Object getBO() {
 		return m_BO;
 	}
-	
+
 	public boolean isEditable() {
 		return m_EditMode;
 	}

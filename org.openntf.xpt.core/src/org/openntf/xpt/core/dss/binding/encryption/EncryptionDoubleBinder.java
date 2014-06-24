@@ -21,7 +21,8 @@ import java.util.Vector;
 
 import lotus.domino.Document;
 
-import org.openntf.xpt.core.base.BaseDoubleBinder;
+import org.openntf.xpt.core.XPTRuntimeException;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
@@ -29,7 +30,7 @@ import org.openntf.xpt.core.dss.binding.IEncryptionBinder;
 import org.openntf.xpt.core.dss.binding.util.BaseEncryptionBinderSupport;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
-public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<Double>, IEncryptionBinder {
+public class EncryptionDoubleBinder extends AbstractBaseBinder<Double> implements IBinder<Double>, IEncryptionBinder {
 	private static EncryptionDoubleBinder m_Binder;
 
 	private EncryptionDoubleBinder() {
@@ -86,7 +87,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 				String strDblValue = (String) vecCurrent.get(0);
 				String strDblValueDec = EncryptionService.getInstance().decrypt(strDblValue);
 				if (strDblValueDec == null) {
-					throw new DSSException("Decryption Failed: " + def.getJavaField() + " / " + def.getNotesField());
+					throw new DSSException("Decryption failed: " + def.getJavaField() + " / " + def.getNotesField());
 				}
 				if (!strDblValueDec.equals("")) {
 					return Double.valueOf(strDblValueDec);
@@ -95,7 +96,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 		} catch (DSSException e) {
 			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new XPTRuntimeException("General Error", e);
 		}
 		return null;
 	}
@@ -118,6 +119,7 @@ public class EncryptionDoubleBinder extends BaseDoubleBinder implements IBinder<
 		}
 		return strRC;
 	}
+
 	@Override
 	public boolean hasAccess(Definition def, List<String> arrRoles) {
 		return BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, arrRoles);

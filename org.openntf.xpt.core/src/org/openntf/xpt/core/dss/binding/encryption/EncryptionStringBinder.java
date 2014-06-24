@@ -21,7 +21,8 @@ import java.util.Vector;
 
 import lotus.domino.Document;
 
-import org.openntf.xpt.core.base.BaseStringBinder;
+import org.openntf.xpt.core.XPTRuntimeException;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
@@ -30,7 +31,7 @@ import org.openntf.xpt.core.dss.binding.util.BaseEncryptionBinderSupport;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
-public class EncryptionStringBinder extends BaseStringBinder implements IBinder<String>, IEncryptionBinder {
+public class EncryptionStringBinder extends AbstractBaseBinder<String> implements IBinder<String>, IEncryptionBinder {
 	private static EncryptionStringBinder m_Binder;
 
 	private EncryptionStringBinder() {
@@ -67,7 +68,9 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 					return null;
 				}
 				String strValue = getValue(objCurrent, def.getJavaField());
-
+				if (strValue == null) {
+					strValue = "";
+				}
 				if (def.isReader() || def.isAuthor() || def.isAuthor()) {
 					strValue = NamesProcessor.getInstance().setPerson(strValue, true, docCurrent.getParentDatabase().getParent());
 				}
@@ -93,7 +96,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 				String strValue = (String) vecCurrent.get(0);
 				String decryptedValue = EncryptionService.getInstance().decrypt(strValue);
 				if (decryptedValue == null) {
-					throw new DSSException("Decryption Failed: " + def.getJavaField() +" / "+ def.getNotesField());
+					throw new DSSException("Decryption Failed: " + def.getJavaField() + " / " + def.getNotesField());
 				}
 				decryptedValue = NamesProcessor.getInstance().getPerson(def, decryptedValue, docCurrent.getParentDatabase().getParent());
 				return decryptedValue;
@@ -101,6 +104,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 		} catch (DSSException e) {
 			throw e;
 		} catch (Exception e) {
+			throw new XPTRuntimeException("General Error", e);
 		}
 		return "";
 	}
@@ -122,7 +126,7 @@ public class EncryptionStringBinder extends BaseStringBinder implements IBinder<
 		}
 		return strRC;
 	}
-	
+
 	@Override
 	public boolean hasAccess(Definition def, List<String> arrRoles) {
 		return BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, arrRoles);

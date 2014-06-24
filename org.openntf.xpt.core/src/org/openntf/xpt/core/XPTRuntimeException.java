@@ -16,11 +16,15 @@
 
 package org.openntf.xpt.core;
 
+/**
+ * General Runtime Exception for XPagesTookit. Will be thrown during the
+ * execution and indicates a illegal state
+ * 
+ * @author Christian Guedemann
+ * 
+ */
 public class XPTRuntimeException extends RuntimeException {
 
-	/**
-	 * General Exception. Will be thrown when something unexpected happens.
-	 */
 	private static final long serialVersionUID = 1L;
 
 	public XPTRuntimeException(String arg0) {

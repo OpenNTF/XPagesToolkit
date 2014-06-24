@@ -16,12 +16,12 @@
 package org.openntf.xpt.core.json.binding;
 
 
-import org.openntf.xpt.core.base.BaseDoubleBinder;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.utils.JSONSupport;
 
 import com.ibm.domino.services.util.JsonWriter;
 
-public class DoubleBinder extends BaseDoubleBinder implements IJSONBinder<Double> {
+public class DoubleBinder extends AbstractBaseBinder<Double> implements IJSONBinder<Double> {
 	private static DoubleBinder m_Binder;
 
 	private DoubleBinder() {

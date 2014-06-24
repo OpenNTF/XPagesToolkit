@@ -20,12 +20,12 @@ import java.util.Vector;
 
 import lotus.domino.Document;
 
-import org.openntf.xpt.core.base.BaseBooleanBinder;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
-public class BooleanBinder extends BaseBooleanBinder implements IBinder<Boolean> {
+public class BooleanBinder extends AbstractBaseBinder<Boolean> implements IBinder<Boolean> {
 
 	private static BooleanBinder m_Binder;
 

@@ -63,9 +63,8 @@ public class ObjectListDataEntry implements ViewRowData, Serializable {
 		if (field == null) {
 			return null;
 		}
-		String strGetter = ServiceSupport.makeGetter(field);
 		try {
-			Method mt = m_BO.getClass().getMethod(strGetter);
+			Method mt = ServiceSupport.getGetterMethod(m_BO.getClass(), field);
 			return mt.invoke(m_BO);
 		} catch (Exception e) {
 		}

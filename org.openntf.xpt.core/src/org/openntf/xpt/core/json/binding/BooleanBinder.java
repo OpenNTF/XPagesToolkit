@@ -16,12 +16,12 @@
 package org.openntf.xpt.core.json.binding;
 
 
-import org.openntf.xpt.core.base.BaseBooleanBinder;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.utils.JSONSupport;
 
 import com.ibm.domino.services.util.JsonWriter;
 
-public class BooleanBinder extends BaseBooleanBinder implements IJSONBinder<Boolean> {
+public class BooleanBinder extends AbstractBaseBinder<Boolean> implements IJSONBinder<Boolean> {
 	private static BooleanBinder m_Binder;
 
 	private BooleanBinder() {

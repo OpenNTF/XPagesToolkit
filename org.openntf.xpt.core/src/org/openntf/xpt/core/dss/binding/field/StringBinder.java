@@ -21,13 +21,13 @@ import java.util.Vector;
 import lotus.domino.Document;
 import lotus.domino.Item;
 
-import org.openntf.xpt.core.base.BaseStringBinder;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
-public class StringBinder extends BaseStringBinder implements IBinder<String> {
+public class StringBinder extends AbstractBaseBinder<String> implements IBinder<String> {
 
 	private static StringBinder m_Binder;
 
@@ -50,6 +50,9 @@ public class StringBinder extends BaseStringBinder implements IBinder<String> {
 			boolean isNamesValue = false;
 			String strOldValue = docCurrent.getItemValueString(def.getNotesField());
 			String strValue = getValue(objCurrent, def.getJavaField());
+			if (strValue == null) {
+				strValue = "";
+			}
 			if (def.isAuthor() || def.isReader() || def.isNames()) {
 				// Changed to a oneLine Call
 				Item iNotesField = docCurrent.replaceItemValue(def.getNotesField(), "");

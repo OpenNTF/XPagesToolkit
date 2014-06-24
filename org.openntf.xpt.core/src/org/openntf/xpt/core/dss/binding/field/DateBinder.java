@@ -24,13 +24,13 @@ import java.util.Vector;
 import lotus.domino.DateTime;
 import lotus.domino.Document;
 
-import org.openntf.xpt.core.base.BaseDateBinder;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.DateProcessor;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
-public class DateBinder extends BaseDateBinder implements IBinder<Date> {
+public class DateBinder extends AbstractBaseBinder<Date> implements IBinder<Date> {
 
 	private static DateBinder m_Binder;
 

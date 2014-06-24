@@ -20,12 +20,12 @@ import java.util.Vector;
 
 import lotus.domino.Document;
 
-import org.openntf.xpt.core.base.BaseIntegerBinder;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
-public class IntBinder extends BaseIntegerBinder implements IBinder<Integer> {
+public class IntBinder extends AbstractBaseBinder<Integer> implements IBinder<Integer> {
 
 	private static IntBinder m_Binder;
 

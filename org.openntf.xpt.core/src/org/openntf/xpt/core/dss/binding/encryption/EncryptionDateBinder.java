@@ -24,7 +24,8 @@ import java.util.Vector;
 
 import lotus.domino.Document;
 
-import org.openntf.xpt.core.base.BaseDateBinder;
+import org.openntf.xpt.core.XPTRuntimeException;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
@@ -33,7 +34,7 @@ import org.openntf.xpt.core.dss.binding.util.BaseEncryptionBinderSupport;
 import org.openntf.xpt.core.dss.binding.util.DateProcessor;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
-public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date>, IEncryptionBinder {
+public class EncryptionDateBinder extends AbstractBaseBinder<Date> implements IBinder<Date>, IEncryptionBinder {
 	private static EncryptionDateBinder m_Binder;
 
 	private EncryptionDateBinder() {
@@ -46,7 +47,6 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 		}
 		return m_Binder;
 	}
-	
 
 	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
@@ -68,7 +68,6 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase())) {
 				Date dtCurrent = getValue(objCurrent, def.getJavaField());
 				Date dtOld = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
-
 
 				dtRC[0] = dtOld; // /EncValue for Logger? Prob with return
 									// type
@@ -105,7 +104,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 				encDate = (String) vecCurrent.get(0);
 				decDate = EncryptionService.getInstance().decrypt(encDate);
 				if (decDate == null) {
-					throw new DSSException("Decryption Failed!"+ def.getJavaField() +" / "+ def.getNotesField());
+					throw new DSSException("Decryption Failed!" + def.getJavaField() + " / " + def.getNotesField());
 				}
 				if (!decDate.equals("")) {
 					if (def.isDateOnly()) {
@@ -118,7 +117,7 @@ public class EncryptionDateBinder extends BaseDateBinder implements IBinder<Date
 		} catch (DSSException e) {
 			throw e;
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new XPTRuntimeException("General Error", e);
 		}
 		return null;
 
