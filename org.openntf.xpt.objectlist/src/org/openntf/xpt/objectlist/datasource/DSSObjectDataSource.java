@@ -29,17 +29,22 @@ import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.FacesExceptionEx;
+import com.ibm.xsp.binding.MethodBindingEx;
 import com.ibm.xsp.model.AbstractDataSource;
 import com.ibm.xsp.model.DataContainer;
 import com.ibm.xsp.util.StateHolderUtil;
 
 public class DSSObjectDataSource extends AbstractDataSource {
 
+	public static final String[] DSSOBJECT_SSJS_NAME = { "cDSSObject" };
 	private String m_DatabaseName;
 	private String m_ObjectId;
 	private String m_Action;
 	private MethodBinding m_ObjectStorageService;
-
+	private MethodBinding m_PostOpen;
+	private MethodBinding m_PostNew;
+	private MethodBinding m_PostSave;
+	private MethodBinding m_QuerySave;
 
 	@Override
 	protected String composeUniqueId() {
@@ -75,8 +80,16 @@ public class DSSObjectDataSource extends AbstractDataSource {
 
 	@Override
 	public DataContainer load(FacesContext context) throws IOException {
+		DSSObject dssObject = buildDSSObject(context);
+		if (dssObject != null) {
+			if (dssObject.isNew()) {
+				invoke(context, m_PostNew, dssObject);
+			} else {
+				invoke(context, m_PostOpen, dssObject);
+			}
+		}
 
-		return new DSSObjectDataContainer(getBeanId(), composeUniqueId(), buildDSSObject(context));
+		return new DSSObjectDataContainer(getBeanId(), composeUniqueId(), dssObject);
 	}
 
 	@Override
@@ -96,11 +109,15 @@ public class DSSObjectDataSource extends AbstractDataSource {
 	}
 
 	@Override
-	public boolean save(FacesContext arg0, DataContainer arg1) throws FacesExceptionEx {
-		DSSObject dssObject = ((DSSObjectDataContainer) arg1).getDSSObject();
+	public boolean save(FacesContext context, DataContainer container) throws FacesExceptionEx {
+		DSSObject dssObject = ((DSSObjectDataContainer) container).getDSSObject();
 		SingleObjectStore<?> sos = getObjectStore();
-
-		return sos.saveObject(dssObject.getBO(), getDatabaseName());
+		invoke(context, m_QuerySave, dssObject);
+		if (sos.saveObject(dssObject.getBO(), getDatabaseName())) {
+			invoke(context, m_PostSave, dssObject);
+			return true;
+		}
+		return false;
 	}
 
 	public String getDatabaseName() {
@@ -195,6 +212,50 @@ public class DSSObjectDataSource extends AbstractDataSource {
 		} catch (Exception ex) {
 			throw new XPTRuntimeException("Error durintg getSingleObjectStoare", ex);
 		}
+	}
+
+	private void invoke(FacesContext context, MethodBinding method, DSSObject dssObject) {
+		if (method != null) {
+			Object[] params = null;
+			if (method instanceof MethodBindingEx) {
+				params = new Object[] { dssObject.getBO() };
+				((MethodBindingEx) method).setComponent(this.getComponent());
+				((MethodBindingEx) method).setParamNames(DSSOBJECT_SSJS_NAME);
+			}
+			method.invoke(context, params);
+		}
+	}
+
+	public MethodBinding getPostOpen() {
+		return m_PostOpen;
+	}
+
+	public void setPostOpen(MethodBinding postOpen) {
+		m_PostOpen = postOpen;
+	}
+
+	public MethodBinding getPostNew() {
+		return m_PostNew;
+	}
+
+	public void setPostNew(MethodBinding postNew) {
+		m_PostNew = postNew;
+	}
+
+	public MethodBinding getPostSave() {
+		return m_PostSave;
+	}
+
+	public void setPostSave(MethodBinding postSave) {
+		m_PostSave = postSave;
+	}
+
+	public MethodBinding getQuerySave() {
+		return m_QuerySave;
+	}
+
+	public void setQuerySave(MethodBinding querySave) {
+		m_QuerySave = querySave;
 	}
 
 }

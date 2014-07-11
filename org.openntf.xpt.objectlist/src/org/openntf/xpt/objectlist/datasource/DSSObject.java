@@ -30,12 +30,13 @@ public class DSSObject implements DataObject, Serializable {
 	private final Object m_BO;
 	private final Map<String, Class<?>> m_Fields = new HashMap<String, Class<?>>();
 	private final boolean m_EditMode;
-	private final boolean m_IsNew;
+	private final boolean m_New;
+
 
 	public DSSObject(Object obj, boolean editMode, boolean isNew) {
 		m_BO = obj;
 		m_EditMode = editMode;
-		m_IsNew = isNew;
+		m_New = isNew;
 	}
 
 	@Override
@@ -79,10 +80,10 @@ public class DSSObject implements DataObject, Serializable {
 				if (ctrl == null) {
 					return false;
 				} else {
-					if (ctrl.editNewOnly() && !m_IsNew) {
+					if (ctrl.editNewOnly() && !m_New) {
 						return true;
 					}
-					if (ctrl.modifyOnly() && m_IsNew) {
+					if (ctrl.modifyOnly() && m_New) {
 						return true;
 					}
 					if (ctrl.editRoles().length == 0) {
@@ -154,6 +155,10 @@ public class DSSObject implements DataObject, Serializable {
 
 	public boolean isEditable() {
 		return m_EditMode;
+	}
+
+	public boolean isNew() {
+		return m_New;
 	}
 
 }
