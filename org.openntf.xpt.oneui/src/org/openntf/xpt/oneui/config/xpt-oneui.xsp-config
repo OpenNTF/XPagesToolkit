@@ -292,6 +292,18 @@
     	<group-type-ref>com.ibm.xsp.group.core.prop.style</group-type-ref>
     	<group-type-ref>com.ibm.xsp.group.core.prop.styleClass</group-type-ref>
 
+ 		<property>
+      		<description>Show as readonly?</description>
+      		<display-name>readOnly</display-name>
+      		<property-name>readOnly</property-name>
+      		<property-class>boolean</property-class>
+      		<property-extension>
+        		<designer-extension>
+          			<category>basics</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+
     	<property>
       		<property-name>database</property-name>
       		<property-class>string</property-class>

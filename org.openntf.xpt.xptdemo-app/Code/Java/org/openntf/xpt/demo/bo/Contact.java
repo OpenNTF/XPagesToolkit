@@ -18,6 +18,7 @@ package org.openntf.xpt.demo.bo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.openntf.xpt.core.dss.annotations.DominoEntity;
@@ -88,6 +89,21 @@ public class Contact implements Serializable {
 
 	@DominoEntity(FieldName = "ModDate")
 	private Date m_ModDate;
+
+	@DominoEntity(FieldName = "RESP", embedded = true)
+	private Responsible m_Responsible = new Responsible();
+
+	@DominoEntity(FieldName = "OTHER", embedded = true)
+	private List<Address> m_OtherAddresses;
+
+	@DominoEntity(FieldName = "PrimaryContact")
+	private boolean m_PrimaryContact;
+
+	@DominoEntity(FieldName = "SupportResponsible")
+	private String m_SupportResponsible;
+
+	@DominoEntity(FieldName = "OtherSupportResponsible")
+	private List<String> m_OtherSupportResponsible;
 
 	public String getID() {
 		return m_ID;
@@ -263,6 +279,56 @@ public class Contact implements Serializable {
 
 	public Date getModDate() {
 		return m_ModDate;
+	}
+
+	public Responsible getResponsible() {
+		if (m_Responsible == null) {
+			m_Responsible = new Responsible();
+		}
+		return m_Responsible;
+	}
+
+	public void setResponsible(Responsible responsible) {
+		m_Responsible = responsible;
+	}
+
+	public void setOtherAddresses(List<Address> ohterAddresses) {
+		m_OtherAddresses = ohterAddresses;
+	}
+
+	public List<Address> getOtherAddresses() {
+		return m_OtherAddresses;
+	}
+
+	public void addOtherAddresses(Address addr) {
+		if (m_OtherAddresses == null) {
+			m_OtherAddresses = new LinkedList<Address>();
+		}
+		m_OtherAddresses.add(addr);
+	}
+
+	public void setPrimaryContact(boolean primaryContact) {
+		m_PrimaryContact = primaryContact;
+	}
+
+	public boolean isPrimaryContact() {
+		return m_PrimaryContact;
+	}
+
+	public void setSupportResponsible(String supportResponsible) {
+		m_SupportResponsible = supportResponsible;
+	}
+
+	public String getSupportResponsible() {
+		return m_SupportResponsible;
+	}
+
+	public void setOtherSupportResponsible(List<String> otherSupportResponsible) {
+		m_OtherSupportResponsible = otherSupportResponsible;
+	}
+
+	public List<String> getOtherSupportResponsible() {
+		return m_OtherSupportResponsible;
 	}
 
 }

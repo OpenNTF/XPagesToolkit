@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.MethodBinding;
+import javax.faces.el.ValueBinding;
 import javax.servlet.http.HttpServletResponse;
 
 import lotus.domino.Document;
@@ -48,6 +49,8 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 	private MethodBinding m_BuildLabel;
 	private MethodBinding m_BuildValue;
 	private MethodBinding m_BuildLine;
+
+	private Boolean m_ReadOnly;
 
 	public UINamePicker() {
 		setRendererType(RENDERER_TYPE);
@@ -129,6 +132,34 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 
 	public void setBuildLine(MethodBinding buildLine) {
 		m_BuildLine = buildLine;
+	}
+
+	public boolean isReadOnly() {
+		if (null != m_ReadOnly) {
+			return m_ReadOnly;
+		}
+		ValueBinding _vb = getValueBinding("readOnly"); //$NON-NLS-1$
+		if (_vb != null) {
+			Boolean val = (java.lang.Boolean) _vb.getValue(FacesContext.getCurrentInstance());
+			if (val != null) {
+				return val;
+			}
+		}
+		return false;
+	}
+
+	public void setReadOnly(boolean readOnly) {
+		m_ReadOnly = readOnly;
+	}
+
+	// This is to maintain the compatibility with JSF
+	// We add this pseudo property as it can be used by the readonly renderkit
+	public boolean isReadonly() {
+		return isReadOnly();
+	}
+
+	public void setReadonly(boolean readOnly) {
+		setReadOnly(readOnly);
 	}
 
 	// SAVE & RESTORE of the Values

@@ -37,6 +37,11 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 	}
 
 	@Override
+	protected String getInputType() {
+		return "text"; // $NON-NLS-1$
+	}
+
+	@Override
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
 		UINamePicker uit = (UINamePicker) component;
 		if (!uit.isRendered()) {
@@ -136,6 +141,26 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 		super.initDojoAttributes(context, dojoComponent, attrs);
 		if (dojoComponent instanceof UINamePicker) {
 			UINamePicker c = (UINamePicker) dojoComponent;
+			
+
+
+            // aria-required
+            if(isRequirable() && c.isRequired()) {
+                DojoRendererUtil.addDojoHtmlAttributes(attrs,"aria-required","true"); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+
+            // aria-invalid
+            if(!c.isValid()) {
+                DojoRendererUtil.addDojoHtmlAttributes(attrs,"aria-invalid","true"); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+
+            // Particular case for the read-only attribute
+            // The flag can come from the readOnly property, or the readonly context?
+            if(isReadOnly(context,c)) {
+                DojoRendererUtil.addDojoHtmlAttributes(attrs,"readOnly",true); // $NON-NLS-1$
+            }
+			
+			
 			String msep = c.getMultipleSeparator();
 			if (!StringUtil.equals(msep, ",")) {
 				DojoRendererUtil.addDojoHtmlAttributes(attrs, "msep", msep); // $NON-NLS-1$

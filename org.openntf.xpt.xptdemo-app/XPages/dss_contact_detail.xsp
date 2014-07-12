@@ -12,8 +12,7 @@
 			<xp:panel xp:key="facetMiddle">
 				<xp:panel>
 					<xp:this.data>
-						<xpt:dssObjectSource var="objContact"
-							scope="view">
+						<xpt:dssObjectSource var="objContact" scope="view">
 
 							<xpt:this.objectStorageService><![CDATA[#{javascript:var store = org.openntf.xpt.demo.bo.ContactStorageService.getInstance();
 return new org.openntf.xpt.core.dss.SingleObjectStore(store);}]]></xpt:this.objectStorageService>
@@ -83,29 +82,125 @@ return new org.openntf.xpt.core.dss.SingleObjectStore(store);}]]></xpt:this.obje
 							<xp:inputText id="inputText2" value="#{objContact.longitude}">
 							</xp:inputText>
 						</xe:formRow>
-						<xe:formRow id="formRow12" for="inputText3" label="Elevation" labelPosition="left">
+						<xe:formRow id="formRow12" for="inputText3" label="Elevation"
+							labelPosition="left">
 							<xp:inputText id="inputText3" value="#{objContact.elevation}">
 							</xp:inputText>
 						</xe:formRow>
-						<xe:formRow id="formRow14" for="inputText4" label="TagCloud" labelPosition="left">
-							<xp:inputText id="inputText4"
-								value="#{objContact.tagCloud}" multipleSeparator=","
-								multipleTrim="false">
+						<xe:formRow id="formRow14" for="inputText4" label="TagCloud"
+							labelPosition="left">
+							<xp:inputText id="inputText4" value="#{objContact.tagCloud}"
+								multipleSeparator="," multipleTrim="false">
 							</xp:inputText>
 						</xe:formRow>
-						<xe:formRow id="formRow15" for="inputText4" label="ContactStatus" labelPosition="left">
-						<xp:radioGroup id="radioGroup1"
-							value="#{objContact.statusTXT}">
-							<xp:selectItems>
-								<xp:this.value><![CDATA[#{javascript:return org.openntf.xpt.demo.bo.ContactStatus.values()}]]></xp:this.value>
-							</xp:selectItems>
-						</xp:radioGroup></xe:formRow>
+						<xe:formRow id="formRow15" for="inputText4" label="ContactStatus"
+							labelPosition="left">
+							<xp:radioGroup id="radioGroup1" value="#{objContact.statusTXT}">
+								<xp:selectItems>
+									<xp:this.value><![CDATA[#{javascript:return org.openntf.xpt.demo.bo.ContactStatus.values()}]]></xp:this.value>
+								</xp:selectItems>
+							</xp:radioGroup>
+						</xe:formRow>
+						<xe:formRow for="inputText5" label="Resp. Name"
+							labelPosition="left" id="rowrespName">
+							<xp:inputText id="inputText5" value="#{objContact.responsible.name}">
+							</xp:inputText>
+						</xe:formRow>
+
+						<xe:formRow id="respDepartment" for="inputText6" label="Resp. Department"
+							labelPosition="left">
+							<xp:inputText id="inputText6"
+								value="#{objContact.responsible.department}">
+							</xp:inputText>
+						</xe:formRow>
+
+						<xe:formRow id="formRow16" label="" labelPosition="left">
+							<xp:checkBox text="Primary Contact" id="checkBox1"
+								value="#{objContact.primaryContact}" checkedValue="TRUE"
+								uncheckedValue="FALSE">
+								<xp:this.converter>
+									<xp:convertBoolean></xp:convertBoolean>
+								</xp:this.converter>
+							</xp:checkBox>
+						</xe:formRow>
+
+						<xe:formRow id="formRow17" label="Support Responsible"
+							labelPosition="left">
+							<xpt:oneuinamepicker displayLabel="false"
+								id="oneuinamepicker1" value="#{objContact.supportResponsible}"
+								view="$Users" database="names.nsf">
+							</xpt:oneuinamepicker>
+						</xe:formRow>
+
+						<xe:formRow id="formRow18" label="Additional Support Responsible"
+							labelPosition="left">
+							<xpt:oneuinamepicker displayLabel="false"
+								id="oneuinamepicker2"
+								value="#{objContact.otherSupportResponsible}" view="$Users"
+								database="names.nsf" multipleSeparator=",">
+							</xpt:oneuinamepicker>
+						</xe:formRow>
+
 						<xe:formRow id="formRow13" for="inputText3" label="Comment"
 							labelPosition="top">
 
-						<xp:inputRichText id="inputRichText1"
-							value="#{objContact.comment}">
-						</xp:inputRichText></xe:formRow>
+							<xp:inputRichText id="inputRichText1" value="#{objContact.comment}">
+							</xp:inputRichText>
+						</xe:formRow>
+
+						<xe:formRow id="otherAdd" labelPosition="none">
+							<xp:table>
+								<xp:tr>
+									<xp:td>Address</xp:td>
+									<xp:td>ZIP</xp:td>
+									<xp:td>Location</xp:td>
+								</xp:tr>
+								<xp:repeat var="adr" indexVar="nAdr"
+									value="#{objContact.otherAddresses}">
+									<xp:tr>
+										<xp:td>
+											<xp:text value="#{adr.address}">
+											</xp:text>
+										</xp:td>
+										<xp:td>
+											<xp:text value="#{adr.ZIP}">
+											</xp:text>
+										</xp:td>
+										<xp:td>
+											<xp:text value="#{adr.location}">
+											</xp:text>
+										</xp:td>
+									</xp:tr>
+								</xp:repeat>
+								<xp:tr>
+									<xp:td>
+										<xp:inputText value="#{viewScope.address}">
+										</xp:inputText>
+									</xp:td>
+									<xp:td>
+										<xp:inputText value="#{viewScope.zip}">
+										</xp:inputText>
+									</xp:td>
+									<xp:td>
+										<xp:inputText value="#{viewScope.location}">
+										</xp:inputText>
+										<xp:button id="btAdd" value="add">
+											<xp:eventHandler event="onclick" submit="true"
+												refreshMode="complete">
+												<xp:this.action><![CDATA[#{javascript:var addressNew = new org.openntf.xpt.demo.bo.Address();
+addressNew.setAddress(viewScope.address);
+addressNew.setZIP(viewScope.zip);
+addressNew.setLocation(viewScope.location);
+objContact.getBO().addOtherAddresses(addressNew);}]]></xp:this.action>
+											</xp:eventHandler>
+										</xp:button>
+									</xp:td>
+								</xp:tr>
+
+							</xp:table>
+						</xe:formRow>
+
+
 						<xp:this.facets>
 							<xe:dialogButtonBar id="dialogButtonBar1"
 								xp:key="footer">
@@ -117,30 +212,29 @@ return new org.openntf.xpt.core.dss.SingleObjectStore(store);}]]></xpt:this.obje
 
 												<xp:actionGroup>
 
-													<xp:executeScript script="#{javascript:objContact.getBO().setModDate(new java.util.Date());}">
-													</xp:executeScript><xp:saveDocument
-														var="objContact">
+													<xp:executeScript
+														script="#{javascript:objContact.getBO().setModDate(new java.util.Date());}">
+													</xp:executeScript>
+													<xp:saveDocument var="objContact">
 													</xp:saveDocument>
 
 
-													<xp:openPage
-														name="/dss_contact_crud.xsp">
+													<xp:openPage name="/dss_contact_crud.xsp">
 													</xp:openPage>
-													
+
 												</xp:actionGroup>
 											</xp:this.action>
 										</xp:eventHandler>
 									</xp:button>
 									&#160;
 									<xp:link escape="true" text="cancel" id="lnkClose">
-										<xp:eventHandler event="onclick"
-											submit="true" refreshMode="complete"
-											immediate="true">
+										<xp:eventHandler event="onclick" submit="true"
+											refreshMode="complete" immediate="true">
 											<xp:this.action>
-												<xp:openPage
-													name="/dss_contact_crud.xsp">
+												<xp:openPage name="/dss_contact_crud.xsp">
 												</xp:openPage>
-											</xp:this.action></xp:eventHandler>
+											</xp:this.action>
+										</xp:eventHandler>
 									</xp:link>
 								</xp:panel>
 							</xe:dialogButtonBar>
