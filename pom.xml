@@ -141,7 +141,7 @@
 				<version>2.9</version>
 				<configuration>
 					<failOnError>false</failOnError>
-					<excludePackageNames>com.sun.*:lotus.domino.*</excludePackageNames>
+					<excludePackageNames>com.sun.*:lotus.domino.*:lotus.domino</excludePackageNames>
 				</configuration>
 			</plugin>
 
