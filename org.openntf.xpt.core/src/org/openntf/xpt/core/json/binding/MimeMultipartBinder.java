@@ -37,7 +37,8 @@ public class MimeMultipartBinder extends AbstractBaseBinder<MimeMultipart> imple
 
 	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, boolean showEmptyValue, Class<?> containerClass) {
 		try {
-			String strValue = getValue(objCurrent, strJAVAField).getContentAsText();
+			MimeMultipart mpart = getValue(objCurrent, strJAVAField);
+			String strValue = mpart == null ? null : mpart.getContentAsText();
 			JSONSupport.writeString(jsWriter, strJSONProperty, strValue, showEmptyValue);
 
 		} catch (Exception e) {
