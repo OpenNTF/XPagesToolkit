@@ -10,6 +10,8 @@
 	<classpathentry exported="true" kind="lib" path="lib/httpcore-4.2.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpmime-4.2.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-io-2.4.jar"/>
-	<classpathentry kind="src" path="src/"/>
+	<classpathentry kind="lib" path="lib/icu4j-charset-53_1.jar"/>
+	<classpathentry kind="lib" path="lib/icu4j-53_1.jar"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
