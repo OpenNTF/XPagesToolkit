@@ -18,10 +18,11 @@ package org.openntf.xpt.core.utils;
 import java.io.IOException;
 import java.util.Date;
 
+import com.ibm.commons.util.io.json.JsonException;
 import com.ibm.domino.services.util.JsonWriter;
 
 public class JSONSupport {
-	public static void writeString(JsonWriter jsWriter, String strField, String strValue, boolean writeEmpty) throws IOException {
+	public static void writeString(JsonWriter jsWriter, String strField, String strValue, boolean writeEmpty) throws IOException, JsonException {
 		if (strValue != null) {
 			jsWriter.startProperty(strField);
 			jsWriter.outStringLiteral(strValue);
@@ -32,7 +33,7 @@ public class JSONSupport {
 		}
 	}
 
-	public static void writeInt(JsonWriter jsWriter, String strField, Integer nValue, boolean writeEmpty) throws IOException {
+	public static void writeInt(JsonWriter jsWriter, String strField, Integer nValue, boolean writeEmpty) throws IOException, JsonException {
 		if (nValue > 0) {
 			jsWriter.startProperty(strField);
 			jsWriter.outIntLiteral(nValue);
@@ -43,7 +44,7 @@ public class JSONSupport {
 		}
 	}
 
-	public static void writeDate(JsonWriter jsWriter, String strField, Date datCurrent, boolean writeEmpty) throws IOException {
+	public static void writeDate(JsonWriter jsWriter, String strField, Date datCurrent, boolean writeEmpty) throws IOException, JsonException {
 		if (datCurrent != null) {
 			jsWriter.startProperty(strField);
 			jsWriter.outDateLiteral(datCurrent);
@@ -55,7 +56,7 @@ public class JSONSupport {
 
 	}
 
-	public static void writeDouble(JsonWriter jsWriter, String strField, Double dblValue, boolean writeEmpty) throws IOException {
+	public static void writeDouble(JsonWriter jsWriter, String strField, Double dblValue, boolean writeEmpty) throws IOException, JsonException {
 		if (dblValue != null) {
 			jsWriter.startProperty(strField);
 			jsWriter.outNumberLiteral(dblValue);
@@ -66,7 +67,7 @@ public class JSONSupport {
 		}
 	}
 
-	public static void writeBoolean(JsonWriter jsWriter, String strField, Boolean blValue, boolean writeEmpty) throws IOException {
+	public static void writeBoolean(JsonWriter jsWriter, String strField, Boolean blValue, boolean writeEmpty) throws IOException, JsonException {
 		if (blValue != null) {
 			jsWriter.startProperty(strField);
 			jsWriter.outBooleanLiteral(blValue);
@@ -77,9 +78,10 @@ public class JSONSupport {
 		}
 	}
 
-	private static void writeEmpty(JsonWriter jsWriter, String strField, boolean writeEmpty) throws IOException {
+	private static void writeEmpty(JsonWriter jsWriter, String strField, boolean writeEmpty) throws IOException, JsonException {
 		if (writeEmpty) {
 			jsWriter.startProperty(strField);
+			jsWriter.outNull();
 			jsWriter.endProperty();
 
 		}
