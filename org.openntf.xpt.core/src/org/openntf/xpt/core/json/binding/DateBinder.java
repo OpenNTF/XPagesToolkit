@@ -18,6 +18,7 @@ package org.openntf.xpt.core.json.binding;
 import java.util.Date;
 
 import org.openntf.xpt.core.base.AbstractBaseBinder;
+import org.openntf.xpt.core.json.JSONEmptyValueStrategy;
 import org.openntf.xpt.core.utils.JSONSupport;
 
 import com.ibm.domino.services.util.JsonWriter;
@@ -35,11 +36,11 @@ public class DateBinder extends AbstractBaseBinder<Date> implements IJSONBinder<
 		}
 		return m_Binder;
 	}
-	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, boolean showEmptyValue,
+	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, JSONEmptyValueStrategy strategy,
 			Class<?> containerClass) {
 		try {
 			Date datValue = getValue(objCurrent, strJAVAField);
-			JSONSupport.writeDate(jsWriter, strJSONProperty, datValue, showEmptyValue);
+			JSONSupport.writeDate(jsWriter, strJSONProperty, datValue, strategy);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

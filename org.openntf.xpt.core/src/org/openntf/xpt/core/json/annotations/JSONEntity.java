@@ -26,4 +26,5 @@ import java.lang.annotation.Target;
 public  @interface JSONEntity {
 	String jsonproperty();
 	boolean showEmptyValue() default false;
+	boolean showEmptyValueAsString() default false;
 }

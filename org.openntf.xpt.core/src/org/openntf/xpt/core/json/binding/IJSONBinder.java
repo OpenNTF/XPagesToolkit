@@ -15,11 +15,13 @@
  */
 package org.openntf.xpt.core.json.binding;
 
+import org.openntf.xpt.core.json.JSONEmptyValueStrategy;
+
 import com.ibm.domino.services.util.JsonWriter;
 
 public interface IJSONBinder<T> {
 
-	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, boolean showEmptyValue,
+	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, JSONEmptyValueStrategy strategy,
 			Class<?> containerClass);
 
 	public T getValue(Object objCurrent, String strJavaField);

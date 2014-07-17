@@ -17,6 +17,7 @@ package org.openntf.xpt.core.json.binding;
 
 
 import org.openntf.xpt.core.base.AbstractBaseBinder;
+import org.openntf.xpt.core.json.JSONEmptyValueStrategy;
 import org.openntf.xpt.core.utils.JSONSupport;
 
 import com.ibm.domino.services.util.JsonWriter;
@@ -34,11 +35,11 @@ public class DoubleBinder extends AbstractBaseBinder<Double> implements IJSONBin
 		}
 		return m_Binder;
 	}
-	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, boolean showEmptyValue,
+	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, JSONEmptyValueStrategy strategy,
 			Class<?> containerClass) {
 		try {
 			Double nValue = getValue(objCurrent, strJAVAField);
-			JSONSupport.writeDouble(jsWriter, strJSONProperty, nValue, showEmptyValue);
+			JSONSupport.writeDouble(jsWriter, strJSONProperty, nValue, strategy);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
