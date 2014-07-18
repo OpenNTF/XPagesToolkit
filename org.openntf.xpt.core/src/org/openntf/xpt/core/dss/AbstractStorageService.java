@@ -39,15 +39,15 @@ import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 
-
 /**
  * Abstract class with all methode's for a storage service.
  * 
  * You need to define the createObject() to build the object for T
  * 
  * @author Christian Guedemann
- *
- * @param <T> The Type of the Object you want to load/store
+ * 
+ * @param <T>
+ *            The Type of the Object you want to load/store
  */
 public abstract class AbstractStorageService<T> {
 
@@ -56,18 +56,23 @@ public abstract class AbstractStorageService<T> {
 
 	/**
 	 * Stores the object in the current database.
-	 * @param obj The object to store
+	 * 
+	 * @param obj
+	 *            The object to store
 	 * @return true if the save operation was successful
 	 */
-	
+
 	public boolean save(T obj) {
 		return saveTo(obj, ExtLibUtil.getCurrentDatabase());
 	}
 
 	/**
 	 * Stores the objec in the target database.
-	 * @param obj the object to store
-	 * @param targetDatabase the target database
+	 * 
+	 * @param obj
+	 *            the object to store
+	 * @param targetDatabase
+	 *            the target database
 	 * @return true if the save operation was successful
 	 */
 	public boolean saveTo(T obj, Database targetDatabase) {
@@ -81,6 +86,7 @@ public abstract class AbstractStorageService<T> {
 
 	/**
 	 * Loads an object from the current database
+	 * 
 	 * @param id
 	 * @return the object
 	 */
@@ -90,6 +96,7 @@ public abstract class AbstractStorageService<T> {
 
 	/**
 	 * Load an object form the source database
+	 * 
 	 * @param id
 	 * @param sourceDatabase
 	 * @return the object
@@ -102,14 +109,14 @@ public abstract class AbstractStorageService<T> {
 			}
 			return ret;
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error",e);
+			LoggerFactory.logError(getClass(), "General Error", e);
 			throw new XPTRuntimeException("General Error", e);
 		}
 	}
 
-	
 	/**
 	 * Loads all objects from a view
+	 * 
 	 * @param viewName
 	 * @return List of objects
 	 */
@@ -117,9 +124,9 @@ public abstract class AbstractStorageService<T> {
 		return getAllFrom(viewName, ExtLibUtil.getCurrentDatabase());
 	}
 
-	
 	/**
 	 * Loads all objects form a view from the source database
+	 * 
 	 * @param viewName
 	 * @param sourceDatabase
 	 * @return
@@ -128,28 +135,26 @@ public abstract class AbstractStorageService<T> {
 		List<T> ret = new ArrayList<T>();
 		try {
 			View viwDabases = sourceDatabase.getView(viewName);
+			viwDabases.setAutoUpdate(false);
 			Document docNext = viwDabases.getFirstDocument();
 			while (docNext != null) {
 				Document docCurrent = docNext;
 				docNext = viwDabases.getNextDocument(docNext);
-				T obj = createObject();
-				if (DominoStorageService.getInstance().getObjectWithDocument(obj, docCurrent)) {
-					ret.add(obj);
-				}
+				convertDocument2ObjectAndAdd2List(ret, docCurrent);
 				docCurrent.recycle();
 
 			}
 			viwDabases.recycle();
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error",e);
+			LoggerFactory.logError(getClass(), "General Error", e);
 			throw new XPTRuntimeException("General Error", e);
 		}
 		return ret;
 	}
 
-	
 	/**
 	 * Loads all object by a foreign id from a view
+	 * 
 	 * @param foreignId
 	 * @param viewName
 	 * @return List with object
@@ -160,6 +165,7 @@ public abstract class AbstractStorageService<T> {
 
 	/**
 	 * Load all objects by a foreign id form a view from the source database
+	 * 
 	 * @param foreignId
 	 * @param viewName
 	 * @param sourceDatabase
@@ -169,22 +175,20 @@ public abstract class AbstractStorageService<T> {
 		List<T> ret = new ArrayList<T>();
 		try {
 			View view = sourceDatabase.getView(viewName);
+			view.setAutoUpdate(false);
 			DocumentCollection documents = view.getAllDocumentsByKey(foreignId, true);
 			Document docNext = documents.getFirstDocument();
 			while (docNext != null) {
 				Document docCurrent = docNext;
 				docNext = documents.getNextDocument(docNext);
 
-				T obj = createObject();
-				if (DominoStorageService.getInstance().getObjectWithDocument(obj, docCurrent)) {
-					ret.add(obj);
-				}
+				convertDocument2ObjectAndAdd2List(ret, docCurrent);
 				docCurrent.recycle();
 
 			}
 			view.recycle();
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error",e);
+			LoggerFactory.logError(getClass(), "General Error", e);
 			throw new XPTRuntimeException("General Error", e);
 		}
 		return ret;
@@ -192,6 +196,7 @@ public abstract class AbstractStorageService<T> {
 
 	/**
 	 * Loads all object where my user, group or role occurs in one of the fields
+	 * 
 	 * @param viewName
 	 * @param fieldsToCheck
 	 * @return
@@ -201,7 +206,9 @@ public abstract class AbstractStorageService<T> {
 	}
 
 	/**
-	 * Loads all object where my user, group or role occurs in one of the fields form the source database
+	 * Loads all object where my user, group or role occurs in one of the fields
+	 * form the source database
+	 * 
 	 * @param viewName
 	 * @param fieldsToCheck
 	 * @param sourceDatabase
@@ -212,22 +219,20 @@ public abstract class AbstractStorageService<T> {
 		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getMyGroupsAndRoles();
 		try {
 			View viwDabases = sourceDatabase.getView(viewName);
+			viwDabases.setAutoUpdate(false);
 			Document docNext = viwDabases.getFirstDocument();
 			while (docNext != null) {
 				Document docCurrent = docNext;
 				docNext = viwDabases.getNextDocument(docNext);
 				if (isDocumentOfInterest(docCurrent, lstRolesGroups, fieldsToCheck)) {
-					T obj = createObject();
-					if (DominoStorageService.getInstance().getObjectWithDocument(obj, docCurrent)) {
-						ret.add(obj);
-					}
+					convertDocument2ObjectAndAdd2List(ret, docCurrent);
 				}
 				docCurrent.recycle();
 
 			}
 			viwDabases.recycle();
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error",e);
+			LoggerFactory.logError(getClass(), "General Error", e);
 			throw new XPTRuntimeException("General Error", e);
 		}
 		return ret;
@@ -235,10 +240,13 @@ public abstract class AbstractStorageService<T> {
 	}
 
 	/**
-	 * Loads all object where the user, group or role occurs in one of the fields 
-	 * @param userName Name of the user
+	 * Loads all object where the user, group or role occurs in one of the
+	 * fields
+	 * 
+	 * @param userName
+	 *            Name of the user
 	 * @param viewName
-	 * @param fieldsToCheck 
+	 * @param fieldsToCheck
 	 * @return
 	 */
 	public List<T> getAllObjectFor(String userName, String viewName, List<String> fieldsToCheck) {
@@ -246,7 +254,9 @@ public abstract class AbstractStorageService<T> {
 	}
 
 	/**
-	 * Loads all object where the user, group or role occurs in one of the fields form the source database
+	 * Loads all object where the user, group or role occurs in one of the
+	 * fields form the source database
+	 * 
 	 * @param userName
 	 * @param viewName
 	 * @param fieldsToCheck
@@ -258,22 +268,20 @@ public abstract class AbstractStorageService<T> {
 		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(userName, sourceDatabase);
 		try {
 			View view = sourceDatabase.getView(viewName);
+			view.setAutoUpdate(false);
 			Document docNext = view.getFirstDocument();
 			while (docNext != null) {
 				Document docCurrent = docNext;
 				docNext = view.getNextDocument(docNext);
 				if (isDocumentOfInterest(docCurrent, lstRolesGroups, fieldsToCheck)) {
-					T obj = createObject();
-					if (DominoStorageService.getInstance().getObjectWithDocument(obj, docCurrent)) {
-						ret.add(obj);
-					}
+					convertDocument2ObjectAndAdd2List(ret, docCurrent);
 				}
 				docCurrent.recycle();
 
 			}
 			view.recycle();
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error",e);
+			LoggerFactory.logError(getClass(), "General Error", e);
 			throw new XPTRuntimeException("General Error", e);
 		}
 		return ret;
@@ -282,6 +290,7 @@ public abstract class AbstractStorageService<T> {
 
 	/**
 	 * Override this method with your implementation of the SoftDeleteProvider
+	 * 
 	 * @return
 	 */
 	public ISoftDeletionProvider<T> getSoftDeletionProvider() {
@@ -289,7 +298,9 @@ public abstract class AbstractStorageService<T> {
 	}
 
 	/**
-	 * Try's to softDelete the object from the current database. It throws a DSSException, if no softdeleteprovider is defined.
+	 * Try's to softDelete the object from the current database. It throws a
+	 * DSSException, if no softdeleteprovider is defined.
+	 * 
 	 * @param objDelete
 	 * @return true if the operation was successful
 	 * @throws DSSException
@@ -299,7 +310,9 @@ public abstract class AbstractStorageService<T> {
 	}
 
 	/**
-	 * Try's to softDelete the object from the current database. It throws a DSSException, if no softdeleteprovider is defined.
+	 * Try's to softDelete the object from the current database. It throws a
+	 * DSSException, if no softdeleteprovider is defined.
+	 * 
 	 * @param objDelete
 	 * @param targetDatabase
 	 * @return true if the operation was successful
@@ -313,11 +326,11 @@ public abstract class AbstractStorageService<T> {
 		}
 		return sdProv.softDelete(objDelete, targetDatabase, this);
 	}
-	
-	
 
 	/**
-	 * Deletes an object from the current database. If direct is true, the SoftDeleprovider is not used
+	 * Deletes an object from the current database. If direct is true, the
+	 * SoftDeleprovider is not used
+	 * 
 	 * @param objDelete
 	 * @param direct
 	 * @return
@@ -328,7 +341,9 @@ public abstract class AbstractStorageService<T> {
 	}
 
 	/**
-	 * Deletes an object from the target database. If direct is true, the SoftDeleprovider is not used
+	 * Deletes an object from the target database. If direct is true, the
+	 * SoftDeleprovider is not used
+	 * 
 	 * @param objDelete
 	 * @param targetDatabase
 	 * @param direct
@@ -348,7 +363,9 @@ public abstract class AbstractStorageService<T> {
 	}
 
 	/**
-	 * Undelet's an object from the current database using the SoftDeleteProvider
+	 * Undelet's an object from the current database using the
+	 * SoftDeleteProvider
+	 * 
 	 * @param objDelete
 	 * @return
 	 * @throws DSSException
@@ -359,6 +376,7 @@ public abstract class AbstractStorageService<T> {
 
 	/**
 	 * Undelet's an object from the target database using the SoftDeleteProvider
+	 * 
 	 * @param objDelete
 	 * @param targetDatabase
 	 * @return
@@ -384,7 +402,7 @@ public abstract class AbstractStorageService<T> {
 				}
 			}
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error",e);
+			LoggerFactory.logError(getClass(), "General Error", e);
 			throw new XPTRuntimeException("General Error", e);
 		}
 		return false;
@@ -398,15 +416,15 @@ public abstract class AbstractStorageService<T> {
 				lstRC.add("" + itValue.next());
 			}
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error",e);
+			LoggerFactory.logError(getClass(), "General Error", e);
 			throw new XPTRuntimeException("General Error", e);
 		}
 		return lstRC;
 	}
 
-	
 	/**
 	 * Override this function to create a blank object
+	 * 
 	 * @return
 	 */
 	protected abstract T createObject();
@@ -415,9 +433,9 @@ public abstract class AbstractStorageService<T> {
 		return getChangeLog(objCurrent, RoleAndGroupProvider.getInstance().getMyGroupsAndRoles());
 	}
 
-	
 	/**
 	 * Get the ChangeLog entries for an object.
+	 * 
 	 * @param objCurrent
 	 * @param myRoles
 	 * @return
@@ -437,9 +455,102 @@ public abstract class AbstractStorageService<T> {
 			}
 
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error",e);
+			LoggerFactory.logError(getClass(), "General Error", e);
 			throw new XPTRuntimeException("General Error", e);
 		}
 		return lstRC;
+	}
+
+	/**
+	 * Search for documents containing the search term in the current database,
+	 * using the fulltext search capability.
+	 * 
+	 * @param search
+	 * @return List with all objects of type T
+	 */
+	public List<T> search(String search) {
+		return searchFrom(search, ExtLibUtil.getCurrentDatabase());
+	}
+
+	/**
+	 * Search for documents containing the search term in the database db, using
+	 * the fulltext search capability.
+	 * 
+	 * @param search
+	 * @return List with all objects of type T
+	 */
+	public List<T> searchFrom(String search, Database db) {
+		List<T> result = new ArrayList<T>();
+		try {
+			DocumentCollection dclResult = db.FTSearch(search);
+			if (dclResult.getCount() == 0) {
+				dclResult.recycle();
+				return result;
+			}
+			result = new ArrayList<T>(dclResult.getCount());
+			Document docNext = dclResult.getFirstDocument();
+			while (docNext != null) {
+				Document docProcess = docNext;
+				docNext = dclResult.getNextDocument();
+				convertDocument2ObjectAndAdd2List(result, docProcess);
+				docProcess.recycle();
+			}
+			dclResult.recycle();
+		} catch (Exception e) {
+			throw new XPTRuntimeException("Error during search of " + search, e);
+		}
+		return result;
+	}
+
+	/**
+	 * Search for documents containing the search term in the view of the
+	 * current database, using the fulltext search capability.
+	 * 
+	 * @param search
+	 * @param viewName
+	 * @return
+	 */
+	public List<T> searchInView(String search, String viewName) {
+		return searchInViewFrom(search, viewName, ExtLibUtil.getCurrentDatabase());
+	}
+
+	/**
+	 * Search for documents containing the search term in the view of the
+	 * database db, using the fulltext search capability.
+	 * 
+	 * @param search
+	 * @param viewName
+	 * @param db
+	 * @return
+	 */
+	public List<T> searchInViewFrom(String search, String viewName, Database db) {
+		List<T> result = new ArrayList<T>();
+		try {
+			View view = db.getView(viewName);
+			int count = view.FTSearch(search);
+			if (count == 0) {
+				view.recycle();
+				return result;
+			}
+			result = new ArrayList<T>(count);
+			Document docNext = view.getFirstDocument();
+			while (docNext != null) {
+				Document docProcess = docNext;
+				docNext = view.getNextDocument(docNext);
+				convertDocument2ObjectAndAdd2List(result, docProcess);
+				docProcess.recycle();
+			}
+			view.recycle();
+		} catch (Exception e) {
+			throw new XPTRuntimeException("Error during search of " + search + " in view " + viewName, e);
+		}
+		return result;
+	}
+
+	private void convertDocument2ObjectAndAdd2List(List<T> result, Document docProcess) throws DSSException {
+		T obj = createObject();
+		if (DominoStorageService.getInstance().getObjectWithDocument(obj, docProcess)) {
+			result.add(obj);
+		}
 	}
 }
