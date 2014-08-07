@@ -62,6 +62,7 @@ public class XPTAgentResourceProvider extends BundleResourceProvider {
 	public static final DojoModuleResource XPTAGENTS_PROGRESSBAR_AGENTCONTROLLER = new DojoModuleResource(DOJO_XPT_PROGRESSBAR_AGENTCONTROLlER);
 	public static final StyleSheetResource XPTAGENTS_PROGRESSBAR_CSS = new StyleSheetResource(CSS_PROGRESSBAR);
 	public static final DojoModuleResource XPTAGENTS_PROGRESSBAR_DOJO = new DojoModuleResource("dijit.ProgressBar");
+	public static final DojoModuleResource XPTAGENTS_EXLIB = new DojoModuleResource("extlib.dijit.ExtLib");
 	public static final StyleSheetResource XPTAGENTS_AGENTLIST_CSS = new StyleSheetResource(CSS_AGENTLIST);
 	public static final DojoModuleResource XPTAGENTS_AGENTLIST_CONTROLLER = new DojoModuleResource(DOJO_XPT_AGENTLISTCONROLLER);
 

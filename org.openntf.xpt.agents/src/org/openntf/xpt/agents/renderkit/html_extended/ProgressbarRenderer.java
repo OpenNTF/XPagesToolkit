@@ -78,7 +78,7 @@ public class ProgressbarRenderer extends FacesRenderer {
 
 		// Compose the url
 		String url = pgBar.getUrl(context);
-		url = url.replaceAll("\\", "/");
+		url = url.replace("\\", "/");
 
 		// Get the service name
 		String serviceName = pgBar.getServiceName();
@@ -92,6 +92,7 @@ public class ProgressbarRenderer extends FacesRenderer {
 		String strID = pgBar.getClientId(context);
 		// Add the dojo modules
 		UIViewRootEx rootEx = (UIViewRootEx) context.getViewRoot();
+		rootEx.addEncodeResource(context, XPTAgentResourceProvider.XPTAGENTS_EXLIB);
 		rootEx.addEncodeResource(context, XPTAgentResourceProvider.XPTAGENTS_PROGRESSBAR_DOJO);
 		rootEx.addEncodeResource(context, XPTAgentResourceProvider.XPTAGENTS_PROGRESSBAR_AGENTCONTROLLER);
 		rootEx.addEncodeResource(context, XPTAgentResourceProvider.XPTAGENTS_PROGRESSBAR_CSS);
