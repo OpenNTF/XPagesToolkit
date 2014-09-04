@@ -9,7 +9,6 @@ import javax.faces.context.FacesContext;
 import javax.faces.context.ResponseWriter;
 
 import org.openntf.xpt.oneui.component.UINamePicker;
-import org.openntf.xpt.oneui.kernel.NamePickerProcessor;
 import org.openntf.xpt.oneui.ressources.XPTONEUIResourceProvider;
 
 import com.ibm.commons.util.StringUtil;
@@ -141,26 +140,24 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 		super.initDojoAttributes(context, dojoComponent, attrs);
 		if (dojoComponent instanceof UINamePicker) {
 			UINamePicker c = (UINamePicker) dojoComponent;
-			
 
+			// aria-required
+			if (isRequirable() && c.isRequired()) {
+				DojoRendererUtil.addDojoHtmlAttributes(attrs, "aria-required", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 
-            // aria-required
-            if(isRequirable() && c.isRequired()) {
-                DojoRendererUtil.addDojoHtmlAttributes(attrs,"aria-required","true"); //$NON-NLS-1$ //$NON-NLS-2$
-            }
+			// aria-invalid
+			if (!c.isValid()) {
+				DojoRendererUtil.addDojoHtmlAttributes(attrs, "aria-invalid", "true"); //$NON-NLS-1$ //$NON-NLS-2$
+			}
 
-            // aria-invalid
-            if(!c.isValid()) {
-                DojoRendererUtil.addDojoHtmlAttributes(attrs,"aria-invalid","true"); //$NON-NLS-1$ //$NON-NLS-2$
-            }
+			// Particular case for the read-only attribute
+			// The flag can come from the readOnly property, or the readonly
+			// context?
+			if (isReadOnly(context, c)) {
+				DojoRendererUtil.addDojoHtmlAttributes(attrs, "readOnly", true); // $NON-NLS-1$
+			}
 
-            // Particular case for the read-only attribute
-            // The flag can come from the readOnly property, or the readonly context?
-            if(isReadOnly(context,c)) {
-                DojoRendererUtil.addDojoHtmlAttributes(attrs,"readOnly",true); // $NON-NLS-1$
-            }
-			
-			
 			String msep = c.getMultipleSeparator();
 			if (!StringUtil.equals(msep, ",")) {
 				DojoRendererUtil.addDojoHtmlAttributes(attrs, "msep", msep); // $NON-NLS-1$
@@ -173,7 +170,7 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 					StringBuilder b = new StringBuilder();
 					JsonBuilder w = new JsonBuilder(b, true);
 					w.startObject();
-					HashMap<String, String> entries = NamePickerProcessor.INSTANCE.getDislplayLabels(c, values);
+					HashMap<String, String> entries = c.getNamePickerValueService(context).getDislplayLabels(c, values);
 					if (entries != null) {
 						for (String strKey : entries.keySet()) {
 							w.startProperty(strKey);

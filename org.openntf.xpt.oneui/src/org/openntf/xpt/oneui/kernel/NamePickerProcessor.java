@@ -19,37 +19,14 @@ import org.openntf.xpt.oneui.component.UINamePicker;
 
 import com.ibm.commons.util.StringUtil;
 
-public enum NamePickerProcessor {
+public enum NamePickerProcessor implements INamePickerValueService {
 	INSTANCE;
 
-	public String getTypeAhead(UINamePicker uiNp, String strSearch) {
-
-		StringBuilder bRC = new StringBuilder();
-		bRC.append("<ul><li><span class='informal'>Suggestions:</span></li>"); // $NON-NLS-1$
-		try {
-			List<NameEntry> lstNameEntries = getTypeAheaderNE(uiNp, strSearch);
-			for (NameEntry nam : lstNameEntries) {
-
-				int start = nam.getResultLine().toLowerCase().indexOf(strSearch.toLowerCase());
-				int stop = start + 3 + strSearch.length();
-
-				StringBuffer sb = new StringBuffer(nam.getResultLine());
-				if (start > -1) {
-					sb.insert(start, "<b>");
-					sb.insert(stop, "</b>");
-				}
-
-				bRC.append("<li><a onclick=\"" + uiNp.buildJSFunctionCall(nam) + "\">" + sb + "</a></li>");
-			}
-			bRC.append("</ul>"); // $NON-NLS-1$
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		// System.out.println(result);
-		return bRC.toString();
-	}
-
-	public List<NameEntry> getTypeAheaderNE(UINamePicker uiNp, String strSearch) throws NotesException {
+	/* (non-Javadoc)
+	 * @see org.openntf.xpt.oneui.kernel.INamePickerValueService#getTypeAheaderNE(org.openntf.xpt.oneui.component.UINamePicker, java.lang.String)
+	 */
+	@Override
+	public List<NameEntry> getTypeAheadValues(UINamePicker uiNp, String strSearch) throws NotesException {
 		Database db = DatabaseProvider.INSTANCE.getDatabase(uiNp.getDatabase(), false);
 		View vw = db.getView(uiNp.getView());
 		DocumentCollection docCollection;
@@ -103,6 +80,10 @@ public enum NamePickerProcessor {
 		return lstNameEntries;
 	}
 
+	/* (non-Javadoc)
+	 * @see org.openntf.xpt.oneui.kernel.INamePickerValueService#getDislplayLabels(org.openntf.xpt.oneui.component.UINamePicker, java.lang.String[])
+	 */
+	@Override
 	public HashMap<String, String> getDislplayLabels(UINamePicker uiNp, String[] values) {
 		HashMap<String, String> hsRC = new HashMap<String, String>();
 		try {

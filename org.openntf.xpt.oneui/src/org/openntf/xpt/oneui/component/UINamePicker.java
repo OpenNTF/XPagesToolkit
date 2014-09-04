@@ -12,21 +12,25 @@ import javax.servlet.http.HttpServletResponse;
 
 import lotus.domino.Document;
 import lotus.domino.Name;
+import lotus.domino.NotesException;
 
 import org.openntf.xpt.core.json.JSONService;
 import org.openntf.xpt.core.utils.ErrorJSONBuilder;
 import org.openntf.xpt.core.utils.ValueBindingSupport;
+import org.openntf.xpt.oneui.kernel.INamePickerValueService;
 import org.openntf.xpt.oneui.kernel.JsonResult;
 import org.openntf.xpt.oneui.kernel.NameEntry;
 import org.openntf.xpt.oneui.kernel.NamePickerProcessor;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.domino.services.util.JsonWriter;
+import com.ibm.xsp.FacesExceptionEx;
 import com.ibm.xsp.binding.MethodBindingEx;
 import com.ibm.xsp.component.FacesAjaxComponent;
 import com.ibm.xsp.component.UIInputEx;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 import com.ibm.xsp.model.domino.wrapped.DominoDocument;
+import com.ibm.xsp.util.ManagedBeanUtil;
 import com.ibm.xsp.util.StateHolderUtil;
 import com.ibm.xsp.util.TypedUtil;
 import com.ibm.xsp.webapp.XspHttpServletResponse;
@@ -51,6 +55,8 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 	private MethodBinding m_BuildLine;
 
 	private Boolean m_ReadOnly;
+
+	private String m_NameValueBean;
 
 	public UINamePicker() {
 		setRendererType(RENDERER_TYPE);
@@ -92,6 +98,14 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 
 	public void setSearchQuery(String searchQuery) {
 		m_SearchQuery = searchQuery;
+	}
+
+	public String getNameValueBean() {
+		return ValueBindingSupport.getValue(m_NameValueBean, "nameValueBean", this, null, getFacesContext());
+	}
+
+	public void setNameValueBean(String nameValueBean) {
+		m_NameValueBean = nameValueBean;
 	}
 
 	public boolean isDisplayLabel() {
@@ -215,7 +229,7 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 			String strSearch = localMap.get("$$value");
 			List<NameEntry> lstEntries = new ArrayList<NameEntry>();
 			if (strSearch != null) {
-				lstEntries = NamePickerProcessor.INSTANCE.getTypeAheaderNE(this, strSearch);
+				lstEntries = searcheNameValues(context, strSearch);
 			}
 			JsonResult jsResult = JsonResult.generateOKResult(lstEntries);
 			JSONService.getInstance().process2JSON(jsWriter, jsResult);
@@ -223,6 +237,27 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		} catch (Exception e) {
 			ErrorJSONBuilder.getInstance().processError2JSON(httpResponse, 9999, "Error during parsing!", e);
 		}
+	}
+
+	private List<NameEntry> searcheNameValues(FacesContext context, String strSearch) throws NotesException {
+		List<NameEntry> lstEntries;
+		INamePickerValueService service = getNamePickerValueService(context);
+		lstEntries = service.getTypeAheadValues(this, strSearch);
+		return lstEntries;
+	}
+
+	public INamePickerValueService getNamePickerValueService(FacesContext context) {
+		String nameValueBeanName = getNameValueBean();
+		if (nameValueBeanName != null) {
+			Object nvBean = ManagedBeanUtil.getBean(context, getNameValueBean());
+			if (!(nvBean instanceof INamePickerValueService)) {
+				throw new FacesExceptionEx(null, "Bean {0} is not a INamePickerValueService", nameValueBeanName);
+			}
+			return ((INamePickerValueService) nvBean);
+		} else {
+			return NamePickerProcessor.INSTANCE;
+		}
+
 	}
 
 	public String getDisplayLableValue(Document docSearch) {

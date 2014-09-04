@@ -305,6 +305,18 @@
     	</property>
 
     	<property>
+    		<description>Bean of type INamePickerValueService. If the bean is in place, database, view, lookupView are obsolet</description>
+      		<property-name>nameValueBean</property-name>
+      		<property-class>string</property-class>
+      		<display-name>NameValueBean</display-name>
+      		<property-extension>
+        		<designer-extension>
+          			<category>namePicker</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+ 
+    	<property>
       		<property-name>database</property-name>
       		<property-class>string</property-class>
       		<display-name>Database</display-name>
