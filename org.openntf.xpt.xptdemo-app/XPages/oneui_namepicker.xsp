@@ -87,6 +87,20 @@ return strName +" ("+strCompany +")"}]]></xpt:this.buildLine>
 							</xp:text>
 						</xp:td>
 					</xp:tr>
+					<xp:tr>
+						<xp:td>Name from CustomBean</xp:td>
+						<xp:td>
+							<xpt:oneuinamepicker id="oneuinamepicker6"
+								value="#{sessionScope.nameFromCustomBean}"
+								nameValueBean="defaultNameBean">
+							</xpt:oneuinamepicker>
+						</xp:td>
+						<xp:td>
+							<xp:text escape="true" id="computedField6" value="#{sessionScope.nameFromCustomBean}">
+							</xp:text>
+						</xp:td>
+					</xp:tr>
+					
 				</xp:table>
 				<xp:button id="btSave"
 					value="save selection 2 session Scope">
