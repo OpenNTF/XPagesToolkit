@@ -210,7 +210,7 @@ public class DSSObjectDataSource extends AbstractDataSource {
 			throw new XPTRuntimeException("No ObjectStorageService defined!");
 
 		} catch (Exception ex) {
-			throw new XPTRuntimeException("Error durintg getSingleObjectStoare", ex);
+			throw new XPTRuntimeException("Error during getObjectStore (SingleObjectStore)", ex);
 		}
 	}
 
