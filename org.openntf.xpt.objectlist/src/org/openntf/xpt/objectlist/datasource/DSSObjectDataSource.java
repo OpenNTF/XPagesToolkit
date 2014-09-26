@@ -154,12 +154,17 @@ public class DSSObjectDataSource extends AbstractDataSource {
 
 	@Override
 	public Object saveState(FacesContext context) {
-		Object[] values = new Object[5];
+		Object[] values = new Object[9];
 		values[0] = super.saveState(context);
 		values[1] = m_DatabaseName;
 		values[2] = m_ObjectId;
 		values[3] = m_Action;
 		values[4] = StateHolderUtil.saveMethodBinding(context, m_ObjectStorageService);
+		values[5] = StateHolderUtil.saveMethodBinding(context, m_PostNew);
+		values[6] = StateHolderUtil.saveMethodBinding(context, m_PostOpen);
+		values[7] = StateHolderUtil.saveMethodBinding(context, m_PostSave);
+		values[8] = StateHolderUtil.saveMethodBinding(context, m_QuerySave);
+		
 		return values;
 	}
 
@@ -171,6 +176,10 @@ public class DSSObjectDataSource extends AbstractDataSource {
 		m_ObjectId = (String) values[2];
 		m_Action = (String) values[3];
 		m_ObjectStorageService = StateHolderUtil.restoreMethodBinding(context, getComponent(), values[4]);
+		m_PostNew = StateHolderUtil.restoreMethodBinding(context, getComponent(), values[5]);
+		m_PostOpen = StateHolderUtil.restoreMethodBinding(context, getComponent(), values[6]);
+		m_PostSave = StateHolderUtil.restoreMethodBinding(context, getComponent(), values[7]);
+		m_QuerySave = StateHolderUtil.restoreMethodBinding(context, getComponent(), values[8]);
 	}
 
 	private DSSObject buildDSSObject(FacesContext context) {
