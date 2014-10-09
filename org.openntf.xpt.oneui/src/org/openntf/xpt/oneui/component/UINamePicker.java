@@ -189,11 +189,12 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		m_BuildValue = StateHolderUtil.restoreMethodBinding(context, this, values[7]);
 		m_LookupView = (String) values[8];
 		m_NameValueBean = (String) values[9];
+		m_DisplayLabel = (Boolean) values[10];
 	}
 
 	@Override
 	public Object saveState(FacesContext context) {
-		Object[] values = new Object[10];
+		Object[] values = new Object[11];
 		values[0] = super.saveState(context);
 		values[1] = m_Database;
 		values[2] = m_View;
@@ -204,6 +205,7 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		values[7] = StateHolderUtil.saveMethodBinding(context, m_BuildValue);
 		values[8] = m_LookupView;
 		values[9] = m_NameValueBean;
+		values[10] = m_DisplayLabel;
 		return values;
 	}
 
