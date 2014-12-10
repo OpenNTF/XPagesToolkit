@@ -75,7 +75,6 @@ public class DoubleArrayBinder implements IBinder<Double[]> {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public Double[] getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
 		try {
