@@ -15,8 +15,6 @@
  */
 package org.openntf.xpt.core.dss.binding;
 
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.HashMap;
