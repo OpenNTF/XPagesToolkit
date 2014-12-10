@@ -129,13 +129,13 @@ public class DominoStorageService {
 
 	public boolean isFieldAccessable(Object objCurrent, String strFieldName, List<String> currentRoles) throws DSSException {
 		Java2DominoBinder d2j = m_BinderContainer.getSaver(objCurrent.getClass());
-		return d2j.isFieldAccessable(strFieldName, currentRoles);
+		return d2j.isFieldAccessible(strFieldName, currentRoles);
 
 	}
 
 	public boolean isFieldAccessable(Object objCurrent, ChangeLogEntry cl, List<String> currentRoles) throws DSSException {
 		Java2DominoBinder d2j = m_BinderContainer.getSaver(objCurrent.getClass());
-		return d2j.isFieldAccessable(cl.getObjectField(), currentRoles, cl);
+		return d2j.isFieldAccessible(cl.getObjectField(), currentRoles, cl);
 
 	}
 

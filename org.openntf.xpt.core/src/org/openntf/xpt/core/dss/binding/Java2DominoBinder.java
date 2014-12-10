@@ -69,7 +69,7 @@ public class Java2DominoBinder {
 		}
 	}
 
-	public boolean isFieldAccessable(String strFieldName, List<String> currentRoles) {
+	public boolean isFieldAccessible(String strFieldName, List<String> currentRoles) {
 		for (Definition def : m_Definition) {
 			if (def.isEncrypted()) {
 				if (def.getJavaField().equals(strFieldName)) {
@@ -81,13 +81,13 @@ public class Java2DominoBinder {
 
 	}
 
-	public boolean isFieldAccessable(String strFieldName, List<String> currentRoles, ChangeLogEntry cl) {
+	public boolean isFieldAccessible(String strFieldName, List<String> currentRoles, ChangeLogEntry cl) {
 		for (Definition def : m_Definition) {
 			if (def.isEncrypted()) {
 				if (def.getJavaField().equals(strFieldName)) {
 					boolean hasAccess = ((IEncryptionBinder) def.getBinder()).hasAccess(def, currentRoles);
 					if (hasAccess) {
-						getDecyptedChangeLogWithoutCheck(cl);
+						getDecryptedChangeLogWithoutCheck(cl);
 					}
 					return hasAccess;
 				}
@@ -98,7 +98,7 @@ public class Java2DominoBinder {
 	}
 
 	@SuppressWarnings("rawtypes")
-	private void getDecyptedChangeLogWithoutCheck(ChangeLogEntry cl) {
+	private void getDecryptedChangeLogWithoutCheck(ChangeLogEntry cl) {
 		if (cl.getOldValue() instanceof Vector) {
 			Vector vc = (Vector) cl.getOldValue();
 			if (vc.size() > 0) {
