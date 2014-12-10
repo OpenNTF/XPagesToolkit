@@ -29,6 +29,8 @@ List of third party software used in this project:
  	- ROME, Version 1.0 (https://rometools.jira.com/wiki/display/ROME/Home) under Apache V2.0 (http://www.apache.org/licenses/)
 
 	- JDOM, Version 1.0 (http://www.jdom.org/) under its own licence (http://www.jdom.org/docs/faq.html#a0030)
+	
+	- ICU4J, Version 5.3 (http://userguide.icu-project.org/) under its own licence (http://source.icu-project.org/repos/icu/icu/trunk/license.html)
 
 
 Export control
