@@ -138,14 +138,14 @@ public class DominoStorageService {
 	public boolean isFieldAccessable(Object objCurrent, String strFieldName, List<String> currentRoles) throws DSSException {
 		checkDominoStoreDefinition(objCurrent);
 		Java2DominoBinder d2j = m_Saver.get(objCurrent.getClass().getCanonicalName());
-		return d2j.isFieldAccessable(strFieldName, currentRoles);
+		return d2j.isFieldAccessible(strFieldName, currentRoles);
 		
 	}
 
 	public boolean isFieldAccessable(Object objCurrent, ChangeLogEntry cl, List<String> currentRoles) throws DSSException {
 		checkDominoStoreDefinition(objCurrent);
 		Java2DominoBinder d2j = m_Saver.get(objCurrent.getClass().getCanonicalName());
-		return d2j.isFieldAccessable(cl.getObjectField(), currentRoles, cl);
+		return d2j.isFieldAccessible(cl.getObjectField(), currentRoles, cl);
 		
 	}
 	private boolean getObjectFromDocument(DominoStore dsDefinition, Domino2JavaBinder d2j, Object objCurrent, Object pk, Database ndbTarget) {
