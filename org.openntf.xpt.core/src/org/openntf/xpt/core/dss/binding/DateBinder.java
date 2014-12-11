@@ -88,6 +88,7 @@ public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 			try {
 				vecDates = docCurrent.getItemValueDateTimeArray(strNotesField);
 			} catch (Exception e) {
+			  e.printStackTrace();
 			}
 			if (vecDates != null && vecDates.size() > 0) {
 				DateTime dtCurrent = (DateTime) vecDates.elementAt(0);
@@ -97,9 +98,9 @@ public class DateBinder extends BaseDateBinder implements IBinder<Date> {
 				return (Date) formatter.parse(dtCurrent.getLocalTime());
 			}
 		} catch (Exception e) {
+		  e.printStackTrace();
 		}
 		return null;
-
 	}
 
 }
