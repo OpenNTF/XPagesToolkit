@@ -1,10 +1,11 @@
 <?xml version='1.0' encoding='utf-8'?>
-<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' replicaid='C1257B95007265C6'>
-<noteinfo noteid='182' unid='C98940A8971939D4C1257B5800493A27' sequence='2'>
+<note class='view' xmlns='http://www.lotus.com/dxl' version='9.0' maintenanceversion='1.0'
+ replicaid='C1257B95007265C6'>
+<noteinfo noteid='182' unid='C98940A8971939D4C1257B5800493A27' sequence='4'>
 <created><datetime dst='true'>20130425T151950,15+02</datetime></created>
-<modified><datetime dst='true'>20130625T224932,14+02</datetime></modified>
-<revised><datetime dst='true'>20130425T151950,51+02</datetime></revised>
-<lastaccessed><datetime dst='true'>20130625T224932,14+02</datetime></lastaccessed>
+<modified><datetime dst='true'>20130719T005318,90+02</datetime></modified>
+<revised><datetime dst='true'>20130719T005318,89+02</datetime></revised>
+<lastaccessed><datetime>20131115T020111,88+01</datetime></lastaccessed>
 <addedtofile><datetime dst='true'>20130625T224932,14+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>

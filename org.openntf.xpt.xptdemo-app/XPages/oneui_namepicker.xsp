@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt">
+
+	
+	<xc:cc_application navigationPath="/oneui/uitips"
+		pageTitle="Tips Box">
+		<xp:this.facets>
+			<xc:cc_nav_oneui xp:key="facetLeft"></xc:cc_nav_oneui>
+			<xp:panel xp:key="facetMiddle" id="content">
+				<xp:table>
+					<xp:tr>
+						<xp:td></xp:td>
+						<xp:td>Selector</xp:td>
+						<xp:td>Value in the sessionScope Variabel</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>Name from Names.nsf</xp:td>
+						<xp:td>
+							<xpt:oneuinamepicker id="oneuinamepicker1"
+								value="#{sessionScope.nameFromNames}" database="names.nsf" view="($Users)">
+							</xpt:oneuinamepicker>
+						</xp:td>
+						<xp:td>
+							<xp:text escape="true" id="computedField1" value="#{sessionScope.nameFromNames}">
+							</xp:text>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>Name from Names.nsf with Alias</xp:td>
+						<xp:td>
+							<xpt:oneuinamepicker id="oneuinamepicker2"
+								value="#{sessionScope.nameFromNamesALIAS}" database="names.nsf"
+								view="($Users)" displayLabel="true">
+							</xpt:oneuinamepicker>
+						</xp:td>
+						<xp:td>
+							<xp:text escape="true" id="computedField2"
+								value="#{sessionScope.nameFromNamesALIAS}">
+							</xp:text>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>Names (MulitValue) from Names.nsf</xp:td>
+						<xp:td>
+							<xpt:oneuinamepicker id="oneuinamepicker3"
+								value="#{sessionScope.nameFromNamesMV}" database="names.nsf"
+								view="($Users)" multipleSeparator=",">
+							</xpt:oneuinamepicker>
+						</xp:td>
+						<xp:td>
+							<xp:text escape="true" id="computedField3"
+								value="#{sessionScope.nameFromNamesMV}">
+							</xp:text>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>Names (MulitValue) and Alias from Names.nsf</xp:td>
+						<xp:td>
+							<xpt:oneuinamepicker id="oneuinamepicker4"
+								value="#{sessionScope.nameFromNamesAliasMV}" database="names.nsf"
+								view="($Users)" multipleSeparator="," displayLabel="true">
+							</xpt:oneuinamepicker>
+						</xp:td>
+						<xp:td>
+							<xp:text escape="true" id="computedField4"
+								value="#{sessionScope.nameFromNamesAliasMV}">
+							</xp:text>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>Names (MulitValue) and Alias from Names.nsf<xp:br></xp:br>
+						and custom result line</xp:td>
+						<xp:td>
+							<xpt:oneuinamepicker id="oneuinamepicker5"
+								value="#{sessionScope.nameFromNamesAliasMVCR}"
+								database="names.nsf" view="($Users)" multipleSeparator=","
+								displayLabel="true">
+								<xpt:this.buildLine><![CDATA[#{javascript:var strCompany = docName.getItemValueString("Company");
+var strName = docName.getItemValueString("LastName") +", "+docName.getItemValueString("FirstName");
+return strName +" ("+strCompany +")"}]]></xpt:this.buildLine>
+							</xpt:oneuinamepicker>
+						</xp:td>
+						<xp:td>
+							<xp:text escape="true" id="computedField5"
+								value="#{sessionScope.nameFromNamesAliasMVCR}">
+							</xp:text>
+						</xp:td>
+					</xp:tr>
+					<xp:tr>
+						<xp:td>Name from CustomBean</xp:td>
+						<xp:td>
+							<xpt:oneuinamepicker id="oneuinamepicker6"
+								value="#{sessionScope.nameFromCustomBean}"
+								nameValueBean="defaultNameBean">
+							</xpt:oneuinamepicker>
+						</xp:td>
+						<xp:td>
+							<xp:text escape="true" id="computedField6" value="#{sessionScope.nameFromCustomBean}">
+							</xp:text>
+						</xp:td>
+					</xp:tr>
+					
+				</xp:table>
+				<xp:button id="btSave"
+					value="save selection 2 session Scope">
+				<xp:eventHandler event="onclick" submit="true"
+					refreshMode="partial" refreshId="content">
+				</xp:eventHandler></xp:button>
+			</xp:panel>
+		</xp:this.facets>
+	</xc:cc_application>
+</xp:view>

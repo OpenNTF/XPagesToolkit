@@ -1,22 +1,22 @@
-<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="216" sequence="76" unid="639EFE3ED6D553C3C1257B5800493AFD">
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257C4400357124" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="1b6" sequence="116" unid="639EFE3ED6D553C3C1257B5800493AFD">
 <created><datetime dst="true">20130425T151952,29+02</datetime></created>
-<modified><datetime>20131118T133826,84+01</datetime></modified>
-<revised><datetime>20131118T133826,83+01</datetime></revised>
-<lastaccessed><datetime>20131118T133826,84+01</datetime></lastaccessed>
-<addedtofile><datetime dst="true">20130625T224932,88+02</datetime></addedtofile></noteinfo>
-<updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
-<wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
+<modified><datetime>20140228T084757,39+01</datetime></modified>
+<revised><datetime>20140228T084757,38+01</datetime></revised>
+<lastaccessed><datetime>20140228T084757,39+01</datetime></lastaccessed>
+<addedtofile><datetime>20131217T104344,62+01</datetime></addedtofile></noteinfo>
+<updatedby><name>CN=Lena Troxler/O=WGC/C=CH</name></updatedby>
+<wassignedby><name>CN=Lena Troxler/O=WGC/C=CH</name></wassignedby>
 <item name="$Flags"><text>gC~4;</text></item>
 <item name="$TITLE" sign="true"><text>cc_application.xsp</text></item>
-<item name="$DesignerVersion"><text>8.5</text></item>
-
-
 
 
 
 
 
 <item name="$FileNames" sign="true"><text>cc_application.xsp</text></item>
+<item name="$DesignerVersion"><text>8.5.2</text></item>
+
+
 
 </note>

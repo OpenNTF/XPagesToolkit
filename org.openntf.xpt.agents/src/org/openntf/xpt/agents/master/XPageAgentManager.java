@@ -42,7 +42,7 @@ import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class XPageAgentManager {
 
-	private static XPageAgentManager m_Manager;
+	private static final XPageAgentManager m_Manager = new XPageAgentManager();
 
 	private Properties m_AGMRProperties;
 
@@ -57,9 +57,6 @@ public class XPageAgentManager {
 	}
 
 	public static XPageAgentManager getInstance() {
-		if (m_Manager == null) {
-			m_Manager = new XPageAgentManager();
-		}
 		return m_Manager;
 	}
 
@@ -103,7 +100,7 @@ public class XPageAgentManager {
 			Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
 			if (isServer()) {
 				logCurrent.fine("checkTasks()");
-				logCurrent.finest("AMGR Properies size:" + getAMGRProperties().keySet().size());
+				logCurrent.fine("AMGR Properies size:" + getAMGRProperties().keySet().size());
 				for (Application app : m_ApplicationRegistry.values()) {
 					if (app.isReadyToCheck()) {
 						executeCheck(app);

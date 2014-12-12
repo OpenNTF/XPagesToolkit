@@ -44,8 +44,8 @@ public class DefinitionFactory {
 		Class<?> clInner = null;
 		if (jsBinder != null) {
 			clInner = getInnerClass(fldCurrent);
-			Definition defCurrent = new Definition(je.jsonproperty(), ServiceSupport.buildCleanFieldNameCC(jo, fldCurrent.getName()), je
-					.showEmptyValue(), jsBinder, clInner);
+			Definition defCurrent = new Definition(je.jsonproperty(), ServiceSupport.buildCleanFieldNameCC(jo, fldCurrent.getName()), JSONEmptyValueStrategy.getStrategy(je.showEmptyValue(),
+					je.showEmptyValueAsString()), jsBinder, clInner);
 			return defCurrent;
 		}
 		return null;

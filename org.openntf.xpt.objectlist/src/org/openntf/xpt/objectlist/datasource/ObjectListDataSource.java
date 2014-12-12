@@ -17,6 +17,7 @@ package org.openntf.xpt.objectlist.datasource;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -40,8 +41,7 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 	private String m_SortAttribute;
 	private Boolean m_Ascending;
 
-	private String m_CurrentSortAttribute;
-	private Boolean m_CurrentAscending;
+	private List<String> m_SortableAttributes;
 
 	public MethodBinding getBuildValues() {
 		return m_BuildValues;
@@ -79,9 +79,9 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 
 	@Override
 	public DataContainer load(FacesContext arg0) throws IOException {
-		ObjectListDataContainer dtC = new ObjectListDataContainer(getBeanId(), getUniqueId(), buildList());
-		if (m_CurrentSortAttribute != null) {
-			dtC.sortList(m_CurrentSortAttribute, m_CurrentAscending);
+		ObjectListDataContainer dtC = new ObjectListDataContainer(getBeanId(), getUniqueId(), buildList(), getSortableAttributesArray());
+		if (dtC.hasSortAttribute()) {
+			dtC.sortList(dtC.getCurrentSortAttribute(), dtC.getCurrentAscending());
 
 		} else {
 			if (m_SortAttribute != null) {
@@ -98,13 +98,11 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 	public void sortList(String strAttribute, boolean ascending) {
 		ObjectListDataContainer oldc = (ObjectListDataContainer) getDataContainer();
 		oldc.sortList(strAttribute, ascending);
-		m_CurrentSortAttribute = strAttribute;
-		m_CurrentAscending = ascending;
 	}
 
 	public void clearSort() {
-		m_CurrentAscending = null;
-		m_CurrentSortAttribute = null;
+		ObjectListDataContainer oldc = (ObjectListDataContainer) getDataContainer();
+		oldc.clearSort();
 	}
 
 	private List<ObjectListDataEntry> buildList() throws IOException {
@@ -140,13 +138,12 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 	// SAVE and RESTOR of Datas
 	@Override
 	public Object saveState(FacesContext arg0) {
-		Object[] state = new Object[6];
+		Object[] state = new Object[5];
 		state[0] = super.saveState(arg0);
 		state[1] = StateHolderUtil.saveMethodBinding(getFacesContext(), m_BuildValues);
 		state[2] = m_SortAttribute;
 		state[3] = m_Ascending;
-		state[4] = m_CurrentAscending;
-		state[5] = m_CurrentSortAttribute;
+		state[4] = getSortableAttributesArray();
 		return state;
 	}
 
@@ -157,8 +154,7 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 		m_BuildValues = StateHolderUtil.restoreMethodBinding(getFacesContext(), getComponent(), values[1]);
 		m_SortAttribute = (String) values[2];
 		m_Ascending = (Boolean) values[3];
-		m_CurrentAscending = (Boolean) values[4];
-		m_CurrentSortAttribute = (String) values[5];
+		m_SortableAttributes = Arrays.asList((String[])values[4]);
 	}
 
 	@Override
@@ -185,6 +181,29 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 
 	public void setAscending(boolean ascending) {
 		m_Ascending = ascending;
+	}
+
+	public List<String> getSortableAttributes() {
+		return m_SortableAttributes;
+	}
+
+	public void setSortableAttributes(List<String> sortableAttributes) {
+		m_SortableAttributes = sortableAttributes;
+	}
+
+	public void addSortableAttribute(String strAttribute) {
+		if (m_SortableAttributes == null) {
+			m_SortableAttributes = new ArrayList<String>();
+		}
+		m_SortableAttributes.add(strAttribute);
+	}
+
+	private String[] getSortableAttributesArray() {
+		if (getSortableAttributes() == null) {
+			return new String[0];
+		}
+		List<String> lstSA = getSortableAttributes();
+		return lstSA.toArray(new String[lstSA.size()]);
 	}
 
 }

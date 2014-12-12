@@ -16,11 +16,12 @@
 package org.openntf.xpt.agents;
 
 import java.io.Serializable;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.GregorianCalendar;
 
 import org.openntf.xpt.agents.annotations.ExecutionDay;
 import org.openntf.xpt.agents.annotations.ExecutionMode;
+import org.openntf.xpt.agents.annotations.XPagesAgent;
+import org.openntf.xpt.agents.timer.AgentTimer;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 ;
@@ -31,127 +32,113 @@ public class XPageAgentEntry implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private Class<XPageAgentJob> m_Agent;
-	private String m_Title;
-	private String m_Alias;
-	private ExecutionMode m_ExecutionMode;
-	private int m_Intervall;
-	private ExecutionDay[] m_ExecutionDay;
-	private int m_execTimeWindowStartHour = 0;
-	private int m_execTimeWindowStartMinute = 0;
-	private int m_execTimeWindowEndHour = 23;
-	private int m_execTimeWindowEndMinute = 59;
+	private final Class<XPageAgentJob> m_Agent;
+	private final String m_Title;
+	private final String m_Alias;
+	private final ExecutionMode m_ExecutionMode;
+	private final XPagesAgent m_XPA;
+
+	// StateControlled
+	private AgentTimer m_Timer;
 	private boolean m_Active;
-
-	private Date m_LastRun;
-	private Date m_NextRun;
-
 	private boolean m_Running = false;
+
+	public static XPageAgentEntry buildXPagesAgentEntry(Class<XPageAgentJob> clAgent, XPagesAgent xpa, boolean active) {
+		return new XPageAgentEntry(clAgent, xpa.Name(), xpa.Alias(), xpa.executionMode(), AgentTimer.buildInitialTimer(xpa), active, xpa);
+	}
+
+	private XPageAgentEntry(Class<XPageAgentJob> agent, String title, String alias, ExecutionMode executionMode, AgentTimer timer, boolean active, XPagesAgent xpa) {
+		super();
+
+		m_Agent = agent;
+		m_Title = title;
+		if (alias.contains(" ")) {
+			alias = alias.replace(" ", "");
+		}
+		m_Alias = alias;
+		m_ExecutionMode = executionMode;
+		m_Timer = timer;
+		m_XPA = xpa;
+		m_Active = active;
+		m_Running = false;
+	}
 
 	public boolean isRunning() {
 		return m_Running;
 	}
 
-	public void setRunning(boolean running) {
-		if (!running && m_ExecutionMode.isScheduled()) {
-			m_LastRun = new Date();
-			m_NextRun = calcNextRun(m_LastRun);
+	public void runScheduled() {
+		m_Running = true;
+	}
+
+	public void endSchedules() {
+		LoggerFactory.logFine(this.getClass(), "endSchedules called!", null);
+		LoggerFactory.logFine(this.getClass(), "Intervall is set to:" + m_Timer.getIntervall(), null);
+		m_Running = false;
+		if (m_Timer.getLastRun() == null) {
+			LoggerFactory.logFine(this.getClass(), "getLastRun is null / nextRun was: " + m_Timer.getNextRun().getTime(), null);
+			m_Timer = m_Timer.nextTimer(GregorianCalendar.getInstance());
+		} else {
+			LoggerFactory.logFine(this.getClass(), "getLast was: " + m_Timer.getLastRun().getTime() + " / nextRun was: " + m_Timer.getNextRun().getTime(), null);
+			m_Timer = m_Timer.nextTimer();
 		}
-		m_Running = running;
+		LoggerFactory.logInfo(this.getClass(), "New Timer is set to: " + m_Timer.getNextRun().getTime(), null);
 	}
 
 	public Class<XPageAgentJob> getAgent() {
 		return m_Agent;
 	}
 
-	public void setAgent(Class<XPageAgentJob> agent) {
-		m_Agent = agent;
-	}
-
 	public String getTitle() {
 		return m_Title;
-	}
-
-	public void setTitle(String title) {
-		m_Title = title;
 	}
 
 	public String getAlias() {
 		return m_Alias;
 	}
 
-	public void setAlias(String alias) {
-		if (alias.contains(" ")) {
-			alias = alias.replaceAll(" ", "");
-		}
-		m_Alias = alias;
-	}
-
 	public ExecutionMode getExecutionMode() {
 		return m_ExecutionMode;
 	}
 
-	public void setExecutionMode(ExecutionMode executionMode) {
-		m_ExecutionMode = executionMode;
-	}
-
 	public int getIntervall() {
-		return m_Intervall;
+		return m_Timer.getIntervall();
 	}
 
 	public void setIntervall(int intervall) {
 		if (m_ExecutionMode.isScheduled()) {
-			m_LastRun = new Date();
-			m_NextRun = calcNextRun(m_LastRun);
-			m_Intervall = intervall;
+			// TODO: was muss ich hier wirklich machen?
 		}
 	}
 
 	public ExecutionDay[] getExecutionDay() {
-		return m_ExecutionDay;
-	}
-
-	public void setExecutionDay(ExecutionDay[] executionDay) {
-		m_ExecutionDay = executionDay;
+		return m_Timer.getExecutionDay();
 	}
 
 	public int getExecTimeWindowStartHour() {
-		return m_execTimeWindowStartHour;
-	}
-
-	public void setExecTimeWindowStartHour(int execTimeWindowStartHour) {
-		m_execTimeWindowStartHour = execTimeWindowStartHour;
+		return m_Timer.getExecTimeWindowStartHour();
 	}
 
 	public int getExecTimeWindowStartMinute() {
-		return m_execTimeWindowStartMinute;
-	}
-
-	public void setExecTimeWindowStartMinute(int execTimeWindowStartMinute) {
-		m_execTimeWindowStartMinute = execTimeWindowStartMinute;
+		return m_Timer.getExecTimeWindowStartMinute();
 	}
 
 	public int getExecTimeWindowEndHour() {
-		return m_execTimeWindowEndHour;
-	}
-
-	public void setExecTimeWindowEndHour(int execTimeWindowEndHour) {
-		m_execTimeWindowEndHour = execTimeWindowEndHour;
+		return m_Timer.getExecTimeWindowEndHour();
 	}
 
 	public int getExecTimeWindowEndMinute() {
-		return m_execTimeWindowEndMinute;
+		return m_Timer.getExecTimeWindowEndMinute();
 	}
 
-	public void setExecTimeWindowEndMinute(int execTimeWindowEndMinute) {
-		m_execTimeWindowEndMinute = execTimeWindowEndMinute;
-	}
-
-	public boolean readyToExecute() {
+	public boolean readyToExecuteScheduled() {
 		if (!m_ExecutionMode.isScheduled()) {
 			return false;
 		}
-		return m_Active && m_NextRun.before(new Date());
+		if (isRunning()) {
+			return false;
+		}
+		return (m_Active && m_Timer.isTimeUp());
 	}
 
 	public boolean isActive() {
@@ -159,47 +146,8 @@ public class XPageAgentEntry implements Serializable {
 	}
 
 	public void setActive(boolean active) {
+		m_Timer = AgentTimer.buildInitialTimer(m_XPA);
 		m_Active = active;
 	}
 
-	public Date calcNextRun(Date dtCurrent) {
-		Calendar calCurrent = Calendar.getInstance();
-		Calendar calNextRun = Calendar.getInstance();
-		calCurrent.setTime(dtCurrent);
-		calNextRun.setTime(dtCurrent);
-		calNextRun.add(Calendar.MINUTE, m_Intervall);
-		if (calNextRun.get(Calendar.HOUR_OF_DAY) > m_execTimeWindowEndHour || calNextRun.get(Calendar.HOUR_OF_DAY) > m_execTimeWindowEndHour
-				&& calNextRun.get(Calendar.MINUTE) > m_execTimeWindowEndMinute) {
-			if (m_execTimeWindowEndHour > m_execTimeWindowStartHour) {
-				calNextRun.add(Calendar.DAY_OF_YEAR, 1);
-			}
-			calNextRun.set(Calendar.HOUR_OF_DAY, m_execTimeWindowStartHour);
-			calNextRun.set(Calendar.MINUTE, m_execTimeWindowStartMinute);
-		}
-		if (calNextRun.get(Calendar.HOUR_OF_DAY) < m_execTimeWindowStartHour) {
-			calNextRun.set(Calendar.HOUR_OF_DAY, m_execTimeWindowStartHour);
-		}
-		if (calNextRun.get(Calendar.HOUR_OF_DAY) == m_execTimeWindowStartHour && calNextRun.get(Calendar.MINUTE) < m_execTimeWindowStartMinute) {
-			calNextRun.set(Calendar.MINUTE, m_execTimeWindowStartMinute);
-		}
-		if (m_ExecutionDay != null && m_ExecutionDay.length > 0 && m_ExecutionDay[0] != ExecutionDay.ALLDAY) {
-			boolean blFound = false;
-			int nCounter = 0;
-			while (!blFound && nCounter < 8) {
-				int nCurrentDay = calCurrent.get(Calendar.DAY_OF_WEEK);
-				for (ExecutionDay ed : m_ExecutionDay) {
-					if (ed == ExecutionDay.getByDateWeekday(nCurrentDay)) {
-						blFound = true;
-						break;
-					}
-				}
-				calNextRun.add(Calendar.DAY_OF_YEAR, 1);
-				nCounter++;
-				if (nCounter > 8) {
-					LoggerFactory.getLogger(this.getClass().getCanonicalName()).severe("Error in find next Day: " + m_Alias);
-				}
-			}
-		}
-		return calNextRun.getTime();
-	}
 }

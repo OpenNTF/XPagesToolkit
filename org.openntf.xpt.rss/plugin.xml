@@ -22,4 +22,11 @@
             type="com.ibm.xsp.resource.DojoModulePathResource"
             class="org.openntf.xpt.rss.resources.XPTRSSModulePath" />
    </extension>
+   <extension
+         point="com.ibm.commons.Extension">
+      <service
+            class="org.openntf.xpt.rss.minifier.RSSLoader"
+            type="com.ibm.xsp.minifier.loader">
+      </service>
+   </extension>
 </plugin>

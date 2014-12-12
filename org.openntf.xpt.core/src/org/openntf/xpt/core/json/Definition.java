@@ -23,20 +23,20 @@ public class Definition {
 
 	private String m_JSONProperty;
 	private String m_JAVAField;
-	private boolean m_showEmptyValues;
+	private JSONEmptyValueStrategy m_EmptyValueStrategy = JSONEmptyValueStrategy.NOPROPERTY;
 	private IJSONBinder<?> m_Binder;
 	private Class<?> m_ContainerClass;
 
-	public Definition(String property, String field, boolean showEmptyValues, IJSONBinder<?> binder, Class<?> containterClass) {
+	public Definition(String property, String field,JSONEmptyValueStrategy strategy, IJSONBinder<?> binder, Class<?> containterClass) {
 		super();
 		m_JSONProperty = property;
 		m_JAVAField = field;
-		m_showEmptyValues = showEmptyValues;
+		m_EmptyValueStrategy = strategy;
 		m_Binder = binder;
 		m_ContainerClass = containterClass;
 	}
 
 	public void process2JSON(JsonWriter jsWriter, Object objCurrent) {
-		m_Binder.process2JSON(jsWriter, objCurrent, m_JSONProperty, m_JAVAField, m_showEmptyValues, m_ContainerClass);
+		m_Binder.process2JSON(jsWriter, objCurrent, m_JSONProperty, m_JAVAField, m_EmptyValueStrategy, m_ContainerClass);
 	}
 }

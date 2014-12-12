@@ -15,31 +15,18 @@
  */
 package org.openntf.xpt.oneui;
 
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
+import org.eclipse.core.runtime.Plugin;
 
-public class XPTOneUIActivator implements BundleActivator {
+public class XPTOneUIActivator extends Plugin {
 
-	private static BundleContext context;
+	private static XPTOneUIActivator m_Instance;
 
-	static BundleContext getContext() {
-		return context;
+	public XPTOneUIActivator() {
+		m_Instance = this;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#start(org.osgi.framework.BundleContext)
-	 */
-	public void start(BundleContext bundleContext) throws Exception {
-		XPTOneUIActivator.context = bundleContext;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * @see org.osgi.framework.BundleActivator#stop(org.osgi.framework.BundleContext)
-	 */
-	public void stop(BundleContext bundleContext) throws Exception {
-		XPTOneUIActivator.context = null;
+	public static Plugin getInstance() {
+		return m_Instance;
 	}
 
 }

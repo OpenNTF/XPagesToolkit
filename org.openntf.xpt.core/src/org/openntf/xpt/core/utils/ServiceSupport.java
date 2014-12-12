@@ -16,6 +16,7 @@
 package org.openntf.xpt.core.utils;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Arrays;
@@ -27,6 +28,18 @@ import java.util.TreeSet;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
 import org.openntf.xpt.core.json.annotations.JSONObject;
 
+/**
+ * @author Christian Guedemann
+ *
+ */
+/**
+ * @author Christian Guedemann
+ *
+ */
+/**
+ * @author Christian Guedemann
+ * 
+ */
 public class ServiceSupport {
 
 	public static String buildCleanFieldNameCC(DominoStore dsCurrent, String strFieldName) {
@@ -40,6 +53,7 @@ public class ServiceSupport {
 	public static String buildCleanFieldNameCC(JSONObject jsCurrent, String strFieldName) {
 		return makeCamelCase(buildCleanFieldName(jsCurrent, strFieldName));
 	}
+
 	public static String buildCleanFieldName(JSONObject jsCurrent, String strFieldName) {
 		return internalBuildCleanFieldName(jsCurrent.JavaFieldPrefix(), jsCurrent.JavaFieldPostFix(), strFieldName);
 	}
@@ -55,41 +69,62 @@ public class ServiceSupport {
 		return fldNameClean;
 	}
 
-	
 	public static String makeGetter(String strFieldClean) {
-		return "get"+ makeCamelCase(strFieldClean);
+		return "get" + makeCamelCase(strFieldClean);
 	}
-	
+
+	public static String makeBooleanGetter(String strFieldClean) {
+		return "is" + makeCamelCase(strFieldClean);
+	}
+
 	public static String makeSetter(String strFieldClean) {
-		return "get"+ makeCamelCase(strFieldClean);		
+		return "set" + makeCamelCase(strFieldClean);
 	}
-	
-	public static String makeGetter(DominoStore dsCurrent, String strField ) {
+
+	public static String makeGetter(DominoStore dsCurrent, String strField) {
 		String strFieldClean = buildCleanFieldName(dsCurrent, strField);
 		return makeGetter(strFieldClean);
 	}
 
-	public static String makeGetter(JSONObject dsCurrent, String strField ) {
+	public static String makeGetter(JSONObject dsCurrent, String strField) {
 		String strFieldClean = buildCleanFieldName(dsCurrent, strField);
 		return makeGetter(strFieldClean);
 	}
 
-	public static String makeSetter(DominoStore dsCurrent, String strField ) {
+	public static String makeSetter(DominoStore dsCurrent, String strField) {
 		String strFieldClean = buildCleanFieldName(dsCurrent, strField);
 		return makeSetter(strFieldClean);
 	}
 
-	public static String makeSetter(JSONObject dsCurrent, String strField ) {
+	public static String makeSetter(JSONObject dsCurrent, String strField) {
 		String strFieldClean = buildCleanFieldName(dsCurrent, strField);
 		return makeSetter(strFieldClean);
 	}
 
-	
 	public static String makeCamelCase(String strCurrent) {
-		return strCurrent.substring(0, 1).toUpperCase()
-				+ strCurrent.substring(1);
+		return strCurrent.substring(0, 1).toUpperCase() + strCurrent.substring(1);
 	}
-	
+
+	/**
+	 * Returns the getter Method form objectClass. Uses "get" + strFieldName and
+	 * if it fails uses is +...
+	 * 
+	 * @param objectClass
+	 * @param strFieldClean
+	 * @return GetterMethod or throws a {@link NoSuchMethodException}
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 */
+	public static Method getGetterMethod(Class<?> objectClass, String strFieldClean) throws SecurityException, NoSuchMethodException {
+		String strMethod = makeGetter(strFieldClean);
+		try {
+			return objectClass.getMethod(strMethod);
+		} catch (NoSuchMethodException nomp) {
+			strMethod = makeBooleanGetter(strFieldClean);
+			return objectClass.getMethod(strMethod);
+		}
+	}
+
 	public static Collection<Field> getClassFields(final Class<?> currentClass) {
 		Collection<Field> lstFields = AccessController.doPrivileged(new PrivilegedAction<Collection<Field>>() {
 
@@ -117,7 +152,5 @@ public class ServiceSupport {
 		}
 		return setFields;
 	}
-	
-	
 
 }

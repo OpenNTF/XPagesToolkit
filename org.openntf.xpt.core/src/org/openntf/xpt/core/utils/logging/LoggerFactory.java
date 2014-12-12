@@ -21,6 +21,7 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -40,7 +41,7 @@ public class LoggerFactory {
 
 	private static int m_logLevel = -1;
 
-	public static Logger getLogger(String strName) {
+	public static synchronized Logger getLogger(String strName) {
 		try {
 			String strDB = XPT_CORE_LOGGER;
 			try {
@@ -48,33 +49,45 @@ public class LoggerFactory {
 					strDB = NotesContext.getCurrent().getCurrentDatabase().getFilePath();
 				}
 			} catch (Exception e) {
-				//System.out.println("Context has no Database... :"+e.getMessage());
+				// System.out.println("Context has no Database... :"+e.getMessage());
 			}
-			Logger logRC = null; 
-			if (m_RegistredLoggers.containsKey(strDB + strName)) {
-				logRC = m_RegistredLoggers.get(strDB + strName);
-				if (!strDB.equals(XPT_CORE_LOGGER)) {
-					return logRC;
-				}
-			} else {
-				logRC = java.util.logging.Logger.getAnonymousLogger();
-			}
-			if (strDB.equals(XPT_CORE_LOGGER)) {
+			Logger logRC = null;
+			if (XPT_CORE_LOGGER.equals(strDB)) {
 				if (m_logLevel == -1) {
 					checkLogLevel();
+					if (m_logLevel > -1) {
+						for (Logger log : m_RegistredLoggers.values()) {
+							log.setLevel(getLogLevel(m_logLevel));
+							for (Handler hand : log.getHandlers()) {
+								hand.setLevel(getLogLevel(m_logLevel));
+							}
+						}
+					}
 				}
-				logRC.setLevel(getLogLevel(m_logLevel));
-				ConsoleHandler ch = new ConsoleHandler(strDB, strName, getLogLevel(m_logLevel));
-				logRC.addHandler(ch);
-			} else {
-				int nLevel = getAppLogLevel(strDB, strName);
-				logRC.setLevel(getLogLevel(nLevel));
-				ConsoleHandler ch = new ConsoleHandler(strDB, strName, getLogLevel(nLevel));
-				logRC.addHandler(ch);
 
+				if (m_RegistredLoggers.containsKey(strDB + strName)) {
+					logRC = m_RegistredLoggers.get(strDB + strName);
+				} else {
+					logRC = java.util.logging.Logger.getAnonymousLogger();
+					logRC.setLevel(getLogLevel(m_logLevel));
+					ConsoleHandler ch = new ConsoleHandler(strDB, strName, getLogLevel(m_logLevel));
+					logRC.addHandler(ch);
+				}
+				return logRC;
+			} else {
+				if (m_RegistredLoggers.containsKey(strDB + strName)) {
+					logRC = m_RegistredLoggers.get(strDB + strName);
+				} else {
+					logRC = java.util.logging.Logger.getAnonymousLogger();
+					int nLevel = getAppLogLevel(strDB, strName);
+					logRC.setLevel(getLogLevel(nLevel));
+					ConsoleHandler ch = new ConsoleHandler(strDB, strName, getLogLevel(nLevel));
+					logRC.addHandler(ch);
+					m_RegistredLoggers.put(strDB + strName, logRC);
+
+				}
+				return logRC;
 			}
-			m_RegistredLoggers.put(strDB + strName, logRC);
-			return logRC;
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -173,4 +186,39 @@ public class LoggerFactory {
 		}
 		return nRC;
 	}
+
+	public static void logFinest(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.FINEST, clCurrent, strMessage, thr);
+	}
+
+	public static void logFiner(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.FINER, clCurrent, strMessage, thr);
+	}
+
+	public static void logFine(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.FINE, clCurrent, strMessage, thr);
+	}
+
+	public static void logInfo(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.INFO, clCurrent, strMessage, thr);
+	}
+
+	public static void logWarning(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.WARNING, clCurrent, strMessage, thr);
+	}
+
+	public static void logError(Class<?> clCurrent, String strMessage, Throwable thr) {
+		log(Level.SEVERE, clCurrent, strMessage, thr);
+
+	}
+
+	public static void log(Level level, Class<?> clCurrent, String strMessage, Throwable thr) {
+		Logger log = getLogger(clCurrent.getCanonicalName());
+		if (thr == null) {
+			log.log(level, strMessage);
+		} else {
+			log.log(level, strMessage, thr);
+		}
+	}
+
 }

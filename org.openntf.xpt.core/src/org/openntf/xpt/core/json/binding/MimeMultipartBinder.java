@@ -15,12 +15,14 @@
  */
 package org.openntf.xpt.core.json.binding;
 
-import org.openntf.xpt.core.base.BaseMimeMultipartBinder;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
+import org.openntf.xpt.core.json.JSONEmptyValueStrategy;
 import org.openntf.xpt.core.utils.JSONSupport;
 
 import com.ibm.domino.services.util.JsonWriter;
+import com.ibm.xsp.http.MimeMultipart;
 
-public class MimeMultipartBinder extends BaseMimeMultipartBinder implements IJSONBinder<String> {
+public class MimeMultipartBinder extends AbstractBaseBinder<MimeMultipart> implements IJSONBinder<MimeMultipart> {
 	private static MimeMultipartBinder m_Binder;
 
 	private MimeMultipartBinder() {
@@ -33,12 +35,12 @@ public class MimeMultipartBinder extends BaseMimeMultipartBinder implements IJSO
 		}
 		return m_Binder;
 	}
-	
-	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, boolean showEmptyValue,
-			Class<?> containerClass) {
+
+	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField,JSONEmptyValueStrategy strategy, Class<?> containerClass) {
 		try {
-			String strValue = getValue(objCurrent, strJAVAField);
-			JSONSupport.writeString(jsWriter, strJSONProperty, strValue, showEmptyValue);
+			MimeMultipart mpart = getValue(objCurrent, strJAVAField);
+			String strValue = mpart == null ? null : mpart.getContentAsText();
+			JSONSupport.writeString(jsWriter, strJSONProperty, strValue, strategy);
 
 		} catch (Exception e) {
 			e.printStackTrace();

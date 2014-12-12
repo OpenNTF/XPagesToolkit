@@ -18,12 +18,15 @@ package org.openntf.xpt.demo.bo;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.openntf.xpt.core.dss.annotations.DominoEntity;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
 import org.openntf.xpt.core.json.annotations.JSONEntity;
 import org.openntf.xpt.core.json.annotations.JSONObject;
+
+import com.ibm.xsp.http.MimeMultipart;
 
 @JSONObject
 @DominoStore(Form = "Contact", PrimaryFieldClass = String.class, PrimaryKeyField = "ID", View = "LUPContactByID")
@@ -60,13 +63,47 @@ public class Contact implements Serializable {
 	private double m_Salary;
 	@DominoEntity(FieldName = "CompanyCar", changeLog = true)
 	private double m_CompanyCar;
-	@JSONEntity(jsonproperty="jobfunction")
+	@JSONEntity(jsonproperty = "jobfunction")
 	@DominoEntity(FieldName = "JobFunction", changeLog = true)
 	private String m_JobFunction;
 	@DominoEntity(FieldName = "Devices", changeLog = true)
 	private int m_Devices;
 	@DominoEntity(FieldName = "LastInterview", changeLog = true)
 	private Date m_LastInterview;
+
+	@DominoEntity(FieldName = "Latitude", changeLog = true)
+	private Double m_Latitude;
+	@DominoEntity(FieldName = "Longitude", changeLog = true)
+	private Double m_Longitude;
+	@DominoEntity(FieldName = "Elevation", changeLog = true)
+	private Integer m_Elevation;
+
+	@DominoEntity(FieldName = "BodyMIME")
+	private MimeMultipart m_Comment;
+
+	@DominoEntity(FieldName = "TagCloud")
+	private List<String> m_TagCloud;
+
+	@DominoEntity(FieldName = "contactStatus")
+	private ContactStatus m_Status = ContactStatus.UNKNOWN;
+
+	@DominoEntity(FieldName = "ModDate")
+	private Date m_ModDate;
+
+	@DominoEntity(FieldName = "RESP", embedded = true)
+	private Responsible m_Responsible = new Responsible();
+
+	@DominoEntity(FieldName = "OTHER", embedded = true)
+	private List<Address> m_OtherAddresses;
+
+	@DominoEntity(FieldName = "PrimaryContact")
+	private boolean m_PrimaryContact;
+
+	@DominoEntity(FieldName = "SupportResponsible")
+	private String m_SupportResponsible;
+
+	@DominoEntity(FieldName = "OtherSupportResponsible")
+	private List<String> m_OtherSupportResponsible;
 
 	public String getID() {
 		return m_ID;
@@ -178,6 +215,120 @@ public class Contact implements Serializable {
 
 	public Date getLastInterview() {
 		return m_LastInterview;
+	}
+
+	public void setLatitude(Double latitude) {
+		m_Latitude = latitude;
+	}
+
+	public Double getLatitude() {
+		return m_Latitude;
+	}
+
+	public void setLongitude(Double longitude) {
+		m_Longitude = longitude;
+	}
+
+	public Double getLongitude() {
+		return m_Longitude;
+	}
+
+	public void setElevation(Integer elevation) {
+		m_Elevation = elevation;
+	}
+
+	public Integer getElevation() {
+		return m_Elevation;
+	}
+
+	public MimeMultipart getComment() {
+		return m_Comment;
+	}
+
+	public void setComment(MimeMultipart comment) {
+		m_Comment = comment;
+	}
+
+	public void setTagCloud(List<String> tagCloud) {
+		m_TagCloud = tagCloud;
+	}
+
+	public List<String> getTagCloud() {
+		return m_TagCloud;
+	}
+
+	public void setStatus(ContactStatus status) {
+		m_Status = status;
+	}
+
+	public ContactStatus getStatus() {
+		return m_Status;
+	}
+
+	public void setStatusTXT(String status) {
+		m_Status = ContactStatus.valueOf(status);
+	}
+
+	public String getStatusTXT() {
+		return m_Status.name();
+	}
+
+	public void setModDate(Date modDate) {
+		m_ModDate = modDate;
+	}
+
+	public Date getModDate() {
+		return m_ModDate;
+	}
+
+	public Responsible getResponsible() {
+		if (m_Responsible == null) {
+			m_Responsible = new Responsible();
+		}
+		return m_Responsible;
+	}
+
+	public void setResponsible(Responsible responsible) {
+		m_Responsible = responsible;
+	}
+
+	public void setOtherAddresses(List<Address> ohterAddresses) {
+		m_OtherAddresses = ohterAddresses;
+	}
+
+	public List<Address> getOtherAddresses() {
+		return m_OtherAddresses;
+	}
+
+	public void addOtherAddresses(Address addr) {
+		if (m_OtherAddresses == null) {
+			m_OtherAddresses = new LinkedList<Address>();
+		}
+		m_OtherAddresses.add(addr);
+	}
+
+	public void setPrimaryContact(boolean primaryContact) {
+		m_PrimaryContact = primaryContact;
+	}
+
+	public boolean isPrimaryContact() {
+		return m_PrimaryContact;
+	}
+
+	public void setSupportResponsible(String supportResponsible) {
+		m_SupportResponsible = supportResponsible;
+	}
+
+	public String getSupportResponsible() {
+		return m_SupportResponsible;
+	}
+
+	public void setOtherSupportResponsible(List<String> otherSupportResponsible) {
+		m_OtherSupportResponsible = otherSupportResponsible;
+	}
+
+	public List<String> getOtherSupportResponsible() {
+		return m_OtherSupportResponsible;
 	}
 
 }

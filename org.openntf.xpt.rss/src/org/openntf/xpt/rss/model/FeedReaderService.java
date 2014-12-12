@@ -21,6 +21,7 @@ import java.util.List;
 
 import org.openntf.xpt.rss.XPTRSSActivator;
 
+import com.ibm.commons.util.StringUtil;
 import com.sun.syndication.feed.synd.SyndCategoryImpl;
 import com.sun.syndication.feed.synd.SyndContentImpl;
 import com.sun.syndication.feed.synd.SyndEntry;
@@ -46,21 +47,23 @@ public class FeedReaderService {
 
 	public List<RSSEntry> getAllEntriesFromURL(String strURL) {
 		List<RSSEntry> lstRC = new ArrayList<RSSEntry>();
-		Thread currentThread = Thread.currentThread();
-		ClassLoader clCurrent = currentThread.getContextClassLoader();
+		if (!StringUtil.isEmpty(strURL)) {
+			Thread currentThread = Thread.currentThread();
+			ClassLoader clCurrent = currentThread.getContextClassLoader();
 
-		try {
-			currentThread.setContextClassLoader(XPTRSSActivator.class.getClassLoader());
+			try {
+				currentThread.setContextClassLoader(XPTRSSActivator.class.getClassLoader());
 
-			URL feedUrl = new URL(strURL);
-			SyndFeedInput input = new SyndFeedInput();
-			SyndFeed feed = input.build(new XmlReader(feedUrl));
-			lstRC = processFeed2List(feed);
+				URL feedUrl = new URL(strURL);
+				SyndFeedInput input = new SyndFeedInput();
+				SyndFeed feed = input.build(new XmlReader(feedUrl));
+				lstRC = processFeed2List(feed);
 
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			currentThread.setContextClassLoader(clCurrent);
+			} catch (Exception e) {
+				e.printStackTrace();
+			} finally {
+				currentThread.setContextClassLoader(clCurrent);
+			}
 		}
 		return lstRC;
 	}

@@ -16,45 +16,104 @@
 package org.openntf.xpt.core.dss.binding;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Vector;
+
+import org.openntf.xpt.core.dss.binding.field.DominoRichTextItemBinder;
+import org.openntf.xpt.core.dss.binding.field.MimeMultipartBinder;
+import org.openntf.xpt.core.dss.binding.field.ObjectBinder;
+import org.openntf.xpt.core.dss.binding.files.FileDownloadBinder;
 
 import lotus.domino.Document;
 import lotus.domino.NotesException;
 
+import com.ibm.commons.util.profiler.Profiler;
+import com.ibm.commons.util.profiler.ProfilerAggregator;
+import com.ibm.commons.util.profiler.ProfilerType;
+
 public class Domino2JavaBinder {
 
 	private ArrayList<Definition> m_Definition;
+	private static final ProfilerType pt = new ProfilerType("XPT.DSS.Domino2JavaBinder");
 
 	public Domino2JavaBinder() {
 		m_Definition = new ArrayList<Definition>();
 	}
 
-	public void addDefinition(String strNotesField, String strJavaField,
-			IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues, boolean encrypted, String[] encRoles) {
-		m_Definition.add(new Definition(strNotesField, strJavaField,
-				binCurrent,changeLog, addValues, encrypted, encRoles));
+	public void addDefinition(Definition def) {
+		m_Definition.add(def);
 	}
 
-	public void processDocument(Document docProcess, Object objCurrent)
-			throws NotesException {
-		for (Iterator<Definition> itDefinition = m_Definition.iterator(); itDefinition
-				.hasNext();) {
-			Definition defCurrent = itDefinition.next();
-			if (defCurrent.getBinder() instanceof IFormulaBinder) {
-				defCurrent.getBinder().processDomino2Java(docProcess,
-						objCurrent, defCurrent.getNotesField(),
-						defCurrent.getJavaField(),
-						defCurrent.getAdditionalValues());
+	public void processDocument(Document docProcess, Object objCurrent) throws NotesException {
+		if (Profiler.isEnabled()) {
+			ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDocument");
+			long startTime = Profiler.getCurrentTime();
+			try {
+				_processDocument(docProcess, objCurrent);
+			} finally {
+				Profiler.endProfileBlock(pa, startTime);
+			}
+		} else {
+			_processDocument(docProcess, objCurrent);
+		}
 
-			} else {
-				if (docProcess.hasItem(defCurrent.getNotesField()) || defCurrent.getBinder().getClass().getSimpleName().equals("FileDownloadBinder")) {
-					defCurrent.getBinder().processDomino2Java(docProcess,
-							objCurrent, defCurrent.getNotesField(),
-							defCurrent.getJavaField(),
-							defCurrent.getAdditionalValues());
+	}
+
+	private void _processDocument(Document docProcess, Object objCurrent) throws NotesException {
+		for (Definition defCurrent : m_Definition) {
+			if (Profiler.isEnabled()) {
+				ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDefinition - " + defCurrent.getBinder().getClass().getCanonicalName());
+				long startTime = Profiler.getCurrentTime();
+				try {
+					_processDefinition(docProcess, objCurrent, defCurrent);
+				} finally {
+					Profiler.endProfileBlock(pa, startTime);
 				}
+			} else {
+				_processDefinition(docProcess, objCurrent, defCurrent);
 			}
 		}
 	}
+
+	private void _processDefinition(Document docProcess, Object objCurrent, Definition defCurrent) throws NotesException {
+		if (defCurrent.getBinder() instanceof IFormulaBinder) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
+			return;
+		}
+		if (defCurrent.getBinder() instanceof MimeMultipartBinder) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
+			return;
+		}
+		if (defCurrent.getBinder() instanceof DominoRichTextItemBinder) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
+			return;
+		}
+		if (defCurrent.getBinder() instanceof FileDownloadBinder) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
+			return;
+		}
+		if (defCurrent.getBinder() instanceof ObjectBinder) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
+			return;
+		}
+		Vector<?> vecValues = docProcess.getItemValue(defCurrent.getNotesField());
+		if (!vecValues.isEmpty()) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, vecValues, defCurrent);
+		}
+	}
+
+	public List<Object> processDocument2List(Document docProcess, Class<?> cl, int nSize) throws Exception {
+		List<Object> lstRC = new LinkedList<Object>();
+		for (int nCounter = 0; nCounter < nSize; nCounter++) {
+			Object obj = cl.newInstance();
+			for (Definition def : m_Definition) {
+				Definition defProcess = Definition.cloneDefinition(def, nCounter);
+				_processDefinition(docProcess, obj, defProcess);
+			}
+			lstRC.add(obj);
+		}
+		return lstRC;
+	}
+
 }

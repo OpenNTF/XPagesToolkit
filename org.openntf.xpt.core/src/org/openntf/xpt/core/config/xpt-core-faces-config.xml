@@ -25,4 +25,23 @@
 		<managed-bean-class>org.openntf.xpt.core.beans.XPTBean</managed-bean-class>
 		<managed-bean-scope>application</managed-bean-scope>
 	</managed-bean>
+	<managed-bean>
+		<managed-bean-name>xptI18NBean</managed-bean-name>
+		<managed-bean-class>org.openntf.xpt.core.beans.XPTI18NBean</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+
+	<managed-bean>
+		<managed-bean-name>xptLTPABean</managed-bean-name>
+		<managed-bean-class>org.openntf.xpt.core.beans.XPTLtpaBean</managed-bean-class>
+		<managed-bean-scope>application</managed-bean-scope>
+	</managed-bean>
+
+	<render-kit>
+		<renderer>
+			<component-family>org.openntf.xpt.core.component.uii18ncsjs</component-family>
+			<renderer-type>org.openntf.xpt.core.component.uii18ncsjs</renderer-type>
+			<renderer-class>org.openntf.xpt.core.renderkit.html_extended.I18NcsjsRenderer</renderer-class>
+		</renderer>
+	</render-kit>
 </faces-config>

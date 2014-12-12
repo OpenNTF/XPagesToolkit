@@ -30,7 +30,7 @@ public class CheckAgents implements IXPTServletCommand {
 			jsWriter.endProperty();
 
 			jsWriter.startProperty("checkagents");
-			jsWriter.outIntLiteral(agentBean.checkSchedule());
+			jsWriter.outIntLiteral(agentBean.checkSchedule(context));
 			jsWriter.endProperty();
 			jsWriter.endObject();
 

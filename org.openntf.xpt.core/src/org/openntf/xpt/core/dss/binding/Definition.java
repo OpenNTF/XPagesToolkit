@@ -15,81 +15,157 @@
  */
 package org.openntf.xpt.core.dss.binding;
 
-import java.util.HashMap;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+
+import org.openntf.xpt.core.dss.annotations.DominoEntity;
+import org.openntf.xpt.core.dss.annotations.DominoStore;
+import org.openntf.xpt.core.dss.binding.embedded.EmbeddedObjectBinder;
+import org.openntf.xpt.core.utils.ServiceSupport;
 
 public class Definition {
 
-	private String m_NotesField;
-	private String m_JavaField;
-	private IBinder<?> m_Binder;
-	private boolean m_ChangeLog;
-	private HashMap<String, Object> m_AdditionalValues;
-	private boolean m_Encrypted;
-	private String[] m_EncRoles;
+	private final String m_NotesField;
+	private final String m_JavaField;
+	private final IBinder<?> m_Binder;
+	private final boolean m_ChangeLog;
+	private final boolean m_Encrypted;
+	private final String[] m_EncRoles;
+	private final boolean m_DateOnly;
+	private final boolean m_Author;
+	private final boolean m_Formula;
+	private final boolean m_Names;
+	private final boolean m_Reader;
+	private final boolean m_ReadOnly;
+	private final String m_ShowNameAs;
+	private final boolean m_WriteOnly;
+	private final Class<?> m_InnerClass;
+	private final Type m_GenericType;
+	private final BinderContainer m_Container;
+	private final int m_Counter;
 
-	public Definition(String notesField, String javaField, IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object> addValues, boolean encrypted, String[] encRoles) {
+	public static Definition buildDefiniton(DominoStore ds, DominoEntity de, IBinder<?> binCurrent, Field fld) {
+		if (binCurrent instanceof EmbeddedObjectBinder) {
+			return new Definition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(ds, fld.getName()), binCurrent, de.changeLog(), de.encrypt(), de.encRoles(), de.dateOnly(), de.isAuthor(),
+					de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(), new BinderContainer(de.FieldName()), -1);
+
+		} else {
+			return new Definition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(ds, fld.getName()), binCurrent, de.changeLog(), de.encrypt(), de.encRoles(), de.dateOnly(), de.isAuthor(),
+					de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(), null, -1);
+		}
+	}
+
+	public static Definition buildDefinition4Decryption(String strFieldName, String[] arrRoles, boolean isDateOnly, IBinder<?> binCurrent) {
+		return new Definition(strFieldName, "", binCurrent, false, true, arrRoles, isDateOnly, false, false, false, false, false, "", false, null, null, null, -1);
+
+	}
+
+	public static Definition buildDefinition4EO(DominoStore ds, DominoEntity de, IBinder<?> binCurrent, Field fld, String storePrefix) {
+		return new Definition(de.embedded() ? de.FieldName() : storePrefix + "_" + de.FieldName(), ServiceSupport.buildCleanFieldNameCC(ds, fld.getName()), binCurrent, de.changeLog(), de.encrypt(),
+				de.encRoles(), de.dateOnly(), de.isAuthor(), de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(),
+				de.embedded() ? new BinderContainer(storePrefix) : null, -1);
+	}
+
+	public static Definition cloneDefinition(Definition def, int nCounter) {
+		return new Definition(def.m_NotesField, def.m_JavaField, def.m_Binder, def.m_ChangeLog, def.m_Encrypted, def.m_EncRoles, def.m_DateOnly, def.m_Author, def.m_Formula, def.m_Names,
+				def.m_Reader, def.m_ReadOnly, def.m_ShowNameAs, def.m_WriteOnly, def.m_InnerClass, def.m_GenericType, def.m_Container, nCounter);
+	}
+
+	private Definition(String notesField, String javaField, IBinder<?> binCurrent, boolean changeLog, boolean encrypted, String[] encRoles, boolean dateOnly, boolean isAuthor, boolean isFormula,
+			boolean isNames, boolean isReader, boolean readOnly, String strShowNameAs, boolean writeOnly, Class<?> innerClass, Type genericType, BinderContainer bc, int counter) {
 		m_NotesField = notesField;
 		m_JavaField = javaField;
 		m_Binder = binCurrent;
-		m_AdditionalValues = addValues;
-		setChangeLog(changeLog);
-		setEncrypted(encrypted);
-		setEncRoles(encRoles);
+		m_ChangeLog = changeLog;
+		m_Encrypted = encrypted;
+		m_EncRoles = encRoles;
+		m_DateOnly = dateOnly;
+		m_Author = isAuthor;
+		m_Formula = isFormula;
+		m_Names = isNames;
+		m_Reader = isReader;
+		m_ReadOnly = readOnly;
+		m_ShowNameAs = strShowNameAs;
+		m_WriteOnly = writeOnly;
+		m_InnerClass = innerClass;
+		m_GenericType = genericType;
+		m_Container = bc;
+		m_Counter = counter;
 	}
 
 	public String getNotesField() {
+		if (m_Counter > -1) {
+			return m_NotesField + "_" + m_Counter;
+		}
 		return m_NotesField;
-	}
-
-	public void setNotesField(String notesField) {
-		m_NotesField = notesField;
 	}
 
 	public String getJavaField() {
 		return m_JavaField;
 	}
 
-	public void setJavaField(String javaField) {
-		m_JavaField = javaField;
-	}
-
 	public IBinder<?> getBinder() {
 		return m_Binder;
-	}
-
-	public void setBinder(IBinder<?> binCurrent) {
-		m_Binder = binCurrent;
-	}
-
-	public void setAdditionalValues(HashMap<String, Object> additionalValues) {
-		m_AdditionalValues = additionalValues;
-	}
-
-	public HashMap<String, Object> getAdditionalValues() {
-		return m_AdditionalValues;
 	}
 
 	public boolean isChangeLog() {
 		return m_ChangeLog;
 	}
 
-	public void setChangeLog(boolean changeLog) {
-		m_ChangeLog = changeLog;
-	}
-	
 	public boolean isEncrypted() {
 		return m_Encrypted;
 	}
 
-	public void setEncrypted(boolean encrypted) {
-		m_Encrypted = encrypted;
-	}
-
-	public String[] getEncRoles(){
+	public String[] getEncRoles() {
 		return m_EncRoles;
 	}
-	
-	public void setEncRoles(String[] encRoles){
-		m_EncRoles = encRoles;		
+
+	public boolean isDateOnly() {
+		return m_DateOnly;
 	}
+
+	public boolean isAuthor() {
+		return m_Author;
+	}
+
+	public boolean isFormula() {
+		return m_Formula;
+	}
+
+	public boolean isNames() {
+		return m_Names;
+	}
+
+	public boolean isReader() {
+		return m_Reader;
+	}
+
+	public boolean isReadOnly() {
+		return m_ReadOnly;
+	}
+
+	public String getShowNameAs() {
+		return m_ShowNameAs;
+	}
+
+	public boolean isWriteOnly() {
+		return m_WriteOnly;
+	}
+
+	public Class<?> getInnerClass() {
+		return m_InnerClass;
+	}
+
+	public Type getGenericType() {
+		return m_GenericType;
+	}
+
+	public BinderContainer getContainer() {
+		return m_Container;
+	}
+
+	public int getCounter() {
+		return m_Counter;
+	}
+
 }

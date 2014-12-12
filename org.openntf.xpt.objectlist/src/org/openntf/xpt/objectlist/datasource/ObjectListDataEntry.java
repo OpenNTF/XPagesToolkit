@@ -55,14 +55,16 @@ public class ObjectListDataEntry implements ViewRowData, Serializable {
 
 	@Override
 	public String getOpenPageURL(String arg0, boolean arg1) {
-		return "#";
+		return null;
 	}
 
 	@Override
 	public Object getValue(String field) {
-		String strGetter = ServiceSupport.makeGetter(field);
+		if (field == null) {
+			return null;
+		}
 		try {
-			Method mt = m_BO.getClass().getMethod(strGetter);
+			Method mt = ServiceSupport.getGetterMethod(m_BO.getClass(), field);
 			return mt.invoke(m_BO);
 		} catch (Exception e) {
 		}
@@ -77,6 +79,5 @@ public class ObjectListDataEntry implements ViewRowData, Serializable {
 	@Override
 	public void setColumnValue(String arg0, Object arg1) {
 	}
-	
 
 }

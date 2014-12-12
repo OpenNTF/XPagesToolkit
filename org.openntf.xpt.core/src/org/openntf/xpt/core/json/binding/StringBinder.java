@@ -16,12 +16,13 @@
 package org.openntf.xpt.core.json.binding;
 
 
-import org.openntf.xpt.core.base.BaseStringBinder;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
+import org.openntf.xpt.core.json.JSONEmptyValueStrategy;
 import org.openntf.xpt.core.utils.JSONSupport;
 
 import com.ibm.domino.services.util.JsonWriter;
 
-public class StringBinder extends BaseStringBinder implements IJSONBinder<String> {
+public class StringBinder extends AbstractBaseBinder<String> implements IJSONBinder<String> {
 	private static StringBinder m_Binder;
 
 	private StringBinder() {
@@ -34,11 +35,11 @@ public class StringBinder extends BaseStringBinder implements IJSONBinder<String
 		}
 		return m_Binder;
 	}
-	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, boolean showEmptyValue,
+	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, JSONEmptyValueStrategy strategy,
 			Class<?> containerClass) {
 		try {
 			String strValue = getValue(objCurrent, strJAVAField);
-			JSONSupport.writeString(jsWriter, strJSONProperty, strValue, showEmptyValue);
+			JSONSupport.writeString(jsWriter, strJSONProperty, strValue, strategy);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -17,6 +17,7 @@ package org.openntf.xpt.core.json.binding;
 
 import java.lang.reflect.Method;
 
+import org.openntf.xpt.core.json.JSONEmptyValueStrategy;
 import org.openntf.xpt.core.json.JSONService;
 
 import com.ibm.domino.services.util.JsonWriter;
@@ -45,14 +46,16 @@ public class BusinessObjectBinder implements IJSONBinder<Object> {
 		return null;
 	}
 
-	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, boolean showEmptyValue,
+	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, JSONEmptyValueStrategy strategy,
 			Class<?> containerClass) {
 		try {
 			Object boValue = getValue(objCurrent, strJAVAField);
-			if (showEmptyValue || boValue != null) {
+			if (strategy != JSONEmptyValueStrategy.NOPROPERTY || boValue != null) {
 				jsWriter.startProperty(strJSONProperty);
 				if (boValue != null) {
 					JSONService.getInstance().process2JSON(jsWriter, boValue);
+				} else {
+					strategy.writeJSONValue(jsWriter);
 				}
 				jsWriter.endProperty();
 			}

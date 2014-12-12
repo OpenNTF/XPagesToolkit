@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<site>
+   <feature url="features/org.openntf.xpt.feature_1.2.0.qualifier.jar" id="org.openntf.xpt.feature" version="1.2.0.qualifier">
+      <category name="XPages Tookit"/>
+   </feature>
+   <category-def name="XPages Tookit" label="XPages Toolkit"/>
+</site>

@@ -15,8 +15,10 @@
  */
 package org.openntf.xpt.core.properties.storage;
 
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Properties;
 import java.util.logging.Logger;
 
@@ -69,7 +71,8 @@ public class StorageService {
 				return null;
 			}
 			Properties propRC = new Properties();
-			propRC.load(is);
+			BufferedReader r = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+			propRC.load(r);
 			return propRC;
 		} catch (Exception e) {
 

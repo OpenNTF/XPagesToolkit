@@ -18,12 +18,8 @@ package org.openntf.xpt.core.config;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.logging.Logger;
 
-import org.eclipse.core.runtime.IConfigurationElement;
-import org.eclipse.core.runtime.Platform;
 import org.eclipse.osgi.framework.console.CommandProvider;
-import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class ConfiguationProvider {
 
@@ -45,57 +41,54 @@ public class ConfiguationProvider {
 		return m_Provider;
 	}
 
-	public synchronized String[] getXspConfigFiles() {
+	public synchronized String[] getXspConfigFiles(
+			IPartConfiguration[] arrConfig) {
 		if (m_XspConfig == null) {
-			initCP();
+			initCP(arrConfig);
 		}
-		return m_XspConfig != null ? m_XspConfig.toArray(new String[m_XspConfig.size()]) : new String[] {};
+		return m_XspConfig != null ? m_XspConfig.toArray(new String[m_XspConfig
+				.size()]) : new String[] {};
 	}
 
-	private void initCP() {
-		Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
+	private void initCP(IPartConfiguration[] arrConfig) {
 		m_XspConfig = new ArrayList<String>();
 		m_FacesConfig = new ArrayList<String>();
 		m_CommandProvider = new ArrayList<CommandProvider>();
-		m_FacesConfig.add("org/openntf/xpt/core/config/xpt-core-faces-config.xml");
-		IConfigurationElement[] config = Platform.getExtensionRegistry().getConfigurationElementsFor(EXT_POINT_ID);
-		try {
-			for (IConfigurationElement e : config) {
-				String strElementID = e.getAttribute("ID");
-				logCurrent.info("Adding Part: " + strElementID);
-				Object objRC = e.createExecutableExtension("class");
-				if (objRC instanceof IPartConfiguration) {
-					IPartConfiguration lib = (IPartConfiguration) objRC;
-					if (lib.getCommandProvider() != null) {
-						m_CommandProvider.add(lib.getCommandProvider());
-					}
-					if (lib.getFacesConfigFiles() != null) {
-						m_FacesConfig.addAll(Arrays.asList(lib.getFacesConfigFiles()));
-					}
-					if (lib.getXspConfigFiles() != null) {
-						m_XspConfig.addAll(Arrays.asList(lib.getXspConfigFiles()));
-					}
-				}
+		m_FacesConfig
+				.add("org/openntf/xpt/core/config/xpt-core-faces-config.xml");
+		m_XspConfig.add("org/openntf/xpt/core/config/xpt-i18n.xsp-config");
+		for (IPartConfiguration lib : arrConfig) {
+			if (lib.getCommandProvider() != null) {
+				m_CommandProvider.add(lib.getCommandProvider());
 			}
-		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			if (lib.getFacesConfigFiles() != null) {
+				m_FacesConfig.addAll(Arrays.asList(lib.getFacesConfigFiles()));
+			}
+			if (lib.getXspConfigFiles() != null) {
+				m_XspConfig.addAll(Arrays.asList(lib.getXspConfigFiles()));
+			}
 		}
 
 	}
 
-	public synchronized String[] getFacesConfigFiles() {
+	public synchronized String[] getFacesConfigFiles(
+			IPartConfiguration[] arrConfig) {
 		if (m_FacesConfig == null) {
-			initCP();
+			initCP(arrConfig);
 		}
-		return m_FacesConfig != null ? m_FacesConfig.toArray(new String[m_FacesConfig.size()]) : new String[] {};
+		return m_FacesConfig != null ? m_FacesConfig
+				.toArray(new String[m_FacesConfig.size()]) : new String[] {};
 
 	}
 
-	public synchronized CommandProvider[] getCommandProvider() {
+	public synchronized CommandProvider[] getCommandProvider(
+			IPartConfiguration[] arrConfig) {
 		if (m_CommandProvider == null) {
-			initCP();
+			initCP(arrConfig);
 		}
-		return m_CommandProvider != null ? m_CommandProvider.toArray(new CommandProvider[m_CommandProvider.size()]) : new CommandProvider[] {};
+		return m_CommandProvider != null ? m_CommandProvider
+				.toArray(new CommandProvider[m_CommandProvider.size()])
+				: new CommandProvider[] {};
 
 	}
 

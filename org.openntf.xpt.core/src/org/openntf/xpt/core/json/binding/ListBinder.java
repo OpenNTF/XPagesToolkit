@@ -17,12 +17,13 @@ package org.openntf.xpt.core.json.binding;
 
 import java.util.List;
 
-import org.openntf.xpt.core.base.BaseListBinder;
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.json.DefinitionFactory;
+import org.openntf.xpt.core.json.JSONEmptyValueStrategy;
 
 import com.ibm.domino.services.util.JsonWriter;
 
-public class ListBinder extends BaseListBinder implements IJSONBinder<List<?>> {
+public class ListBinder extends AbstractBaseBinder<List<?>> implements IJSONBinder<List<?>> {
 	private static ListBinder m_Binder;
 
 	private ListBinder() {
@@ -35,12 +36,12 @@ public class ListBinder extends BaseListBinder implements IJSONBinder<List<?>> {
 		}
 		return m_Binder;
 	}
-	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, boolean showEmptyValue,
-			Class<?> containerClass) {
+
+	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, JSONEmptyValueStrategy strategy, Class<?> containerClass) {
 		try {
 			List<?> lstValues = getValue(objCurrent, strJAVAField);
 			IJSONBinder<?> innerBinder = DefinitionFactory.getJSONBinder(containerClass);
-			if (showEmptyValue || (lstValues != null && lstValues.size() >0)) {
+			if (strategy != JSONEmptyValueStrategy.NOPROPERTY || (lstValues != null && lstValues.size() > 0)) {
 				jsWriter.startProperty(strJSONProperty);
 				if (lstValues != null && lstValues.size() > 0) {
 					jsWriter.startArray();
@@ -50,6 +51,8 @@ public class ListBinder extends BaseListBinder implements IJSONBinder<List<?>> {
 						jsWriter.endArrayItem();
 					}
 					jsWriter.endArray();
+				} else {
+					strategy.writeJSONValue(jsWriter);
 				}
 				jsWriter.endProperty();
 			}

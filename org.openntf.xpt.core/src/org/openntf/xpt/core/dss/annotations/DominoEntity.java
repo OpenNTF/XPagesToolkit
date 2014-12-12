@@ -36,4 +36,5 @@ public @interface DominoEntity {
 	boolean changeLog() default false;
 	boolean encrypt() default false;
 	String[] encRoles() default {};
+	boolean embedded() default false;
 }

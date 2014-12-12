@@ -17,9 +17,10 @@ package org.openntf.xpt.demo;
 
 import lotus.domino.Database;
 import lotus.domino.Session;
+
 import org.openntf.xpt.agents.XPageAgentJob;
 import org.openntf.xpt.agents.annotations.ExecutionMode;
-import org.openntf.xpt.agents.annotations.XPagesAgent;;
+import org.openntf.xpt.agents.annotations.XPagesAgent;
 
 @XPagesAgent(Alias="updateAllUserProfiles", Name="Update All UserProfiels", executionMode = ExecutionMode.SCHEDULE, intervall=3)
 public class TestAgentBackendUpdateUP extends XPageAgentJob {
@@ -29,13 +30,17 @@ public class TestAgentBackendUpdateUP extends XPageAgentJob {
 	}
 
 	@Override
-	public int executeCode(Session arg0, Database arg1) {
+	public int executeCode(Session session, Database dbCurrent) {
 		try {
 			setCurrentTaskStatus("Task started");
 			setTaskCompletion(0);
-			System.out.println(arg0.getCommonUserName());
-			System.out.println(arg0.getEffectiveUserName());
-			System.out.println(arg1.getFilePath());
+			System.out.println("TEST alll 3 Minutes");
+			System.out.println(session.getCommonUserName());
+			System.out.println(session.getEffectiveUserName());
+			System.out.println(dbCurrent.getFilePath());
+			System.out.println("Faces Context: "+getFacesContext());
+			System.out.println("Applicaiton: "+getFacesContext().getApplication());
+			
 			setCurrentTaskStatus("Task finished");
 			setTaskCompletion(100);
 		} catch (Exception e) {

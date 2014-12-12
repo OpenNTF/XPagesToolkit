@@ -18,6 +18,7 @@
       		<property-name>title</property-name>
       		<property-class>string</property-class>
       		<display-name>Title of the Box</display-name>
+      		<property-extension><localizable>true</localizable></property-extension>
     	</property>
     	<property>
       		<property-name>text</property-name>
@@ -280,6 +281,155 @@
     	</component-extension>
   	</component>
 	
+	
+	   <component>
+    	<description>OneUI NamePicker</description>
+    	<display-name>Name Picker</display-name>
+    	<component-type>org.openntf.xpt.oneui.component.uinamepicker</component-type>
+    	<component-class>org.openntf.xpt.oneui.component.UINamePicker</component-class>
+    	
+    	 
+    	<group-type-ref>com.ibm.xsp.group.core.prop.style</group-type-ref>
+    	<group-type-ref>com.ibm.xsp.group.core.prop.styleClass</group-type-ref>
+
+ 		<property>
+      		<description>Show as readonly?</description>
+      		<display-name>readOnly</display-name>
+      		<property-name>readOnly</property-name>
+      		<property-class>boolean</property-class>
+      		<property-extension>
+        		<designer-extension>
+          			<category>basics</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+
+    	<property>
+    		<description>Bean of type INamePickerValueService. If the bean is in place, database, view, lookupView are obsolet</description>
+      		<property-name>nameValueBean</property-name>
+      		<property-class>string</property-class>
+      		<display-name>NameValueBean</display-name>
+      		<property-extension>
+        		<designer-extension>
+          			<category>namePicker</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+ 
+    	<property>
+      		<property-name>database</property-name>
+      		<property-class>string</property-class>
+      		<display-name>Database</display-name>
+      		<property-extension>
+        		<designer-extension>
+          			<category>namePicker</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+    	<property>
+      		<property-name>view</property-name>
+      		<property-class>string</property-class>
+      		<display-name>View</display-name>
+      		<property-extension>
+        		<designer-extension>
+          			<category>namePicker</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+    	<property>
+      		<property-name>lookupView</property-name>
+      		<property-class>string</property-class>
+      		<display-name>LookupView</display-name>
+      		<property-extension>
+        		<designer-extension>
+          			<category>namePicker</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+   		<property>
+   			<description>FT search query. Use ###VALUE### as placeholder</description>
+      		<property-name>searchQuery</property-name>
+      		<property-class>string</property-class>
+      		<display-name>SearchQuery</display-name>
+      		<property-extension>
+        		<designer-extension>
+          			<category>namePicker</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+    	<property>
+      		<property-name>displayLabel</property-name>
+      		<property-class>boolean</property-class>
+      		<property-extension>
+        		<designer-extension>
+          			<editor/>
+          			<default-value>false</default-value>
+          			<category>namePicker</category>
+        		</designer-extension>
+      		</property-extension>
+      		<display-name>DisplayLabel</display-name>
+    	</property> 
+    	<property>
+      		<property-name>refreshId</property-name>
+      		<property-class>string</property-class>
+      		<display-name>Refresh Id</display-name>
+    	</property>  	
+    	
+    	<property>
+			<description>Build the value for the search result line (docName is the document as NotesXspDocument)</description>
+			<display-name>BuildLine</display-name>
+			<property-name>buildLine</property-name>
+			<property-class>javax.faces.el.MethodBinding</property-class>
+			<property-extension>
+				<method-binding-property>true</method-binding-property>
+            	<designer-extension>
+            		<category>namePicker</category>
+            	</designer-extension>
+			</property-extension>
+		</property>
+
+   		<property>
+			<description>Build the value (docName is the document as NotesXspDocument)</description>
+			<display-name>BuildValue</display-name>
+			<property-name>buildValue</property-name>
+			<property-class>javax.faces.el.MethodBinding</property-class>
+			<property-extension>
+				<method-binding-property>true</method-binding-property>
+            	<designer-extension>
+            		<category>namePicker</category>
+            	</designer-extension>
+			</property-extension>
+		</property>
+
+   		<property>
+			<description>Build the Label (docName is the document as NotesXspDocument)</description>
+			<display-name>BuildLabel</display-name>
+			<property-name>buildLabel</property-name>
+			<property-class>javax.faces.el.MethodBinding</property-class>
+			<property-extension>
+				<method-binding-property>true</method-binding-property>
+            	<designer-extension>
+            		<category>namePicker</category>
+            	</designer-extension>
+			</property-extension>
+		</property>
+    	
+    	<component-extension>
+      		<base-component-type>com.ibm.xsp.UIInputEx</base-component-type>
+      		<component-family>javax.faces.Input</component-family>
+      		<renderer-type>org.openntf.xpt.oneui.component.uinampicker</renderer-type>
+      		<tag-name>oneuinamepicker</tag-name>
+      		<designer-extension>
+ 				<in-palette>true</in-palette>
+        		<category>XPages Toolkit</category>
+        		<render-markup>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
+				&lt;xp:view xmlns:xp="http://www.ibm.com/xsp/core"&gt;&#xd;
+				&lt;xp:image url="/icons/oneui_namepicker.png" id="oneui_namepicker"&gt;&lt;/xp:image&gt;&#xd;
+				&lt;/xp:view&gt;&#xd;
+			</render-markup>
+      		</designer-extension>
+    	</component-extension>
+	</component>
 	
 	  <complex-type>
   		<description>About Block</description>

@@ -15,14 +15,19 @@
  */
 package org.openntf.xpt.core.dss.binding.util;
 
-import java.util.HashMap;
-
 import lotus.domino.Item;
 import lotus.domino.Name;
 import lotus.domino.Session;
 
-public class NamesProcessor {
+import org.openntf.xpt.core.dss.binding.Definition;
 
+import com.ibm.commons.util.StringUtil;
+import com.ibm.commons.util.profiler.Profiler;
+import com.ibm.commons.util.profiler.ProfilerAggregator;
+import com.ibm.commons.util.profiler.ProfilerType;
+
+public class NamesProcessor {
+	private static final ProfilerType pt = new ProfilerType("XPT.DSS.NameProcessorr");
 	private static NamesProcessor instance = null;
 
 	private NamesProcessor() {
@@ -35,20 +40,51 @@ public class NamesProcessor {
 		return instance;
 	}
 
-	public String getPerson(HashMap<String, Object> addValues, String strValue, Session sesCurrent) {
+	public String getPerson(Definition def, String strValue, Session sesCurrent) {
+		String strRC = strValue;
+		if (Profiler.isEnabled()) {
+			ProfilerAggregator pa = Profiler.startProfileBlock(pt, "getPerson");
+			long startTime = Profiler.getCurrentTime();
+			try {
+				strRC = _getPerson(def, strValue, sesCurrent);
+			} finally {
+				Profiler.endProfileBlock(pa, startTime);
+			}
+		} else {
+			strRC = _getPerson(def, strValue, sesCurrent);
+
+		}
+		return strRC;
+	}
+
+	public String _getPerson(Definition def, String strValue, Session sesCurrent) {
 		String rcValue = strValue;
-		try {
-			Name nonCurrent = sesCurrent.createName(strValue);
-			if (addValues != null && addValues.size() > 0) {
-				if ((addValues.containsKey("isReader") || addValues.containsKey("isAuthor") || addValues.containsKey("isNames"))
-						&& addValues.containsKey("showNameAs")) {
-					if ("ABBREVIATE".equalsIgnoreCase(addValues.get("showNameAs").toString())) {
-						rcValue = nonCurrent.getAbbreviated();
-					} else if ("CN".equals(addValues.get("showNameAs"))) {
-						rcValue = nonCurrent.getCommon();
-					}
+		if (def.isReader() || def.isAuthor() || def.isNames() && !StringUtil.isEmpty(def.getShowNameAs())) {
+			try {
+				Name nonCurrent = sesCurrent.createName(strValue);
+
+				if ("ABBREVIATE".equalsIgnoreCase(def.getShowNameAs())) {
+					rcValue = nonCurrent.getAbbreviated();
+				} else if ("CN".equals(def.getShowNameAs())) {
+					rcValue = nonCurrent.getCommon();
 				}
 				nonCurrent.recycle();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+		return rcValue;
+	}
+
+	public String setPerson(String strValue, boolean isNamesValue, Session sesCurrent) {
+		String rcValue = strValue;
+		try {
+			if (isNamesValue) {
+				Name person = sesCurrent.createName(strValue);
+				if (person != null) {
+					rcValue = person.getCanonical();
+					person.recycle();
+				}
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -56,35 +92,19 @@ public class NamesProcessor {
 		return rcValue;
 	}
 
-	public String setPerson(String strValue, boolean isNamesValue, Session sesCurrent) {
-		String rcValue = strValue;
-		Name person = null;
-		try {
-			person = sesCurrent.createName(strValue);
-			if (person != null && isNamesValue)
-				rcValue = person.getCanonical();
-			person.recycle();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return rcValue;
-	}
-
-	public boolean setNamesField(HashMap<String, Object> addValues, Item iNotesField) {
+	public boolean setNamesField(Definition def, Item iNotesField) {
 		boolean isNamesValue = false;
 		try {
-			if (addValues != null && addValues.size() > 0) {
-				if (iNotesField != null) {
-					if (addValues.containsKey("isReader")) {
-						isNamesValue = true;
-						iNotesField.setReaders(true);
-					} else if (addValues.containsKey("isAuthor")) {
-						isNamesValue = true;
-						iNotesField.setAuthors(true);
-					} else if (addValues.containsKey("isNames")) {
-						isNamesValue = true;
-						iNotesField.setNames(true);
-					}
+			if (iNotesField != null) {
+				if (def.isReader()) {
+					isNamesValue = true;
+					iNotesField.setReaders(true);
+				} else if (def.isAuthor()) {
+					isNamesValue = true;
+					iNotesField.setAuthors(true);
+				} else if (def.isNames()) {
+					isNamesValue = true;
+					iNotesField.setNames(true);
 				}
 			}
 		} catch (Exception e) {

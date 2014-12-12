@@ -2,7 +2,6 @@
 <classpath>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
 	<classpathentry kind="con" path="org.eclipse.pde.core.requiredPlugins"/>
-	<classpathentry kind="src" path="src"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-codec-1.6.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/commons-logging-1.1.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/fluent-hc-4.2.5.jar"/>
@@ -10,5 +9,9 @@
 	<classpathentry exported="true" kind="lib" path="lib/httpclient-cache-4.2.5.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpcore-4.2.4.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/httpmime-4.2.5.jar"/>
-	<classpathentry kind="output" path="bin"/>
+	<classpathentry exported="true" kind="lib" path="lib/commons-io-2.4.jar"/>
+	<classpathentry kind="lib" path="lib/icu4j-charset-53_1.jar"/>
+	<classpathentry kind="lib" path="lib/icu4j-53_1.jar"/>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="output" path="target/classes"/>
 </classpath>

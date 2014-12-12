@@ -1,4 +1,11 @@
-#Tue Jul 23 07:41:22 CEST 2013
+#Sat Apr 12 03:02:42 CEST 2014
+encoding//Resources/Files/general.properties=UTF-8
+encoding//Resources/Files/keywords_de.properties=UTF-8
+encoding//Resources/Files/general_de.properties=UTF-8
+encoding//Resources/Files/contact.properties=UTF-8
+encoding//Resources/Files/keywords.properties=UTF-8
+encoding//Resources/Files/contact_de.properties=UTF-8
+encoding//Resources/StyleSheets/customRSSCSS.css=UTF-8
 encoding//Resources/Files/Test.properties=UTF-8
 eclipse.preferences.version=1
-encoding//Resources/StyleSheets/customRSSCSS.css=UTF-8
+encoding//Resources/Files/xpt-log.properties=UTF-8

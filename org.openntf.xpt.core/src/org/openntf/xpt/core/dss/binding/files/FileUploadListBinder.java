@@ -17,12 +17,14 @@ package org.openntf.xpt.core.dss.binding.files;
 
 import java.io.File;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Vector;
 
 import lotus.domino.Document;
 import lotus.domino.EmbeddedObject;
 import lotus.domino.RichTextItem;
+
+import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 
 import com.ibm.xsp.component.UIFileuploadEx.UploadedFile;
@@ -44,15 +46,14 @@ public class FileUploadListBinder implements IBinder<List<UploadedFile>> {
 
 	}
 
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> addValues) {
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 
 	}
 
-	public List<UploadedFile>[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField,
-			HashMap<String, Object> addValues) {
+	public List<UploadedFile>[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		try {
 
-			List<UploadedFile> files = getValue(objCurrent, strJavaField);
+			List<UploadedFile> files = getValue(objCurrent, def.getJavaField());
 
 			for (UploadedFile file : files) {
 				IUploadedFile FTemp = file.getUploadedFile();
@@ -61,9 +62,9 @@ public class FileUploadListBinder implements IBinder<List<UploadedFile>> {
 				File FNew = new File(SrFile.getParentFile().getAbsolutePath() + File.separator + FTemp.getClientFileName());
 				SrFile.renameTo(FNew);
 				RichTextItem rt = null;
-				rt = (RichTextItem) docCurrent.getFirstItem(strNotesField);
+				rt = (RichTextItem) docCurrent.getFirstItem(def.getNotesField());
 				if (rt == null)
-					rt = docCurrent.createRichTextItem(strNotesField);
+					rt = docCurrent.createRichTextItem(def.getNotesField());
 				rt.embedObject(EmbeddedObject.EMBED_ATTACHMENT, "", FNew.getAbsolutePath(), null);
 			}
 
@@ -85,7 +86,7 @@ public class FileUploadListBinder implements IBinder<List<UploadedFile>> {
 	}
 
 	@Override
-	public List<UploadedFile> getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) {
+	public List<UploadedFile> getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {
 		return null;
 	}
 

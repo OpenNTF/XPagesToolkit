@@ -40,12 +40,14 @@ public class XPTAgentActivator extends Plugin {
 	public void start(BundleContext bundleContext) throws Exception {
 		super.start(bundleContext);
 		m_Activator = this;
-		try {
-			Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
-			logCurrent.info("XPT AgentManager FrameWork loaded.");
-			XPageAgentManager.getInstance().startJob();
-		} catch (Exception e) {
-			e.printStackTrace();
+		if (!"yes".equals(System.getProperty("junit-test-running"))) {
+			try {
+				Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
+				logCurrent.info("XPT AgentManager FrameWork loaded.");
+				XPageAgentManager.getInstance().startJob();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
@@ -58,9 +60,10 @@ public class XPTAgentActivator extends Plugin {
 	 */
 	public void stop(BundleContext bundleContext) throws Exception {
 		super.stop(bundleContext);
-		Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
-		logCurrent.info("XPT AgentManager FrameWork stopped.");
-
+		if (!"yes".equals(System.getProperty("junit-test-running"))) {
+			Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
+			logCurrent.info("XPT AgentManager FrameWork stopped.");
+		}
 	}
 
 	public static XPTAgentActivator getInstance() {

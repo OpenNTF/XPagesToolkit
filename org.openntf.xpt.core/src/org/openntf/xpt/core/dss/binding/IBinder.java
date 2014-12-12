@@ -15,18 +15,18 @@
  */
 package org.openntf.xpt.core.dss.binding;
 
-import java.util.HashMap;
+import java.util.Vector;
 
 import lotus.domino.Document;
 
 import org.openntf.xpt.core.dss.DSSException;
 
 public interface IBinder<T> {
-	public void processDomino2Java(Document docCurrent, Object objCurrent, String strNotesField, String strJavaField, HashMap<String, Object> additionalValues);
+	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecValues, Definition def);
 
-	public T[] processJava2Domino(Document docCurrent, Object objCurrent, String strNotesField, String JavaField, HashMap<String, Object> additionalValues);
+	public T[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def);
 
 	public T getValue(Object objCurrent, String strJavaField);
 
-	public T getValueFromStore(Document docCurrent, String strNotesField, HashMap<String, Object> additionalValues) throws DSSException;
+	public T getValueFromStore(Document docCurrent, Vector<?> vecValues, Definition def) throws DSSException;
 }

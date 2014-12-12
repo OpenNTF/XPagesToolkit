@@ -75,7 +75,7 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 
 	@Override
 	public boolean isColumnSortable(String arg0) {
-		return true;
+		return m_Container.containsSA(arg0);
 	}
 
 	@Override
@@ -100,6 +100,57 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 
 	@Override
 	public String getRowPosition() {
-		return ""+getRowIndex();
+		return "" + getRowIndex();
+	}
+
+	@Override
+	public int getResortType(String arg0) {
+		if (isColumnSortable(arg0)) {
+			return m_Container.getSortDirection(arg0);
+		}
+		return RESORT_NONE;
+	}
+
+	@Override
+	public void setResortOrder(String columnName, String sortOrder) {
+		if (columnName.equals(m_Container.getCurrentSortAttribute())) {
+			if (SORT_TOGGLE.equals(sortOrder)) {
+				m_Container.sortList(columnName, !m_Container.getCurrentAscending());
+				return;
+			}
+		}
+		if (SORT_TOGGLE.equals(sortOrder)) {
+			m_Container.sortList(columnName, true);
+			return;
+		}
+		if (SORT_ASCENDING.equals(sortOrder)) {
+			m_Container.sortList(columnName, true);
+		}
+		if (SORT_DESCENDING.equals(sortOrder)) {
+			m_Container.sortList(columnName, false);
+		}
+	}
+
+	@Override
+	public String getResortColumn() {
+		return m_Container.getCurrentSortAttribute();
+	}
+
+	@Override
+	public int resetResortState(String arg0) {
+		return RESORT_NONE;
+	}
+
+	@Override
+	public int getResortState(String columnName) {
+		if (!columnName.equals(m_Container.getCurrentSortAttribute())) {
+			return RESORT_NONE;
+		}
+		if (getResortType(columnName) == RESORT_BOTH) {
+			return m_Container.getCurrentAscending() ? RESORT_ASCENDING : RESORT_DESCENDING;
+		} else {
+			return !m_Container.getCurrentAscending() ? RESORT_ASCENDING : RESORT_DESCENDING;
+
+		}
 	}
 }
