@@ -10,3 +10,7 @@ tmp/
 *.swp
 *~.nib
 local.properties
+org.openntf.xpt.agents/target/
+target/
+org.openntf.xpt.updatesite/artifacts.jar
+org.openntf.xpt.updatesite/content.jar
