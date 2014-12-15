@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -26,14 +26,14 @@ public class ConfiguationProvider {
 	public static final String EXT_POINT_ID = "org.openntf.xpt.part";
 	private static ConfiguationProvider m_Provider;
 
-	private ConfiguationProvider() {
-
-	}
 
 	private List<String> m_XspConfig;
 	private List<String> m_FacesConfig;
 	private List<CommandProvider> m_CommandProvider;
 
+	private ConfiguationProvider() {
+
+	}
 	public static synchronized ConfiguationProvider getInstance() {
 		if (m_Provider == null) {
 			m_Provider = new ConfiguationProvider();

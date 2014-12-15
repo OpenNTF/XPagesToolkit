@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2014
+ * ï¿½ Copyright WebGate Consulting AG, 2014
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -26,8 +26,7 @@ public class XPTLtpaBean {
 	public static final String BEAN_NAME = "xptLTPABean"; //$NON-NLS-1$
 
 	public static XPTLtpaBean get(FacesContext context) {
-		XPTLtpaBean bean = (XPTLtpaBean) context.getApplication().getVariableResolver().resolveVariable(context, BEAN_NAME);
-		return bean;
+		return (XPTLtpaBean) context.getApplication().getVariableResolver().resolveVariable(context, BEAN_NAME);
 	}
 
 	public static XPTLtpaBean get() {

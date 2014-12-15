@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -51,6 +51,9 @@ import com.ibm.xsp.extlib.util.ExtLibUtil;
  */
 public abstract class AbstractStorageService<T> {
 
+	private static final String GENERAL_ERROR = "General Error";
+	private static final String NO_SOFTDELETION_PROVIDER_DEFINED = "No softdeletion provider defined";
+
 	protected AbstractStorageService() {
 	}
 
@@ -79,7 +82,7 @@ public abstract class AbstractStorageService<T> {
 		try {
 			return DominoStorageService.getInstance().saveObject(obj, targetDatabase);
 		} catch (DSSException e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "saveTo", e);
 		}
 		return false;
 	}
@@ -109,8 +112,8 @@ public abstract class AbstractStorageService<T> {
 			}
 			return ret;
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 	}
 
@@ -146,8 +149,8 @@ public abstract class AbstractStorageService<T> {
 			}
 			viwDabases.recycle();
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return ret;
 	}
@@ -188,8 +191,8 @@ public abstract class AbstractStorageService<T> {
 			}
 			view.recycle();
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return ret;
 	}
@@ -232,8 +235,8 @@ public abstract class AbstractStorageService<T> {
 			}
 			viwDabases.recycle();
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return ret;
 
@@ -281,8 +284,8 @@ public abstract class AbstractStorageService<T> {
 			}
 			view.recycle();
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return ret;
 
@@ -322,7 +325,7 @@ public abstract class AbstractStorageService<T> {
 
 		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
 		if (sdProv == null) {
-			throw new DSSException("No softdeletion provider defined");
+			throw new DSSException(NO_SOFTDELETION_PROVIDER_DEFINED);
 		}
 		return sdProv.softDelete(objDelete, targetDatabase, this);
 	}
@@ -356,7 +359,7 @@ public abstract class AbstractStorageService<T> {
 		}
 		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
 		if (sdProv == null) {
-			throw new DSSException("No softdeletion provider defined");
+			throw new DSSException(NO_SOFTDELETION_PROVIDER_DEFINED);
 		}
 		return sdProv.hardDelete(objDelete, targetDatabase, this);
 
@@ -386,7 +389,7 @@ public abstract class AbstractStorageService<T> {
 
 		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
 		if (sdProv == null) {
-			throw new DSSException("No softdeletion provider defined");
+			throw new DSSException(NO_SOFTDELETION_PROVIDER_DEFINED);
 		}
 		return sdProv.undelete(objDelete, targetDatabase, this);
 	}
@@ -402,8 +405,8 @@ public abstract class AbstractStorageService<T> {
 				}
 			}
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return false;
 	}
@@ -416,8 +419,8 @@ public abstract class AbstractStorageService<T> {
 				lstRC.add("" + itValue.next());
 			}
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return lstRC;
 	}
@@ -455,8 +458,8 @@ public abstract class AbstractStorageService<T> {
 			}
 
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return lstRC;
 	}

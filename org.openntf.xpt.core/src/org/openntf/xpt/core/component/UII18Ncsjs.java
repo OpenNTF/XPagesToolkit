@@ -5,20 +5,18 @@ import javax.faces.context.FacesContext;
 
 public class UII18Ncsjs extends UIComponentBase {
 
-	public static final String COMPONENT_TYPE = "org.openntf.xpt.core.component.uii18ncsjs"; //$NON-NLS-1$
-	public static final String COMPONENT_FAMILY = "org.openntf.xpt.core.component.uii18ncsjs"; //$NON-NLS-1$
-	public static final String RENDERER_TYPE = "org.openntf.xpt.core.component.uii18ncsjs"; //$NON-NLS-1$
+	public static final String COMPONENT_TYPE_FAMILY_RENDERER = "org.openntf.xpt.core.component.uii18ncsjs"; //$NON-NLS-1$
 
 	private String m_VarName;
 	private String m_LanguageForce;
 
 	public UII18Ncsjs() {
-		setRendererType(RENDERER_TYPE);
+		setRendererType(COMPONENT_TYPE_FAMILY_RENDERER);
 	}
 
 	@Override
 	public String getFamily() {
-		return COMPONENT_FAMILY;
+		return COMPONENT_TYPE_FAMILY_RENDERER;
 	}
 
 	public String getVarName() {
