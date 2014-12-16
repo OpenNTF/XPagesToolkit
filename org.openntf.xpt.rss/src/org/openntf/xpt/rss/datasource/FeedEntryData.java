@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -17,14 +17,35 @@ package org.openntf.xpt.rss.datasource;
 
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
+
+import org.openntf.xpt.rss.model.RSSEntry;
 
 import com.ibm.xsp.model.ViewRowData;
 
 public class FeedEntryData implements ViewRowData, Serializable {
 
 	private static final long serialVersionUID = 1L;
-	private HashMap<String, Object> m_Properties;
+	private Map<String, Object> m_Properties;
 
+	public static FeedEntryData buildFromRSSEntry(RSSEntry rssEntry) {
+		FeedEntryData fed = new FeedEntryData();
+		Map<String,Object> props = new HashMap<String, Object>();
+		props.put("title", rssEntry.getTitle());
+		props.put("link", rssEntry.getLink());
+		props.put("description", rssEntry.getDescription());
+		props.put("author", rssEntry.getAuthors().isEmpty() ? "" : rssEntry.getAuthors().get(0));
+		props.put("authors", rssEntry.getAuthorsTXT());
+		props.put("categories", rssEntry.getCategoriesTXT());
+		props.put("contents", rssEntry.getContentsTXT());
+		props.put("links", rssEntry.getLinksTXT());
+		props.put("date", rssEntry.getCreated());
+		props.put("update", rssEntry.getUpdated());
+		fed.m_Properties = props;
+		return fed;
+		
+	}
+	
 	@Override
 	public ColumnInfo getColumnInfo(String arg0) {
 		return null;
@@ -32,7 +53,6 @@ public class FeedEntryData implements ViewRowData, Serializable {
 
 	@Override
 	public Object getColumnValue(String arg0) {
-		System.out.println("getCV: "+ arg0);
 		return getValue(arg0);
 	}
 

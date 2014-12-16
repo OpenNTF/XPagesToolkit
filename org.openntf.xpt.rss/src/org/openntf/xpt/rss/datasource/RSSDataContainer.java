@@ -68,7 +68,7 @@ public class RSSDataContainer extends AbstractDataContainer {
 		m_FeedURL = feedURL;
 	}
 
-	public List<?> getRSSasList() {
+	public List<FeedEntryData> getRSSasList() {
 		if (m_FeedEntries == null) {
 			m_FeedEntries = buildEntries();
 		}
@@ -80,17 +80,7 @@ public class RSSDataContainer extends AbstractDataContainer {
 		try {
 			List<RSSEntry> lstEntries = FeedReaderService.getInstance().getAllEntriesFromURL(m_FeedURL);
 			for (RSSEntry rssEntry : lstEntries) {
-				FeedEntryData fed = new FeedEntryData();
-				fed.setColumnValue("title", rssEntry.getTitle());
-				fed.setColumnValue("link", rssEntry.getLink());
-				fed.setColumnValue("description", rssEntry.getDescription());
-				fed.setColumnValue("author", rssEntry.getAuthors().isEmpty() ? "" : rssEntry.getAuthors().get(0));
-				fed.setColumnValue("authors", rssEntry.getAuthorsTXT());
-				fed.setColumnValue("categories", rssEntry.getCategoriesTXT());
-				fed.setColumnValue("contents", rssEntry.getContentsTXT());
-				fed.setColumnValue("links", rssEntry.getLinksTXT());
-				fed.setColumnValue("date", rssEntry.getCreated());
-				fed.setColumnValue("update", rssEntry.getUpdated());
+				FeedEntryData fed = FeedEntryData.buildFromRSSEntry(rssEntry);
 				lstRC.add(fed);
 			}
 

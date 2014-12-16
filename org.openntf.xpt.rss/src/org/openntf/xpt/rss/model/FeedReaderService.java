@@ -19,7 +19,6 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.LogFactory;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 import org.openntf.xpt.rss.XPTRSSActivator;
 
