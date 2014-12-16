@@ -16,7 +16,6 @@
 package org.openntf.xpt.oneui.renderkit.html_extended;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
