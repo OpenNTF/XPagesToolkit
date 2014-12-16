@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -55,14 +55,14 @@ public class TipsBoxRenderer extends FacesRenderer {
 		}
 		writer.writeAttribute("role", "note", null);
 
-		writeTitle(context, writer, uit, strTitle);
-		writeText(context, writer, uit, strText);
+		writeTitle(writer, uit, strTitle);
+		writeText(writer, uit, strText);
 
 		writer.endElement("div");
 
 	}
 
-	private void writeText(FacesContext context, ResponseWriter writer, UITips uit, String strText) throws IOException {
+	private void writeText( ResponseWriter writer, UITips uit, String strText) throws IOException {
 		writer.startElement("p", uit);
 		if (!StringUtil.isEmpty(strText)) {
 			writer.writeText(strText, null);
@@ -71,7 +71,7 @@ public class TipsBoxRenderer extends FacesRenderer {
 
 	}
 
-	private void writeTitle(FacesContext context, ResponseWriter writer, UITips uit, String strTitle) throws IOException {
+	private void writeTitle( ResponseWriter writer, UITips uit, String strTitle) throws IOException {
 		writer.startElement("h3", uit);
 		writer.startElement("span", null);
 		writer.writeAttribute("class", "lotusLeft", null);
@@ -85,6 +85,7 @@ public class TipsBoxRenderer extends FacesRenderer {
 
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
+		//No EncodedEnd needed
 	}
 
 	@Override

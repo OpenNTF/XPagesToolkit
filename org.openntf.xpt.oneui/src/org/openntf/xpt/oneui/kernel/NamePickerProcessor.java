@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lotus.domino.Database;
 import lotus.domino.Document;
@@ -14,7 +15,9 @@ import lotus.domino.View;
 import lotus.domino.ViewEntry;
 import lotus.domino.ViewEntryCollection;
 
+import org.openntf.xpt.core.XPTRuntimeException;
 import org.openntf.xpt.core.utils.DatabaseProvider;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 import org.openntf.xpt.oneui.component.UINamePicker;
 
 import com.ibm.commons.util.StringUtil;
@@ -51,7 +54,7 @@ public enum NamePickerProcessor implements INamePickerValueService {
 				}
 				vecEntries.recycle();
 			} catch (Exception e) {
-				e.printStackTrace();
+				LoggerFactory.logError(getClass(), "Error during ftSearch access", e);
 				docCollection = vw.getAllDocumentsByKey(strSearch, false);
 			}
 		} else {
@@ -84,8 +87,8 @@ public enum NamePickerProcessor implements INamePickerValueService {
 	 * @see org.openntf.xpt.oneui.kernel.INamePickerValueService#getDislplayLabels(org.openntf.xpt.oneui.component.UINamePicker, java.lang.String[])
 	 */
 	@Override
-	public HashMap<String, String> getDislplayLabels(UINamePicker uiNp, String[] values) {
-		HashMap<String, String> hsRC = new HashMap<String, String>();
+	public Map<String, String> getDislplayLabels(UINamePicker uiNp, String[] values) {
+		Map<String, String> hsRC = new HashMap<String, String>();
 		try {
 			Database db = DatabaseProvider.INSTANCE.getDatabase(uiNp.getDatabase(), false);
 			View vw = null;
@@ -97,24 +100,28 @@ public enum NamePickerProcessor implements INamePickerValueService {
 			}
 			for (String strValue : values) {
 				// Assign a default value
-				hsRC.put(strValue, strValue);
-				if (vw != null) {
-					Document docRC = vw.getDocumentByKey(strValue, true);
-					if (docRC != null) {
-						String strLabel = uiNp.getDisplayLableValue(docRC);
-						hsRC.put(strValue, strLabel);
-					}
-					docRC.recycle();
-				}
+				String strLabel = getLabel(vw, strValue, uiNp);
+				hsRC.put(strValue, strLabel);
 			}
 			if (vw != null) {
 				vw.recycle();
 			}
 			DatabaseProvider.INSTANCE.handleRecylce(db);
 		} catch (Exception ex) {
-			ex.printStackTrace();
-			return null;
+			throw new XPTRuntimeException("getDisplayLables", ex);
 		}
 		return hsRC;
+	}
+	
+	private String getLabel(View vw, String strValue, UINamePicker uiNp) throws NotesException {
+		String rc = strValue;
+		if (vw != null) {
+			Document docRC = vw.getDocumentByKey(strValue, true);
+			if (docRC != null) {
+				rc = uiNp.getDisplayLableValue(docRC);
+			}
+			docRC.recycle();
+		}
+		return rc;
 	}
 }

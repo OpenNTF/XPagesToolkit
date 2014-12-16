@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -35,6 +35,7 @@ public class AboutPageRenderer extends FacesRenderer {
 
 	@Override
 	public void decode(FacesContext context, UIComponent component) {
+		//NO decode needed
 	}
 
 	@Override
@@ -49,15 +50,15 @@ public class AboutPageRenderer extends FacesRenderer {
 
 		ResponseWriter writer = context.getResponseWriter();
 		writeAboutBox(context, writer, uip);
-		if (uip.getLeftColumnBlocks() != null && uip.getLeftColumnBlocks().size() > 0) {
-			writeColumnBlocks(context, writer, uip.getLeftColumnBlocks(), true);
+		if (uip.getLeftColumnBlocks() != null && !uip.getLeftColumnBlocks().isEmpty()) {
+			writeColumnBlocks( writer, uip.getLeftColumnBlocks(), true);
 		}
-		if (uip.getRightColumnBlocks() != null && uip.getRightColumnBlocks().size() > 0) {
-			writeColumnBlocks(context, writer, uip.getRightColumnBlocks(), false);
+		if (uip.getRightColumnBlocks() != null && !uip.getRightColumnBlocks().isEmpty()) {
+			writeColumnBlocks( writer, uip.getRightColumnBlocks(), false);
 		}
 	}
 
-	private void writeColumnBlocks(FacesContext context, ResponseWriter writer, List<UIAboutBlock> columnBlocks, boolean isLeft) throws IOException {
+	private void writeColumnBlocks( ResponseWriter writer, List<UIAboutBlock> columnBlocks, boolean isLeft) throws IOException {
 		String strClass = isLeft ? "lotusContentColOne" : "lotusContentColTwo";
 
 		writer.startElement("div", null);
@@ -154,6 +155,7 @@ public class AboutPageRenderer extends FacesRenderer {
 
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
+		//No encodeEnd needed
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -22,6 +22,7 @@ import java.io.ObjectInput;
 import java.io.ObjectOutput;
 
 import org.openntf.xpt.core.properties.storage.StorageService;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.xsp.model.AbstractDataContainer;
 
@@ -53,7 +54,7 @@ public class PropertiesDataContainer extends AbstractDataContainer {
 		try {
 			m_PDO = (PropertiesDataObject) in.readObject();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "Errror during deserialize", e);
 		}
 	}
 
@@ -101,7 +102,7 @@ public class PropertiesDataContainer extends AbstractDataContainer {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "save failed!", e);
 			return false;
 		}
 		return true;

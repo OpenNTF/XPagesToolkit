@@ -1,7 +1,7 @@
 package org.openntf.xpt.oneui.kernel;
 
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import lotus.domino.NotesException;
 
@@ -11,6 +11,6 @@ public interface INamePickerValueService {
 
 	public abstract List<NameEntry> getTypeAheadValues(UINamePicker uiNp, String strSearch) throws NotesException;
 
-	public abstract HashMap<String, String> getDislplayLabels(UINamePicker uiNp, String[] values);
+	public abstract Map<String, String> getDislplayLabels(UINamePicker uiNp, String[] values);
 
 }

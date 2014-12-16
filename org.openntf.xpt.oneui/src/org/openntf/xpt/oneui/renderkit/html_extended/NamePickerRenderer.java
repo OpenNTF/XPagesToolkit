@@ -166,11 +166,11 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 			if (c.isDisplayLabel()) {
 				DojoRendererUtil.addDojoHtmlAttributes(attrs, "displayLabel", true); // $NON-NLS-1$
 				String[] values = getValues(context, c, msep);
-				if (values != null) {
+				if (values.length > 0) {
 					StringBuilder b = new StringBuilder();
 					JsonBuilder w = new JsonBuilder(b, true);
 					w.startObject();
-					HashMap<String, String> entries = c.getNamePickerValueService(context).getDislplayLabels(c, values);
+					Map<String, String> entries = c.getNamePickerValueService(context).getDislplayLabels(c, values);
 					if (entries != null) {
 						for (String strKey : entries.keySet()) {
 							w.startProperty(strKey);
@@ -192,6 +192,6 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 			String[] values = StringUtil.isNotEmpty(msep) ? StringUtil.splitString(value, msep.charAt(0)) : new String[] { value };
 			return values;
 		}
-		return null;
+		return new String[]{};
 	}
 }
