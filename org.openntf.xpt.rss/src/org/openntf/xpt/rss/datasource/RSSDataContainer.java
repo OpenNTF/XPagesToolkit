@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -21,6 +21,7 @@ import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 import org.openntf.xpt.rss.model.FeedReaderService;
 import org.openntf.xpt.rss.model.RSSEntry;
 
@@ -48,7 +49,7 @@ public class RSSDataContainer extends AbstractDataContainer {
 		try {
 			m_FeedEntries = (List<FeedEntryData>) in.readObject();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "Error during desrialize", e);
 		}
 	}
 
@@ -74,19 +75,16 @@ public class RSSDataContainer extends AbstractDataContainer {
 		return m_FeedEntries;
 	}
 
-	private ArrayList<FeedEntryData> buildEntries() {
-		ArrayList<FeedEntryData> lstRC = new ArrayList<FeedEntryData>();
+	private List<FeedEntryData> buildEntries() {
+		List<FeedEntryData> lstRC = new ArrayList<FeedEntryData>();
 		try {
-			List<RSSEntry> lstEntries = FeedReaderService.getInstance()
-					.getAllEntriesFromURL(m_FeedURL);
+			List<RSSEntry> lstEntries = FeedReaderService.getInstance().getAllEntriesFromURL(m_FeedURL);
 			for (RSSEntry rssEntry : lstEntries) {
 				FeedEntryData fed = new FeedEntryData();
 				fed.setColumnValue("title", rssEntry.getTitle());
 				fed.setColumnValue("link", rssEntry.getLink());
 				fed.setColumnValue("description", rssEntry.getDescription());
-				fed.setColumnValue("author", rssEntry.getAuthors() == null
-						|| rssEntry.getAuthors().size() == 0 ? "" : rssEntry
-						.getAuthors().get(0));
+				fed.setColumnValue("author", rssEntry.getAuthors().isEmpty() ? "" : rssEntry.getAuthors().get(0));
 				fed.setColumnValue("authors", rssEntry.getAuthorsTXT());
 				fed.setColumnValue("categories", rssEntry.getCategoriesTXT());
 				fed.setColumnValue("contents", rssEntry.getContentsTXT());
@@ -97,7 +95,7 @@ public class RSSDataContainer extends AbstractDataContainer {
 			}
 
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "buildEntries", e);
 		}
 
 		return lstRC;

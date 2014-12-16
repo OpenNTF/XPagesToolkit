@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2014
+ * ï¿½ Copyright WebGate Consulting AG, 2014
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -19,6 +19,7 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.Hashtable;
+import java.util.Map;
 
 import org.openntf.xpt.core.dss.BinderFactory;
 import org.openntf.xpt.core.dss.DSSException;
@@ -33,10 +34,10 @@ public class BinderContainer implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private final Hashtable<String, Domino2JavaBinder> m_Loader = new Hashtable<String, Domino2JavaBinder>();
-	private final Hashtable<String, Java2DominoBinder> m_Saver = new Hashtable<String, Java2DominoBinder>();
-	private final Hashtable<String, DominoStore> m_StoreDefinitions = new Hashtable<String, DominoStore>();
-	private final Hashtable<String, Hashtable<String, XPTPresentationControl>> m_PresentationControl = new Hashtable<String, Hashtable<String, XPTPresentationControl>>();
+	private final Map<String, Domino2JavaBinder> m_Loader = new Hashtable<String, Domino2JavaBinder>();
+	private final Map<String, Java2DominoBinder> m_Saver = new Hashtable<String, Java2DominoBinder>();
+	private final Map<String, DominoStore> m_StoreDefinitions = new Hashtable<String, DominoStore>();
+	private final Map<String, Map<String, XPTPresentationControl>> m_PresentationControl = new Hashtable<String, Map<String, XPTPresentationControl>>();
 
 	private final String m_Prefix;
 
@@ -112,8 +113,8 @@ public class BinderContainer implements Serializable {
 		return djdRC;
 	}
 
-	private Hashtable<String, XPTPresentationControl> buildXPTPresentationControl(DominoStore ds, Class<?> cl) {
-		Hashtable<String, XPTPresentationControl> hsRC = new Hashtable<String, XPTPresentationControl>();
+	private Map<String, XPTPresentationControl> buildXPTPresentationControl(DominoStore ds, Class<?> cl) {
+		Map<String, XPTPresentationControl> hsRC = new Hashtable<String, XPTPresentationControl>();
 		Collection<Field> lstFields = ServiceSupport.getClassFields(cl);
 		for (Field fldCurrent : lstFields) {
 			if (fldCurrent.isAnnotationPresent(XPTPresentationControl.class)) {
