@@ -31,4 +31,19 @@
 		<sonar.tests>src</sonar.tests>
 	</properties>
 
+	<dependencies>
+		<dependency>
+			<groupId>org.easymock</groupId>
+			<artifactId>easymock</artifactId>
+		</dependency>
+	</dependencies>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.easymock</groupId>
+				<artifactId>easymock</artifactId>
+				<version>3.3</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 </project>
