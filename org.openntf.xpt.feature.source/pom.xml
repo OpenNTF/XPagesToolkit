@@ -1,34 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<artifactId>org.openntf.xpt.core</artifactId>
-	<packaging>eclipse-plugin</packaging>
-	<build>
-		<sourceDirectory>src</sourceDirectory>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>generate-javadoc</id>
-						<!-- <phase>package</phase> -->
-						<goals>
-							<goal>jar</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-		</plugins>
-	</build>
-
+	<artifactId>org.openntf.xpt.feature.source</artifactId>
 	<parent>
 		<groupId>org.openntf.xpt</groupId>
 		<artifactId>xpt.parent</artifactId>
 		<version>1.3.0-SNAPSHOT</version>
 	</parent>
+	<packaging>eclipse-feature</packaging>
 	<properties>
 		<lic.file>${project.parent.basedir}/LICENSE_HEADER/apacheV2.txt</lic.file>
 	</properties>
-
 </project>

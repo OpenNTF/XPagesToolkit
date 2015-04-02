@@ -7,7 +7,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<tycho-version>0.19.0</tycho-version>
+		<tycho-version>0.22.0</tycho-version>
 		<compiler>1.6</compiler>
 		<license.failIfMissing>false</license.failIfMissing>
 		<lic.file>${project.basedir}/LICENSE_HEADER/apacheV2.txt</lic.file>
@@ -65,6 +65,19 @@
 					<source>${compiler}</source>
 					<target>${compiler}</target>
 				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.eclipse.tycho</groupId>
+				<artifactId>tycho-source-plugin</artifactId>
+				<version>${tycho-version}</version>
+				<executions>
+					<execution>
+						<id>plugin-source</id>
+						<goals>
+							<goal>plugin-source</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.tycho</groupId>
@@ -148,17 +161,6 @@
 					<includeAllDependencies>true</includeAllDependencies>
 				</configuration>
 			</plugin>
-			<plugin>
-				<!-- javadoc configuration -->
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>2.9</version>
-				<configuration>
-					<failOnError>false</failOnError>
-					<excludePackageNames>com.sun.*:lotus.domino.*:lotus.domino</excludePackageNames>
-				</configuration>
-			</plugin>
-
 			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
@@ -267,6 +269,35 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+
+				<plugin>
+					<!-- javadoc configuration -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-javadoc-plugin</artifactId>
+					<version>2.9</version>
+					<configuration>
+						<failOnError>false</failOnError>
+						<excludePackageNames>com.sun.*:com.ibm.commons.*:com.ibm.sbt.core.*:com.ibm.sbt.plugin.*:com.ibm.sbt.jslibrray.*:com.ibm.sbt.proxy.*:com.ibm.sbt.security.*:*.util.*:com.ibm.sbt.portlet.*:com.ibm.sbt.playground.*:demo.*:acme.*</excludePackageNames>
+						<doclet>org.jboss.apiviz.APIviz</doclet>
+						<docletArtifact>
+							<groupId>org.jboss.apiviz</groupId>
+							<artifactId>apiviz</artifactId>
+							<version>1.3.1.GA</version>
+						</docletArtifact>
+						<useStandardDocletOptions>true</useStandardDocletOptions>
+						<charset>UTF-8</charset>
+						<encoding>UTF-8</encoding>
+						<docencoding>UTF-8</docencoding>
+						<breakiterator>true</breakiterator>
+						<version>true</version>
+						<author>true</author>
+						<keywords>true</keywords>
+						<additionalparam>
+							-sourceclasspath ${project.build.outputDirectory}
+						</additionalparam>
+					</configuration>
+				</plugin>
+
 			</plugins>
 		</pluginManagement>
 	</build>
@@ -286,20 +317,46 @@
 			<distribution>manual</distribution>
 		</license>
 	</licenses>
-	<modules>
-		<module>org.openntf.xpt</module>
-		<module>org.openntf.xpt.agents</module>
-		<module>org.openntf.xpt.core</module>
-		<module>org.openntf.xpt.feature</module>
-		<module>org.openntf.xpt.objectlist</module>
-		<module>org.openntf.xpt.oneui</module>
-		<module>org.openntf.xpt.properties</module>
-		<module>org.openntf.xpt.rss</module>
-		<module>org.openntf.xpt.testsuite</module>
-
-		<module>org.openntf.xpt.updatesite</module>
-		<module>xpt.assembly</module>
-	</modules>
+	<profiles>
+		<profile>
+			<id>default_no_assembly</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>org.openntf.xpt</module>
+				<module>org.openntf.xpt.agents</module>
+				<module>org.openntf.xpt.core</module>
+				<module>org.openntf.xpt.feature</module>
+				<module>org.openntf.xpt.feature.source</module>
+				<module>org.openntf.xpt.objectlist</module>
+				<module>org.openntf.xpt.oneui</module>
+				<module>org.openntf.xpt.properties</module>
+				<module>org.openntf.xpt.rss</module>
+				<module>org.openntf.xpt.testsuite</module>
+				<module>org.openntf.xpt.updatesite</module>
+				<module>org.openntf.xpt.updatesite-designer</module>
+			</modules>
+		</profile>
+		<profile>
+			<id>assembly</id>
+			<modules>
+				<module>org.openntf.xpt</module>
+				<module>org.openntf.xpt.agents</module>
+				<module>org.openntf.xpt.core</module>
+				<module>org.openntf.xpt.feature</module>
+				<module>org.openntf.xpt.feature.source</module>
+				<module>org.openntf.xpt.objectlist</module>
+				<module>org.openntf.xpt.oneui</module>
+				<module>org.openntf.xpt.properties</module>
+				<module>org.openntf.xpt.rss</module>
+				<module>org.openntf.xpt.testsuite</module>
+				<module>org.openntf.xpt.updatesite</module>
+				<module>org.openntf.xpt.updatesite-designer</module>
+				<module>xpt.assembly</module>
+			</modules>
+		</profile>
+	</profiles>
 	<dependencies>
 		<dependency>
 			<groupId>com.mycila</groupId>

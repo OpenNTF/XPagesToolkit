@@ -116,4 +116,24 @@
 
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.openntf.xpt</groupId>
+			<artifactId>org.openntf.xpt</artifactId>
+			<version>1.3.0-SNAPSHOT</version>
+			<type>eclipse-plugin</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openntf.xpt</groupId>
+			<artifactId>org.openntf.xpt.agents</artifactId>
+			<version>1.3.0-SNAPSHOT</version>
+			<type>eclipse-plugin</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openntf.xpt</groupId>
+			<artifactId>org.openntf.xpt.core</artifactId>
+			<version>1.3.0-SNAPSHOT</version>
+			<type>eclipse-plugin</type>
+		</dependency>
+	</dependencies>
 </project>
