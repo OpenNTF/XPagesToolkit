@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2012
+ * ï¿½ Copyright WebGate Consulting AG, 2012
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -34,8 +34,8 @@ import com.ibm.commons.util.profiler.ProfilerType;
 
 public class Domino2JavaBinder {
 
-	private ArrayList<Definition> m_Definition;
-	private static final ProfilerType pt = new ProfilerType("XPT.DSS.Domino2JavaBinder");
+	private List<Definition> m_Definition;
+	private static final ProfilerType PROFILERTYPE = new ProfilerType("XPT.DSS.Domino2JavaBinder");
 
 	public Domino2JavaBinder() {
 		m_Definition = new ArrayList<Definition>();
@@ -47,7 +47,7 @@ public class Domino2JavaBinder {
 
 	public void processDocument(Document docProcess, Object objCurrent) throws NotesException {
 		if (Profiler.isEnabled()) {
-			ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDocument");
+			ProfilerAggregator pa = Profiler.startProfileBlock(PROFILERTYPE, "processDocument");
 			long startTime = Profiler.getCurrentTime();
 			try {
 				_processDocument(docProcess, objCurrent);
@@ -63,7 +63,7 @@ public class Domino2JavaBinder {
 	private void _processDocument(Document docProcess, Object objCurrent) throws NotesException {
 		for (Definition defCurrent : m_Definition) {
 			if (Profiler.isEnabled()) {
-				ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDefinition - " + defCurrent.getBinder().getClass().getCanonicalName());
+				ProfilerAggregator pa = Profiler.startProfileBlock(PROFILERTYPE, "processDefinition - " + defCurrent.getBinder().getClass().getCanonicalName());
 				long startTime = Profiler.getCurrentTime();
 				try {
 					_processDefinition(docProcess, objCurrent, defCurrent);

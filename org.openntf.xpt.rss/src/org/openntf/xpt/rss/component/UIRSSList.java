@@ -7,12 +7,12 @@ import java.security.PrivilegedAction;
 import javax.faces.component.UIComponentBase;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.el.ValueBinding;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.openntf.xpt.core.utils.ErrorJSONBuilder;
 import org.openntf.xpt.core.utils.JSONSupport;
+import org.openntf.xpt.core.utils.ValueBindingSupport;
 import org.openntf.xpt.rss.model.FeedReaderService;
 import org.openntf.xpt.rss.model.RSSEntry;
 import org.openntf.xpt.rss.model.RSSFeed;
@@ -40,15 +40,7 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 	private Boolean m_UseDescription;
 
 	public Boolean getUseDescription() {
-		if (m_UseDescription != null) {
-			return m_UseDescription;
-		}
-		ValueBinding _vb = getValueBinding("useDescription"); //$NON-NLS-1$
-		if (_vb != null) {
-			return (Boolean) _vb.getValue(getFacesContext());
-		} else {
-			return false;
-		}
+		return ValueBindingSupport.getValue(m_UseDescription, "useDescription", this, Boolean.FALSE, getFacesContext());
 	}
 
 	public void setUseDescription(Boolean useDescription) {
@@ -65,16 +57,7 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 	}
 
 	public String getHtmlTemplate() {
-		if (m_HtmlTemplate != null) {
-			return m_HtmlTemplate;
-		}
-		ValueBinding _vb = getValueBinding("htmlTemplate"); //$NON-NLS-1$
-		if (_vb != null) {
-			return (java.lang.String) _vb.getValue(getFacesContext());
-		} else {
-			return null;
-		}
-
+		return ValueBindingSupport.getValue(m_HtmlTemplate, "htmlTemplate", this, null, getFacesContext());
 	}
 
 	public void setHtmlTemplate(String htmlTemplate) {
@@ -98,15 +81,7 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 	}
 
 	public String getFeedURL() {
-		if (m_FeedURL != null) {
-			return m_FeedURL;
-		}
-		ValueBinding _vb = getValueBinding("feedURL"); //$NON-NLS-1$
-		if (_vb != null) {
-			return (java.lang.String) _vb.getValue(FacesContext.getCurrentInstance());
-		} else {
-			return null;
-		}
+		return ValueBindingSupport.getValue(m_FeedURL, "feedURL",this, null, getFacesContext());
 	}
 
 	public void setFeedURL(String feedURL) {
@@ -123,11 +98,6 @@ public class UIRSSList extends UIComponentBase implements FacesAjaxComponent {
 		HttpServletResponse httpResponse = (HttpServletResponse) context.getExternalContext().getResponse();
 		HttpServletRequest httpRequest = (HttpServletRequest) context.getExternalContext().getRequest();
 
-		// Disable the XPages response buffer as this will collide with the
-		// engine one
-		// We mark it as committed and use its delegate instead
-		// Logger logCurrent =
-		// LoggerFactory.getLogger(this.getClass().getCanonicalName());
 		if (httpResponse instanceof XspHttpServletResponse) {
 			XspHttpServletResponse r = (XspHttpServletResponse) httpResponse;
 			r.setCommitted(true);

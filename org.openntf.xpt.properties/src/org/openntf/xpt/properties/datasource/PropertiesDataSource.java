@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -80,7 +80,6 @@ public class PropertiesDataSource extends AbstractDataSource implements
 	@Override
 	public boolean save(FacesContext arg0, DataContainer arg1)
 			throws FacesExceptionEx {
-		// TODO Auto-generated method stub
 		return ((PropertiesDataContainer) getDataContainer()).executeSave();
 	}
 

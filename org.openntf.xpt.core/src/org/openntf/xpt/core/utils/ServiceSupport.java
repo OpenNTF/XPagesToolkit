@@ -22,6 +22,7 @@ import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -146,7 +147,12 @@ public class ServiceSupport {
 
 	private static Set<Field> getAllFieldsRec(Class<?> clazz, Set<Field> setFields) {
 		Class<?> superClazz = clazz.getSuperclass();
-		setFields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+		List<Field> decFields = Arrays.asList(clazz.getDeclaredFields());
+		for (Field fldCheck : decFields) {
+			if (!fldCheck.isSynthetic()) {
+				setFields.add(fldCheck);
+			}
+		}
 		if (superClazz != null) {
 			getAllFieldsRec(superClazz, setFields);
 		}

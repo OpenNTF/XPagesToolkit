@@ -51,7 +51,7 @@ public final class NameEntry implements Serializable {
 		int start = m_ResultLine.toLowerCase().indexOf(strSearch.toLowerCase());
 		int stop = start + 3 + strSearch.length();
 
-		StringBuffer sb = new StringBuffer(m_ResultLine);
+		StringBuilder sb = new StringBuilder(m_ResultLine);
 		if (start > -1) {
 			sb.insert(start, "<b>");
 			sb.insert(stop, "</b>");

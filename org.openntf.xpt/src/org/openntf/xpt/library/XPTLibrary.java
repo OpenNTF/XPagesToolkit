@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -27,7 +27,7 @@ import com.ibm.xsp.library.AbstractXspLibrary;
 
 public class XPTLibrary extends AbstractXspLibrary {
 
-	private final IPartConfiguration[] ALL_CONFIG = { new AgentConfig(),
+	private static final IPartConfiguration[] ALL_CONFIG = { new AgentConfig(),
 			new ObjectListConfig(), new OneUIConfig(), new PropertiesConfig(),
 			new RSSConfig() };
 

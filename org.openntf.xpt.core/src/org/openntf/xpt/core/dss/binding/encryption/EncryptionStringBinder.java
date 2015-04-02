@@ -18,6 +18,8 @@ package org.openntf.xpt.core.dss.binding.encryption;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import lotus.domino.Document;
 
@@ -30,6 +32,7 @@ import org.openntf.xpt.core.dss.binding.IEncryptionBinder;
 import org.openntf.xpt.core.dss.binding.util.BaseEncryptionBinderSupport;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class EncryptionStringBinder extends AbstractBaseBinder<String> implements IBinder<String>, IEncryptionBinder {
 	private static EncryptionStringBinder m_Binder;
@@ -53,8 +56,14 @@ public class EncryptionStringBinder extends AbstractBaseBinder<String> implement
 				Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), String.class);
 				mt.invoke(objCurrent, getValueFromStore(docCurrent, vecCurrent, def));
 			}
+		} catch (DSSException dsse) {
+			Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName());
+			log.log(Level.SEVERE, dsse.getMessage(), dsse);
+		} catch (XPTRuntimeException rte) {
+			throw rte;
 
 		} catch (Exception e) {
+			throw new XPTRuntimeException("General Error: ", e);
 		}
 
 	}

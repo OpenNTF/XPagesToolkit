@@ -49,7 +49,6 @@ public class ServiceSupportTest {
 			ServiceSupport.getGetterMethod(ChildClassWithBooleanAndStringGetter.class, "notavailablemethod");
 			fail("No Exception trown!");
 		} catch (Exception ex) {
-			System.out.println(ex.getClass().getCanonicalName());
 			assertTrue("Wrong Exception: " + ex.getClass().getCanonicalName(), ex instanceof NoSuchMethodException);
 			return;
 		}

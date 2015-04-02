@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2014
+ * ï¿½ Copyright WebGate Consulting AG, 2014
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -23,23 +23,25 @@ import javax.faces.context.FacesContext;
 
 import org.openntf.xpt.core.i18n.I18NServiceProvider;
 import org.openntf.xpt.core.i18n.II18NService;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.domino.services.util.JsonWriter;
 import com.ibm.xsp.extlib.util.ExtLibUtil;
 
 /**
- * The xptI18NBean delivers a set of methods to handle all language related stuff
+ * The xptI18NBean delivers a set of methods to handle all language related
+ * stuff
+ * 
  * @author Lena Troxler, Christian Guedemann
- *
+ * 
  */
 public final class XPTI18NBean {
 
 	public static final String BEAN_NAME = "xptI18NBean"; //$NON-NLS-1$
 
 	public static XPTI18NBean get(FacesContext context) {
-		XPTI18NBean bean = (XPTI18NBean) context.getApplication().getVariableResolver().resolveVariable(context, BEAN_NAME);
-		return bean;
+		return (XPTI18NBean) context.getApplication().getVariableResolver().resolveVariable(context, BEAN_NAME);
 	}
 
 	public static XPTI18NBean get() {
@@ -48,6 +50,7 @@ public final class XPTI18NBean {
 
 	/**
 	 * Evaluates the current language
+	 * 
 	 * @return the current language as ISO Code
 	 */
 	public String getCurrentLanguage() {
@@ -66,14 +69,14 @@ public final class XPTI18NBean {
 				language = setLanguageForUser(effectiveUserName, getDefaultLanguage());
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "General Error", e);
 		}
 		return language;
 	}
 
-	
 	/**
 	 * Set the langauge for a User
+	 * 
 	 * @param effectiveUserName
 	 * @param language
 	 * @return
@@ -85,6 +88,7 @@ public final class XPTI18NBean {
 
 	/**
 	 * All languages of the current application
+	 * 
 	 * @return list of iso codes
 	 */
 	public List<String> getAllLanguages() {
@@ -93,6 +97,7 @@ public final class XPTI18NBean {
 
 	/**
 	 * The default language of this application
+	 * 
 	 * @return iso code of the default language
 	 */
 	public String getDefaultLanguage() {
@@ -101,8 +106,9 @@ public final class XPTI18NBean {
 
 	/**
 	 * Language value for key using the current language
+	 * 
 	 * @param key
-	 * @return 
+	 * @return
 	 */
 	public String getValue(String key) {
 		return getValue(key, getCurrentLanguage());
@@ -110,6 +116,7 @@ public final class XPTI18NBean {
 
 	/**
 	 * Language value for key using the specified language
+	 * 
 	 * @param key
 	 * @param language
 	 * @return
@@ -121,6 +128,7 @@ public final class XPTI18NBean {
 
 	/**
 	 * List of keys
+	 * 
 	 * @return List of keys
 	 */
 	public List<String> getKeys() {
@@ -129,8 +137,11 @@ public final class XPTI18NBean {
 
 	/**
 	 * Builds the JS representation of the language values as a JSON object.
-	 * @param varName Name of the js variable
-	 * @param languageForce Language to force
+	 * 
+	 * @param varName
+	 *            Name of the js variable
+	 * @param languageForce
+	 *            Language to force
 	 * @return a string with the JSON object
 	 */
 	public String getJSRepresentation(String varName, String languageForce) {
@@ -156,6 +167,7 @@ public final class XPTI18NBean {
 			jsWriter.endObject();
 			jsWriter.close();
 		} catch (Exception ex) {
+			LoggerFactory.logError(getClass(), "General Error", ex);
 		}
 		StringBuilder sb = new StringBuilder();
 		sb.append("var " + varName + " = ");
