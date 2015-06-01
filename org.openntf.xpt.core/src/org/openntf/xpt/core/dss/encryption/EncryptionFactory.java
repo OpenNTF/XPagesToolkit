@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -23,38 +23,75 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Base64;
 import org.openntf.xpt.core.dss.DSSException;
 
+import com.ibm.commons.util.profiler.Profiler;
+import com.ibm.commons.util.profiler.ProfilerAggregator;
+import com.ibm.commons.util.profiler.ProfilerType;
+
 public class EncryptionFactory {
 
+	private static final ProfilerType PROFILERTYPE = new ProfilerType("XPT.DSS.ENCRYPTION.FACTORY");
+
+	private EncryptionFactory() {
+	}
+
 	public static String encrypt(String strValue, SecretKeySpec key) {
+		if (Profiler.isEnabled()) {
+			ProfilerAggregator pa = Profiler.startProfileBlock(PROFILERTYPE, "encrypt");
+			long startTime = Profiler.getCurrentTime();
+			try {
+				return _encrypt(strValue, key);
+			} finally {
+				Profiler.endProfileBlock(pa, startTime);
+			}
+
+		} else {
+			return _encrypt(strValue, key);
+		}
+	}
+
+	private static String _encrypt(String strValue, SecretKeySpec key) {
 		String strRC = "";
 		try {
 			Cipher aes = Cipher.getInstance("AES");
 			aes.init(Cipher.ENCRYPT_MODE, key);
 			byte[] ciphertext = aes.doFinal(strValue.getBytes());
 			strRC = Base64.encodeBase64String(ciphertext);
-			// strRC = Base64.encodeBase64String(ciphertext);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return strRC;
 	}
 
-	public static String decrypt(String strHash, SecretKeySpec key) throws DSSException  {
+	public static String decrypt(String strHash, SecretKeySpec key) throws DSSException {
+		if (Profiler.isEnabled()) {
+			ProfilerAggregator pa = Profiler.startProfileBlock(PROFILERTYPE, "encrypt");
+			long startTime = Profiler.getCurrentTime();
+			try {
+				return _decrypt(strHash, key);
+			} finally {
+				Profiler.endProfileBlock(pa, startTime);
+			}
+
+		} else {
+			return _decrypt(strHash, key);
+		}
+
+	}
+
+	private static String _decrypt(String strHash, SecretKeySpec key) throws DSSException {
 		String strRC = "";
 		try {
 			Cipher aes = Cipher.getInstance("AES");
 			byte[] ciphertext = Base64.decodeBase64(strHash);
 			aes.init(Cipher.DECRYPT_MODE, key);
 			strRC = new String(aes.doFinal(ciphertext));
-		} catch (IllegalBlockSizeException e){
-			//System.out.println("- BlockSize : Not encrypted Values in Store - ");
-			throw new DSSException("- BlockSize : Not encrypted Values in Store -");
-		} catch (BadPaddingException e){
-			 //System.out.println("- BadPadding : try clean build -");
-			throw new DSSException("- BadPadding : try clean build -");
+		} catch (IllegalBlockSizeException e) {
+			throw new DSSException("- BlockSize : Not encrypted Values in Store -", e);
+		} catch (BadPaddingException e) {
+			throw new DSSException("- BadPadding : try clean build -", e);
 		} catch (Exception e) {
-			//e.printStackTrace();
-			throw new DSSException(e.getMessage());
+			// e.printStackTrace();
+			throw new DSSException(e.getMessage(), e);
 		}
 		return strRC;
 

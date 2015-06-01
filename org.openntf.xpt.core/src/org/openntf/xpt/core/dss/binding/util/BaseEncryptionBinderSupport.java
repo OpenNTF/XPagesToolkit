@@ -50,6 +50,21 @@ public enum BaseEncryptionBinderSupport {
 	}
 
 	public boolean hasAccess(Definition def, List<String> myRoles) {
+		if (Profiler.isEnabled()) {
+			ProfilerAggregator pa = Profiler.startProfileBlock(PROFILERTYPE, "hasAccess");
+			long startTime = Profiler.getCurrentTime();
+			try {
+				return _hasAccess(def, myRoles);
+			} finally {
+				Profiler.endProfileBlock(pa, startTime);
+			}
+			
+		} else {
+			return _hasAccess(def, myRoles);
+		}
+	}
+
+	private boolean _hasAccess(Definition def, List<String> myRoles) {
 		if (def.getEncRoles() != null) {
 			String[] roles = def.getEncRoles();
 			for (String role : roles) {
@@ -62,6 +77,7 @@ public enum BaseEncryptionBinderSupport {
 		return true;
 	}
 
+	
 	private List<String> getRolesForUser(Database ndbSource) {
 		if (Profiler.isEnabled()) {
 			ProfilerAggregator pa = Profiler.startProfileBlock(PROFILERTYPE, "getRolesForUser");

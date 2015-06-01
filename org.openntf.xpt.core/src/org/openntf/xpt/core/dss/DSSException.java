@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2012
+ * ï¿½ Copyright WebGate Consulting AG, 2012
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -28,4 +28,9 @@ public class DSSException extends Exception {
 	public DSSException(String strMessage) {
 		super(strMessage);
 	}
+
+	public DSSException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+	
 }
