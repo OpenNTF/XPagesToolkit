@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -16,11 +16,11 @@
 package org.openntf.xpt.core.dss.binding.util;
 
 import java.util.List;
+import java.util.Vector;
 
 import lotus.domino.Database;
 
 import org.openntf.xpt.core.dss.binding.Definition;
-import org.openntf.xpt.core.utils.RoleAndGroupProvider;
 
 public enum BaseEncryptionBinderSupport {
 	INSTANCE;
@@ -28,7 +28,9 @@ public enum BaseEncryptionBinderSupport {
 	public boolean hasAccess(Definition def, Database ndbSource) {
 		try {
 			String strUser = ndbSource.getParent().getEffectiveUserName();
-			return hasAccess(def, RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(strUser, ndbSource));
+			@SuppressWarnings("unchecked")
+			Vector<String> roles = ndbSource.queryAccessRoles(strUser);
+			return hasAccess(def, roles);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
