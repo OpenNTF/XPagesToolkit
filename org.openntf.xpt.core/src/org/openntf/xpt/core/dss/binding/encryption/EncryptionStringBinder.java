@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -33,6 +33,8 @@ import org.openntf.xpt.core.dss.binding.util.BaseEncryptionBinderSupport;
 import org.openntf.xpt.core.dss.binding.util.NamesProcessor;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
+
+import com.ibm.commons.util.StringUtil;
 
 public class EncryptionStringBinder extends AbstractBaseBinder<String> implements IBinder<String>, IEncryptionBinder {
 	private static EncryptionStringBinder m_Binder;
@@ -101,8 +103,11 @@ public class EncryptionStringBinder extends AbstractBaseBinder<String> implement
 	@Override
 	public String getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) throws DSSException {
 		try {
-			if (BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase()) && !vecCurrent.isEmpty()) {
+			if (!vecCurrent.isEmpty() && BaseEncryptionBinderSupport.INSTANCE.hasAccess(def, docCurrent.getParentDatabase())) {
 				String strValue = (String) vecCurrent.get(0);
+				if (StringUtil.isEmpty(strValue)) {
+					return "";
+				}
 				String decryptedValue = EncryptionService.getInstance().decrypt(strValue);
 				if (decryptedValue == null) {
 					throw new DSSException("Decryption Failed: " + def.getJavaField() + " / " + def.getNotesField());
