@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -40,6 +40,8 @@ import org.openntf.xpt.core.dss.binding.field.DoubleClassBinder;
 import org.openntf.xpt.core.dss.binding.field.ENumBinder;
 import org.openntf.xpt.core.dss.binding.field.IntBinder;
 import org.openntf.xpt.core.dss.binding.field.IntClassBinder;
+import org.openntf.xpt.core.dss.binding.field.ListDoubleBinder;
+import org.openntf.xpt.core.dss.binding.field.ListIntegerBinder;
 import org.openntf.xpt.core.dss.binding.field.ListStringBinder;
 import org.openntf.xpt.core.dss.binding.field.LongBinder;
 import org.openntf.xpt.core.dss.binding.field.LongClassBinder;
@@ -105,6 +107,12 @@ public class BinderFactory {
 				for (Type genericType : genericTypes) {
 					if (String.class.equals(genericType)) {
 						return ListStringBinder.getInstance();
+					}
+					if (Double.class.equals(genericType)) {
+						return ListDoubleBinder.getInstance();
+					}
+					if (Integer.class.equals(genericType)) {
+						return ListIntegerBinder.getInstance();
 					}
 					if (FileHelper.class.equals(genericType)) {
 						return FileDownloadBinder.getInstance();

@@ -116,4 +116,8 @@ public class Domino2JavaBinder {
 		return lstRC;
 	}
 
+	public List<Definition> getDefinitions() {
+		return m_Definition;
+	}
+
 }
