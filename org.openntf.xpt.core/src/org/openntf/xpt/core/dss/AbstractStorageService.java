@@ -243,6 +243,60 @@ public abstract class AbstractStorageService<T> {
 	}
 
 	/**
+	 * Loads all object where my user, group or role occurs in one of the fields
+	 * in the list of documents (the documents are not recycled!)
+	 * 
+	 * @param documents
+	 * @param fieldsToCheck
+	 * @return
+	 */
+	public List<T> getAllMyObjectsFromDocumentList(List<Document> documents, List<String> fieldsToCheck) {
+		List<T> ret = new ArrayList<T>();
+		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getMyGroupsAndRoles();
+		try {
+			for (Document docCurrent : documents) {
+				if (isDocumentOfInterest(docCurrent, lstRolesGroups, fieldsToCheck)) {
+					convertDocument2ObjectAndAdd2List(ret, docCurrent);
+				}
+
+			}
+		} catch (Exception e) {
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
+		}
+		return ret;
+	}
+
+	/**
+	 * Loads all object where my user, group or role occurs in one of the fields
+	 * in the document collection
+	 * 
+	 * @param collection
+	 * @param fieldsToCheck
+	 * @return
+	 */
+	public List<T> getAllMyObjectsFromDocumentCollection(DocumentCollection collection, List<String> fieldsToCheck) {
+		List<T> ret = new ArrayList<T>();
+		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getMyGroupsAndRoles();
+		try {
+			Document docNext = collection.getFirstDocument();
+			while (docNext != null) {
+				Document docCurrent = docNext;
+				docNext = collection.getNextDocument();
+				if (isDocumentOfInterest(docCurrent, lstRolesGroups, fieldsToCheck)) {
+					convertDocument2ObjectAndAdd2List(ret, docCurrent);
+				}
+				docCurrent.recycle();
+			}
+		} catch (Exception e) {
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
+		}
+		return ret;
+	}
+
+	
+	/**
 	 * Loads all object where the user, group or role occurs in one of the
 	 * fields
 	 * 
@@ -289,6 +343,62 @@ public abstract class AbstractStorageService<T> {
 		}
 		return ret;
 
+	}
+	/**
+	 * Loads all object where the user, group or role occurs in one of the fields
+	 * in the list of documents (the documents are not recycled!)
+	 * 
+	 * @param userName
+	 * @param documents
+	 * @param fieldsToCheck
+	 * @param sourceDatabase
+	 * @return
+	 */
+	public List<T> getAllObjectsFromDocumentListFor(String userName,List<Document> documents, List<String> fieldsToCheck, Database sourceDatabase) {
+		List<T> ret = new ArrayList<T>();
+		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(userName, sourceDatabase);
+		try {
+			for (Document docCurrent : documents) {
+				if (isDocumentOfInterest(docCurrent, lstRolesGroups, fieldsToCheck)) {
+					convertDocument2ObjectAndAdd2List(ret, docCurrent);
+				}
+
+			}
+		} catch (Exception e) {
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
+		}
+		return ret;
+	}
+
+	/**
+	 * Loads all object where the user, group or role occurs in one of the fields
+	 * in the document collection
+	 * 
+	 * @param userName
+	 * @param collection
+	 * @param fieldsToCheck
+	 * @param sourceDatabase
+	 * @return
+	 */
+	public List<T> getAllObjectsFromDocumentCollectionFor(String userName, DocumentCollection collection, List<String> fieldsToCheck, Database sourceDatabase) {
+		List<T> ret = new ArrayList<T>();
+		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(userName, sourceDatabase);
+		try {
+			Document docNext = collection.getFirstDocument();
+			while (docNext != null) {
+				Document docCurrent = docNext;
+				docNext = collection.getNextDocument();
+				if (isDocumentOfInterest(docCurrent, lstRolesGroups, fieldsToCheck)) {
+					convertDocument2ObjectAndAdd2List(ret, docCurrent);
+				}
+				docCurrent.recycle();
+			}
+		} catch (Exception e) {
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
+		}
+		return ret;
 	}
 
 	/**
