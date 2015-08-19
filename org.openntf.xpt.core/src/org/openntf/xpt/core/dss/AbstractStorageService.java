@@ -28,6 +28,7 @@ import java.util.Vector;
 import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.DocumentCollection;
+import lotus.domino.NotesException;
 import lotus.domino.View;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -105,8 +106,8 @@ public abstract class AbstractStorageService<T> {
 	 * @return the object
 	 */
 	public T getByIdFrom(String id, Database sourceDatabase) {
+		T ret = prepareNewObject();
 		try {
-			T ret = createObject();
 			if (!DominoStorageService.getInstance().getObject(ret, id, sourceDatabase)) {
 				return null;
 			}
@@ -148,6 +149,8 @@ public abstract class AbstractStorageService<T> {
 
 			}
 			viwDabases.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
 			throw new XPTRuntimeException(GENERAL_ERROR, e);
@@ -190,6 +193,8 @@ public abstract class AbstractStorageService<T> {
 
 			}
 			view.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
 			throw new XPTRuntimeException(GENERAL_ERROR, e);
@@ -234,6 +239,8 @@ public abstract class AbstractStorageService<T> {
 
 			}
 			viwDabases.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
 			throw new XPTRuntimeException(GENERAL_ERROR, e);
@@ -260,6 +267,8 @@ public abstract class AbstractStorageService<T> {
 				}
 
 			}
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
 			throw new XPTRuntimeException(GENERAL_ERROR, e);
@@ -288,6 +297,8 @@ public abstract class AbstractStorageService<T> {
 				}
 				docCurrent.recycle();
 			}
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
 			throw new XPTRuntimeException(GENERAL_ERROR, e);
@@ -295,7 +306,6 @@ public abstract class AbstractStorageService<T> {
 		return ret;
 	}
 
-	
 	/**
 	 * Loads all object where the user, group or role occurs in one of the
 	 * fields
@@ -337,6 +347,8 @@ public abstract class AbstractStorageService<T> {
 
 			}
 			view.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
 			throw new XPTRuntimeException(GENERAL_ERROR, e);
@@ -344,9 +356,10 @@ public abstract class AbstractStorageService<T> {
 		return ret;
 
 	}
+
 	/**
-	 * Loads all object where the user, group or role occurs in one of the fields
-	 * in the list of documents (the documents are not recycled!)
+	 * Loads all object where the user, group or role occurs in one of the
+	 * fields in the list of documents (the documents are not recycled!)
 	 * 
 	 * @param userName
 	 * @param documents
@@ -354,7 +367,7 @@ public abstract class AbstractStorageService<T> {
 	 * @param sourceDatabase
 	 * @return
 	 */
-	public List<T> getAllObjectsFromDocumentListFor(String userName,List<Document> documents, List<String> fieldsToCheck, Database sourceDatabase) {
+	public List<T> getAllObjectsFromDocumentListFor(String userName, List<Document> documents, List<String> fieldsToCheck, Database sourceDatabase) {
 		List<T> ret = new ArrayList<T>();
 		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(userName, sourceDatabase);
 		try {
@@ -364,6 +377,8 @@ public abstract class AbstractStorageService<T> {
 				}
 
 			}
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
 			throw new XPTRuntimeException(GENERAL_ERROR, e);
@@ -372,8 +387,8 @@ public abstract class AbstractStorageService<T> {
 	}
 
 	/**
-	 * Loads all object where the user, group or role occurs in one of the fields
-	 * in the document collection
+	 * Loads all object where the user, group or role occurs in one of the
+	 * fields in the document collection
 	 * 
 	 * @param userName
 	 * @param collection
@@ -394,6 +409,8 @@ public abstract class AbstractStorageService<T> {
 				}
 				docCurrent.recycle();
 			}
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
 			throw new XPTRuntimeException(GENERAL_ERROR, e);
@@ -507,16 +524,23 @@ public abstract class AbstractStorageService<T> {
 	private boolean isDocumentOfInterest(Document docCurrent, List<String> lstRolesGroups, List<String> lstFieldsToCheck) {
 		try {
 			for (String strField : lstFieldsToCheck) {
-				if (docCurrent.hasItem(strField)) {
-					List<String> lstValues = getStringListFromDocument(docCurrent, strField);
-					if (CollectionUtils.containsAny(lstRolesGroups, lstValues)) {
-						return true;
-					}
+				if (isUserRoleInField(docCurrent, lstRolesGroups, strField)) {
+					return true;
 				}
 			}
 		} catch (Exception e) {
 			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
 			throw new XPTRuntimeException(GENERAL_ERROR, e);
+		}
+		return false;
+	}
+
+	private boolean isUserRoleInField(Document docCurrent, List<String> lstRolesGroups, String strField) throws NotesException {
+		if (docCurrent.hasItem(strField)) {
+			List<String> lstValues = getStringListFromDocument(docCurrent, strField);
+			if (CollectionUtils.containsAny(lstRolesGroups, lstValues)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -541,6 +565,14 @@ public abstract class AbstractStorageService<T> {
 	 * @return
 	 */
 	protected abstract T createObject();
+
+	public T prepareNewObject() {
+		T object = createObject();
+		if (object == null) {
+			throw new NullPointerException("Create Object must return an object and not null");
+		}
+		return object;
+	}
 
 	public List<ChangeLogEntry> getChangeLog(T objCurrent) {
 		return getChangeLog(objCurrent, RoleAndGroupProvider.getInstance().getMyGroupsAndRoles());
@@ -609,6 +641,8 @@ public abstract class AbstractStorageService<T> {
 				docProcess.recycle();
 			}
 			dclResult.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			throw new XPTRuntimeException("Error during search of " + search, e);
 		}
@@ -654,6 +688,8 @@ public abstract class AbstractStorageService<T> {
 				docProcess.recycle();
 			}
 			view.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			throw new XPTRuntimeException("Error during search of " + search + " in view " + viewName, e);
 		}
@@ -661,7 +697,7 @@ public abstract class AbstractStorageService<T> {
 	}
 
 	private void convertDocument2ObjectAndAdd2List(List<T> result, Document docProcess) throws DSSException {
-		T obj = createObject();
+		T obj = prepareNewObject();
 		if (DominoStorageService.getInstance().getObjectWithDocument(obj, docProcess)) {
 			result.add(obj);
 		}

@@ -1,4 +1,4 @@
-package org.openntf.xpt.test.dss;
+package org.openntf.xpt.test.dss.mock;
 
 import java.util.List;
 

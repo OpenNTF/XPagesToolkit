@@ -18,6 +18,7 @@ import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.Domino2JavaBinder;
 import org.openntf.xpt.core.dss.binding.field.ListDoubleBinder;
 import org.openntf.xpt.core.dss.binding.field.ListIntegerBinder;
+import org.openntf.xpt.test.dss.mock.ListDoubleIntTestMock;
 
 public class ListDoubleBinderTest {
 
