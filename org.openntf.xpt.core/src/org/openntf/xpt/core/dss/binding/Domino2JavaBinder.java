@@ -20,13 +20,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import org.openntf.xpt.core.dss.binding.field.DominoRichTextItemBinder;
+import lotus.domino.Document;
+import lotus.domino.NotesException;
+
 import org.openntf.xpt.core.dss.binding.field.MimeMultipartBinder;
 import org.openntf.xpt.core.dss.binding.field.ObjectBinder;
 import org.openntf.xpt.core.dss.binding.files.FileDownloadBinder;
-
-import lotus.domino.Document;
-import lotus.domino.NotesException;
 
 import com.ibm.commons.util.profiler.Profiler;
 import com.ibm.commons.util.profiler.ProfilerAggregator;
@@ -82,10 +81,6 @@ public class Domino2JavaBinder {
 			return;
 		}
 		if (defCurrent.getBinder() instanceof MimeMultipartBinder) {
-			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
-			return;
-		}
-		if (defCurrent.getBinder() instanceof DominoRichTextItemBinder) {
 			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
 			return;
 		}

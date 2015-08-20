@@ -32,7 +32,6 @@ public class DSSObject implements DataObject, Serializable {
 	private final boolean m_EditMode;
 	private final boolean m_New;
 
-
 	public DSSObject(Object obj, boolean editMode, boolean isNew) {
 		m_BO = obj;
 		m_EditMode = editMode;
@@ -79,25 +78,23 @@ public class DSSObject implements DataObject, Serializable {
 				XPTPresentationControl ctrl = DominoStorageService.getInstance().getXPTPresentationControl(m_BO, "" + field);
 				if (ctrl == null) {
 					return false;
-				} else {
-					if (ctrl.editNewOnly() && !m_New) {
-						return true;
-					}
-					if (ctrl.modifyOnly() && m_New) {
-						return true;
-					}
-					if (ctrl.editRoles().length == 0) {
-						return false;
-					} else {
-						List<String> lstEditors = Arrays.asList(ctrl.editRoles());
-						for (String strRole : RoleAndGroupProvider.getInstance().getMyGroupsAndRoles()) {
-							if (lstEditors.contains(strRole)) {
-								return false;
-							}
-						}
-					}
+				}
+				if (ctrl.editNewOnly() && !m_New) {
 					return true;
 				}
+				if (ctrl.modifyOnly() && m_New) {
+					return true;
+				}
+				if (ctrl.editRoles().length == 0) {
+					return false;
+				}
+				List<String> lstEditors = Arrays.asList(ctrl.editRoles());
+				for (String strRole : RoleAndGroupProvider.getInstance().getMyGroupsAndRoles()) {
+					if (lstEditors.contains(strRole)) {
+						return false;
+					}
+				}
+				return true;
 			} catch (Exception ex) {
 				throw new XPTRuntimeException("Error during isReadOnly for " + field, ex);
 			}

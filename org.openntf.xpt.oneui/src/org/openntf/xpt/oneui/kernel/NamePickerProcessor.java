@@ -91,26 +91,29 @@ public enum NamePickerProcessor implements INamePickerValueService {
 		Map<String, String> hsRC = new HashMap<String, String>();
 		try {
 			Database db = DatabaseProvider.INSTANCE.getDatabase(uiNp.getDatabase(), false);
-			View vw = null;
-			if (StringUtil.isEmpty(uiNp.getLookupView())) {
-				vw = db.getView(uiNp.getView());
-			} else {
-				vw = db.getView(uiNp.getLookupView());
-
-			}
-			for (String strValue : values) {
-				// Assign a default value
-				String strLabel = getLabel(vw, strValue, uiNp);
-				hsRC.put(strValue, strLabel);
-			}
-			if (vw != null) {
-				vw.recycle();
-			}
+			buildDisplayLabelsFromDatabase(uiNp, values, hsRC, db);
 			DatabaseProvider.INSTANCE.handleRecylce(db);
 		} catch (Exception ex) {
 			throw new XPTRuntimeException("getDisplayLables", ex);
 		}
 		return hsRC;
+	}
+
+	public void buildDisplayLabelsFromDatabase(UINamePicker uiNp, String[] values, Map<String, String> hsRC, Database db) throws NotesException {
+		View vw = null;
+		if (StringUtil.isEmpty(uiNp.getLookupView())) {
+			vw = db.getView(uiNp.getView());
+		} else {
+			vw = db.getView(uiNp.getLookupView());
+
+		}
+		for (String strValue : values) {
+			String strLabel = getLabel(vw, strValue, uiNp);
+			hsRC.put(strValue, strLabel);
+		}
+		if (vw != null) {
+			vw.recycle();
+		}
 	}
 	
 	private String getLabel(View vw, String strValue, UINamePicker uiNp) throws NotesException {
@@ -119,8 +122,8 @@ public enum NamePickerProcessor implements INamePickerValueService {
 			Document docRC = vw.getDocumentByKey(strValue, true);
 			if (docRC != null) {
 				rc = uiNp.getDisplayLableValue(docRC);
+				docRC.recycle();
 			}
-			docRC.recycle();
 		}
 		return rc;
 	}
