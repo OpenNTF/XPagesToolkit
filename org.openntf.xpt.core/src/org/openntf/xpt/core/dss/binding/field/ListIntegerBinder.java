@@ -61,7 +61,9 @@ public class ListIntegerBinder implements IBinder<List<Integer>> {
 
 			lstRC[0] = lstOldValues;
 			lstRC[1] = lstValues;
-			docCurrent.replaceItemValue(def.getNotesField(), lstValues);
+			Vector<Integer> vecValues = new Vector<Integer>();
+			vecValues.addAll(lstValues);
+			docCurrent.replaceItemValue(def.getNotesField(), vecValues);
 		} catch (Exception e) {
 			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}

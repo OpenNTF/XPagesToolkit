@@ -61,7 +61,9 @@ public class ListDoubleBinder implements IBinder<List<Double>> {
 
 			lstRC[0] = lstOldValues;
 			lstRC[1] = lstValues;
-			docCurrent.replaceItemValue(def.getNotesField(), lstValues);
+			Vector<Double> vecValues = new Vector<Double>();
+			vecValues.addAll(lstValues);
+			docCurrent.replaceItemValue(def.getNotesField(), vecValues);
 		} catch (Exception e) {
 			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
