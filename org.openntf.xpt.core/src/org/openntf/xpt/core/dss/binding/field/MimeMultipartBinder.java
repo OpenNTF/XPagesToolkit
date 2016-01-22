@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * ï¿½ Copyright WebGate Consulting AG, 2013
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -28,6 +28,7 @@ import org.openntf.xpt.core.XPTRuntimeException;
 import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.utils.NotesObjectRecycler;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.xsp.http.MimeMultipart;
@@ -113,9 +114,11 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 	}
 
 	public MimeMultipart getRawValueFromStore(Document docCurrent, String strNotesField) {
+		MimeMultipart mimeValue = null;
+		MIMEEntity entity = null;
+		RichTextItem rti = null;
 		try {
-			MimeMultipart mimeValue = null;
-			MIMEEntity entity = docCurrent.getMIMEEntity(strNotesField);
+			entity = docCurrent.getMIMEEntity(strNotesField);
 			if (entity != null) {
 				mimeValue = MimeMultipart.fromHTML(entity.getContentAsText());
 
@@ -125,7 +128,7 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 					if (docCurrent.getFirstItem(strNotesField).getType() != 1) {
 						mimeValue = MimeMultipart.fromHTML(docCurrent.getItemValueString(strNotesField));
 					} else {
-						RichTextItem rti = (RichTextItem) docCurrent.getFirstItem(strNotesField);
+						rti = (RichTextItem) docCurrent.getFirstItem(strNotesField);
 						if (rti != null) {
 							DominoDocument dd = new DominoDocument();
 							dd.setDocument(docCurrent);
@@ -135,11 +138,13 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 					}
 				}
 			}
-
+		
 			return mimeValue;
 		} catch (Exception e) {
 			LoggerFactory.logWarning(this.getClass(), "Error during getRawValueFromStore", e);
 			throw new XPTRuntimeException("Error during getRawValueFormStore", e);
+		} finally {
+			NotesObjectRecycler.recycle(rti,entity);
 		}
 	}
 
