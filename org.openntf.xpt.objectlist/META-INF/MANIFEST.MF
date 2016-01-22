@@ -17,4 +17,5 @@ Export-Package: org.openntf.xpt.objectlist,
  org.openntf.xpt.objectlist.config,
  org.openntf.xpt.objectlist.datasource,
  org.openntf.xpt.objectlist.utils
-Import-Package: org.apache.commons.io
+Import-Package: lotus.domino,
+ org.apache.commons.io

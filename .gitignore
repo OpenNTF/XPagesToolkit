@@ -14,3 +14,4 @@ org.openntf.xpt.agents/target/
 target/
 org.openntf.xpt.updatesite/artifacts.jar
 org.openntf.xpt.updatesite/content.jar
+org.openntf.xpt.updatesite-designer/.settings/
