@@ -25,22 +25,22 @@ import com.ibm.xsp.http.MimeMultipart;
 
 import org.openntf.xpt.core.json.annotations.JSONEntity;
 import org.openntf.xpt.core.json.annotations.JSONObject;
-import org.openntf.xpt.core.json.binding.BooleanBinder;
-import org.openntf.xpt.core.json.binding.BusinessObjectBinder;
-import org.openntf.xpt.core.json.binding.DateBinder;
-import org.openntf.xpt.core.json.binding.DoubleBinder;
 import org.openntf.xpt.core.json.binding.IJSONBinder;
-import org.openntf.xpt.core.json.binding.IntBinder;
-import org.openntf.xpt.core.json.binding.ListBinder;
-import org.openntf.xpt.core.json.binding.MimeMultipartBinder;
-import org.openntf.xpt.core.json.binding.StringBinder;
+import org.openntf.xpt.core.json.binding.impl.BooleanBinder;
+import org.openntf.xpt.core.json.binding.impl.BusinessObjectBinder;
+import org.openntf.xpt.core.json.binding.impl.DateBinder;
+import org.openntf.xpt.core.json.binding.impl.DoubleBinder;
+import org.openntf.xpt.core.json.binding.impl.IntBinder;
+import org.openntf.xpt.core.json.binding.impl.ListBinder;
+import org.openntf.xpt.core.json.binding.impl.MimeMultipartBinder;
+import org.openntf.xpt.core.json.binding.impl.StringBinder;
 import org.openntf.xpt.core.utils.ServiceSupport;
 
 public class DefinitionFactory {
 
-	public static Definition getDefinition(Field fldCurrent, JSONEntity je, JSONObject jo) {
+	public static Definition getDefinition(JsonBinderContainer container, Field fldCurrent, JSONEntity je, JSONObject jo) {
 
-		IJSONBinder<?> jsBinder = getJSONBinder(fldCurrent.getType());
+		IJSONBinder<?> jsBinder = getJSONBinder(container, fldCurrent.getType());
 		Class<?> clInner = null;
 		if (jsBinder != null) {
 			clInner = getInnerClass(fldCurrent);
@@ -62,7 +62,7 @@ public class DefinitionFactory {
 		return clInner;
 	}
 
-	public static IJSONBinder<?> getJSONBinder(Class<?> clCurrent) {
+	public static IJSONBinder<?> getJSONBinder(JsonBinderContainer container, Class<?> clCurrent) {
 		if (clCurrent.equals(Boolean.class) || clCurrent.equals(Boolean.TYPE)) {
 			return BooleanBinder.getInstance();
 		}
@@ -84,7 +84,7 @@ public class DefinitionFactory {
 		if (clCurrent.equals(MimeMultipart.class)) {
 			return MimeMultipartBinder.getInstance();
 		}
-		if (JSONService.getInstance().hasBinderDefinition(clCurrent)) {
+		if (container.hasBinderDefinition(clCurrent)) {
 			return BusinessObjectBinder.getInstance();
 		}
 		return null;

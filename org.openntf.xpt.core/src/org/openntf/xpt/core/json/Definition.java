@@ -15,17 +15,16 @@
  */
 package org.openntf.xpt.core.json;
 
+import org.openntf.xpt.core.json.binding.BinderProcessParameter;
 import org.openntf.xpt.core.json.binding.IJSONBinder;
-
-import com.ibm.domino.services.util.JsonWriter;
 
 public class Definition {
 
-	private String m_JSONProperty;
-	private String m_JAVAField;
+	private final String m_JSONProperty;
+	private final String m_JAVAField;
 	private JSONEmptyValueStrategy m_EmptyValueStrategy = JSONEmptyValueStrategy.NOPROPERTY;
-	private IJSONBinder<?> m_Binder;
-	private Class<?> m_ContainerClass;
+	private final IJSONBinder<?> m_Binder;
+	private final Class<?> m_ContainerClass;
 
 	public Definition(String property, String field,JSONEmptyValueStrategy strategy, IJSONBinder<?> binder, Class<?> containterClass) {
 		super();
@@ -36,7 +35,25 @@ public class Definition {
 		m_ContainerClass = containterClass;
 	}
 
-	public void process2JSON(JsonWriter jsWriter, Object objCurrent) {
-		m_Binder.process2JSON(jsWriter, objCurrent, m_JSONProperty, m_JAVAField, m_EmptyValueStrategy, m_ContainerClass);
+	public void process2JSON(BinderProcessParameter parameter) {
+		m_Binder.process2JSON(parameter.applyDefinition(this));
 	}
+
+	public JSONEmptyValueStrategy getEmptyValueStrategy() {
+		return m_EmptyValueStrategy;
+	}
+
+	public String getJSONProperty() {
+		return m_JSONProperty;
+	}
+
+	public String getJAVAField() {
+		return m_JAVAField;
+	}
+
+	public Class<?> getContainerClass() {
+		return m_ContainerClass;
+	}
+	
+	
 }

@@ -20,8 +20,6 @@ import java.util.List;
 
 import org.openntf.xpt.core.json.Definition;
 
-import com.ibm.domino.services.util.JsonWriter;
-
 public class Java2JSONBinder {
 
 	private List<Definition> m_Definitions = new ArrayList<Definition>();
@@ -30,9 +28,9 @@ public class Java2JSONBinder {
 		m_Definitions.add(def);
 	}
 
-	public void processJSON(JsonWriter jsWriter, Object obj) {
+	public void processJSON(BinderProcessParameter parameter) {
 		for (Definition def : m_Definitions) {
-			def.process2JSON(jsWriter, obj);
+			def.process2JSON(parameter);
 			
 		}
 	}
