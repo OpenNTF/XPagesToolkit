@@ -118,6 +118,12 @@ public class ServiceSupport {
 		}
 	}
 
+	public static Method getSetterMethod(Class<?> objectClass, String javaFieldName, Class<? extends Object> typeClass) throws SecurityException, NoSuchMethodException {
+		String strMethod = makeSetter(javaFieldName);
+		return objectClass.getMethod(strMethod, typeClass);
+	}
+
+	
 	public static Collection<Field> getClassFields(final Class<?> currentClass) {
 		Collection<Field> lstFields = AccessController.doPrivileged(new PrivilegedAction<Collection<Field>>() {
 

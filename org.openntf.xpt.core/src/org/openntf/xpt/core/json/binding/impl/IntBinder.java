@@ -15,21 +15,22 @@
  */
 package org.openntf.xpt.core.json.binding.impl;
 
-
 import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.json.binding.BinderProcessParameter;
 import org.openntf.xpt.core.json.binding.IJSONBinder;
 import org.openntf.xpt.core.utils.JSONSupport;
 
-public class IntBinder extends AbstractBaseBinder<Integer> implements IJSONBinder<Integer> {
+public class IntBinder extends AbstractBaseBinder<Integer>implements IJSONBinder<Integer> {
 	private static IntBinder m_Binder = new IntBinder();
- 
+
 	private IntBinder() {
 	}
 
 	public static IntBinder getInstance() {
 		return m_Binder;
 	}
+
+	@Override
 	public void process2JSON(BinderProcessParameter parameter) {
 		try {
 			Integer nValue = getValue(parameter.getObject(), parameter.getJavaField());
@@ -38,6 +39,8 @@ public class IntBinder extends AbstractBaseBinder<Integer> implements IJSONBinde
 			e.printStackTrace();
 		}
 	}
+
+	@Override
 	public void processValue2JSON(BinderProcessParameter parameter, Object value) {
 		try {
 			parameter.getWriter().outIntLiteral((Integer) value);
@@ -45,6 +48,12 @@ public class IntBinder extends AbstractBaseBinder<Integer> implements IJSONBinde
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public void processJson2Value(BinderProcessParameter parameter) {
+		int value = parameter.getJson().getInt(parameter.getJsonProperty());
+		setValue(parameter.getObject(), parameter.getJavaField(), value, Integer.class, Integer.TYPE);
 	}
 
 }

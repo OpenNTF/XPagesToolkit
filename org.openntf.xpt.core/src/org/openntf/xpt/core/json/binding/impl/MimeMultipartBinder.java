@@ -33,6 +33,7 @@ public class MimeMultipartBinder extends AbstractBaseBinder<MimeMultipart> imple
 		return m_Binder;
 	}
 
+	@Override
 	public void process2JSON(BinderProcessParameter parameter) {
 		try {
 			MimeMultipart mpart = getValue(parameter.getObject(), parameter.getJavaField());
@@ -43,12 +44,21 @@ public class MimeMultipartBinder extends AbstractBaseBinder<MimeMultipart> imple
 		}
 	}
 
+	@Override
 	public void processValue2JSON(BinderProcessParameter parameter, Object value) {
 		try {
 			parameter.getWriter().outStringLiteral((String) value);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+	}
+
+	@Override
+	public void processJson2Value(BinderProcessParameter parameter) {
+		String value = parameter.getJson().getString(parameter.getJsonProperty());
+		MimeMultipart mp = MimeMultipart.fromHTML(value);
+		setValue(parameter.getObject(), parameter.getJavaField(), mp, MimeMultipart.class);
 
 	}
 

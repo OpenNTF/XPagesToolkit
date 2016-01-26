@@ -15,13 +15,12 @@
  */
 package org.openntf.xpt.core.json.binding.impl;
 
-
 import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.json.binding.BinderProcessParameter;
 import org.openntf.xpt.core.json.binding.IJSONBinder;
 import org.openntf.xpt.core.utils.JSONSupport;
 
-public class BooleanBinder extends AbstractBaseBinder<Boolean> implements IJSONBinder<Boolean> {
+public class BooleanBinder extends AbstractBaseBinder<Boolean>implements IJSONBinder<Boolean> {
 	private static final BooleanBinder m_Binder = new BooleanBinder();
 
 	private BooleanBinder() {
@@ -32,21 +31,30 @@ public class BooleanBinder extends AbstractBaseBinder<Boolean> implements IJSONB
 		return m_Binder;
 	}
 
+	@Override
 	public void process2JSON(BinderProcessParameter parameter) {
 		try {
-			Boolean blValue = getValue(parameter.getObject(),parameter.getJavaField());
-			JSONSupport.writeBoolean(parameter.getWriter(), parameter.getJsonProperty(), blValue,parameter.getStrategy());
+			Boolean blValue = getValue(parameter.getObject(), parameter.getJavaField());
+			JSONSupport.writeBoolean(parameter.getWriter(), parameter.getJsonProperty(), blValue, parameter.getStrategy());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	@Override
 	public void processValue2JSON(BinderProcessParameter parameter, Object value) {
 		try {
 			parameter.getWriter().outBooleanLiteral((Boolean) value);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+	}
+
+	@Override
+	public void processJson2Value(BinderProcessParameter parameter) {
+		boolean value = parameter.getJson().getBoolean(parameter.getJsonProperty());
+		setValue(parameter.getObject(), parameter.getJavaField(), value, Boolean.class, Boolean.TYPE);
 
 	}
 

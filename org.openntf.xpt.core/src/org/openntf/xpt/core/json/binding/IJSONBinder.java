@@ -22,4 +22,6 @@ public interface IJSONBinder<T> {
 	public T getValue(Object objCurrent, String strJavaField);
 
 	public void processValue2JSON(BinderProcessParameter parameter, Object value);
+	
+	public void processJson2Value(BinderProcessParameter parameter);
 }

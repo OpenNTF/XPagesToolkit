@@ -20,8 +20,6 @@ import org.openntf.xpt.core.json.binding.BinderProcessParameter;
 import org.openntf.xpt.core.json.binding.IJSONBinder;
 import org.openntf.xpt.core.utils.JSONSupport;
 
-import com.ibm.domino.services.util.JsonWriter;
-
 public class DoubleBinder extends AbstractBaseBinder<Double>implements IJSONBinder<Double> {
 	private static DoubleBinder m_Binder = new DoubleBinder();
 
@@ -50,4 +48,12 @@ public class DoubleBinder extends AbstractBaseBinder<Double>implements IJSONBind
 		}
 
 	}
+
+	@Override
+	public void processJson2Value(BinderProcessParameter parameter) {
+		double value = parameter.getJson().getDouble(parameter.getJsonProperty());
+		setValue(parameter.getObject(), parameter.getJavaField(), value, Double.class, Double.TYPE);
+
+	}
+
 }

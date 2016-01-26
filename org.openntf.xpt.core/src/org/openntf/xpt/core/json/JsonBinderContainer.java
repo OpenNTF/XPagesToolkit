@@ -10,6 +10,7 @@ import org.openntf.xpt.core.json.binding.BinderProcessParameter;
 import org.openntf.xpt.core.json.binding.Java2JSONBinder;
 import org.openntf.xpt.core.utils.ServiceSupport;
 
+import com.ibm.commons.util.io.json.JsonJavaObject;
 import com.ibm.domino.services.util.JsonWriter;
 
 public class JsonBinderContainer {
@@ -30,7 +31,7 @@ public class JsonBinderContainer {
 		}
 		try {
 			jsWriter.startObject();
-			BinderProcessParameter parameter = BinderProcessParameter.buildParameter(this,jsWriter, obj);
+			BinderProcessParameter parameter = BinderProcessParameter.buildObject2JsonParameter(this,jsWriter, obj);
 			m_Binders.get(obj.getClass().getCanonicalName()).processJSON(parameter);
 			jsWriter.endObject();
 		} catch (Exception e) {
@@ -64,5 +65,27 @@ public class JsonBinderContainer {
 		}
 		return true;
 
+	}
+
+	public int processJson2Object(JsonJavaObject jsonObject, Object obj) {
+		if (!m_JSONObject.containsKey(obj.getClass().getCanonicalName())) {
+			if (!obj.getClass().isAnnotationPresent(JSONObject.class)) {
+				return -1;
+			}
+			m_JSONObject.put(obj.getClass().getCanonicalName(), obj.getClass().getAnnotation(JSONObject.class));
+			Java2JSONBinder js2Binder = buildBinder(obj.getClass());
+			if (js2Binder == null) {
+				return -2;
+			}
+			m_Binders.put(obj.getClass().getCanonicalName(), js2Binder);
+		}
+		try {
+			BinderProcessParameter parameter = BinderProcessParameter.buildJson2ObjectParameter(this, jsonObject, obj);
+			m_Binders.get(obj.getClass().getCanonicalName()).processJson2Object(parameter);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 1;
+		
 	}
 }

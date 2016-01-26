@@ -31,6 +31,7 @@ public class StringBinder extends AbstractBaseBinder<String>implements IJSONBind
 		return m_Binder;
 	}
 
+	@Override
 	public void process2JSON(BinderProcessParameter parameter) {
 		try {
 			String strValue = getValue(parameter.getObject(), parameter.getJavaField());
@@ -40,6 +41,7 @@ public class StringBinder extends AbstractBaseBinder<String>implements IJSONBind
 		}
 	}
 
+	@Override
 	public void processValue2JSON(BinderProcessParameter parameter, Object value) {
 		try {
 			parameter.getWriter().outStringLiteral((String) value);
@@ -48,4 +50,11 @@ public class StringBinder extends AbstractBaseBinder<String>implements IJSONBind
 		}
 
 	}
+
+	@Override
+	public void processJson2Value(BinderProcessParameter parameter) {
+		String value = parameter.getJson().getString(parameter.getJsonProperty());
+		setValue(parameter.getObject(), parameter.getJavaField(), value, String.class);
+	}
+
 }

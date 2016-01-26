@@ -22,7 +22,7 @@ import org.openntf.xpt.core.json.binding.BinderProcessParameter;
 import org.openntf.xpt.core.json.binding.IJSONBinder;
 import org.openntf.xpt.core.utils.JSONSupport;
 
-public class DateBinder extends AbstractBaseBinder<Date> implements IJSONBinder<Date> {
+public class DateBinder extends AbstractBaseBinder<Date>implements IJSONBinder<Date> {
 	private static DateBinder m_Binder = new DateBinder();
 
 	private DateBinder() {
@@ -32,6 +32,7 @@ public class DateBinder extends AbstractBaseBinder<Date> implements IJSONBinder<
 	public static DateBinder getInstance() {
 		return m_Binder;
 	}
+
 	public void process2JSON(BinderProcessParameter parameter) {
 		try {
 			Date datValue = getValue(parameter.getObject(), parameter.getJavaField());
@@ -40,6 +41,7 @@ public class DateBinder extends AbstractBaseBinder<Date> implements IJSONBinder<
 			e.printStackTrace();
 		}
 	}
+
 	public void processValue2JSON(BinderProcessParameter parameter, Object value) {
 		try {
 			parameter.getWriter().outDateLiteral((Date) value);
@@ -48,4 +50,15 @@ public class DateBinder extends AbstractBaseBinder<Date> implements IJSONBinder<
 		}
 
 	}
+
+	@Override
+	public void processJson2Value(BinderProcessParameter parameter) {
+		try {
+			Date value = parameter.getJson().getJavaDate(parameter.getJsonProperty());
+			setValue(parameter.getObject(), parameter.getJavaField(), value, Date.class);
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+	}
+
 }

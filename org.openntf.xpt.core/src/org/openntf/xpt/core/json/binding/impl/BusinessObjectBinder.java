@@ -17,11 +17,14 @@ package org.openntf.xpt.core.json.binding.impl;
 
 import java.lang.reflect.Method;
 
+import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.json.JSONEmptyValueStrategy;
 import org.openntf.xpt.core.json.binding.BinderProcessParameter;
 import org.openntf.xpt.core.json.binding.IJSONBinder;
 
-public class BusinessObjectBinder implements IJSONBinder<Object> {
+import com.ibm.commons.util.io.json.JsonJavaObject;
+
+public class BusinessObjectBinder extends AbstractBaseBinder<Object>implements IJSONBinder<Object> {
 	private static final BusinessObjectBinder m_Binder = new BusinessObjectBinder();
 
 	private BusinessObjectBinder() {
@@ -31,6 +34,7 @@ public class BusinessObjectBinder implements IJSONBinder<Object> {
 	public static BusinessObjectBinder getInstance() {
 		return m_Binder;
 	}
+
 	@Override
 	public Object getValue(Object objCurrent, String strJavaField) {
 		try {
@@ -61,6 +65,7 @@ public class BusinessObjectBinder implements IJSONBinder<Object> {
 		}
 	}
 
+	@Override
 	public void processValue2JSON(BinderProcessParameter parameter, Object value) {
 		try {
 			parameter.getJsonBinderContainer().process2JSON(parameter.getWriter(), value);
@@ -68,6 +73,18 @@ public class BusinessObjectBinder implements IJSONBinder<Object> {
 			e.printStackTrace();
 		}
 
+	}
+
+	@Override
+	public void processJson2Value(BinderProcessParameter parameter) {
+		JsonJavaObject value = parameter.getJson().getJsonObject(parameter.getJsonProperty());
+		try {
+			Object element = parameter.getContainerClass().newInstance();
+			parameter.getJsonBinderContainer().processJson2Object(value, element);
+			setValue(parameter.getObject(), parameter.getJavaField(), element, parameter.getContainerClass());
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
 
 }

@@ -34,4 +34,11 @@ public class Java2JSONBinder {
 			
 		}
 	}
+
+	public void processJson2Object(BinderProcessParameter parameter) {
+		for (Definition def : m_Definitions) {
+			def.processJson2Object(parameter);
+		}
+		
+	}
 }

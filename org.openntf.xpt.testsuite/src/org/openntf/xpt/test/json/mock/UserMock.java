@@ -37,6 +37,10 @@ public class UserMock implements Serializable {
 		mock.addChildern(buildMock("Cecile Nünlist", 19, 99000, new ArrayList<String>()));
 		return mock;
 	}
+	public static UserMock buildSimpleMock() {
+		UserMock mock = buildMock("Marco Müller", 42, 123000, Arrays.asList("Manager", "Developer", "Leader"));
+		return mock;
+	}
 
 	public static UserMock buildMock(String name, int account, double salary, List<String> tags) {
 		UserMock mock = new UserMock();

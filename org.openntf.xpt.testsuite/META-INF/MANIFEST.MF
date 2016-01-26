@@ -7,7 +7,8 @@ Bundle-Vendor: WebGate Consulting AG
 Fragment-Host: org.openntf.xpt
 Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Require-Bundle: org.junit;bundle-version="4.11.0",
- com.ibm.commons.vfs
+ com.ibm.commons.vfs,
+ com.ibm.commons
 Bundle-ClassPath: .,
  lib/cglib-nodep-2.2.2.jar,
  lib/objenesis-2.1.jar,

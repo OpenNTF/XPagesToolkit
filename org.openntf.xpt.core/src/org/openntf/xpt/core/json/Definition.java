@@ -20,40 +20,46 @@ import org.openntf.xpt.core.json.binding.IJSONBinder;
 
 public class Definition {
 
-	private final String m_JSONProperty;
-	private final String m_JAVAField;
-	private JSONEmptyValueStrategy m_EmptyValueStrategy = JSONEmptyValueStrategy.NOPROPERTY;
-	private final IJSONBinder<?> m_Binder;
-	private final Class<?> m_ContainerClass;
+	private final String jsonProperty;
+	private final String javaField;
+	private JSONEmptyValueStrategy emptyValueStrategy = JSONEmptyValueStrategy.NOPROPERTY;
+	private final IJSONBinder<?> binder;
+	private final Class<?> containerClass;
 
-	public Definition(String property, String field,JSONEmptyValueStrategy strategy, IJSONBinder<?> binder, Class<?> containterClass) {
+	public Definition(String property, String field, JSONEmptyValueStrategy strategy, IJSONBinder<?> binder, Class<?> containterClass) {
 		super();
-		m_JSONProperty = property;
-		m_JAVAField = field;
-		m_EmptyValueStrategy = strategy;
-		m_Binder = binder;
-		m_ContainerClass = containterClass;
+		this.jsonProperty = property;
+		this.javaField = field;
+		this.emptyValueStrategy = strategy;
+		this.binder = binder;
+		this.containerClass = containterClass;
 	}
 
 	public void process2JSON(BinderProcessParameter parameter) {
-		m_Binder.process2JSON(parameter.applyDefinition(this));
+		binder.process2JSON(parameter.applyDefinition(this));
 	}
 
+	public void processJson2Object(BinderProcessParameter parameter) {
+		if (parameter.getJson().containsKey(jsonProperty)) {
+			binder.processJson2Value(parameter.applyDefinition(this));
+		}
+
+	}
 	public JSONEmptyValueStrategy getEmptyValueStrategy() {
-		return m_EmptyValueStrategy;
+		return emptyValueStrategy;
 	}
 
 	public String getJSONProperty() {
-		return m_JSONProperty;
+		return jsonProperty;
 	}
 
 	public String getJAVAField() {
-		return m_JAVAField;
+		return javaField;
 	}
 
 	public Class<?> getContainerClass() {
-		return m_ContainerClass;
+		return containerClass;
 	}
-	
-	
+
+
 }
