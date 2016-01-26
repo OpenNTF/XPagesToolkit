@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2014, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -29,14 +29,6 @@ import java.util.TreeSet;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
 import org.openntf.xpt.core.json.annotations.JSONObject;
 
-/**
- * @author Christian Guedemann
- *
- */
-/**
- * @author Christian Guedemann
- *
- */
 /**
  * @author Christian Guedemann
  * 
