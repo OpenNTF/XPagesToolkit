@@ -35,6 +35,7 @@ public class BaseJson2ObjectRestBinding {
 			if (nresult < 1) {
 				throw new XPTRestException("Error during object -> json conversation: " + nresult);
 			}
+			jsonWriter.close();
 		} catch (XPTRestException ex) {
 			throw ex;
 		} catch (Exception ex) {
