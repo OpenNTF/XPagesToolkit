@@ -7,5 +7,5 @@ public interface IRestMethod {
 
 	public String getMethodName();
 
-	public void executeAction(HttpServletRequest request, HttpServletResponse response) throws XPTRestException;
+	public void execute(HttpServletRequest request, HttpServletResponse response) throws XPTRestException;
 }

@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.openntf.xpt.core.utils.ErrorJSONBuilder;
+import org.openntf.xpt.core.utils.HttpResponseSupport;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.domino.services.ServiceException;
@@ -31,6 +32,7 @@ public abstract class AbstractRestService extends CustomServiceBean {
 		HttpServletResponse response = engine.getHttpResponse();
 		String action = request.getParameter("action");
 		String method = request.getMethod();
+		HttpResponseSupport.setJSONUTF8ContentType(response);
 		if (!StringUtil.isEmpty(action)) {
 			handleAction(request, response, action, method);
 		} else {
@@ -42,7 +44,7 @@ public abstract class AbstractRestService extends CustomServiceBean {
 		if (methods.containsKey(method.toLowerCase())) {
 			IRestMethod restMethode = methods.get(method.toLowerCase());
 			try {
-				restMethode.executeAction(request, response);
+				restMethode.execute(request, response);
 			} catch (XPTRestException e) {
 				ErrorJSONBuilder.getInstance().processError2JSON(response, 9999, e.getMessage(), e);
 			}
