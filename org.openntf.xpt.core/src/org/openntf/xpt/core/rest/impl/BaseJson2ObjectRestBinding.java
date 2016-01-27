@@ -18,7 +18,7 @@ public class BaseJson2ObjectRestBinding {
 			JsonJavaFactory factory = JsonJavaFactory.instanceEx;
 			JsonJavaObject json = (JsonJavaObject) JsonParser.fromJson(factory, request.getReader());
 			int nresult = JSONService.getInstance().processJson2Object(json, object);
-			if (nresult > 0) {
+			if (nresult < 1) {
 				throw new XPTRestException("Error during Json -> object conversation: " + nresult);
 			}
 		} catch (XPTRestException ex) {
@@ -32,7 +32,7 @@ public class BaseJson2ObjectRestBinding {
 		try {
 			JsonWriter jsonWriter = new JsonWriter(response.getWriter(), true);
 			int nresult = JSONService.getInstance().process2JSON(jsonWriter, object);
-			if (nresult > 0) {
+			if (nresult < 1) {
 				throw new XPTRestException("Error during object -> json conversation: " + nresult);
 			}
 		} catch (XPTRestException ex) {
