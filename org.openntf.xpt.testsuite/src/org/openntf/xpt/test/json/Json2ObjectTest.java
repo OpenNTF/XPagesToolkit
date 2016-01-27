@@ -1,7 +1,9 @@
 package org.openntf.xpt.test.json;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import org.junit.Test;
-import org.openntf.xpt.core.dss.binding.BinderContainer;
 import org.openntf.xpt.core.json.JsonBinderContainer;
 import org.openntf.xpt.test.json.mock.UserMock;
 
@@ -9,7 +11,6 @@ import com.ibm.commons.util.io.json.JsonException;
 import com.ibm.commons.util.io.json.JsonJavaFactory;
 import com.ibm.commons.util.io.json.JsonJavaObject;
 import com.ibm.commons.util.io.json.JsonParser;
-import static org.junit.Assert.*;
 
 public class Json2ObjectTest {
 	private final String RESULT = "{\"accountnumber\":42,\"accountobject\":42,\"name\":\"Marco M\\u00FCller\",\"salary\":123000,\"salaryobject\":123000,\"tags\":[\"Manager\",\"Developer\",\"Leader\"]}";

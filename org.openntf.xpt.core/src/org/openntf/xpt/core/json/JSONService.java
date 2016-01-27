@@ -15,6 +15,7 @@
  */
 package org.openntf.xpt.core.json;
 
+import com.ibm.commons.util.io.json.JsonJavaObject;
 import com.ibm.designer.runtime.Application;
 import com.ibm.domino.services.util.JsonWriter;
 
@@ -48,6 +49,10 @@ public class JSONService {
 	public boolean hasBinderDefinition(Class<?> cl) {
 		return container.hasBinderDefinition(cl);
 
+	}
+
+	public int processJson2Object(JsonJavaObject jsonObject, Object object) {
+		return container.processJson2Object(jsonObject, object);
 	}
 
 }
