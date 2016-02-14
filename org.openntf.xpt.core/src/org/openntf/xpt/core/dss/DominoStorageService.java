@@ -171,6 +171,7 @@ public class DominoStorageService {
 			Document docCurrent = getDocument(ds, obj, ndbTarget, true, objID);
 			j2d.processDocument(docCurrent, obj, "" + objID);
 			docCurrent.save(true, false, true);
+			docCurrent.recycle();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
