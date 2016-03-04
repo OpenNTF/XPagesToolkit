@@ -53,6 +53,19 @@
 				<version>1.7</version>
 				<executions>
 					<execution>
+						<id>clear_snapshot</id>
+						<phase>clean</phase>
+						<goals>
+                    		<goal>run</goal>
+                		</goals>
+						<configuration>
+							<target>
+								<!-- Remove Other Sources -->
+								<delete dir="${kit.parentDir}/${kit.result}" />
+							</target>
+						</configuration>
+					</execution>
+					<execution>
 						<id>removedownloads</id>
 						<phase>generate-sources</phase>
 						<configuration>
