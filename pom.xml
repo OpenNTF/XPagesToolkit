@@ -13,10 +13,16 @@
 		<lic.file>${project.basedir}/LICENSE_HEADER/apacheV2.txt</lic.file>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<maven.build.timestamp.format>yyyyMMddHHmm</maven.build.timestamp.format>
+		<osgi.qualifier>${maven.build.timestamp}</osgi.qualifier>
 		<sonar.language>java</sonar.language>
 		<sonar.core.codeCoveragePlugin>jacoco</sonar.core.codeCoveragePlugin>
 		<sonar.dynamicAnalysis>reuseReports</sonar.dynamicAnalysis>
 		<sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
+		<kit.buildVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}-SNAPSHOT</kit.buildVersion>
+		<p2.buildVersion>${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.${parsedVersion.incrementalVersion}</p2.buildVersion>
+		<kit.result>snapshots</kit.result>
+
 	</properties>
 
 	<repositories>
@@ -44,6 +50,20 @@
 					<verbose>true</verbose>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>build-helper-maven-plugin</artifactId>
+				<version>1.8</version>
+				<executions>
+					<execution>
+						<id>parse-version</id>
+						<goals>
+							<goal>parse-version</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<!-- enable tycho build extension -->
 				<groupId>org.eclipse.tycho</groupId>
@@ -336,6 +356,7 @@
 				<module>org.openntf.xpt.testsuite</module>
 				<module>org.openntf.xpt.updatesite</module>
 				<module>org.openntf.xpt.updatesite-designer</module>
+				<module>org.openntf.xpt.p2</module>
 			</modules>
 		</profile>
 		<profile>
@@ -353,6 +374,7 @@
 				<module>org.openntf.xpt.testsuite</module>
 				<module>org.openntf.xpt.updatesite</module>
 				<module>org.openntf.xpt.updatesite-designer</module>
+				<module>org.openntf.xpt.p2</module>
 				<module>xpt.assembly</module>
 			</modules>
 		</profile>
@@ -370,5 +392,5 @@
 			<version>3.0.15</version>
 		</dependency>
 	</dependencies>
-	<name>XPT::Parent</name>
+	<name>XPages Toolkit :: Parent</name>
 </project>

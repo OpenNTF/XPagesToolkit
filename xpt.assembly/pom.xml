@@ -11,12 +11,11 @@
 
 	<properties>
 		<workingDir>${project.build.directory}</workingDir>
-		<finalAssemblyFolder>
-			${workingDir}/kit
-		</finalAssemblyFolder>
 		<git.revision>master</git.revision>
 		<lic.file>${project.parent.basedir}/LICENSE_HEADER/apacheV2.txt</lic.file>
-
+		<kit.parentDir>${project.basedir}/../</kit.parentDir>
+		<kit.workingDir>${project.build.directory}</kit.workingDir>
+		<kit.finalAssemblyFolder>${kit.workingDir}/kit</kit.finalAssemblyFolder>
 	</properties>
 	<build>
 		<plugins>
@@ -92,6 +91,36 @@
 							<goal>run</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>p2repo</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<unzip
+									src="../org.openntf.xpt.p2/target/org.openntf.xpt.p2-${project.version}.zip"
+									dest="${kit.finalAssemblyFolder}/p2-${p2.buildVersion}" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>toDistribution</id>
+						<phase>install</phase>
+						<configuration>
+							<target>
+								<copy todir="${kit.parentDir}/${kit.result}">
+									<fileset dir="${kit.finalAssemblyFolder}">
+									</fileset>
+								</copy>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+
 				</executions>
 			</plugin>
 			<plugin>
@@ -108,7 +137,7 @@
 							<descriptor>assembly.xml</descriptor>
 							<finalName>org.openntf.xpt-${project.version}</finalName>
 							<appendAssemblyId>false</appendAssemblyId>
-							<outputDirectory>${finalAssemblyFolder}</outputDirectory>
+							<outputDirectory>${kit.finalAssemblyFolder}</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>

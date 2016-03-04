@@ -38,6 +38,7 @@ import org.openntf.xpt.core.dss.binding.field.LongBinder;
 import org.openntf.xpt.core.dss.binding.field.StringArrayBinder;
 import org.openntf.xpt.core.dss.binding.field.StringBinder;
 import org.openntf.xpt.core.dss.changeLog.ChangeLogEntry;
+import org.openntf.xpt.core.utils.NotesObjectRecycler;
 import org.openntf.xpt.core.utils.ServiceSupport;
 
 import com.ibm.designer.runtime.Application;
@@ -75,7 +76,6 @@ public class DominoStorageService {
 		try {
 			j2d.processDocument(docCurrent, objCurrent, "" + objID);
 			docCurrent.save(true, false, true);
-
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
@@ -108,8 +108,9 @@ public class DominoStorageService {
 	public boolean deleteObject(Object objDelete, Database ndbTarget) throws DSSException {
 		DominoStore dsDefinition = m_BinderContainer.getStoreDefinitions(objDelete.getClass());
 		Object objPK = getObjectID(dsDefinition, objDelete);
+		Document docDelete = null;
 		try {
-			Document docDelete = getDocument(dsDefinition, objDelete, ndbTarget, false, objPK);
+			docDelete = getDocument(dsDefinition, objDelete, ndbTarget, false, objPK);
 			if (docDelete == null) {
 				return false;
 			}
@@ -117,6 +118,8 @@ public class DominoStorageService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			NotesObjectRecycler.recycle(docDelete);
 		}
 		return true;
 
@@ -145,11 +148,12 @@ public class DominoStorageService {
 	}
 
 	private boolean getObjectFromDocument(DominoStore dsDefinition, Domino2JavaBinder d2j, Object objCurrent, Object pk, Database ndbTarget) {
+		Document docCurrent = null;
 		try {
 			if (pk != null) {
 				setPK2Object(dsDefinition, objCurrent, pk);
 			}
-			Document docCurrent = getDocument(dsDefinition, objCurrent, ndbTarget, false, pk);
+			docCurrent = getDocument(dsDefinition, objCurrent, ndbTarget, false, pk);
 			if (docCurrent == null) {
 				return false;
 			}
@@ -161,20 +165,25 @@ public class DominoStorageService {
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			NotesObjectRecycler.recycle(docCurrent);
 		}
 		return true;
 	}
 
 	private boolean saveObject2Document(DominoStore ds, Java2DominoBinder j2d, Object obj, Database ndbTarget) {
+		Document docCurrent = null;
+
 		try {
 			Object objID = getObjectID(ds, obj);
-			Document docCurrent = getDocument(ds, obj, ndbTarget, true, objID);
+			docCurrent = getDocument(ds, obj, ndbTarget, true, objID);
 			j2d.processDocument(docCurrent, obj, "" + objID);
 			docCurrent.save(true, false, true);
-			docCurrent.recycle();
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
+		} finally {
+			NotesObjectRecycler.recycle(docCurrent);
 		}
 		return true;
 	}

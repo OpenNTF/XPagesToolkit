@@ -15,3 +15,6 @@ target/
 org.openntf.xpt.updatesite/artifacts.jar
 org.openntf.xpt.updatesite/content.jar
 org.openntf.xpt.updatesite-designer/.settings/
+org.openntf.xpt.p2/.project
+org.openntf.xpt.p2/.settings/
+snapshots/
