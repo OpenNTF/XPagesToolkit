@@ -37,7 +37,7 @@ public class ClientSSLResistanceExtender {
 
 		public static HttpClient wrapClient(HttpClient base) {
 			try {
-				SSLContext ctx = SSLContext.getDefault();
+				SSLContext ctx = SSLContext.getInstance("TLSv1");
 				X509TrustManager tm = new X509TrustManager() {
 
 					public void checkClientTrusted(X509Certificate[] xcs,
