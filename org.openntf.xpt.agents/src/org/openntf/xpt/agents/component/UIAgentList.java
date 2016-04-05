@@ -33,17 +33,22 @@ import org.openntf.xpt.agents.XPageAgentRegistry;
 import org.openntf.xpt.agents.beans.XPTAgentBean;
 import org.openntf.xpt.agents.master.ApplicationStatus;
 import org.openntf.xpt.agents.master.ExecutionUserProperties;
+import org.openntf.xpt.core.utils.ValueBindingSupport;
 
 import com.ibm.commons.util.StringUtil;
 import com.ibm.commons.util.io.json.JsonJavaFactory;
 import com.ibm.commons.util.io.json.JsonJavaObject;
 import com.ibm.commons.util.io.json.JsonParser;
 import com.ibm.domino.services.util.JsonWriter;
+import com.ibm.domino.xsp.module.nsf.NotesContext;
 import com.ibm.xsp.ajax.AjaxUtil;
 import com.ibm.xsp.application.UniqueViewIdManager;
 import com.ibm.xsp.component.FacesAjaxComponent;
 import com.ibm.xsp.util.StateHolderUtil;
 import com.ibm.xsp.webapp.XspHttpServletResponse;
+
+import lotus.domino.Database;
+import lotus.domino.NotesException;
 
 public class UIAgentList extends UIComponentBase implements FacesAjaxComponent {
 
@@ -59,6 +64,9 @@ public class UIAgentList extends UIComponentBase implements FacesAjaxComponent {
 
 	private List<UIAgentEntry> m_Entries;
 	private String m_Sort = SORT_NAME + "_ASC";
+
+	private String hostName;
+	private String protocol;
 
 	public UIAgentList() {
 		super();
@@ -85,12 +93,30 @@ public class UIAgentList extends UIComponentBase implements FacesAjaxComponent {
 		return m_Sort;
 	}
 
+	public String getHostName() {
+		return ValueBindingSupport.getValue(hostName, "hostName", this, "", getFacesContext());
+	}
+
+	public void setHostName(String hostName) {
+		this.hostName = hostName;
+	}
+
+	public String getProtocol() {
+		return ValueBindingSupport.getValue(protocol, "protocol", this, "", getFacesContext());
+	}
+
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
+	}
+
 	@Override
 	public Object saveState(FacesContext context) {
-		Object[] values = new Object[3];
+		Object[] values = new Object[5];
 		values[0] = super.saveState(context);
 		values[1] = StateHolderUtil.saveList(context, getAllEntries());
 		values[2] = m_Sort;
+		values[3] = hostName;
+		values[4] = protocol;
 		return values;
 	}
 
@@ -100,6 +126,8 @@ public class UIAgentList extends UIComponentBase implements FacesAjaxComponent {
 		super.restoreState(context, values[0]);
 		m_Entries = StateHolderUtil.restoreList(context, this, values[1]);
 		m_Sort = (String) values[2];
+		hostName = (String) values[3];
+		protocol = (String) values[4];
 	}
 
 	// -- AJAX Handling --//
@@ -135,7 +163,7 @@ public class UIAgentList extends UIComponentBase implements FacesAjaxComponent {
 				JsonWriter jsWriter = new JsonWriter(httpResponse.getWriter(), true);
 				String strUserName = json.getString("user");
 				String strPassword = json.getString("password");
-				ExecutionUserProperties exp = XPTAgentBean.get(context).registerApplication2Master(strUserName, strPassword);
+				ExecutionUserProperties exp = registerApplication(strUserName, strPassword, context);
 
 				jsWriter.startObject();
 				jsWriter.startProperty("status");
@@ -210,6 +238,20 @@ public class UIAgentList extends UIComponentBase implements FacesAjaxComponent {
 				e2.printStackTrace();
 				httpResponse.getWriter().flush();
 			}
+		}
+	}
+
+	private ExecutionUserProperties registerApplication(String strUserName, String strPassword, FacesContext context) throws NotesException {
+		String host = getHostName();
+		String protocol = getProtocol();
+		if (host == null || protocol == null) {
+			return XPTAgentBean.get(context).registerApplication2Master(strUserName, strPassword);
+		} else {
+			Database db = NotesContext.getCurrentUnchecked().getCurrentDatabase();
+			String repid = db.getReplicaID();
+			String path = db.getFilePath().replace("\\", "/");
+			String url = protocol + host + path;
+			return XPTAgentBean.get(context).registerApplication2Master(strUserName, strPassword, url, repid);
 		}
 	}
 

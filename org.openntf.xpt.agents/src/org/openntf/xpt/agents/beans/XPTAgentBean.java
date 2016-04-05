@@ -61,14 +61,20 @@ public class XPTAgentBean {
 	public int checkSchedule(FacesContext fc) {
 		return XPageAgentRegistry.getInstance().checkSchedule(fc);
 	}
+	
+	public ExecutionUserProperties registerApplication2Master(String user, String password, String url, String repid) {
+		return XPageAgentManager.getInstance().registerNewApplication(repid, url,
+				user, password);
+		
+	}
 
 	public ExecutionUserProperties registerApplication2Master(String strUser, String strPassword) {
 		try {
 			String strHost = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURL().toString();
 			int nNSF = strHost.toLowerCase().indexOf(".nsf");
 			String strNSFURL = strHost.substring(0, nNSF) + ".nsf";
-			return XPageAgentManager.getInstance().registerNewApplication(NotesContext.getCurrentUnchecked().getCurrentDatabase().getReplicaID(), strNSFURL,
-					strUser, strPassword);
+			String repid = NotesContext.getCurrentUnchecked().getCurrentDatabase().getReplicaID();
+			return registerApplication2Master(strUser, strPassword, strNSFURL, repid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
