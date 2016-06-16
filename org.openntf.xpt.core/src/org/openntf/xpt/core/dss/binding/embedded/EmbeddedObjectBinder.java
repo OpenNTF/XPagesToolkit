@@ -43,6 +43,7 @@ public class EmbeddedObjectBinder implements IBinder<Object> {
 	@Override
 	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecValues, Definition def) {
 		try {
+			System.out.println("Loading ..."+ def.getNotesField());
 			String strClassStore = docCurrent.getItemValueString(def.getNotesField());
 			if (StringUtil.isEmpty(strClassStore)) {
 				LoggerFactory.logWarning(getClass(), "No Class Defined. Using Class: " + def.getInnerClass().getCanonicalName(), null);
@@ -96,8 +97,9 @@ public class EmbeddedObjectBinder implements IBinder<Object> {
 			objSet = def.getInnerClass().newInstance();
 			Domino2JavaBinder d2j = def.getContainer().getLoader(objSet.getClass());
 			d2j.processDocument(docCurrent, objSet);
+			System.out.println(objSet);
 		} catch (Exception e) {
-			// TODO: Handling exception
+			e.printStackTrace();
 		}
 		return objSet;
 	}
