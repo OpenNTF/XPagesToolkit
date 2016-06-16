@@ -23,6 +23,8 @@ import java.util.Vector;
 import lotus.domino.Document;
 import lotus.domino.NotesException;
 
+import org.openntf.xpt.core.dss.binding.embedded.EmbeddedListObjectBinder;
+import org.openntf.xpt.core.dss.binding.embedded.EmbeddedObjectBinder;
 import org.openntf.xpt.core.dss.binding.field.MimeMultipartBinder;
 import org.openntf.xpt.core.dss.binding.field.ObjectBinder;
 import org.openntf.xpt.core.dss.binding.files.FileDownloadBinder;
@@ -91,6 +93,10 @@ public class Domino2JavaBinder {
 		if (defCurrent.getBinder() instanceof ObjectBinder) {
 			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
 			return;
+		}
+		if (defCurrent.getBinder() instanceof EmbeddedObjectBinder || defCurrent.getBinder() instanceof EmbeddedListObjectBinder) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
+			return;			
 		}
 		Vector<?> vecValues = docProcess.getItemValue(defCurrent.getNotesField());
 		if (!vecValues.isEmpty()) {

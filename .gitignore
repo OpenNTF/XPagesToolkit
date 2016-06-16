@@ -18,3 +18,15 @@ org.openntf.xpt.updatesite-designer/.settings/
 org.openntf.xpt.p2/.project
 org.openntf.xpt.p2/.settings/
 snapshots/
+org.openntf.xpt.agents/.project
+org.openntf.xpt.feature.source/.project
+org.openntf.xpt.feature/.project
+org.openntf.xpt.objectlist/.project
+org.openntf.xpt.oneui/.project
+org.openntf.xpt.properties/.project
+org.openntf.xpt.rss/.project
+org.openntf.xpt.testsuite/.project
+org.openntf.xpt.updatesite-designer/.project
+org.openntf.xpt.updatesite/.project
+org.openntf.xpt/.project
+xpt.assembly/.project
