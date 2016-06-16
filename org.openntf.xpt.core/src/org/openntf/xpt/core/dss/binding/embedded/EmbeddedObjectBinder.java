@@ -31,13 +31,13 @@ import com.ibm.commons.util.StringUtil;
 
 public class EmbeddedObjectBinder implements IBinder<Object> {
 
-	private final static EmbeddedObjectBinder m_Binder = new EmbeddedObjectBinder();
+	private static final  EmbeddedObjectBinder m_Binder = new EmbeddedObjectBinder();
+
+	private EmbeddedObjectBinder() {
+	}
 
 	public static EmbeddedObjectBinder getInstance() {
 		return m_Binder;
-	}
-
-	private EmbeddedObjectBinder() {
 	}
 
 	@Override
@@ -45,15 +45,16 @@ public class EmbeddedObjectBinder implements IBinder<Object> {
 		try {
 			String strClassStore = docCurrent.getItemValueString(def.getNotesField());
 			if (StringUtil.isEmpty(strClassStore)) {
-				return;
-			}
-			if (!strClassStore.equals(def.getInnerClass().getCanonicalName())) {
-				LoggerFactory.logWarning(getClass(), strClassStore + " expected. Effective Class: " + def.getInnerClass().getCanonicalName(), null);
+				LoggerFactory.logWarning(getClass(), "No Class Defined. Using Class: " + def.getInnerClass().getCanonicalName(), null);
+			} else {
+				if (!strClassStore.equals(def.getInnerClass().getCanonicalName())) {
+					LoggerFactory.logWarning(getClass(), strClassStore + " expected. Effective Class: " + def.getInnerClass().getCanonicalName(), null);
+				}
 			}
 			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), (Class<?>) def.getInnerClass());
 			mt.invoke(objCurrent, getValueFromStore(docCurrent, null, def));
 		} catch (Exception ex) {
-
+			ex.printStackTrace();
 		}
 	}
 
