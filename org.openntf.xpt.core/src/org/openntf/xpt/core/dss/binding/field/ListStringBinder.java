@@ -74,11 +74,9 @@ public class ListStringBinder implements IBinder<List<String>> {
 			if (lstValues != null) {
 				boolean isNamesValue = false;
 				if (def.isAuthor() || def.isReader() || def.isNames()) {
-					// Changed to a one call
 					Item iNotesField = docCurrent.replaceItemValue(def.getNotesField(), "");
-					// Item iNotesField =
-					// docCurrent.getFirstItem(strNotesField);
 					isNamesValue = NamesProcessor.getInstance().setNamesField(def, iNotesField);
+					iNotesField.recycle();
 				}
 
 				for (String strValue : lstValues) {
@@ -87,7 +85,10 @@ public class ListStringBinder implements IBinder<List<String>> {
 				lstRC[1] = new ArrayList<String>(vValues);
 
 			}
-			docCurrent.replaceItemValue(def.getNotesField(), vValues);
+			Item notesItem =docCurrent.replaceItemValue(def.getNotesField(), vValues);
+			notesItem.setSummary(def.isNotesSummary());
+			notesItem.recycle();
+
 		} catch (Exception e) {
 			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}

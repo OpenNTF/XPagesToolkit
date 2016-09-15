@@ -29,8 +29,16 @@ import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class StringBinder extends AbstractBaseBinder<String> implements IBinder<String> {
 
-	private static StringBinder m_Binder;
+	private static final StringBinder m_Binder = new StringBinder();;
+	public static IBinder<String> getInstance() {
+		return m_Binder;
+	}
 
+	private StringBinder() {
+
+	}
+
+	
 	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecCurrent, Definition def) {
 		try {
 			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), String.class);
@@ -54,15 +62,16 @@ public class StringBinder extends AbstractBaseBinder<String> implements IBinder<
 				strValue = "";
 			}
 			if (def.isAuthor() || def.isReader() || def.isNames()) {
-				// Changed to a oneLine Call
 				Item iNotesField = docCurrent.replaceItemValue(def.getNotesField(), "");
-				// Item iNotesField = docCurrent.getFirstItem(strNotesField);
 				isNamesValue = NamesProcessor.getInstance().setNamesField(def, iNotesField);
 				strValue = NamesProcessor.getInstance().setPerson(strValue, isNamesValue, docCurrent.getParentDatabase().getParent());
+				iNotesField.recycle();
 			}
 			arrRC[0] = strOldValue;
 			arrRC[1] = strValue;
-			docCurrent.replaceItemValue(def.getNotesField(), strValue);
+			Item notesItem = docCurrent.replaceItemValue(def.getNotesField(), strValue);
+			notesItem.setSummary(def.isNotesSummary());
+			notesItem.recycle();
 
 		} catch (Exception e) {
 			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
@@ -70,16 +79,6 @@ public class StringBinder extends AbstractBaseBinder<String> implements IBinder<
 		return arrRC;
 	}
 
-	public static IBinder<String> getInstance() {
-		if (m_Binder == null) {
-			m_Binder = new StringBinder();
-		}
-		return m_Binder;
-	}
-
-	private StringBinder() {
-
-	}
 
 	@Override
 	public String getValueFromStore(Document docCurrent, Vector<?> vecCurrent, Definition def) {

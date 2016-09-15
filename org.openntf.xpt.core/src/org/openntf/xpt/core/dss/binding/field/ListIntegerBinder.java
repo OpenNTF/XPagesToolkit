@@ -21,6 +21,7 @@ import java.util.List;
 import java.util.Vector;
 
 import lotus.domino.Document;
+import lotus.domino.Item;
 
 import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.Definition;
@@ -78,7 +79,10 @@ public class ListIntegerBinder implements IBinder<List<Integer>> {
 			lstRC[1] = lstValues;
 			Vector<Integer> vecValues = new Vector<Integer>();
 			vecValues.addAll(lstValues);
-			docCurrent.replaceItemValue(def.getNotesField(), vecValues);
+			Item notesItem = docCurrent.replaceItemValue(def.getNotesField(), vecValues);
+			notesItem.setSummary(def.isNotesSummary());
+			notesItem.recycle();
+
 		} catch (Exception e) {
 			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}

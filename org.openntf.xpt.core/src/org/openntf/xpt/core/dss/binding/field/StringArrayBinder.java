@@ -53,17 +53,19 @@ public class StringArrayBinder implements IBinder<String[]> {
 
 			boolean isNamesValue = false;
 			if (def.isAuthor() || def.isReader() || def.isNames()) {
-				// Changed to a oneLine Call
 				Item iNotesField = docCurrent.replaceItemValue(def.getNotesField(), "");
-				// Item iNotesField = docCurrent.getFirstItem(strNotesField);
 				isNamesValue = NamesProcessor.getInstance().setNamesField(def, iNotesField);
+				iNotesField.recycle();
 			}
 
 			for (String strVal : strValues) {
 				vecValues.addElement(NamesProcessor.getInstance().setPerson(strVal, isNamesValue, docCurrent.getParentDatabase().getParent()));
 			}
 			strRC[1] = vecValues.toArray(new String[vecValues.size()]);
-			docCurrent.replaceItemValue(def.getNotesField(), vecValues);
+			Item notesItem =docCurrent.replaceItemValue(def.getNotesField(), vecValues);
+			notesItem.setSummary(def.isNotesSummary());
+			notesItem.recycle();
+
 		} catch (Exception e) {
 			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
