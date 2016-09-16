@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Vector;
 
 import lotus.domino.Document;
+import lotus.domino.Item;
 import lotus.domino.NotesException;
 
 import org.easymock.EasyMock;
@@ -68,10 +69,11 @@ public class ListDoubleBinderTest {
 		assertNotNull(defDouble);
 		assertTrue(defDouble.getBinder() instanceof ListDoubleBinder);
 		ListDoubleIntTestMock mock = new ListDoubleIntTestMock();
+		Item item = EasyMock.createNiceMock(Item.class);
 		mock.setDoubleList(DOUBLE_VALUES);
 		Document docTest = EasyMock.createNiceMock(Document.class);
 		expect(docTest.getItemValue(defDouble.getNotesField())).andReturn(NUMBERS_DOUBLES);
-		expect(docTest.replaceItemValue(defDouble.getNotesField(), DOUBLE_VALUES)).andReturn(null);
+		expect(docTest.replaceItemValue(defDouble.getNotesField(), DOUBLE_VALUES)).andReturn(item);
 		replay(docTest);
 		defDouble.getBinder().processJava2Domino(docTest, mock, defDouble);
 		verify(docTest);
@@ -110,8 +112,9 @@ public class ListDoubleBinderTest {
 		ListDoubleIntTestMock mock = new ListDoubleIntTestMock();
 		mock.setIntegerList(INT_VALUES);
 		Document docTest = EasyMock.createNiceMock(Document.class);
+		Item item = EasyMock.createNiceMock(Item.class);
 		expect(docTest.getItemValue(defInteger.getNotesField())).andReturn(NUMBERS_INTEGERS);
-		expect(docTest.replaceItemValue(defInteger.getNotesField(), INT_VALUES)).andReturn(null);
+		expect(docTest.replaceItemValue(defInteger.getNotesField(), INT_VALUES)).andReturn(item);
 		replay(docTest);
 		defInteger.getBinder().processJava2Domino(docTest, mock, defInteger);
 		verify(docTest);

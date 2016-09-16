@@ -40,5 +40,10 @@
       		<renderer-type>org.openntf.xpt.oneui.component.uinamepicker</renderer-type>
       		<renderer-class>org.openntf.xpt.oneui.renderkit.html_extended.NamePickerRenderer</renderer-class>
     	</renderer>
-	</render-kit>
+    	<renderer>
+     	 	<component-family>javax.faces.Input</component-family>
+      		<renderer-type>org.openntf.xpt.oneui.component.uimarkdowninput</renderer-type>
+      		<renderer-class>org.openntf.xpt.oneui.renderkit.html_extended.MarkdownRenderer</renderer-class>
+    	</renderer>
+    </render-kit>
 </faces-config>

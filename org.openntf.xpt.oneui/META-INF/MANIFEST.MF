@@ -21,3 +21,5 @@ Export-Package: org.openntf.xpt.oneui,
  org.openntf.xpt.oneui.renderkit.html_extended,
  org.openntf.xpt.oneui.ressources
 Import-Package: lotus.domino
+Bundle-ClassPath: lib/markdown4j.jar,
+ .

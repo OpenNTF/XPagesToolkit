@@ -573,5 +573,52 @@
     		<tag-name>oneuiAboutBlock</tag-name>
   		</complex-extension>
 	</complex-type>
-	
+	<component>
+    	<description>Use this input control for Markdown Editor</description>
+    	<display-name>Markdown UI Editor</display-name>
+    	<component-type>org.openntf.xpt.oneui.component.uimarkdowninput</component-type>
+    	<component-class>org.openntf.xpt.oneui.component.UIMarkdownInput</component-class>
+    	<group-type-ref>com.ibm.xsp.group.core</group-type-ref>
+    	<group-type-ref>com.ibm.xsp.group.events</group-type-ref>
+    	<group-type-ref>com.ibm.xsp.group.focus</group-type-ref>
+    	<group-type-ref>com.ibm.xsp.group.i18n</group-type-ref>
+    	<group-type-ref>com.ibm.xsp.group.input</group-type-ref>
+    	<group-type-ref>com.ibm.xsp.group.filter</group-type-ref>
+    	<group-type-ref>com.ibm.xsp.group.aria.role</group-type-ref>
+    	<property>
+      		<description>Columns</description>
+      		<display-name>Columns</display-name>
+      		<property-name>cols</property-name>
+      		<property-class>int</property-class>
+      		<property-extension>
+        		<pass-through>true</pass-through>
+        		<designer-extension>
+          			<category>basics</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+    	<property>
+      		<description>Rows</description>
+      		<display-name>Rows</display-name>
+      		<property-name>rows</property-name>
+      		<property-class>int</property-class>
+      		<property-extension>
+        		<pass-through>true</pass-through>
+        		<designer-extension>
+          			<category>basics</category>
+        		</designer-extension>
+      		</property-extension>
+    	</property>
+    	<component-extension>
+      		<javadoc-description>
+        		<p>XPT Implentation of Markdown Editor</javadoc-description>
+      			<base-component-type>com.ibm.xsp.UIInputTextarea</base-component-type>
+      			<renderer-type>org.openntf.xpt.oneui.component.uimarkdowninput</renderer-type>
+      			<tag-name>inputMarkdown</tag-name>
+      			<designer-extension>
+        			<category>XPages Toolkit</category>
+      			</designer-extension>
+    	</component-extension>
+  	</component>
+
 </faces-config>
