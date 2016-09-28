@@ -22,9 +22,7 @@ import org.openntf.xpt.core.dss.SingleObjectStore;
 import org.openntf.xpt.demo.BlogStorageService;
 import org.openntf.xpt.demo.bo.BlogEntry;
 
-import com.ibm.xsp.extlib.component.rest.CustomServiceBean;
-
-public class BlogSessionFacade extends CustomServiceBean implements Serializable {
+public class BlogSessionFacade implements Serializable {
 
 	/**
 	 * 

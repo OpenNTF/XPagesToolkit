@@ -19,58 +19,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-clean-plugin</artifactId>
-				<version>2.6.1</version>
-
-				<configuration>
-					<filesets>
-						<fileset>
-							<directory>lib</directory>
-						</fileset>
-					</filesets>
-				</configuration>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.10</version>
-
-				<configuration>
-					<excludeTransitive>true</excludeTransitive>
-					<includeGroupIds>org.commonjava.googlecode.markdown4j</includeGroupIds>
-				</configuration>
-
-				<executions>
-					<execution>
-						<id>copy-dependencies</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>copy</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>org.commonjava.googlecode.markdown4j</groupId>
-									<artifactId>markdown4j</artifactId>
-									<version>2.2-cj-1.1</version>
-								</artifactItem>
-							</artifactItems>
-							<includeScope>compile</includeScope>
-							<includeTypes>jar</includeTypes>
-							<outputDirectory>lib</outputDirectory>
-							<overWriteIfNewer>true</overWriteIfNewer>
-							<overWriteReleases>true</overWriteReleases>
-							<overWriteSnapshots>true</overWriteSnapshots>
-							<stripVersion>true</stripVersion>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
 		</plugins>
-
 	</build>
 
 	<parent>
@@ -81,11 +30,4 @@
 	<properties>
 		<lic.file>${project.parent.basedir}/LICENSE_HEADER/apacheV2.txt</lic.file>
 	</properties>
-	<dependencies>
-		<dependency>
-			<groupId>org.commonjava.googlecode.markdown4j</groupId>
-			<artifactId>markdown4j</artifactId>
-			<version>2.2-cj-1.0</version>
-		</dependency>
-	</dependencies>
 </project>
