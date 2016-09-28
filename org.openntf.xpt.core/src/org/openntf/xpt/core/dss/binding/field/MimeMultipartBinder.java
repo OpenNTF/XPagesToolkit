@@ -21,7 +21,10 @@ import java.util.logging.Logger;
 
 import lotus.domino.Document;
 import lotus.domino.MIMEEntity;
+import lotus.domino.MIMEHeader;
+import lotus.domino.NotesException;
 import lotus.domino.RichTextItem;
+import lotus.domino.Session;
 import lotus.domino.Stream;
 
 import org.openntf.xpt.core.XPTRuntimeException;
@@ -34,6 +37,7 @@ import org.openntf.xpt.core.utils.logging.LoggerFactory;
 import com.ibm.xsp.http.MimeMultipart;
 import com.ibm.xsp.model.domino.wrapped.DominoDocument;
 import com.ibm.xsp.model.domino.wrapped.DominoRichTextItem;
+import com.ibm.xsp.util.HtmlUtil;
 
 public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 
@@ -70,7 +74,7 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 			log.info("entity = " + entity);
 			if (entity == null) {
 				docCurrent.removeItem(def.getNotesField());
-				log.info("creating Entity for "+ def.getNotesField());
+				log.info("creating Entity for " + def.getNotesField());
 				entity = docCurrent.createMIMEEntity(def.getNotesField());
 				log.info("new entity created");
 			}
@@ -120,7 +124,8 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 		try {
 			entity = docCurrent.getMIMEEntity(strNotesField);
 			if (entity != null) {
-				mimeValue = MimeMultipart.fromHTML(entity.getContentAsText());
+				String content = getContentFromMime(entity, docCurrent.getParentDatabase().getParent());
+				mimeValue = MimeMultipart.fromHTML(content);
 
 			} else if (docCurrent.hasItem(strNotesField)) {
 
@@ -138,14 +143,61 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 					}
 				}
 			}
-		
+
 			return mimeValue;
 		} catch (Exception e) {
 			LoggerFactory.logWarning(this.getClass(), "Error during getRawValueFromStore", e);
 			throw new XPTRuntimeException("Error during getRawValueFormStore", e);
 		} finally {
-			NotesObjectRecycler.recycle(rti,entity);
+			NotesObjectRecycler.recycle(rti, entity);
 		}
 	}
 
+	private String getContentFromMime(MIMEEntity entity, Session parent) throws NotesException {
+		String content;
+		content = extractMimeText(entity, "text/html", parent);
+		if (content == null) {
+			content = extractMimeText(entity, "text/plain", parent);
+
+			content = HtmlUtil.toHTMLContentString(content, true, HtmlUtil.useHTML);
+		}
+		if (content == null) {
+			content = extractMimeText(entity, null, parent);
+		}
+		return content;
+	}
+
+	private String extractMimeText(MIMEEntity entity, String mimeType, Session sesCurrent) throws NotesException {
+		String content = null;
+		MIMEHeader mimeContentType = entity.getNthHeader("Content-Type");
+		MIMEHeader mimeDispostion = entity.getNthHeader("Content-Disposition");
+		if ((mimeContentType != null) && (mimeDispostion == null)) {
+			String headerValue = mimeContentType.getHeaderVal();
+			if (headerValue.startsWith("multipart")) {
+				MIMEEntity childNext = entity.getFirstChildEntity();
+				while ((childNext != null) && (content == null)) {
+					MIMEEntity child = childNext;
+					childNext = child.getNextSibling();
+					content = extractMimeText(child, mimeType, sesCurrent);
+					child.recycle();
+				}
+			} else if ((mimeType != null) && (headerValue.startsWith(mimeType))) {
+				content = getContentsAsText(entity, sesCurrent);
+			}
+			mimeContentType.recycle();
+		} else if ((mimeType == null) && (mimeDispostion == null)) {
+			content = getContentsAsText(entity, sesCurrent);
+		}
+
+		return content;
+	}
+
+	private String getContentsAsText(MIMEEntity child, Session sesCurrent) throws NotesException {
+		Stream stream = sesCurrent.createStream();
+		child.getContentAsText(stream, true);
+		stream.setPosition(0);
+		String str = stream.readText();
+		stream.recycle();
+		return str;
+	}
 }
