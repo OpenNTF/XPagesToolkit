@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="2ba" sequence="47" unid="B14A812868D4C5E9C1257BAE002E34EB">
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.5" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="2ba" sequence="54" unid="B14A812868D4C5E9C1257BAE002E34EB">
 <created><datetime dst="true">20130720T102442,03+02</datetime></created>
-<modified><datetime dst="true">20140521T131327,43+02</datetime></modified>
-<revised><datetime dst="true">20140521T131327,42+02</datetime></revised>
-<lastaccessed><datetime dst="true">20140521T131327,43+02</datetime></lastaccessed>
+<modified><datetime dst="true">20160928T124802,67+02</datetime></modified>
+<revised><datetime dst="true">20160928T124802,66+02</datetime></revised>
+<lastaccessed><datetime dst="true">20160928T124802,67+02</datetime></lastaccessed>
 <addedtofile><datetime dst="true">20130720T102442,04+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
@@ -12,8 +12,8 @@
 
 
 <item name="$FileNames" sign="true"><text>rss_uilist_htmltemplate.xsp</text></item>
-
 <item name="$DesignerVersion"><text>8.5</text></item>
+
 
 
 

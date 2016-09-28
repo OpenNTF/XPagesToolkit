@@ -611,11 +611,12 @@
     	</property>
     	<component-extension>
       		<javadoc-description>
-        		<p>XPT Implentation of Markdown Editor</javadoc-description>
+        		<p>XPT Implentation of Markdown Editor</p></javadoc-description>
       			<base-component-type>com.ibm.xsp.UIInputTextarea</base-component-type>
       			<renderer-type>org.openntf.xpt.oneui.component.uimarkdowninput</renderer-type>
       			<tag-name>inputMarkdown</tag-name>
       			<designer-extension>
+					<in-palette>true</in-palette> 
         			<category>XPages Toolkit</category>
       			</designer-extension>
     	</component-extension>

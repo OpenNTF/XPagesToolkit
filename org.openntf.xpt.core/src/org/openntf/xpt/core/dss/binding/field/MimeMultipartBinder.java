@@ -118,39 +118,53 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 	}
 
 	public MimeMultipart getRawValueFromStore(Document docCurrent, String strNotesField) {
-		MimeMultipart mimeValue = null;
-		MIMEEntity entity = null;
-		RichTextItem rti = null;
+
+		boolean isMimeSession = true;
 		try {
-			entity = docCurrent.getMIMEEntity(strNotesField);
-			if (entity != null) {
-				String content = getContentFromMime(entity, docCurrent.getParentDatabase().getParent());
-				mimeValue = MimeMultipart.fromHTML(content);
+			isMimeSession = docCurrent.getParentDatabase().getParent().isConvertMime();
 
-			} else if (docCurrent.hasItem(strNotesField)) {
+			MimeMultipart mimeValue = null;
+			MIMEEntity entity = null;
+			RichTextItem rti = null;
+			try {
+				docCurrent.getParentDatabase().getParent().setConvertMime(false);
+				entity = docCurrent.getMIMEEntity(strNotesField);
+				if (entity != null) {
+					String content = getContentFromMime(entity, docCurrent.getParentDatabase().getParent());
+					mimeValue = MimeMultipart.fromHTML(content);
 
-				if (docCurrent.getFirstItem(strNotesField) != null) {
-					if (docCurrent.getFirstItem(strNotesField).getType() != 1) {
-						mimeValue = MimeMultipart.fromHTML(docCurrent.getItemValueString(strNotesField));
-					} else {
-						rti = (RichTextItem) docCurrent.getFirstItem(strNotesField);
-						if (rti != null) {
-							DominoDocument dd = new DominoDocument();
-							dd.setDocument(docCurrent);
-							DominoRichTextItem drtCurrent = new DominoRichTextItem(dd, rti);
-							mimeValue = MimeMultipart.fromHTML(drtCurrent.getHTML());
+				} else if (docCurrent.hasItem(strNotesField)) {
+					if (docCurrent.getFirstItem(strNotesField) != null) {
+						if (docCurrent.getFirstItem(strNotesField).getType() != 1) {
+							mimeValue = MimeMultipart.fromHTML(docCurrent.getItemValueString(strNotesField));
+						} else {
+							rti = (RichTextItem) docCurrent.getFirstItem(strNotesField);
+							if (rti != null) {
+								DominoDocument dd = new DominoDocument();
+								dd.setDocument(docCurrent);
+								DominoRichTextItem drtCurrent = new DominoRichTextItem(dd, rti);
+								mimeValue = MimeMultipart.fromHTML(drtCurrent.getHTML());
+							}
 						}
 					}
 				}
+				return mimeValue;
+			} catch (Exception e) {
+				LoggerFactory.logWarning(this.getClass(), "Error during getRawValueFromStore", e);
+				throw new XPTRuntimeException("Error during getRawValueFormStore", e);
+			} finally {
+				NotesObjectRecycler.recycle(rti, entity);
 			}
-
-			return mimeValue;
-		} catch (Exception e) {
-			LoggerFactory.logWarning(this.getClass(), "Error during getRawValueFromStore", e);
-			throw new XPTRuntimeException("Error during getRawValueFormStore", e);
+		} catch (NotesException e1) {
+			LoggerFactory.logError(this.getClass(), "Error during getRawValueFromStore", e1);
 		} finally {
-			NotesObjectRecycler.recycle(rti, entity);
+			try {
+				docCurrent.getParentDatabase().getParent().setConvertMime(isMimeSession);
+			} catch (Exception ex) {
+				LoggerFactory.logError(this.getClass(), "Error during getRawValueFromStore", ex);
+			}
 		}
+		return null;
 	}
 
 	private String getContentFromMime(MIMEEntity entity, Session parent) throws NotesException {
@@ -158,7 +172,6 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 		content = extractMimeText(entity, "text/html", parent);
 		if (content == null) {
 			content = extractMimeText(entity, "text/plain", parent);
-
 			content = HtmlUtil.toHTMLContentString(content, true, HtmlUtil.useHTML);
 		}
 		if (content == null) {
