@@ -28,6 +28,7 @@ import javax.faces.model.DataModel;
 
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
+import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.FacesExceptionEx;
 import com.ibm.xsp.model.AbstractDataSource;
 import com.ibm.xsp.model.DataContainer;
@@ -40,7 +41,8 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 
 	private String m_SortAttribute;
 	private Boolean m_Ascending;
-
+	private String m_IdAttribute;
+	
 	private List<String> m_SortableAttributes;
 
 	public MethodBinding getBuildValues() {
@@ -79,7 +81,7 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 
 	@Override
 	public DataContainer load(FacesContext arg0) throws IOException {
-		ObjectListDataContainer dtC = new ObjectListDataContainer(getBeanId(), getUniqueId(), buildList(), getSortableAttributesArray());
+		ObjectListDataContainer dtC = new ObjectListDataContainer(getBeanId(), getUniqueId(), buildList(), getSortableAttributesArray(), getIdAttribute());
 		if (dtC.hasSortAttribute()) {
 			dtC.sortList(dtC.getCurrentSortAttribute(), dtC.getCurrentAscending());
 
@@ -138,12 +140,13 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 	// SAVE and RESTOR of Datas
 	@Override
 	public Object saveState(FacesContext arg0) {
-		Object[] state = new Object[5];
+		Object[] state = new Object[6];
 		state[0] = super.saveState(arg0);
 		state[1] = StateHolderUtil.saveMethodBinding(getFacesContext(), m_BuildValues);
 		state[2] = m_SortAttribute;
 		state[3] = m_Ascending;
 		state[4] = getSortableAttributesArray();
+		state[5] = m_IdAttribute;
 		return state;
 	}
 
@@ -155,6 +158,7 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 		m_SortAttribute = (String) values[2];
 		m_Ascending = (Boolean) values[3];
 		m_SortableAttributes = Arrays.asList((String[])values[4]);
+		m_IdAttribute = (String)values[5];
 	}
 
 	@Override
@@ -206,4 +210,11 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 		return lstSA.toArray(new String[lstSA.size()]);
 	}
 
+	public String getIdAttribute() {
+		return StringUtil.isEmpty(m_IdAttribute) ? "" : m_IdAttribute;
+	}
+
+	public void setIdAttribute(String idAttribute) {
+		this.m_IdAttribute = idAttribute;
+	}
 }

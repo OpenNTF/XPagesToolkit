@@ -16,6 +16,7 @@
 package org.openntf.xpt.objectlist.datasource;
 
 import java.io.Serializable;
+import java.util.Iterator;
 
 import com.ibm.xsp.model.TabularDataModel;
 
@@ -52,7 +53,7 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 
 	@Override
 	public String getRowId() {
-		return "" + getRowIndex();
+		return m_Container.getRowID(getRowIndex());
 	}
 
 	@Override
@@ -152,5 +153,30 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 			return !m_Container.getCurrentAscending() ? RESORT_ASCENDING : RESORT_DESCENDING;
 
 		}
+	}
+	
+	@Override
+	public void addSelectedId(String id) {
+		m_Container.addSelectedId(id);
+	}
+	
+	@Override
+	public void clearSelectedIds() {
+		m_Container.clearSelectedIds();
+	}
+	
+	@Override
+	public boolean isSelectedId(String id) {
+		return m_Container.isSelectedId(id);
+	}
+	
+	@Override
+	public void removeSelectedId(String id) {
+		m_Container.removeSelectedId(id);
+	}
+	@SuppressWarnings("rawtypes")
+	@Override
+	public Iterator getSelectedIds() {
+		return m_Container.getSelectedIds();
 	}
 }
