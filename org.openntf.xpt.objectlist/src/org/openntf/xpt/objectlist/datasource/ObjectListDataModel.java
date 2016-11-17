@@ -16,7 +16,9 @@
 package org.openntf.xpt.objectlist.datasource;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import com.ibm.xsp.model.TabularDataModel;
 
@@ -26,6 +28,8 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 	 */
 	private static final long serialVersionUID = 1L;
 	private ObjectListDataContainer m_Container;
+	private List<String> selectedIds = new ArrayList<String>();
+
 
 	public ObjectListDataModel(ObjectListDataContainer container) {
 		super();
@@ -157,26 +161,26 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 	
 	@Override
 	public void addSelectedId(String id) {
-		m_Container.addSelectedId(id);
+		selectedIds.add(id);
 	}
 	
 	@Override
 	public void clearSelectedIds() {
-		m_Container.clearSelectedIds();
+		selectedIds.clear();
 	}
 	
 	@Override
 	public boolean isSelectedId(String id) {
-		return m_Container.isSelectedId(id);
+		return selectedIds.contains(id);
 	}
 	
 	@Override
 	public void removeSelectedId(String id) {
-		m_Container.removeSelectedId(id);
+		selectedIds.remove(id);
 	}
-	@SuppressWarnings("rawtypes")
 	@Override
-	public Iterator getSelectedIds() {
-		return m_Container.getSelectedIds();
+	public Iterator<String> getSelectedIds() {
+		return selectedIds.iterator();
 	}
+	
 }

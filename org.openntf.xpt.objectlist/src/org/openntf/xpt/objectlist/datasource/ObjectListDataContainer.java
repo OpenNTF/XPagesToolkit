@@ -36,7 +36,6 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 
 	private String m_CurrentSortAttribute;
 	private Boolean m_CurrentAscending;
-	private List<String> selectedIds;
 	private String idAttribute;
 
 	public ObjectListDataContainer() {
@@ -44,11 +43,9 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 
 	public ObjectListDataContainer(String strBeanID, String strUniqueID, List<ObjectListDataEntry> objList, String[] sortValues, String idAttribute) {
 		super(strBeanID, strUniqueID);
-		System.out.println("Create OLDC With idAttribute ===>" + idAttribute);
 		m_ObjectList = objList;
 		m_SortableAttributes = buildSortValues(sortValues);
 		this.idAttribute = idAttribute;
-		selectedIds = new ArrayList<String>();
 	}
 
 	private SortAttribute[] buildSortValues(String[] sortValues) {
@@ -77,7 +74,6 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 			m_ObjectList = (List<ObjectListDataEntry>) in.readObject();
 			m_CurrentAscending = in.readBoolean();
 			m_CurrentSortAttribute = readUTF(in);
-			selectedIds = (List<String>) in.readObject();
 			idAttribute = readUTF(in);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -91,7 +87,6 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 		out.writeObject(m_ObjectList);
 		out.writeBoolean(m_CurrentAscending);
 		writeUTF(out, m_CurrentSortAttribute);
-		out.writeObject(selectedIds);
 		writeUTF(out, idAttribute);
 	}
 
@@ -196,28 +191,6 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 			return m_Direction;
 		}
 
-	}
-
-	public void addSelectedId(String id) {
-		selectedIds.add(id);
-	}
-
-	public void clearSelectedIds() {
-		selectedIds.clear();
-	}
-
-	public boolean isSelectedId(String id) {
-		return selectedIds.contains(id);
-	}
-
-	public void removeSelectedId(String id) {
-		selectedIds.remove(id);
-
-	}
-
-	@SuppressWarnings("rawtypes")
-	public Iterator getSelectedIds() {
-		return selectedIds.iterator();
 	}
 
 	public String getRowID(int rowIndex) {
