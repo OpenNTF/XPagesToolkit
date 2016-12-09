@@ -121,10 +121,9 @@ public class BinderFactory {
 				if (UploadedFile.class.equals(genericType)) {
 					return FileUploadBinder.getInstance();
 				}
-
 			}
 		}
-		return null;
+		return ObjectBinder.getInstance();
 	}
 
 	public static IBinder<?> getFormulaBinder(Class<?> clCurrent) {
