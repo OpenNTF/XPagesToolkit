@@ -16,6 +16,7 @@
 package org.openntf.xpt.agents.beans;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -45,9 +46,19 @@ public class XPTAgentBean {
 		return XPageAgentRegistry.getInstance().addExecutionProperties(hsProperties);
 	}
 
+	public String registerExecutionPropertiesExtnd(Map<String, Object> hsProperties) {
+		return XPageAgentRegistry.getInstance().addExecutionPropertiesExtnd(hsProperties);
+	}
+
+	
 	public String executeAgentUI(String strAlias, HashMap<String, String> hsProperties) {
 		String strPropID = XPageAgentRegistry.getInstance().addExecutionProperties(hsProperties);
 		return XPageAgentRegistry.getInstance().executeJobUI(strAlias, strPropID);
+	}
+
+	public String executeAgentUIExtnd(String strAlias, Map<String, Object> hsProperties) {
+		String strPropID = registerExecutionPropertiesExtnd(hsProperties);
+		return XPageAgentRegistry.getInstance().executeJobUIExtnd(strAlias, strPropID);
 	}
 
 	public String executeAgentUI(String strAliasName) {

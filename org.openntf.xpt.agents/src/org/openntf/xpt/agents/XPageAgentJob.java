@@ -19,13 +19,11 @@ import java.security.AccessControlContext;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Logger;
 
 import javax.faces.context.FacesContext;
-
-import lotus.domino.Database;
-import lotus.domino.Session;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
@@ -40,6 +38,9 @@ import com.ibm.domino.xsp.module.nsf.NSFComponentModule;
 import com.ibm.domino.xsp.module.nsf.NotesContext;
 import com.ibm.domino.xsp.module.nsf.SessionCloner;
 import com.ibm.domino.xsp.module.nsf.platform.NotesPlatform;
+
+import lotus.domino.Database;
+import lotus.domino.Session;
 
 public abstract class XPageAgentJob extends Job implements IXPageAgent {
 
@@ -57,6 +58,7 @@ public abstract class XPageAgentJob extends Job implements IXPageAgent {
 	private NSFComponentModule m_Module;
 	private SessionCloner m_Cloner;
 	private HashMap<String, String> m_ExecutionProperties;
+	private Map<String, Object> m_ExtendedExecutionProperties;
 
 	private final String m_JobID = UUID.randomUUID().toString();
 	private Logger m_Logger = LoggerFactory.getLogger(this.getClass().getCanonicalName());
@@ -121,6 +123,16 @@ public abstract class XPageAgentJob extends Job implements IXPageAgent {
 
 	public void setExecutionProperties(HashMap<String, String> executionProperties) {
 		m_ExecutionProperties = executionProperties;
+	}
+	
+	
+
+	public Map<String, Object> getExtendedExecutionProperties() {
+		return m_ExtendedExecutionProperties;
+	}
+
+	public void setExtendedExecutionProperties(Map<String, Object> extendedExecutionProperties) {
+		this.m_ExtendedExecutionProperties = extendedExecutionProperties;
 	}
 
 	public AgentTaskStatus getAgentTaskStatus() {

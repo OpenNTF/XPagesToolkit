@@ -22,6 +22,7 @@ import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -57,7 +58,7 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 
 	private final HashMap<String, XPageAgentJob> m_RunningJobs = new HashMap<String, XPageAgentJob>();
 	private final HashMap<String, HashMap<String, String>> m_ExecutionPropertyRegistry = new HashMap<String, HashMap<String, String>>();
-
+	private final Map<String,Map<String,Object>> m_ExecutionPropertyRegistryExtnd = new HashMap<String, Map<String,Object>>();
 	private AmgrPropertiesHandler m_AgentRunProperties;
 
 	private Logger m_Logger;;
@@ -347,6 +348,62 @@ public abstract class XPageAgentRegistry implements ApplicationListener2 {
 			m_AgentRunProperties.setProperty(strAgent, "OFF");
 			saveARP();
 		}
+	}
+
+	public String addExecutionPropertiesExtnd(Map<String, Object> properties) {
+		String strKey = UUID.randomUUID().toString();
+		m_ExecutionPropertyRegistryExtnd.put(strKey, properties);
+		return strKey;
+	}
+
+	public String executeJobUIExtnd(String strAgentAlias, String strExectuionPropertiesID) {
+		if (!m_Agents.containsKey(strAgentAlias)) {
+			return "<agent " + strAgentAlias + " not found>";
+		}
+
+		// CHECK if a possible Encryption Provider is loaded
+		EncryptionService.getInstance().agentLoadProvider();
+		// CHECK if a possible ChangLogProvider is loaded
+		ChangeLogService.getInstance().getChangeLogProcessors();
+
+		XPageAgentEntry en = m_Agents.get(strAgentAlias);
+		try {
+			m_Logger.info("Agent found with alias: " + en.getAlias());
+			final XPageAgentJob jbCurrent = buildAgentClass(en, FacesContext.getCurrentInstance());
+			m_RunningJobs.put(jbCurrent.getJobID(), jbCurrent);
+			jbCurrent.addJobChangeListener(new JobChangeAdapter() {
+				@Override
+				public void done(IJobChangeEvent event) {
+					m_RunningJobs.remove(jbCurrent.getJobID());
+				}
+			});
+			if (strExectuionPropertiesID != null) {
+				jbCurrent.setExtendedExecutionProperties(m_ExecutionPropertyRegistryExtnd.get(strExectuionPropertiesID));
+			}
+			AccessController.doPrivileged(new PrivilegedAction<Object>() {
+
+				@Override
+				public Object run() {
+					try {
+						m_Logger.info("Execution scheduled");
+						jbCurrent.schedule();
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					return null;
+				}
+			});
+			deleteExecutionPropertiesExtnd(strExectuionPropertiesID);
+			return jbCurrent.getJobID();
+		} catch (Exception e) {
+			m_Logger.log(Level.SEVERE, "Error in executeUI:", e);
+		}
+
+		return "<unkown error>";
+		}
+
+	public void deleteExecutionPropertiesExtnd(String strKey) {
+		m_ExecutionPropertyRegistryExtnd.remove(strKey);
 	}
 
 }

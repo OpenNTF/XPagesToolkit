@@ -16,7 +16,6 @@
 package org.openntf.xpt.oneui.renderkit.html_extended;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;

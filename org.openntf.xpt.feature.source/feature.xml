@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <feature
       id="org.openntf.xpt.feature.source"
-      label="XPages Toolkit"
+      label="XPages Toolkit Source"
       version="1.3.0.qualifier"
       provider-name="WebGate Consulting AG">
 
