@@ -7,7 +7,7 @@
 			<xp:panel xp:key="facetRight">
 				<xe:widgetContainer id="widgetContainer1"
 					titleBarText="Blog Entries">
-					<xp:panel>
+					<xp:panel id="panBlogEntries">
 						<table>
 							<xp:repeat id="rpAllEntries" first="0" rows="10" var="bEntry"
 								indexVar="indEntry" value="#{javascript:blogBean.getAllBlogEntries();}">
@@ -41,8 +41,7 @@ getComponent("dlgBlog").show()}]]></xp:this.action>
 					<xp:inputText id="inputText1"
 						value="#{viewScope.blogEntry.subject}">
 					</xp:inputText>
-					<xpt:inputMarkdown id="inputMD" rows="15"
-						value="#{viewScope.blogEntry.content}">
+					<xpt:inputMarkdown id="inputMD" value="#{viewScope.blogEntry.content}">
 					</xpt:inputMarkdown>
 				</xp:panel>
 			</xp:panel>
@@ -71,7 +70,9 @@ return viewScope.blogAction}]]></xpt:this.action>
 					</xp:inputText>
 				</xe:formRow>
 				<xe:formRow id="formRow3" for="itContent" label="Inhalt">
-					<xpt:inputMarkdown id="itContent" value="#{objBlog.content}"></xpt:inputMarkdown>
+					<xpt:inputMarkdown id="itContent"
+						value="#{objBlog.content}" cols="60" rows="20">
+					</xpt:inputMarkdown>
 				</xe:formRow>
 				<xp:this.facets>
 					<xe:dialogButtonBar id="dialogButtonBar1"
@@ -89,9 +90,7 @@ return viewScope.blogAction}]]></xpt:this.action>
 											<xp:executeScript>
 												<xp:this.script><![CDATA[#{javascript:var dlg = getComponent("dlgBlog");
 viewScope.blogID = "";
-dlg.hide("panBlogs");
-var ds = xptBean.findDataSource("panBlogList", "sourceBlogs");
-ds.refresh();}]]></xp:this.script>
+dlg.hide("panBlogEntries");}]]></xp:this.script>
 											</xp:executeScript>
 										</xp:actionGroup>
 									</xp:this.action>
