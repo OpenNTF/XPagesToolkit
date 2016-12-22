@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -126,7 +126,7 @@ public class RSSEntry implements Serializable {
 
 	private String buildStringFromList(List<String> lstCurrent) {
 		StringBuilder sb = new StringBuilder("");
-		if (lstCurrent == null || lstCurrent.size() == 0) {
+		if (lstCurrent == null ||lstCurrent.isEmpty()) {
 			return "";
 		}
 		Iterator<String> itCurrent = lstCurrent.iterator();

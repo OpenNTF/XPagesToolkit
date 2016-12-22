@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2012
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -43,54 +43,56 @@ public class Definition {
 	private final Type m_GenericType;
 	private final BinderContainer m_Container;
 	private final int m_Counter;
+	private final boolean m_NotesSummary;
 
 	public static Definition buildDefiniton(DominoStore ds, DominoEntity de, IBinder<?> binCurrent, Field fld) {
 		if (binCurrent instanceof EmbeddedObjectBinder) {
 			return new Definition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(ds, fld.getName()), binCurrent, de.changeLog(), de.encrypt(), de.encRoles(), de.dateOnly(), de.isAuthor(),
-					de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(), new BinderContainer(de.FieldName()), -1);
+					de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(), new BinderContainer(de.FieldName()), -1,de.isNotesSummary());
 
 		} else {
 			return new Definition(de.FieldName(), ServiceSupport.buildCleanFieldNameCC(ds, fld.getName()), binCurrent, de.changeLog(), de.encrypt(), de.encRoles(), de.dateOnly(), de.isAuthor(),
-					de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(), null, -1);
+					de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(), null, -1,de.isNotesSummary());
 		}
 	}
 
 	public static Definition buildDefinition4Decryption(String strFieldName, String[] arrRoles, boolean isDateOnly, IBinder<?> binCurrent) {
-		return new Definition(strFieldName, "", binCurrent, false, true, arrRoles, isDateOnly, false, false, false, false, false, "", false, null, null, null, -1);
+		return new Definition(strFieldName, "", binCurrent, false, true, arrRoles, isDateOnly, false, false, false, false, false, "", false, null, null, null, -1,true);
 
 	}
 
 	public static Definition buildDefinition4EO(DominoStore ds, DominoEntity de, IBinder<?> binCurrent, Field fld, String storePrefix) {
 		return new Definition(de.embedded() ? de.FieldName() : storePrefix + "_" + de.FieldName(), ServiceSupport.buildCleanFieldNameCC(ds, fld.getName()), binCurrent, de.changeLog(), de.encrypt(),
 				de.encRoles(), de.dateOnly(), de.isAuthor(), de.isFormula(), de.isNames(), de.isReader(), de.readOnly(), de.showNameAs(), de.writeOnly(), fld.getType(), fld.getGenericType(),
-				de.embedded() ? new BinderContainer(storePrefix) : null, -1);
+				de.embedded() ? new BinderContainer(storePrefix) : null, -1,de.isNotesSummary());
 	}
 
 	public static Definition cloneDefinition(Definition def, int nCounter) {
 		return new Definition(def.m_NotesField, def.m_JavaField, def.m_Binder, def.m_ChangeLog, def.m_Encrypted, def.m_EncRoles, def.m_DateOnly, def.m_Author, def.m_Formula, def.m_Names,
-				def.m_Reader, def.m_ReadOnly, def.m_ShowNameAs, def.m_WriteOnly, def.m_InnerClass, def.m_GenericType, def.m_Container, nCounter);
+				def.m_Reader, def.m_ReadOnly, def.m_ShowNameAs, def.m_WriteOnly, def.m_InnerClass, def.m_GenericType, def.m_Container, nCounter,def.m_NotesSummary);
 	}
 
 	private Definition(String notesField, String javaField, IBinder<?> binCurrent, boolean changeLog, boolean encrypted, String[] encRoles, boolean dateOnly, boolean isAuthor, boolean isFormula,
-			boolean isNames, boolean isReader, boolean readOnly, String strShowNameAs, boolean writeOnly, Class<?> innerClass, Type genericType, BinderContainer bc, int counter) {
-		m_NotesField = notesField;
-		m_JavaField = javaField;
-		m_Binder = binCurrent;
-		m_ChangeLog = changeLog;
-		m_Encrypted = encrypted;
-		m_EncRoles = encRoles;
-		m_DateOnly = dateOnly;
-		m_Author = isAuthor;
-		m_Formula = isFormula;
-		m_Names = isNames;
-		m_Reader = isReader;
-		m_ReadOnly = readOnly;
-		m_ShowNameAs = strShowNameAs;
-		m_WriteOnly = writeOnly;
-		m_InnerClass = innerClass;
-		m_GenericType = genericType;
-		m_Container = bc;
-		m_Counter = counter;
+			boolean isNames, boolean isReader, boolean readOnly, String strShowNameAs, boolean writeOnly, Class<?> innerClass, Type genericType, BinderContainer bc, int counter, boolean notesSummary) {
+		this.m_NotesField = notesField;
+		this.m_JavaField = javaField;
+		this.m_Binder = binCurrent;
+		this.m_ChangeLog = changeLog;
+		this.m_Encrypted = encrypted;
+		this.m_EncRoles = encRoles;
+		this.m_DateOnly = dateOnly;
+		this.m_Author = isAuthor;
+		this.m_Formula = isFormula;
+		this.m_Names = isNames;
+		this.m_Reader = isReader;
+		this.m_ReadOnly = readOnly;
+		this.m_ShowNameAs = strShowNameAs;
+		this.m_WriteOnly = writeOnly;
+		this.m_InnerClass = innerClass;
+		this.m_GenericType = genericType;
+		this.m_Container = bc;
+		this.m_Counter = counter;
+		this.m_NotesSummary = notesSummary;
 	}
 
 	public String getNotesField() {
@@ -166,6 +168,10 @@ public class Definition {
 
 	public int getCounter() {
 		return m_Counter;
+	}
+
+	public boolean isNotesSummary() {
+		return m_NotesSummary;
 	}
 
 }

@@ -24,7 +24,16 @@ contactBean.getMyContacts()}]]></xpt:this.buildValues>
 
 					</xp:this.data>
 
-
+					<xp:button value="Add selected contacts to my watchlist" id="button1">
+						<xp:eventHandler event="onclick" submit="true"
+							refreshMode="complete">
+							<xp:this.action><![CDATA[#{javascript:var panel:com.ibm.xsp.component.xp.XspViewPanel = getComponent("vpAll");
+print (panel.getSelectedIds());
+contactBean.addMeAsObserver( panel.getSelectedIds() )
+var ds = xptBean.findDataSource("panContacts", "myContacts");
+ds.refresh()
+panel.getDataModel().clearSelectedIds()}]]></xp:this.action>
+						</xp:eventHandler></xp:button>
 					<xp:viewPanel id="vpAll" viewStyle="width:100%" var="contact"
 						rows="10">
 						<xp:this.facets>
@@ -46,7 +55,7 @@ contactBean.getMyContacts()}]]></xpt:this.buildValues>
 						<xp:this.data>
 
 							<xpt:objectlistSource var="sourceContacts"
-								ascending="true" scope="view" sortAttribute="firstName">
+								ascending="true" scope="view" sortAttribute="firstName" idAttribute="ID">
 								<xpt:this.buildValues><![CDATA[#{javascript:viewScope.SORT="FN_ASC";
 print ("EXEC BUID VALUES");
 contactBean.getAllContacts()}]]></xpt:this.buildValues>
@@ -58,7 +67,8 @@ contactBean.getAllContacts()}]]></xpt:this.buildValues>
 								</xpt:this.sortableAttributes>
 							</xpt:objectlistSource>
 						</xp:this.data>
-						<xp:viewColumn id="viewColumn1" columnName="firstName">
+						<xp:viewColumn id="viewColumn1"
+							columnName="firstName" showCheckbox="true">
 							<xp:this.facets>
 								<xp:viewColumnHeader xp:key="header"
 									id="viewColumnHeader1" value="First Name" sortable="true">

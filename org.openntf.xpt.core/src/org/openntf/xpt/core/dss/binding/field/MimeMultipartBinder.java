@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -21,18 +21,23 @@ import java.util.logging.Logger;
 
 import lotus.domino.Document;
 import lotus.domino.MIMEEntity;
+import lotus.domino.MIMEHeader;
+import lotus.domino.NotesException;
 import lotus.domino.RichTextItem;
+import lotus.domino.Session;
 import lotus.domino.Stream;
 
 import org.openntf.xpt.core.XPTRuntimeException;
 import org.openntf.xpt.core.dss.DSSException;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
+import org.openntf.xpt.core.utils.NotesObjectRecycler;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import com.ibm.xsp.http.MimeMultipart;
 import com.ibm.xsp.model.domino.wrapped.DominoDocument;
 import com.ibm.xsp.model.domino.wrapped.DominoRichTextItem;
+import com.ibm.xsp.util.HtmlUtil;
 
 public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 
@@ -69,7 +74,7 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 			log.info("entity = " + entity);
 			if (entity == null) {
 				docCurrent.removeItem(def.getNotesField());
-				log.info("creating Entity for "+ def.getNotesField());
+				log.info("creating Entity for " + def.getNotesField());
 				entity = docCurrent.createMIMEEntity(def.getNotesField());
 				log.info("new entity created");
 			}
@@ -113,34 +118,99 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 	}
 
 	public MimeMultipart getRawValueFromStore(Document docCurrent, String strNotesField) {
+
+		boolean isMimeSession = true;
 		try {
+			isMimeSession = docCurrent.getParentDatabase().getParent().isConvertMime();
+
 			MimeMultipart mimeValue = null;
-			MIMEEntity entity = docCurrent.getMIMEEntity(strNotesField);
-			if (entity != null) {
-				mimeValue = MimeMultipart.fromHTML(entity.getContentAsText());
+			MIMEEntity entity = null;
+			RichTextItem rti = null;
+			try {
+				docCurrent.getParentDatabase().getParent().setConvertMime(false);
+				entity = docCurrent.getMIMEEntity(strNotesField);
+				if (entity != null) {
+					String content = getContentFromMime(entity, docCurrent.getParentDatabase().getParent());
+					mimeValue = MimeMultipart.fromHTML(content);
 
-			} else if (docCurrent.hasItem(strNotesField)) {
-
-				if (docCurrent.getFirstItem(strNotesField) != null) {
-					if (docCurrent.getFirstItem(strNotesField).getType() != 1) {
-						mimeValue = MimeMultipart.fromHTML(docCurrent.getItemValueString(strNotesField));
-					} else {
-						RichTextItem rti = (RichTextItem) docCurrent.getFirstItem(strNotesField);
-						if (rti != null) {
-							DominoDocument dd = new DominoDocument();
-							dd.setDocument(docCurrent);
-							DominoRichTextItem drtCurrent = new DominoRichTextItem(dd, rti);
-							mimeValue = MimeMultipart.fromHTML(drtCurrent.getHTML());
+				} else if (docCurrent.hasItem(strNotesField)) {
+					if (docCurrent.getFirstItem(strNotesField) != null) {
+						if (docCurrent.getFirstItem(strNotesField).getType() != 1) {
+							mimeValue = MimeMultipart.fromHTML(docCurrent.getItemValueString(strNotesField));
+						} else {
+							rti = (RichTextItem) docCurrent.getFirstItem(strNotesField);
+							if (rti != null) {
+								DominoDocument dd = new DominoDocument();
+								dd.setDocument(docCurrent);
+								DominoRichTextItem drtCurrent = new DominoRichTextItem(dd, rti);
+								mimeValue = MimeMultipart.fromHTML(drtCurrent.getHTML());
+							}
 						}
 					}
 				}
+				return mimeValue;
+			} catch (Exception e) {
+				LoggerFactory.logWarning(this.getClass(), "Error during getRawValueFromStore", e);
+				throw new XPTRuntimeException("Error during getRawValueFormStore", e);
+			} finally {
+				NotesObjectRecycler.recycle(rti, entity);
 			}
-
-			return mimeValue;
-		} catch (Exception e) {
-			LoggerFactory.logWarning(this.getClass(), "Error during getRawValueFromStore", e);
-			throw new XPTRuntimeException("Error during getRawValueFormStore", e);
+		} catch (NotesException e1) {
+			LoggerFactory.logError(this.getClass(), "Error during getRawValueFromStore", e1);
+		} finally {
+			try {
+				docCurrent.getParentDatabase().getParent().setConvertMime(isMimeSession);
+			} catch (Exception ex) {
+				LoggerFactory.logError(this.getClass(), "Error during getRawValueFromStore", ex);
+			}
 		}
+		return null;
 	}
 
+	private String getContentFromMime(MIMEEntity entity, Session parent) throws NotesException {
+		String content;
+		content = extractMimeText(entity, "text/html", parent);
+		if (content == null) {
+			content = extractMimeText(entity, "text/plain", parent);
+			content = HtmlUtil.toHTMLContentString(content, true, HtmlUtil.useHTML);
+		}
+		if (content == null) {
+			content = extractMimeText(entity, null, parent);
+		}
+		return content;
+	}
+
+	private String extractMimeText(MIMEEntity entity, String mimeType, Session sesCurrent) throws NotesException {
+		String content = null;
+		MIMEHeader mimeContentType = entity.getNthHeader("Content-Type");
+		MIMEHeader mimeDispostion = entity.getNthHeader("Content-Disposition");
+		if ((mimeContentType != null) && (mimeDispostion == null)) {
+			String headerValue = mimeContentType.getHeaderVal();
+			if (headerValue.startsWith("multipart")) {
+				MIMEEntity childNext = entity.getFirstChildEntity();
+				while ((childNext != null) && (content == null)) {
+					MIMEEntity child = childNext;
+					childNext = child.getNextSibling();
+					content = extractMimeText(child, mimeType, sesCurrent);
+					child.recycle();
+				}
+			} else if ((mimeType != null) && (headerValue.startsWith(mimeType))) {
+				content = getContentsAsText(entity, sesCurrent);
+			}
+			mimeContentType.recycle();
+		} else if ((mimeType == null) && (mimeDispostion == null)) {
+			content = getContentsAsText(entity, sesCurrent);
+		}
+
+		return content;
+	}
+
+	private String getContentsAsText(MIMEEntity child, Session sesCurrent) throws NotesException {
+		Stream stream = sesCurrent.createStream();
+		child.getContentAsText(stream, true);
+		stream.setPosition(0);
+		String str = stream.readText();
+		stream.recycle();
+		return str;
+	}
 }

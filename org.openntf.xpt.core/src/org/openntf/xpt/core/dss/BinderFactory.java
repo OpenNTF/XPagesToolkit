@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -19,7 +19,9 @@ import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.openntf.xpt.core.dss.annotations.DominoEntity;
 import org.openntf.xpt.core.dss.annotations.DominoStore;
@@ -33,13 +35,14 @@ import org.openntf.xpt.core.dss.binding.encryption.EncryptionStringBinder;
 import org.openntf.xpt.core.dss.binding.field.BooleanBinder;
 import org.openntf.xpt.core.dss.binding.field.BooleanClassBinder;
 import org.openntf.xpt.core.dss.binding.field.DateBinder;
-import org.openntf.xpt.core.dss.binding.field.DominoRichTextItemBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleArrayBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleBinder;
 import org.openntf.xpt.core.dss.binding.field.DoubleClassBinder;
 import org.openntf.xpt.core.dss.binding.field.ENumBinder;
 import org.openntf.xpt.core.dss.binding.field.IntBinder;
 import org.openntf.xpt.core.dss.binding.field.IntClassBinder;
+import org.openntf.xpt.core.dss.binding.field.ListDoubleBinder;
+import org.openntf.xpt.core.dss.binding.field.ListIntegerBinder;
 import org.openntf.xpt.core.dss.binding.field.ListStringBinder;
 import org.openntf.xpt.core.dss.binding.field.LongBinder;
 import org.openntf.xpt.core.dss.binding.field.LongClassBinder;
@@ -57,80 +60,38 @@ import org.openntf.xpt.core.dss.binding.util.FileHelper;
 import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.component.UIFileuploadEx.UploadedFile;
 import com.ibm.xsp.http.MimeMultipart;
-import com.ibm.xsp.model.domino.wrapped.DominoRichTextItem;
 
 public class BinderFactory {
 
+	private static final Map<Class<?>, IBinder<?>> BINDER_MAP = new HashMap<Class<?>, IBinder<?>>() {
+		{
+			put(Boolean.class, BooleanClassBinder.getInstance());
+			put(Boolean.TYPE, BooleanBinder.getInstance());
+			put(String.class, StringBinder.getInstance());
+			put(String[].class, StringArrayBinder.getInstance());
+			put(Integer.class, IntClassBinder.getInstance());
+			put(Integer.TYPE, IntBinder.getInstance());
+			put(Double.class, DoubleClassBinder.getInstance());
+			put(Double.TYPE, DoubleBinder.getInstance());
+			put(Long.class, LongClassBinder.getInstance());
+			put(Long.TYPE, LongBinder.getInstance());
+			put(Double[].class, DoubleArrayBinder.getInstance());
+			put(Date.class, DateBinder.getInstance());
+			put(MimeMultipart.class, MimeMultipartBinder.getInstance());
+			put(UploadedFile.class, FileUploadBinder.getInstance());
+			put(FileHelper.class, FileDownloadBinder.getInstance());
+
+		}
+	};
+
 	public static IBinder<?> getBinder(Class<?> clCurrent, Type gtCurrent) {
-		if (clCurrent.equals(Boolean.class)) {
-			return BooleanClassBinder.getInstance();
-		}
-		if (clCurrent.equals(Boolean.TYPE)) {
-			return BooleanBinder.getInstance();
-		}
-		if (clCurrent.equals(String.class)) {
-			return StringBinder.getInstance();
-		}
-		if (clCurrent.equals(Integer.class)) {
-			return IntClassBinder.getInstance();
-		}
-		if (clCurrent.equals(Integer.TYPE)) {
-			return IntBinder.getInstance();
-		}
-		if (clCurrent.equals(Double.class)) {
-			return DoubleClassBinder.getInstance();
-		}
-		if (clCurrent.equals(Double.TYPE)) {
-			return DoubleBinder.getInstance();
-		}
-		if (clCurrent.equals(Double[].class)) {
-			return DoubleArrayBinder.getInstance();
-		}
-		if (clCurrent.equals(Long.class)) {
-			return LongClassBinder.getInstance();
-		}
-		if (clCurrent.equals(Long.TYPE)) {
-			return LongBinder.getInstance();
-		}
-		if (clCurrent.equals(Date.class)) {
-			return DateBinder.getInstance();
-		}
-		if (clCurrent.equals(String[].class)) {
-			return StringArrayBinder.getInstance();
-		}
 		if (clCurrent.equals(List.class)) {
-
-			if (gtCurrent instanceof ParameterizedType) {
-				Type[] genericTypes = ((ParameterizedType) gtCurrent).getActualTypeArguments();
-				for (Type genericType : genericTypes) {
-					if (String.class.equals(genericType)) {
-						return ListStringBinder.getInstance();
-					}
-					if (FileHelper.class.equals(genericType)) {
-						return FileDownloadBinder.getInstance();
-					}
-					if (UploadedFile.class.equals(genericType)) {
-						return FileUploadBinder.getInstance();
-					}
-
-				}
-			}
-
-		}
-		if (clCurrent.equals(MimeMultipart.class)) {
-			return MimeMultipartBinder.getInstance();
-		}
-		if (clCurrent.equals(DominoRichTextItem.class)) {
-			return DominoRichTextItemBinder.getInstance();
-		}
-		if (clCurrent.equals(UploadedFile.class)) {
-			return FileUploadBinder.getInstance();
+			return getAccurateListBinder(gtCurrent);
 		}
 
-		if (clCurrent.equals(FileHelper.class)) {
-			return FileDownloadBinder.getInstance();
+		if (BINDER_MAP.containsKey(clCurrent)) {
+			return BINDER_MAP.get(clCurrent);
 		}
-
 		if (clCurrent.isEnum()) {
 			return ENumBinder.getInstance();
 		}
@@ -139,6 +100,30 @@ public class BinderFactory {
 			return ObjectBinder.getInstance();
 		}
 		return null;
+	}
+
+	private static IBinder<?> getAccurateListBinder(Type gtCurrent) {
+		if (gtCurrent instanceof ParameterizedType) {
+			Type[] genericTypes = ((ParameterizedType) gtCurrent).getActualTypeArguments();
+			for (Type genericType : genericTypes) {
+				if (String.class.equals(genericType)) {
+					return ListStringBinder.getInstance();
+				}
+				if (Double.class.equals(genericType)) {
+					return ListDoubleBinder.getInstance();
+				}
+				if (Integer.class.equals(genericType)) {
+					return ListIntegerBinder.getInstance();
+				}
+				if (FileHelper.class.equals(genericType)) {
+					return FileDownloadBinder.getInstance();
+				}
+				if (UploadedFile.class.equals(genericType)) {
+					return FileUploadBinder.getInstance();
+				}
+			}
+		}
+		return ObjectBinder.getInstance();
 	}
 
 	public static IBinder<?> getFormulaBinder(Class<?> clCurrent) {
@@ -178,7 +163,7 @@ public class BinderFactory {
 		if (de.embedded()) {
 			IBinder<?> binder = BinderFactory.getEmbededBinder(fldCurrent.getType());
 			if (binder != null) {
-				String endPrefix = StringUtil.isEmpty(prefix) ? de.FieldName() : prefix +"_"+de.FieldName();
+				String endPrefix = StringUtil.isEmpty(prefix) ? de.FieldName() : prefix + "_" + de.FieldName();
 				return Definition.buildDefinition4EO(dsStore, de, binder, fldCurrent, endPrefix);
 			}
 		}

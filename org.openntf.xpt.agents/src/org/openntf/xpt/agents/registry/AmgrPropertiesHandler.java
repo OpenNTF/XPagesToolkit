@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -20,6 +20,8 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Properties;
 
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
+
 import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.Item;
@@ -31,7 +33,7 @@ public class AmgrPropertiesHandler implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	public Properties m_Props = new Properties();
+	private Properties m_Props = new Properties();
 
 	public Properties getProps() {
 		return m_Props;
@@ -59,7 +61,7 @@ public class AmgrPropertiesHandler implements Serializable {
 				}
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "Error during loadProperties", e);
 		}
 	}
 
@@ -69,7 +71,7 @@ public class AmgrPropertiesHandler implements Serializable {
 			Database ndbCurrent = NotesContext.getCurrentUnchecked().getCurrentDatabase();
 			docProfile = ndbCurrent.getProfileDocument("XPTAmgrProps", ndbCurrent.getServer());
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "Error during getProfileDocument", e);
 		}
 		return docProfile;
 	}
@@ -83,7 +85,7 @@ public class AmgrPropertiesHandler implements Serializable {
 			}
 			docProfile.save();
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "Error during save Properties", e);
 		}
 	}
 

@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -19,6 +19,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 import org.openntf.xpt.rss.XPTRSSActivator;
 
 import com.ibm.commons.util.StringUtil;
@@ -60,7 +61,7 @@ public class FeedReaderService {
 				lstRC = processFeed2List(feed);
 
 			} catch (Exception e) {
-				e.printStackTrace();
+				LoggerFactory.logError(getClass(), "getAllEntriesFromURL", e);
 			} finally {
 				currentThread.setContextClassLoader(clCurrent);
 			}
@@ -86,7 +87,7 @@ public class FeedReaderService {
 			}
 			rssFeed.setEntries(processFeed2List(feed));
 		} catch (Exception e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "getFeedFromURL", e);
 		} finally {
 			currentThread.setContextClassLoader(clCurrent);
 		}
@@ -118,7 +119,7 @@ public class FeedReaderService {
 
 	private List<String> buildStringList(List<?> lstConvert) {
 		List<String> lstRC = new ArrayList<String>();
-		if (lstConvert == null || lstConvert.size() == 0) {
+		if (lstConvert.isEmpty()) {
 			return lstRC;
 		}
 		for (Object objX : lstConvert) {

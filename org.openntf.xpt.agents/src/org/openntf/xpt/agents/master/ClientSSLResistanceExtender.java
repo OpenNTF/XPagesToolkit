@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -12,7 +12,8 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
- */package org.openntf.xpt.agents.master;
+ */
+package org.openntf.xpt.agents.master;
 
 import java.io.IOException;
 import java.security.cert.CertificateException;
@@ -36,7 +37,7 @@ public class ClientSSLResistanceExtender {
 
 		public static HttpClient wrapClient(HttpClient base) {
 			try {
-				SSLContext ctx = SSLContext.getInstance("sslv3");
+				SSLContext ctx = SSLContext.getInstance("TLSv1");
 				X509TrustManager tm = new X509TrustManager() {
 
 					public void checkClientTrusted(X509Certificate[] xcs,

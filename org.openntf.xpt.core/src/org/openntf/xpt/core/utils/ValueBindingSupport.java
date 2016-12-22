@@ -1,3 +1,18 @@
+/**
+ * Copyright 2014, WebGate Consulting AG
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at:
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
+ * implied. See the License for the specific language governing 
+ * permissions and limitations under the License.
+ */
 package org.openntf.xpt.core.utils;
 
 import javax.faces.component.UIComponent;
@@ -8,34 +23,31 @@ import com.ibm.xsp.complex.ValueBindingObjectImpl;
 
 public class ValueBindingSupport {
 
-	/**
-	 * Evaluate the value binding, if value is null and returns default, if no value binding was found
-	 * @param strValue
-	 * @param strValueName Name for the valueBinding
-	 * @param uic control
-	 * @param strDefault
-	 * @param context
-	 * @return
-	 */
-	public static String getValue(String strValue, String strValueName, UIComponent uic, String strDefault, FacesContext context) {
-		if (strValue != null) {
-			return strValue;
-		}
-		ValueBinding vb = uic.getValueBinding(strValueName);
-		if (vb != null) {
-			return (String) vb.getValue(context);
-		}
-		return strDefault;
+	private ValueBindingSupport() {
 	}
 
-	public static String getValue(String strValue, String strValueName, ValueBindingObjectImpl uic, String strDefault, FacesContext context) {
-		if (strValue != null) {
-			return strValue;
+	@SuppressWarnings("unchecked")
+	public static <T> T getValue(T value, String propertyName, ValueBindingObjectImpl uic, T defaultValue, FacesContext context) {
+		if (value != null) {
+			return value;
 		}
-		ValueBinding vb = uic.getValueBinding(strValueName);
+		ValueBinding vb = uic.getValueBinding(propertyName);
 		if (vb != null) {
-			return (String) vb.getValue(context);
+			return (T) vb.getValue(context);
 		}
-		return strDefault;
+		return defaultValue;
 	}
+
+	@SuppressWarnings("unchecked")
+	public static <T> T getValue(T value, String propertyName, UIComponent uic, T defaultValue, FacesContext context) {
+		if (value != null) {
+			return value;
+		}
+		ValueBinding vb = uic.getValueBinding(propertyName);
+		if (vb != null) {
+			return (T) vb.getValue(context);
+		}
+		return defaultValue;
+	}
+
 }

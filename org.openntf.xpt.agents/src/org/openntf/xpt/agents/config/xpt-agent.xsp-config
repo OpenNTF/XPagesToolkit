@@ -11,6 +11,31 @@
     <component-type>org.openntf.xpt.agents.component.uiagentlist</component-type>
     <component-class>org.openntf.xpt.agents.component.UIAgentList</component-class>
 
+    <property>
+      <description>Name of the host</description>
+      <display-name>Host Name</display-name>
+      <property-name>hostName</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+          <category>basics</category>
+        </designer-extension>
+      </property-extension>
+    </property>
+
+    <property>
+      <description>Name of the protocol (http / https)</description>
+      <display-name>protocol</display-name>
+      <property-name>protocol</property-name>
+      <property-class>java.lang.String</property-class>
+      <property-extension>
+        <designer-extension>
+          <category>basics</category>
+        </designer-extension>
+      </property-extension>
+    </property>
+
+
     <component-extension>
       <component-family>org.openntf.xpt.agents.component.uiagentlist</component-family>
       <renderer-type>org.openntf.xpt.agents.uiagentlist</renderer-type>

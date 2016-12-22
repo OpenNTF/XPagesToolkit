@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2012
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -20,13 +20,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Vector;
 
-import org.openntf.xpt.core.dss.binding.field.DominoRichTextItemBinder;
+import lotus.domino.Document;
+import lotus.domino.NotesException;
+
+import org.openntf.xpt.core.dss.binding.embedded.EmbeddedListObjectBinder;
+import org.openntf.xpt.core.dss.binding.embedded.EmbeddedObjectBinder;
 import org.openntf.xpt.core.dss.binding.field.MimeMultipartBinder;
 import org.openntf.xpt.core.dss.binding.field.ObjectBinder;
 import org.openntf.xpt.core.dss.binding.files.FileDownloadBinder;
-
-import lotus.domino.Document;
-import lotus.domino.NotesException;
 
 import com.ibm.commons.util.profiler.Profiler;
 import com.ibm.commons.util.profiler.ProfilerAggregator;
@@ -34,8 +35,8 @@ import com.ibm.commons.util.profiler.ProfilerType;
 
 public class Domino2JavaBinder {
 
-	private ArrayList<Definition> m_Definition;
-	private static final ProfilerType pt = new ProfilerType("XPT.DSS.Domino2JavaBinder");
+	private List<Definition> m_Definition;
+	private static final ProfilerType PROFILERTYPE = new ProfilerType("XPT.DSS.Domino2JavaBinder");
 
 	public Domino2JavaBinder() {
 		m_Definition = new ArrayList<Definition>();
@@ -47,7 +48,7 @@ public class Domino2JavaBinder {
 
 	public void processDocument(Document docProcess, Object objCurrent) throws NotesException {
 		if (Profiler.isEnabled()) {
-			ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDocument");
+			ProfilerAggregator pa = Profiler.startProfileBlock(PROFILERTYPE, "processDocument");
 			long startTime = Profiler.getCurrentTime();
 			try {
 				_processDocument(docProcess, objCurrent);
@@ -63,7 +64,7 @@ public class Domino2JavaBinder {
 	private void _processDocument(Document docProcess, Object objCurrent) throws NotesException {
 		for (Definition defCurrent : m_Definition) {
 			if (Profiler.isEnabled()) {
-				ProfilerAggregator pa = Profiler.startProfileBlock(pt, "processDefinition - " + defCurrent.getBinder().getClass().getCanonicalName());
+				ProfilerAggregator pa = Profiler.startProfileBlock(PROFILERTYPE, "processDefinition - " + defCurrent.getBinder().getClass().getCanonicalName());
 				long startTime = Profiler.getCurrentTime();
 				try {
 					_processDefinition(docProcess, objCurrent, defCurrent);
@@ -85,10 +86,6 @@ public class Domino2JavaBinder {
 			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
 			return;
 		}
-		if (defCurrent.getBinder() instanceof DominoRichTextItemBinder) {
-			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
-			return;
-		}
 		if (defCurrent.getBinder() instanceof FileDownloadBinder) {
 			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
 			return;
@@ -96,6 +93,10 @@ public class Domino2JavaBinder {
 		if (defCurrent.getBinder() instanceof ObjectBinder) {
 			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
 			return;
+		}
+		if (defCurrent.getBinder() instanceof EmbeddedObjectBinder || defCurrent.getBinder() instanceof EmbeddedListObjectBinder) {
+			defCurrent.getBinder().processDomino2Java(docProcess, objCurrent, null, defCurrent);
+			return;			
 		}
 		Vector<?> vecValues = docProcess.getItemValue(defCurrent.getNotesField());
 		if (!vecValues.isEmpty()) {
@@ -114,6 +115,10 @@ public class Domino2JavaBinder {
 			lstRC.add(obj);
 		}
 		return lstRC;
+	}
+
+	public List<Definition> getDefinitions() {
+		return m_Definition;
 	}
 
 }

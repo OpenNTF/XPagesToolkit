@@ -1,5 +1,5 @@
 /*
- * © Copyright WebGate Consulting AG, 2013
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -16,6 +16,7 @@
 package org.openntf.xpt.agents.beans;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -45,9 +46,19 @@ public class XPTAgentBean {
 		return XPageAgentRegistry.getInstance().addExecutionProperties(hsProperties);
 	}
 
+	public String registerExecutionPropertiesExtnd(Map<String, Object> hsProperties) {
+		return XPageAgentRegistry.getInstance().addExecutionPropertiesExtnd(hsProperties);
+	}
+
+	
 	public String executeAgentUI(String strAlias, HashMap<String, String> hsProperties) {
 		String strPropID = XPageAgentRegistry.getInstance().addExecutionProperties(hsProperties);
 		return XPageAgentRegistry.getInstance().executeJobUI(strAlias, strPropID);
+	}
+
+	public String executeAgentUIExtnd(String strAlias, Map<String, Object> hsProperties) {
+		String strPropID = registerExecutionPropertiesExtnd(hsProperties);
+		return XPageAgentRegistry.getInstance().executeJobUIExtnd(strAlias, strPropID);
 	}
 
 	public String executeAgentUI(String strAliasName) {
@@ -61,14 +72,20 @@ public class XPTAgentBean {
 	public int checkSchedule(FacesContext fc) {
 		return XPageAgentRegistry.getInstance().checkSchedule(fc);
 	}
+	
+	public ExecutionUserProperties registerApplication2Master(String user, String password, String url, String repid) {
+		return XPageAgentManager.getInstance().registerNewApplication(repid, url,
+				user, password);
+		
+	}
 
 	public ExecutionUserProperties registerApplication2Master(String strUser, String strPassword) {
 		try {
 			String strHost = ((HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest()).getRequestURL().toString();
 			int nNSF = strHost.toLowerCase().indexOf(".nsf");
 			String strNSFURL = strHost.substring(0, nNSF) + ".nsf";
-			return XPageAgentManager.getInstance().registerNewApplication(NotesContext.getCurrentUnchecked().getCurrentDatabase().getReplicaID(), strNSFURL,
-					strUser, strPassword);
+			String repid = NotesContext.getCurrentUnchecked().getCurrentDatabase().getReplicaID();
+			return registerApplication2Master(strUser, strPassword, strNSFURL, repid);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

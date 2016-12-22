@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2012
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -41,7 +41,7 @@ public class BooleanClassBinder extends AbstractBaseBinder<Boolean> implements I
 	public Boolean[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Boolean[] blRC = new Boolean[2];
 		try {
-			Boolean blValue = getValue(objCurrent, def.getJavaField()).booleanValue();
+			Boolean blValue = getValue(objCurrent, def.getJavaField());
 			Boolean blOldValue = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
 			blRC[0] = blOldValue;
 			blRC[1] = blValue;

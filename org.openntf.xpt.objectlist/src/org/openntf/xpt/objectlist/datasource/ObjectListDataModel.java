@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -16,6 +16,9 @@
 package org.openntf.xpt.objectlist.datasource;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 import com.ibm.xsp.model.TabularDataModel;
 
@@ -25,6 +28,8 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 	 */
 	private static final long serialVersionUID = 1L;
 	private ObjectListDataContainer m_Container;
+	private List<String> selectedIds = new ArrayList<String>();
+
 
 	public ObjectListDataModel(ObjectListDataContainer container) {
 		super();
@@ -52,7 +57,7 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 
 	@Override
 	public String getRowId() {
-		return "" + getRowIndex();
+		return m_Container.getRowID(getRowIndex());
 	}
 
 	@Override
@@ -153,4 +158,29 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 
 		}
 	}
+	
+	@Override
+	public void addSelectedId(String id) {
+		selectedIds.add(id);
+	}
+	
+	@Override
+	public void clearSelectedIds() {
+		selectedIds.clear();
+	}
+	
+	@Override
+	public boolean isSelectedId(String id) {
+		return selectedIds.contains(id);
+	}
+	
+	@Override
+	public void removeSelectedId(String id) {
+		selectedIds.remove(id);
+	}
+	@Override
+	public Iterator<String> getSelectedIds() {
+		return selectedIds.iterator();
+	}
+	
 }

@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="416" sequence="12" unid="3759EB99FF95C426C1257C9B005E6450">
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.5" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="416" sequence="71" unid="3759EB99FF95C426C1257C9B005E6450">
 <created><datetime>20140314T181100,64+01</datetime></created>
-<modified><datetime>20140314T212942,10+01</datetime></modified>
-<revised><datetime>20140314T212942,09+01</datetime></revised>
-<lastaccessed><datetime>20140314T212942,10+01</datetime></lastaccessed>
+<modified><datetime dst="true">20160928T124803,47+02</datetime></modified>
+<revised><datetime dst="true">20160928T124803,46+02</datetime></revised>
+<lastaccessed><datetime dst="true">20160928T124803,47+02</datetime></lastaccessed>
 <addedtofile><datetime>20140314T181100,65+01</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>

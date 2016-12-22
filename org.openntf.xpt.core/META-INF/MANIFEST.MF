@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Core of the XPages ToolKit
 Bundle-SymbolicName: org.openntf.xpt.core;singleton:=true
-Bundle-Version: 1.2.0.qualifier
+Bundle-Version: 1.3.0.qualifier
 Bundle-Activator: org.openntf.xpt.core.Activator
 Bundle-Vendor: WebGate Consulting AG
 Require-Bundle: org.eclipse.core.runtime,
@@ -11,7 +11,7 @@ Require-Bundle: org.eclipse.core.runtime,
  com.ibm.xsp.core,
  com.ibm.xsp.domino,
  com.ibm.xsp.extsn,
- com.ibm.xsp.extlib,
+ com.ibm.xsp.extlib;visibility:=reexport,
  com.ibm.xsp.designer,
  com.ibm.designer.runtime,
  com.ibm.notes.java.api,
@@ -82,6 +82,7 @@ Export-Package: org.apache.commons.codec,
  org.openntf.xpt.core.dss,
  org.openntf.xpt.core.dss.annotations,
  org.openntf.xpt.core.dss.binding,
+ org.openntf.xpt.core.dss.binding.embedded,
  org.openntf.xpt.core.dss.binding.encryption,
  org.openntf.xpt.core.dss.binding.field,
  org.openntf.xpt.core.dss.binding.files,
@@ -94,11 +95,14 @@ Export-Package: org.apache.commons.codec,
  org.openntf.xpt.core.json,
  org.openntf.xpt.core.json.annotations,
  org.openntf.xpt.core.json.binding,
+ org.openntf.xpt.core.json.binding.impl,
  org.openntf.xpt.core.ltpa,
  org.openntf.xpt.core.mime,
  org.openntf.xpt.core.minifier,
  org.openntf.xpt.core.properties.storage,
  org.openntf.xpt.core.renderkit.html_extended,
+ org.openntf.xpt.core.rest,
+ org.openntf.xpt.core.rest.impl,
  org.openntf.xpt.core.utils,
  org.openntf.xpt.core.utils.logging
 Bundle-ClassPath: lib/commons-codec-1.6.jar,

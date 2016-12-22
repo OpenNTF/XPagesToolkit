@@ -1,3 +1,18 @@
+/**
+ * Copyright 2013, WebGate Consulting AG
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at:
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
+ * implied. See the License for the specific language governing 
+ * permissions and limitations under the License.
+ */
 package org.openntf.xpt.core.dss.binding.embedded;
 
 import java.lang.reflect.Method;
@@ -16,29 +31,31 @@ import com.ibm.commons.util.StringUtil;
 
 public class EmbeddedObjectBinder implements IBinder<Object> {
 
-	private final static EmbeddedObjectBinder m_Binder = new EmbeddedObjectBinder();
+	private static final  EmbeddedObjectBinder m_Binder = new EmbeddedObjectBinder();
+
+	private EmbeddedObjectBinder() {
+	}
 
 	public static EmbeddedObjectBinder getInstance() {
 		return m_Binder;
 	}
 
-	private EmbeddedObjectBinder() {
-	}
-
 	@Override
 	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecValues, Definition def) {
 		try {
+			System.out.println("Loading ..."+ def.getNotesField());
 			String strClassStore = docCurrent.getItemValueString(def.getNotesField());
 			if (StringUtil.isEmpty(strClassStore)) {
-				return;
-			}
-			if (!strClassStore.equals(def.getInnerClass().getCanonicalName())) {
-				LoggerFactory.logWarning(getClass(), strClassStore + " expected. Effective Class: " + def.getInnerClass().getCanonicalName(), null);
+				LoggerFactory.logWarning(getClass(), "No Class Defined. Using Class: " + def.getInnerClass().getCanonicalName(), null);
+			} else {
+				if (!strClassStore.equals(def.getInnerClass().getCanonicalName())) {
+					LoggerFactory.logWarning(getClass(), strClassStore + " expected. Effective Class: " + def.getInnerClass().getCanonicalName(), null);
+				}
 			}
 			Method mt = objCurrent.getClass().getMethod("set" + def.getJavaField(), (Class<?>) def.getInnerClass());
 			mt.invoke(objCurrent, getValueFromStore(docCurrent, null, def));
 		} catch (Exception ex) {
-
+			ex.printStackTrace();
 		}
 	}
 
@@ -80,8 +97,9 @@ public class EmbeddedObjectBinder implements IBinder<Object> {
 			objSet = def.getInnerClass().newInstance();
 			Domino2JavaBinder d2j = def.getContainer().getLoader(objSet.getClass());
 			d2j.processDocument(docCurrent, objSet);
+			System.out.println(objSet);
 		} catch (Exception e) {
-			// TODO: Handling exception
+			e.printStackTrace();
 		}
 		return objSet;
 	}

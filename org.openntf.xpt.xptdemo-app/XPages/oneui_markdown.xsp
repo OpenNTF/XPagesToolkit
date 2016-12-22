@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xp:view xmlns:xp="http://www.ibm.com/xsp/core" xmlns:xc="http://www.ibm.com/xsp/custom"
+	xmlns:xpt="http://www.openntf.org/xsp/xpt" xmlns:xe="http://www.ibm.com/xsp/coreex">
+	<xc:cc_application navigationPath="/oneui/aboutpage"
+		pageTitle="Markdown Editor">
+		<xp:this.facets>
+			<xp:panel xp:key="facetRight">
+				<xe:widgetContainer id="widgetContainer1"
+					titleBarText="Blog Entries">
+					<xp:panel id="panBlogEntries">
+						<table>
+							<xp:repeat id="rpAllEntries" first="0" rows="10" var="bEntry"
+								indexVar="indEntry" value="#{javascript:blogBean.getAllBlogEntries();}">
+								<tr>
+									<td>
+										<xp:link escape="true" text="#{javascript:bEntry.subject}"
+											id="link1">
+										<xp:eventHandler event="onclick"
+											submit="true" refreshMode="complete">
+											<xp:this.action><![CDATA[#{javascript:viewScope.blogEntry = bEntry}]]></xp:this.action>
+										</xp:eventHandler></xp:link>
+									</td>
+								</tr>
+							</xp:repeat>
+						</table>
+					</xp:panel>
+
+				</xe:widgetContainer>
+			</xp:panel>
+			<xp:panel xp:key="facetMiddle">
+				<xp:button id="btNew" value="Neuer Eintrag">
+					<xp:eventHandler event="onclick" submit="true"
+						refreshMode="complete">
+						<xp:this.action><![CDATA[#{javascript:viewScope.blogID = "";
+viewScope.conAction = "newObject";
+getComponent("dlgBlog").show()}]]></xp:this.action>
+					</xp:eventHandler>
+				</xp:button>
+				<xp:panel readonly="true"
+					rendered="#{javascript:viewScope.blogEntry != null}">
+					<xp:inputText id="inputText1"
+						value="#{viewScope.blogEntry.subject}">
+					</xp:inputText>
+					<xpt:inputMarkdown id="inputMD" value="#{viewScope.blogEntry.content}">
+					</xpt:inputMarkdown>
+				</xp:panel>
+			</xp:panel>
+
+			<xc:cc_nav_oneui xp:key="facetLeft"></xc:cc_nav_oneui>
+		</xp:this.facets>
+
+	</xc:cc_application>
+	<xe:dialog id="dlgBlog" title="Blog">
+		<xp:panel>
+			<xp:this.data>
+				<xpt:dssObjectSource var="objBlog"
+					objectId="#{javascript:viewScope.blogID}" scope="view"
+					objectStorageService="#{javascript:blogBean.getSOS()}">
+					<xpt:this.action><![CDATA[#{javascript:if (viewScope.blogID == null || viewScope.blogID == "") {
+	return "newObject";
+} 
+return viewScope.blogAction}]]></xpt:this.action>
+
+				</xpt:dssObjectSource>
+			</xp:this.data>
+			<xe:formTable id="formTable1" labelPosition="left"
+				disableRowError="true" formDescription="New BlogEntry" labelWidth="150px">
+				<xe:formRow id="formRow2" for="itSubject" label="First Name">
+					<xp:inputText id="itSubject" value="#{objBlog.subject}">
+					</xp:inputText>
+				</xe:formRow>
+				<xe:formRow id="formRow3" for="itContent" label="Inhalt">
+					<xpt:inputMarkdown id="itContent"
+						value="#{objBlog.content}" cols="60" rows="20">
+					</xpt:inputMarkdown>
+				</xe:formRow>
+				<xp:this.facets>
+					<xe:dialogButtonBar id="dialogButtonBar1"
+						xp:key="footer">
+						<xp:panel>
+							<xp:button value="save" id="button1">
+								<xp:eventHandler event="onclick" submit="true"
+									refreshMode="complete">
+									<xp:this.action>
+
+										<xp:actionGroup>
+
+											<xp:saveDocument var="objBlog">
+											</xp:saveDocument>
+											<xp:executeScript>
+												<xp:this.script><![CDATA[#{javascript:var dlg = getComponent("dlgBlog");
+viewScope.blogID = "";
+dlg.hide("panBlogEntries");}]]></xp:this.script>
+											</xp:executeScript>
+										</xp:actionGroup>
+									</xp:this.action>
+								</xp:eventHandler>
+							</xp:button>
+							&#160;
+							<xp:link escape="true" text="cancel" id="lnkClose">
+								<xp:eventHandler event="onclick" submit="true"
+									refreshMode="complete" disableValidators="true">
+									<xp:this.action><![CDATA[#{javascript:var dlg = getComponent("dlgBlog");
+viewScope.blogID = "";
+dlg.hide();}]]></xp:this.action>
+								</xp:eventHandler>
+							</xp:link>
+						</xp:panel>
+					</xe:dialogButtonBar>
+				</xp:this.facets>
+			</xe:formTable>
+		</xp:panel>
+	</xe:dialog>
+</xp:view>

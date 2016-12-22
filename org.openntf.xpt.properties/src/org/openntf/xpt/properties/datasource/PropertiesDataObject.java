@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -20,6 +20,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+
+import org.openntf.xpt.core.XPTRuntimeException;
 
 import com.ibm.xsp.model.DataObject;
 
@@ -67,7 +69,7 @@ public class PropertiesDataObject implements DataObject, Serializable {
 			m_Properties = new Properties();
 			m_Properties.load(isCurrent);
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new XPTRuntimeException("initProperties failed!",e);
 		}
 	}
 	

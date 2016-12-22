@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="3ba" sequence="18" unid="5D1406C13F4DC59EC1257C3600748D55">
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.5" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="3ba" sequence="52" unid="5D1406C13F4DC59EC1257C3600748D55">
 <created><datetime>20131203T221303,57+01</datetime></created>
-<modified><datetime>20131203T224214,93+01</datetime></modified>
-<revised><datetime>20131203T224214,92+01</datetime></revised>
-<lastaccessed><datetime>20131203T224214,93+01</datetime></lastaccessed>
+<modified><datetime dst="true">20160928T124803,87+02</datetime></modified>
+<revised><datetime dst="true">20160928T124803,86+02</datetime></revised>
+<lastaccessed><datetime dst="true">20160928T124803,87+02</datetime></lastaccessed>
 <addedtofile><datetime>20131203T221303,58+01</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
@@ -13,9 +13,9 @@
 
 
 
-
 <item name="$FileNames" sign="true"><text>cc_changeLog.xsp</text></item>
 <item name="$DesignerVersion"><text>8.5</text></item>
+
 
 
 

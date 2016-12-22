@@ -1,21 +1,21 @@
-<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="366" sequence="71" unid="4587B14463176A67C1257BDB0016D9ED">
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.5" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="366" sequence="155" unid="4587B14463176A67C1257BDB0016D9ED">
 <created><datetime dst="true">20130903T060935,81+02</datetime></created>
-<modified><datetime>20131203T223214,07+01</datetime></modified>
-<revised><datetime>20131203T223214,06+01</datetime></revised>
-<lastaccessed><datetime>20131203T223214,07+01</datetime></lastaccessed>
+<modified><datetime dst="true">20160928T124803,71+02</datetime></modified>
+<revised><datetime dst="true">20160928T124803,70+02</datetime></revised>
+<lastaccessed><datetime dst="true">20160928T124803,71+02</datetime></lastaccessed>
 <addedtofile><datetime dst="true">20130903T060935,82+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
 <item name="$Flags"><text>gC~4K</text></item>
 <item name="$TITLE" sign="true"><text>dss_contact_crud.xsp</text></item>
 
+
+<item name="$FileNames" sign="true"><text>dss_contact_crud.xsp</text></item>
 <item name="$DesignerVersion"><text>8.5.2</text></item>
 
 
 
-
-<item name="$FileNames" sign="true"><text>dss_contact_crud.xsp</text></item>
 
 
 </note>

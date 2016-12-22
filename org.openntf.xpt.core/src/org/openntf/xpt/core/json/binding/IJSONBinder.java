@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,16 +15,13 @@
  */
 package org.openntf.xpt.core.json.binding;
 
-import org.openntf.xpt.core.json.JSONEmptyValueStrategy;
-
-import com.ibm.domino.services.util.JsonWriter;
-
 public interface IJSONBinder<T> {
 
-	public void process2JSON(JsonWriter jsWriter, Object objCurrent, String strJSONProperty, String strJAVAField, JSONEmptyValueStrategy strategy,
-			Class<?> containerClass);
+	public void process2JSON(BinderProcessParameter parameter);
 
 	public T getValue(Object objCurrent, String strJavaField);
 
-	public void processValue2JSON(JsonWriter jsWriter, Object value);
+	public void processValue2JSON(BinderProcessParameter parameter, Object value);
+	
+	public void processJson2Value(BinderProcessParameter parameter);
 }

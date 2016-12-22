@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -19,6 +19,7 @@ import java.lang.reflect.Method;
 import java.util.Vector;
 
 import lotus.domino.Document;
+import lotus.domino.Item;
 
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
@@ -51,7 +52,10 @@ public class DoubleArrayBinder implements IBinder<Double[]> {
 			for (Double nVal : nValues) {
 				vecValues.addElement(nVal);
 			}
-			docCurrent.replaceItemValue(def.getNotesField(), vecValues);
+			Item notesItem = docCurrent.replaceItemValue(def.getNotesField(), vecValues);
+			notesItem.setSummary(def.isNotesSummary());
+			notesItem.recycle();
+
 		} catch (Exception e) {
 			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}

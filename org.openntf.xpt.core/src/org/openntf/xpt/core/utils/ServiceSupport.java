@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2014, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -22,20 +22,13 @@ import java.security.PrivilegedAction;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.openntf.xpt.core.dss.annotations.DominoStore;
 import org.openntf.xpt.core.json.annotations.JSONObject;
 
-/**
- * @author Christian Guedemann
- *
- */
-/**
- * @author Christian Guedemann
- *
- */
 /**
  * @author Christian Guedemann
  * 
@@ -125,6 +118,12 @@ public class ServiceSupport {
 		}
 	}
 
+	public static Method getSetterMethod(Class<?> objectClass, String javaFieldName, Class<? extends Object> typeClass) throws SecurityException, NoSuchMethodException {
+		String strMethod = makeSetter(javaFieldName);
+		return objectClass.getMethod(strMethod, typeClass);
+	}
+
+	
 	public static Collection<Field> getClassFields(final Class<?> currentClass) {
 		Collection<Field> lstFields = AccessController.doPrivileged(new PrivilegedAction<Collection<Field>>() {
 
@@ -146,7 +145,12 @@ public class ServiceSupport {
 
 	private static Set<Field> getAllFieldsRec(Class<?> clazz, Set<Field> setFields) {
 		Class<?> superClazz = clazz.getSuperclass();
-		setFields.addAll(Arrays.asList(clazz.getDeclaredFields()));
+		List<Field> decFields = Arrays.asList(clazz.getDeclaredFields());
+		for (Field fldCheck : decFields) {
+			if (!fldCheck.isSynthetic()) {
+				setFields.add(fldCheck);
+			}
+		}
 		if (superClazz != null) {
 			getAllFieldsRec(superClazz, setFields);
 		}

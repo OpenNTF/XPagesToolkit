@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2012
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -13,6 +13,7 @@
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
+
 package org.openntf.xpt.core.dss;
 
 public class DSSException extends Exception {
@@ -28,4 +29,9 @@ public class DSSException extends Exception {
 	public DSSException(String strMessage) {
 		super(strMessage);
 	}
+
+	public DSSException(String arg0, Throwable arg1) {
+		super(arg0, arg1);
+	}
+	
 }

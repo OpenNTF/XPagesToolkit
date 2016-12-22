@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2014
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -47,6 +47,31 @@ public abstract class AbstractBaseBinder<T> {
 			LoggerFactory.logWarning(getClass(), "Error during do getValue()", ex);
 			throw new XPTRuntimeException("Error during getValue()", ex);
 		}
+	}
+
+	public void setValue(Object obj, String javaFieldName, T value, Class<?>... classes) {
+		try {
+			Method mt = null;
+			for (Class<?> cl : classes) {
+				mt = buildSetter(obj, javaFieldName, cl);
+				if (mt != null) {
+					break;
+				}
+			}
+			mt.invoke(obj, value);
+		} catch (Exception ex) {
+			throw new XPTRuntimeException("Error during setValue with obj = " + obj + ", javaFieldName = " + javaFieldName + ", value=" + value, ex);
+		}
+	}
+
+	private Method buildSetter(Object obj, String javaFieldName, Class<?> cl) {
+		Method mt = null;
+		try {
+			mt = ServiceSupport.getSetterMethod(obj.getClass(), javaFieldName, cl);
+		} catch (NoSuchMethodException es) { // NOSONAR
+			//CATCH to use alternate classes; //NOSONAR
+		}
+		return mt;
 	}
 
 }

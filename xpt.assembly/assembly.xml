@@ -36,5 +36,32 @@
 				<include>org.openntf.xpt.updatesite*</include>
 			</includes>
 		</fileSet>
+		<fileSet>
+			<directory>../org.openntf.xpt.updatesite-designer/target</directory>
+			<outputDirectory>/</outputDirectory>
+			<includes>
+				<include>org.openntf.xpt.updatesite*</include>
+			</includes>
+		</fileSet>
 	</fileSets>
+	<moduleSets>
+		<moduleSet>
+			<useAllReactorProjects>true</useAllReactorProjects>
+			<includes>
+				<include>org.openntf.xpt:org.openntf.xpt</include>
+				<include>org.openntf.xpt:org.openntf.xpt.core</include>
+				<include>org.openntf.xpt:org.openntf.xpt.agents</include>
+				<include>org.openntf.xpt:org.openntf.xpt.objectlist</include>
+				<include>org.openntf.xpt:org.openntf.xpt.oneui</include>
+				<include>org.openntf.xpt:org.openntf.xpt.properties</include>
+				<include>org.openntf.xpt:org.openntf.xpt.rss</include>
+			</includes>
+			<binaries>
+				<attachmentClassifier>javadoc</attachmentClassifier>
+				<includeDependencies>false</includeDependencies>
+				<outputDirectory>/apidocs/${module.artifactId}</outputDirectory>
+				<unpack>true</unpack>
+			</binaries>
+		</moduleSet>
+	</moduleSets>
 </assembly>

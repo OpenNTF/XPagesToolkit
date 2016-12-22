@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -14,10 +14,6 @@
  * permissions and limitations under the License.
  */
 
-/*
- * Special Thank to Matthias Cullmann and Sven Haufe for the inspiration of this class
- */
-
 package org.openntf.xpt.core.dss;
 
 import java.util.ArrayList;
@@ -28,6 +24,7 @@ import java.util.Vector;
 import lotus.domino.Database;
 import lotus.domino.Document;
 import lotus.domino.DocumentCollection;
+import lotus.domino.NotesException;
 import lotus.domino.View;
 
 import org.apache.commons.collections.CollectionUtils;
@@ -50,6 +47,9 @@ import com.ibm.xsp.extlib.util.ExtLibUtil;
  *            The Type of the Object you want to load/store
  */
 public abstract class AbstractStorageService<T> {
+
+	private static final String GENERAL_ERROR = "General Error";
+	private static final String NO_SOFTDELETION_PROVIDER_DEFINED = "No softdeletion provider defined";
 
 	protected AbstractStorageService() {
 	}
@@ -79,7 +79,7 @@ public abstract class AbstractStorageService<T> {
 		try {
 			return DominoStorageService.getInstance().saveObject(obj, targetDatabase);
 		} catch (DSSException e) {
-			e.printStackTrace();
+			LoggerFactory.logError(getClass(), "saveTo", e);
 		}
 		return false;
 	}
@@ -102,15 +102,15 @@ public abstract class AbstractStorageService<T> {
 	 * @return the object
 	 */
 	public T getByIdFrom(String id, Database sourceDatabase) {
+		T ret = prepareNewObject();
 		try {
-			T ret = createObject();
 			if (!DominoStorageService.getInstance().getObject(ret, id, sourceDatabase)) {
 				return null;
 			}
 			return ret;
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 	}
 
@@ -145,9 +145,11 @@ public abstract class AbstractStorageService<T> {
 
 			}
 			viwDabases.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return ret;
 	}
@@ -187,9 +189,11 @@ public abstract class AbstractStorageService<T> {
 
 			}
 			view.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return ret;
 	}
@@ -231,12 +235,71 @@ public abstract class AbstractStorageService<T> {
 
 			}
 			viwDabases.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return ret;
 
+	}
+
+	/**
+	 * Loads all object where my user, group or role occurs in one of the fields
+	 * in the list of documents (the documents are not recycled!)
+	 * 
+	 * @param documents
+	 * @param fieldsToCheck
+	 * @return
+	 */
+	public List<T> getAllMyObjectsFromDocumentList(List<Document> documents, List<String> fieldsToCheck) {
+		List<T> ret = new ArrayList<T>();
+		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getMyGroupsAndRoles();
+		try {
+			for (Document docCurrent : documents) {
+				if (isDocumentOfInterest(docCurrent, lstRolesGroups, fieldsToCheck)) {
+					convertDocument2ObjectAndAdd2List(ret, docCurrent);
+				}
+
+			}
+		} catch (NullPointerException ex) {
+			throw ex;
+		} catch (Exception e) {
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
+		}
+		return ret;
+	}
+
+	/**
+	 * Loads all object where my user, group or role occurs in one of the fields
+	 * in the document collection
+	 * 
+	 * @param collection
+	 * @param fieldsToCheck
+	 * @return
+	 */
+	public List<T> getAllMyObjectsFromDocumentCollection(DocumentCollection collection, List<String> fieldsToCheck) {
+		List<T> ret = new ArrayList<T>();
+		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getMyGroupsAndRoles();
+		try {
+			Document docNext = collection.getFirstDocument();
+			while (docNext != null) {
+				Document docCurrent = docNext;
+				docNext = collection.getNextDocument();
+				if (isDocumentOfInterest(docCurrent, lstRolesGroups, fieldsToCheck)) {
+					convertDocument2ObjectAndAdd2List(ret, docCurrent);
+				}
+				docCurrent.recycle();
+			}
+		} catch (NullPointerException ex) {
+			throw ex;
+		} catch (Exception e) {
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
+		}
+		return ret;
 	}
 
 	/**
@@ -280,12 +343,75 @@ public abstract class AbstractStorageService<T> {
 
 			}
 			view.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return ret;
 
+	}
+
+	/**
+	 * Loads all object where the user, group or role occurs in one of the
+	 * fields in the list of documents (the documents are not recycled!)
+	 * 
+	 * @param userName
+	 * @param documents
+	 * @param fieldsToCheck
+	 * @param sourceDatabase
+	 * @return
+	 */
+	public List<T> getAllObjectsFromDocumentListFor(String userName, List<Document> documents, List<String> fieldsToCheck, Database sourceDatabase) {
+		List<T> ret = new ArrayList<T>();
+		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(userName, sourceDatabase);
+		try {
+			for (Document docCurrent : documents) {
+				if (isDocumentOfInterest(docCurrent, lstRolesGroups, fieldsToCheck)) {
+					convertDocument2ObjectAndAdd2List(ret, docCurrent);
+				}
+
+			}
+		} catch (NullPointerException ex) {
+			throw ex;
+		} catch (Exception e) {
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
+		}
+		return ret;
+	}
+
+	/**
+	 * Loads all object where the user, group or role occurs in one of the
+	 * fields in the document collection
+	 * 
+	 * @param userName
+	 * @param collection
+	 * @param fieldsToCheck
+	 * @param sourceDatabase
+	 * @return
+	 */
+	public List<T> getAllObjectsFromDocumentCollectionFor(String userName, DocumentCollection collection, List<String> fieldsToCheck, Database sourceDatabase) {
+		List<T> ret = new ArrayList<T>();
+		List<String> lstRolesGroups = RoleAndGroupProvider.getInstance().getGroupsAndRolesOf(userName, sourceDatabase);
+		try {
+			Document docNext = collection.getFirstDocument();
+			while (docNext != null) {
+				Document docCurrent = docNext;
+				docNext = collection.getNextDocument();
+				if (isDocumentOfInterest(docCurrent, lstRolesGroups, fieldsToCheck)) {
+					convertDocument2ObjectAndAdd2List(ret, docCurrent);
+				}
+				docCurrent.recycle();
+			}
+		} catch (NullPointerException ex) {
+			throw ex;
+		} catch (Exception e) {
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
+		}
+		return ret;
 	}
 
 	/**
@@ -322,7 +448,7 @@ public abstract class AbstractStorageService<T> {
 
 		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
 		if (sdProv == null) {
-			throw new DSSException("No softdeletion provider defined");
+			throw new DSSException(NO_SOFTDELETION_PROVIDER_DEFINED);
 		}
 		return sdProv.softDelete(objDelete, targetDatabase, this);
 	}
@@ -356,7 +482,7 @@ public abstract class AbstractStorageService<T> {
 		}
 		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
 		if (sdProv == null) {
-			throw new DSSException("No softdeletion provider defined");
+			throw new DSSException(NO_SOFTDELETION_PROVIDER_DEFINED);
 		}
 		return sdProv.hardDelete(objDelete, targetDatabase, this);
 
@@ -386,7 +512,7 @@ public abstract class AbstractStorageService<T> {
 
 		ISoftDeletionProvider<T> sdProv = getSoftDeletionProvider();
 		if (sdProv == null) {
-			throw new DSSException("No softdeletion provider defined");
+			throw new DSSException(NO_SOFTDELETION_PROVIDER_DEFINED);
 		}
 		return sdProv.undelete(objDelete, targetDatabase, this);
 	}
@@ -394,16 +520,23 @@ public abstract class AbstractStorageService<T> {
 	private boolean isDocumentOfInterest(Document docCurrent, List<String> lstRolesGroups, List<String> lstFieldsToCheck) {
 		try {
 			for (String strField : lstFieldsToCheck) {
-				if (docCurrent.hasItem(strField)) {
-					List<String> lstValues = getStringListFromDocument(docCurrent, strField);
-					if (CollectionUtils.containsAny(lstRolesGroups, lstValues)) {
-						return true;
-					}
+				if (isUserRoleInField(docCurrent, lstRolesGroups, strField)) {
+					return true;
 				}
 			}
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
+		}
+		return false;
+	}
+
+	private boolean isUserRoleInField(Document docCurrent, List<String> lstRolesGroups, String strField) throws NotesException {
+		if (docCurrent.hasItem(strField)) {
+			List<String> lstValues = getStringListFromDocument(docCurrent, strField);
+			if (CollectionUtils.containsAny(lstRolesGroups, lstValues)) {
+				return true;
+			}
 		}
 		return false;
 	}
@@ -416,8 +549,8 @@ public abstract class AbstractStorageService<T> {
 				lstRC.add("" + itValue.next());
 			}
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return lstRC;
 	}
@@ -428,6 +561,14 @@ public abstract class AbstractStorageService<T> {
 	 * @return
 	 */
 	protected abstract T createObject();
+
+	public T prepareNewObject() {
+		T object = createObject();
+		if (object == null) {
+			throw new NullPointerException("Create Object must return an object and not null");
+		}
+		return object;
+	}
 
 	public List<ChangeLogEntry> getChangeLog(T objCurrent) {
 		return getChangeLog(objCurrent, RoleAndGroupProvider.getInstance().getMyGroupsAndRoles());
@@ -455,8 +596,8 @@ public abstract class AbstractStorageService<T> {
 			}
 
 		} catch (Exception e) {
-			LoggerFactory.logError(getClass(), "General Error", e);
-			throw new XPTRuntimeException("General Error", e);
+			LoggerFactory.logError(getClass(), GENERAL_ERROR, e);
+			throw new XPTRuntimeException(GENERAL_ERROR, e);
 		}
 		return lstRC;
 	}
@@ -496,6 +637,8 @@ public abstract class AbstractStorageService<T> {
 				docProcess.recycle();
 			}
 			dclResult.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			throw new XPTRuntimeException("Error during search of " + search, e);
 		}
@@ -541,6 +684,8 @@ public abstract class AbstractStorageService<T> {
 				docProcess.recycle();
 			}
 			view.recycle();
+		} catch (NullPointerException ex) {
+			throw ex;
 		} catch (Exception e) {
 			throw new XPTRuntimeException("Error during search of " + search + " in view " + viewName, e);
 		}
@@ -548,7 +693,7 @@ public abstract class AbstractStorageService<T> {
 	}
 
 	private void convertDocument2ObjectAndAdd2List(List<T> result, Document docProcess) throws DSSException {
-		T obj = createObject();
+		T obj = prepareNewObject();
 		if (DominoStorageService.getInstance().getObjectWithDocument(obj, docProcess)) {
 			result.add(obj);
 		}

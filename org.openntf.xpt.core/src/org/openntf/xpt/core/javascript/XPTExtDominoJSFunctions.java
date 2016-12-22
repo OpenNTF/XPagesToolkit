@@ -1,7 +1,5 @@
-package org.openntf.xpt.core.javascript;
-
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,6 +13,9 @@ package org.openntf.xpt.core.javascript;
  * implied. See the License for the specific language governing 
  * permissions and limitations under the License.
  */
+
+package org.openntf.xpt.core.javascript;
+
 
 import com.ibm.designer.runtime.extensions.JavaScriptProvider;
 import com.ibm.jscript.JSContext;

@@ -27,6 +27,14 @@
 			</property-extension>
 		</property>
 		<property>
+			<description>Defines the field containing the id. Must be accessible by a getter</description>
+			<display-name>IdAttribute</display-name>
+			<property-name>idAttribute</property-name>
+			<property-class>java.lang.String</property-class>
+			<property-extension>
+			</property-extension>
+		</property>
+		<property>
 			<description>The sort order</description>
 			<display-name>Ascending</display-name>
 			<property-name>ascending</property-name>

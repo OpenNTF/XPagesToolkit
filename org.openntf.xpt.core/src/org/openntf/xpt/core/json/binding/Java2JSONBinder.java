@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -20,8 +20,6 @@ import java.util.List;
 
 import org.openntf.xpt.core.json.Definition;
 
-import com.ibm.domino.services.util.JsonWriter;
-
 public class Java2JSONBinder {
 
 	private List<Definition> m_Definitions = new ArrayList<Definition>();
@@ -30,10 +28,17 @@ public class Java2JSONBinder {
 		m_Definitions.add(def);
 	}
 
-	public void processJSON(JsonWriter jsWriter, Object obj) {
+	public void processJSON(BinderProcessParameter parameter) {
 		for (Definition def : m_Definitions) {
-			def.process2JSON(jsWriter, obj);
+			def.process2JSON(parameter);
 			
 		}
+	}
+
+	public void processJson2Object(BinderProcessParameter parameter) {
+		for (Definition def : m_Definitions) {
+			def.processJson2Object(parameter);
+		}
+		
 	}
 }

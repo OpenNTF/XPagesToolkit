@@ -6,7 +6,7 @@ import org.openntf.xpt.oneui.ressources.XPTONEUIModulePath;
 import org.openntf.xpt.oneui.ressources.XPTONEUIResourceProvider;
 
 import com.ibm.commons.util.DoubleMap;
-//import com.ibm.xsp.extlib.plugin.DominoPluginActivator;
+
 
 public class ONEUILoader extends AbstractResourceLoader {
 
@@ -31,5 +31,6 @@ public class ONEUILoader extends AbstractResourceLoader {
 
 	@Override
 	public void loadCSSShortcutsXPT(DoubleMap<String, String> alias, DoubleMap<String, String> prefix) {
+		//NOCSS ShortCuts to load
 	}
 }

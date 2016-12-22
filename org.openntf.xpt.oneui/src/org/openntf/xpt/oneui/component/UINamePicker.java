@@ -1,3 +1,18 @@
+/**
+ * Copyright 2013, WebGate Consulting AG
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at:
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
+ * implied. See the License for the specific language governing 
+ * permissions and limitations under the License.
+ */
 package org.openntf.xpt.oneui.component;
 
 import java.io.IOException;
@@ -7,7 +22,6 @@ import java.util.Map;
 
 import javax.faces.context.FacesContext;
 import javax.faces.el.MethodBinding;
-import javax.faces.el.ValueBinding;
 import javax.servlet.http.HttpServletResponse;
 
 import lotus.domino.Document;
@@ -17,6 +31,7 @@ import lotus.domino.NotesException;
 import org.openntf.xpt.core.json.JSONService;
 import org.openntf.xpt.core.utils.ErrorJSONBuilder;
 import org.openntf.xpt.core.utils.ValueBindingSupport;
+import org.openntf.xpt.core.utils.logging.LoggerFactory;
 import org.openntf.xpt.oneui.kernel.INamePickerValueService;
 import org.openntf.xpt.oneui.kernel.JsonResult;
 import org.openntf.xpt.oneui.kernel.NameEntry;
@@ -149,17 +164,7 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 	}
 
 	public boolean isReadOnly() {
-		if (null != m_ReadOnly) {
-			return m_ReadOnly;
-		}
-		ValueBinding _vb = getValueBinding("readOnly"); //$NON-NLS-1$
-		if (_vb != null) {
-			Boolean val = (java.lang.Boolean) _vb.getValue(FacesContext.getCurrentInstance());
-			if (val != null) {
-				return val;
-			}
-		}
-		return false;
+		return ValueBindingSupport.getValue(m_ReadOnly, "readOnly", this, Boolean.FALSE, FacesContext.getCurrentInstance());
 	}
 
 	public void setReadOnly(boolean readOnly) {
@@ -257,7 +262,7 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 			if (!(nvBean instanceof INamePickerValueService)) {
 				throw new FacesExceptionEx(null, "Bean {0} is not a INamePickerValueService", nameValueBeanName);
 			}
-			return ((INamePickerValueService) nvBean);
+			return (INamePickerValueService) nvBean;
 		} else {
 			return NamePickerProcessor.INSTANCE;
 		}
@@ -277,7 +282,7 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 				strLabel = getField(docSearch, "InternetAddress");
 			}
 		} catch (Exception ex) {
-			ex.printStackTrace();
+			LoggerFactory.logError(getClass(), "getDisplayLabelValue", ex);
 		}
 		return strLabel;
 	}
@@ -319,6 +324,7 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 			return new NameEntry(strValue, strLabel, strLine);
 
 		} catch (Exception ex) {
+			LoggerFactory.logError(getClass(), "General Error", ex);
 
 		}
 		return null;
@@ -328,6 +334,7 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 		try {
 			return docSearch.getItemValueString(strFieldName);
 		} catch (Exception ex) {
+			LoggerFactory.logError(getClass(), "getField", ex);
 			return "";
 		}
 	}
@@ -346,7 +353,7 @@ public class UINamePicker extends UIInputEx implements FacesAjaxComponent {
 	}
 
 	public String buildJSFunctionCall(NameEntry nam) {
-		StringBuffer sb = new StringBuffer(buildJSFunctionName());
+		StringBuilder sb = new StringBuilder(buildJSFunctionName());
 		sb.append("('");
 		sb.append(nam.getLabel());
 		sb.append("','");

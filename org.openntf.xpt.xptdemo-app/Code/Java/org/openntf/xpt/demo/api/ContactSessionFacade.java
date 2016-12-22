@@ -63,6 +63,13 @@ public class ContactSessionFacade extends CustomServiceBean implements Serializa
 		}
 	}
 
+	public void addMeAsObserver(String[] ids) {
+		for (String id:ids) {
+			Contact con = getContactByID(id);
+			addObserver(con);
+		}
+	}
+	
 	public void removeObserver(Contact conCurrent) {
 		try {
 			conCurrent.removeObserver(ExtLibUtil.getCurrentSession().getEffectiveUserName());

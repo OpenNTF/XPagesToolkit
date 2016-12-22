@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -15,28 +15,51 @@
  */
 package org.openntf.xpt.core.json;
 
+import org.openntf.xpt.core.json.binding.BinderProcessParameter;
 import org.openntf.xpt.core.json.binding.IJSONBinder;
-
-import com.ibm.domino.services.util.JsonWriter;
 
 public class Definition {
 
-	private String m_JSONProperty;
-	private String m_JAVAField;
-	private JSONEmptyValueStrategy m_EmptyValueStrategy = JSONEmptyValueStrategy.NOPROPERTY;
-	private IJSONBinder<?> m_Binder;
-	private Class<?> m_ContainerClass;
+	private final String jsonProperty;
+	private final String javaField;
+	private JSONEmptyValueStrategy emptyValueStrategy = JSONEmptyValueStrategy.NOPROPERTY;
+	private final IJSONBinder<?> binder;
+	private final Class<?> containerClass;
 
-	public Definition(String property, String field,JSONEmptyValueStrategy strategy, IJSONBinder<?> binder, Class<?> containterClass) {
+	public Definition(String property, String field, JSONEmptyValueStrategy strategy, IJSONBinder<?> binder, Class<?> containterClass) {
 		super();
-		m_JSONProperty = property;
-		m_JAVAField = field;
-		m_EmptyValueStrategy = strategy;
-		m_Binder = binder;
-		m_ContainerClass = containterClass;
+		this.jsonProperty = property;
+		this.javaField = field;
+		this.emptyValueStrategy = strategy;
+		this.binder = binder;
+		this.containerClass = containterClass;
 	}
 
-	public void process2JSON(JsonWriter jsWriter, Object objCurrent) {
-		m_Binder.process2JSON(jsWriter, objCurrent, m_JSONProperty, m_JAVAField, m_EmptyValueStrategy, m_ContainerClass);
+	public void process2JSON(BinderProcessParameter parameter) {
+		binder.process2JSON(parameter.applyDefinition(this));
 	}
+
+	public void processJson2Object(BinderProcessParameter parameter) {
+		if (parameter.getJson().containsKey(jsonProperty)) {
+			binder.processJson2Value(parameter.applyDefinition(this));
+		}
+
+	}
+	public JSONEmptyValueStrategy getEmptyValueStrategy() {
+		return emptyValueStrategy;
+	}
+
+	public String getJSONProperty() {
+		return jsonProperty;
+	}
+
+	public String getJAVAField() {
+		return javaField;
+	}
+
+	public Class<?> getContainerClass() {
+		return containerClass;
+	}
+
+
 }

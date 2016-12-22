@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -191,7 +191,7 @@ public class UIWelcomebox extends UIComponentBase {
 			if (m_OnStateChange instanceof MethodBindingEx) {
 				params = new Object[] { blOpen };
 				((MethodBindingEx) m_OnStateChange).setComponent(this);
-				((MethodBindingEx) m_OnStateChange).setParamNames(s_processOnStateChangeParam);
+				((MethodBindingEx) m_OnStateChange).setParamNames(PROCESS_ONCHANGE_IS_CLOSED);
 			}
 			if (FacesUtil.isCancelled(m_OnStateChange.invoke(context, params))) {
 				return false;
@@ -201,5 +201,5 @@ public class UIWelcomebox extends UIComponentBase {
 		return true;
 	}
 
-	private static final String[] s_processOnStateChangeParam = { "isClosed" }; // $NON-NLS-1$
+	private static final String[] PROCESS_ONCHANGE_IS_CLOSED = { "isClosed" }; // $NON-NLS-1$
 }

@@ -4,19 +4,18 @@
 	<parent>
 		<groupId>org.openntf.xpt</groupId>
 		<artifactId>xpt.parent</artifactId>
-		<version>1.2.0-SNAPSHOT</version>
+		<version>1.3.0-SNAPSHOT</version>
 	</parent>
 	<artifactId>xpt.assembly</artifactId>
 	<packaging>pom</packaging>
 
 	<properties>
 		<workingDir>${project.build.directory}</workingDir>
-		<finalAssemblyFolder>
-			${workingDir}/kit
-		</finalAssemblyFolder>
 		<git.revision>master</git.revision>
 		<lic.file>${project.parent.basedir}/LICENSE_HEADER/apacheV2.txt</lic.file>
-
+		<kit.parentDir>${project.basedir}/../</kit.parentDir>
+		<kit.workingDir>${project.build.directory}</kit.workingDir>
+		<kit.finalAssemblyFolder>${kit.workingDir}/kit</kit.finalAssemblyFolder>
 	</properties>
 	<build>
 		<plugins>
@@ -53,6 +52,19 @@
 				<artifactId>maven-antrun-plugin</artifactId>
 				<version>1.7</version>
 				<executions>
+					<execution>
+						<id>clear_snapshot</id>
+						<phase>clean</phase>
+						<goals>
+                    		<goal>run</goal>
+                		</goals>
+						<configuration>
+							<target>
+								<!-- Remove Other Sources -->
+								<delete dir="${kit.parentDir}/${kit.result}" />
+							</target>
+						</configuration>
+					</execution>
 					<execution>
 						<id>removedownloads</id>
 						<phase>generate-sources</phase>
@@ -92,6 +104,36 @@
 							<goal>run</goal>
 						</goals>
 					</execution>
+					<execution>
+						<id>p2repo</id>
+						<phase>package</phase>
+						<configuration>
+							<target>
+								<unzip
+									src="../org.openntf.xpt.p2/target/org.openntf.xpt.p2-${project.version}.zip"
+									dest="${kit.finalAssemblyFolder}/p2-${p2.buildVersion}" />
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>toDistribution</id>
+						<phase>install</phase>
+						<configuration>
+							<target>
+								<copy todir="${kit.parentDir}/${kit.result}">
+									<fileset dir="${kit.finalAssemblyFolder}">
+									</fileset>
+								</copy>
+							</target>
+						</configuration>
+						<goals>
+							<goal>run</goal>
+						</goals>
+					</execution>
+
 				</executions>
 			</plugin>
 			<plugin>
@@ -108,7 +150,7 @@
 							<descriptor>assembly.xml</descriptor>
 							<finalName>org.openntf.xpt-${project.version}</finalName>
 							<appendAssemblyId>false</appendAssemblyId>
-							<outputDirectory>${finalAssemblyFolder}</outputDirectory>
+							<outputDirectory>${kit.finalAssemblyFolder}</outputDirectory>
 						</configuration>
 					</execution>
 				</executions>
@@ -116,4 +158,24 @@
 
 		</plugins>
 	</build>
+	<dependencies>
+		<dependency>
+			<groupId>org.openntf.xpt</groupId>
+			<artifactId>org.openntf.xpt</artifactId>
+			<version>1.3.0-SNAPSHOT</version>
+			<type>eclipse-plugin</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openntf.xpt</groupId>
+			<artifactId>org.openntf.xpt.agents</artifactId>
+			<version>1.3.0-SNAPSHOT</version>
+			<type>eclipse-plugin</type>
+		</dependency>
+		<dependency>
+			<groupId>org.openntf.xpt</groupId>
+			<artifactId>org.openntf.xpt.core</artifactId>
+			<version>1.3.0-SNAPSHOT</version>
+			<type>eclipse-plugin</type>
+		</dependency>
+	</dependencies>
 </project>

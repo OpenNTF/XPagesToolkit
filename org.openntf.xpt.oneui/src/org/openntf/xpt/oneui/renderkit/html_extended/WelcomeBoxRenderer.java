@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -16,7 +16,6 @@
 package org.openntf.xpt.oneui.renderkit.html_extended;
 
 import java.io.IOException;
-import java.util.logging.Logger;
 
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -34,7 +33,7 @@ public class WelcomeBoxRenderer extends FacesRenderer {
 
 	private static final String CLOSEACTION_CLOSE = "_closeaction_close";
 	private static final String CLOSEACTION_OPEN = "_closeaction_open";
-	private String BLANK_GIF = "/oneuiv2.1/images/blank.gif";
+	private static final String BLANK_GIF = "/oneuiv2.1/images/blank.gif";
 
 	@Override
 	public void encodeBegin(FacesContext context, UIComponent component) throws IOException {
@@ -65,12 +64,12 @@ public class WelcomeBoxRenderer extends FacesRenderer {
 		w.writeAttribute("id", strID, null);
 
 		if (!uiwc.isCloseable()) {
-			writeWelcomeBox(context, w, uiwc, false, strID);
+			writeWelcomeBox(context, w, uiwc, strID);
 		} else {
 			if (uiwc.isClosed()) {
-				writeWelcomeBoxClosed(context, w, uiwc, strID);
+				writeWelcomeBoxClosed( w, uiwc, strID);
 			} else {
-				writeWelcomeBox(context, w, uiwc, true, strID);
+				writeWelcomeBox(context, w, uiwc,  strID);
 			}
 		}
 
@@ -78,7 +77,7 @@ public class WelcomeBoxRenderer extends FacesRenderer {
 
 	}
 
-	private void writeWelcomeBoxClosed(FacesContext context, ResponseWriter w, UIWelcomebox uiwc, String strID) throws IOException {
+	private void writeWelcomeBoxClosed( ResponseWriter w, UIWelcomebox uiwc, String strID) throws IOException {
 		String strWCTitle = StringUtil.isEmpty(uiwc.getShowBoxTitle()) ? "show welcomeinfo" : uiwc.getShowBoxTitle();
 		w.startElement("a", null);
 		w.writeURIAttribute("href", "javascript:;", null);
@@ -86,10 +85,10 @@ public class WelcomeBoxRenderer extends FacesRenderer {
 		w.writeAttribute("class", "lotusAction", null);
 		w.writeText(strWCTitle, null);
 		w.endElement("a");
-		setupSubmitOnClick(context, w, uiwc, strID, strID + CLOSEACTION_OPEN);
+		setupSubmitOnClick( strID, strID + CLOSEACTION_OPEN);
 	}
 
-	private void writeWelcomeBox(FacesContext context, ResponseWriter w, UIWelcomebox uiwc, boolean b, String strID) throws IOException {
+	private void writeWelcomeBox(FacesContext context, ResponseWriter w, UIWelcomebox uiwc, String strID) throws IOException {
 		String strTitle = uiwc.getTitle();
 		if (!StringUtil.isEmpty(strTitle)) {
 			w.startElement("h2", null);
@@ -117,16 +116,18 @@ public class WelcomeBoxRenderer extends FacesRenderer {
 			w.writeText("X", null);
 			w.endElement("span");
 			w.endElement("a");
-			setupSubmitOnClick(context, w, uiwc, strID, strID + CLOSEACTION_CLOSE);
+			setupSubmitOnClick(strID, strID + CLOSEACTION_CLOSE);
 		}
 	}
 
 	@Override
 	public void encodeChildren(FacesContext context, UIComponent component) throws IOException {
+		//No children do encode
 	}
 
 	@Override
 	public void encodeEnd(FacesContext context, UIComponent component) throws IOException {
+		//No encodeEnd needed, because of no children
 	}
 
 	@Override
@@ -134,7 +135,7 @@ public class WelcomeBoxRenderer extends FacesRenderer {
 		return true;
 	}
 
-	protected void setupSubmitOnClick(FacesContext context, ResponseWriter w, UIWelcomebox uiw, String welcomeBoxID, String sourceId) throws IOException {
+	protected void setupSubmitOnClick( String welcomeBoxID, String sourceId) throws IOException {
 		String execId = null;
 		String refreshId = welcomeBoxID;
 		final String event = "onclick"; // $NON-NLS-1$
@@ -154,13 +155,13 @@ public class WelcomeBoxRenderer extends FacesRenderer {
 
 	@Override
 	public void decode(FacesContext context, UIComponent component) {
-		Logger logCurrent = LoggerFactory.getLogger(this.getClass().getCanonicalName());
+
 		if (component instanceof UIWelcomebox) {
 			UIWelcomebox uiwc = (UIWelcomebox) component;
 			String currentClientId = component.getClientId(context);
 			String hiddenValue = FacesUtil.getHiddenFieldValue(context);
-			logCurrent.info("currentClientID = " + currentClientId);
-			logCurrent.info("hiddenValue =" + hiddenValue);
+			LoggerFactory.logInfo(getClass(),"currentClientID = " + currentClientId,null);
+			LoggerFactory.logInfo(getClass(),"hiddenValue =" + hiddenValue, null);
 			if (StringUtil.isNotEmpty(hiddenValue) && hiddenValue.startsWith(currentClientId + CLOSEACTION_OPEN)) {
 				uiwc.setClosed(false);
 				uiwc.processOnStateChange(context, false);

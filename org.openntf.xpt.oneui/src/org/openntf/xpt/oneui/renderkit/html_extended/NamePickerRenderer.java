@@ -1,7 +1,21 @@
+/**
+ * Copyright 2013, WebGate Consulting AG
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at:
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
+ * implied. See the License for the specific language governing 
+ * permissions and limitations under the License.
+ */
 package org.openntf.xpt.oneui.renderkit.html_extended;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.faces.component.UIComponent;
@@ -166,11 +180,11 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 			if (c.isDisplayLabel()) {
 				DojoRendererUtil.addDojoHtmlAttributes(attrs, "displayLabel", true); // $NON-NLS-1$
 				String[] values = getValues(context, c, msep);
-				if (values != null) {
+				if (values.length > 0) {
 					StringBuilder b = new StringBuilder();
 					JsonBuilder w = new JsonBuilder(b, true);
 					w.startObject();
-					HashMap<String, String> entries = c.getNamePickerValueService(context).getDislplayLabels(c, values);
+					Map<String, String> entries = c.getNamePickerValueService(context).getDislplayLabels(c, values);
 					if (entries != null) {
 						for (String strKey : entries.keySet()) {
 							w.startProperty(strKey);
@@ -192,6 +206,6 @@ public class NamePickerRenderer extends DojoFormWidgetRenderer {
 			String[] values = StringUtil.isNotEmpty(msep) ? StringUtil.splitString(value, msep.charAt(0)) : new String[] { value };
 			return values;
 		}
-		return null;
+		return new String[]{};
 	}
 }

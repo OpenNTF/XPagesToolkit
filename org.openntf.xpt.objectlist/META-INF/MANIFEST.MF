@@ -2,7 +2,7 @@ Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: ObjectList Datasource XPages Toolkit
 Bundle-SymbolicName: org.openntf.xpt.objectlist;singleton:=true
-Bundle-Version: 1.2.0.qualifier
+Bundle-Version: 1.3.0.qualifier
 Bundle-Activator: org.openntf.xpt.objectlist.Activator
 Bundle-Vendor: WebGate Consulting AG
 Require-Bundle: org.eclipse.core.runtime,
@@ -17,4 +17,5 @@ Export-Package: org.openntf.xpt.objectlist,
  org.openntf.xpt.objectlist.config,
  org.openntf.xpt.objectlist.datasource,
  org.openntf.xpt.objectlist.utils
-Import-Package: org.apache.commons.io
+Import-Package: lotus.domino,
+ org.apache.commons.io

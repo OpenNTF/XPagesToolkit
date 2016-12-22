@@ -1,5 +1,5 @@
-/*
- * © Copyright WebGate Consulting AG, 2013
+/**
+ * Copyright 2013, WebGate Consulting AG
  * 
  * Licensed under the Apache License, Version 2.0 (the "License"); 
  * you may not use this file except in compliance with the License. 
@@ -35,14 +35,16 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 
 	private String m_CurrentSortAttribute;
 	private Boolean m_CurrentAscending;
+	private String idAttribute;
 
 	public ObjectListDataContainer() {
 	}
 
-	public ObjectListDataContainer(String strBeanID, String strUniqueID, List<ObjectListDataEntry> objList, String[] sortValues) {
+	public ObjectListDataContainer(String strBeanID, String strUniqueID, List<ObjectListDataEntry> objList, String[] sortValues, String idAttribute) {
 		super(strBeanID, strUniqueID);
 		m_ObjectList = objList;
 		m_SortableAttributes = buildSortValues(sortValues);
+		this.idAttribute = idAttribute;
 	}
 
 	private SortAttribute[] buildSortValues(String[] sortValues) {
@@ -71,6 +73,7 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 			m_ObjectList = (List<ObjectListDataEntry>) in.readObject();
 			m_CurrentAscending = in.readBoolean();
 			m_CurrentSortAttribute = readUTF(in);
+			idAttribute = readUTF(in);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -83,6 +86,7 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 		out.writeObject(m_ObjectList);
 		out.writeBoolean(m_CurrentAscending);
 		writeUTF(out, m_CurrentSortAttribute);
+		writeUTF(out, idAttribute);
 	}
 
 	public Object getData() {
@@ -186,6 +190,15 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 			return m_Direction;
 		}
 
+	}
+
+	public String getRowID(int rowIndex) {
+		ObjectListDataEntry entry = m_ObjectList.get(rowIndex);
+		if (entry == null || StringUtil.isEmpty(idAttribute)) {
+			return Integer.toString( rowIndex);
+		} else {
+			return "" + entry.getValue(idAttribute);
+		}
 	}
 
 }

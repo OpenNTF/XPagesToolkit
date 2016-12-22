@@ -1,18 +1,18 @@
-<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.0" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
-<noteinfo noteid="33a" sequence="34" unid="7E133261C28342A8C1257BCF0045E115">
+<?xml version="1.0" encoding="UTF-8"?><note class="form" maintenanceversion="1.5" replicaid="C1257B95007265C6" version="9.0" xmlns="http://www.lotus.com/dxl">
+<noteinfo noteid="33a" sequence="45" unid="7E133261C28342A8C1257BCF0045E115">
 <created><datetime dst="true">20130822T144316,05+02</datetime></created>
-<modified><datetime>20131220T095938,77+01</datetime></modified>
-<revised><datetime>20131220T095938,76+01</datetime></revised>
-<lastaccessed><datetime>20131220T095938,77+01</datetime></lastaccessed>
+<modified><datetime>20161116T233137,04+01</datetime></modified>
+<revised><datetime>20161116T233137,03+01</datetime></revised>
+<lastaccessed><datetime>20161116T233137,04+01</datetime></lastaccessed>
 <addedtofile><datetime dst="true">20130822T144316,06+02</datetime></addedtofile></noteinfo>
 <updatedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></updatedby>
 <wassignedby><name>CN=Christian Guedemann/O=WGC/C=CH</name></wassignedby>
 <item name="$Flags"><text>34567Cg~[</text></item>
 <item name="$TITLE"><text>org/openntf/xpt/demo/api/ContactSessionFacade.java</text></item>
 
+
+
 <item name="$DesignerVersion"><text>8.5.3</text></item>
 
 
-<item name="$FileNames" sign="true"><text>org/openntf/xpt/demo/api/ContactSessionFacade.java</text></item>
-
-</note>
+<item name="$FileNames" sign="true"><text>org/openntf/xpt/demo/api/ContactSessionFacade.java</text></item></note>

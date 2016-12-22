@@ -1,3 +1,18 @@
+/**
+ * Copyright 2014, WebGate Consulting AG
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at:
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or 
+ * implied. See the License for the specific language governing 
+ * permissions and limitations under the License.
+ */
 package org.openntf.xpt.objectlist.datasource;
 
 import java.io.Serializable;
@@ -31,7 +46,6 @@ public class DSSObject implements DataObject, Serializable {
 	private final Map<String, Class<?>> m_Fields = new HashMap<String, Class<?>>();
 	private final boolean m_EditMode;
 	private final boolean m_New;
-
 
 	public DSSObject(Object obj, boolean editMode, boolean isNew) {
 		m_BO = obj;
@@ -79,25 +93,23 @@ public class DSSObject implements DataObject, Serializable {
 				XPTPresentationControl ctrl = DominoStorageService.getInstance().getXPTPresentationControl(m_BO, "" + field);
 				if (ctrl == null) {
 					return false;
-				} else {
-					if (ctrl.editNewOnly() && !m_New) {
-						return true;
-					}
-					if (ctrl.modifyOnly() && m_New) {
-						return true;
-					}
-					if (ctrl.editRoles().length == 0) {
-						return false;
-					} else {
-						List<String> lstEditors = Arrays.asList(ctrl.editRoles());
-						for (String strRole : RoleAndGroupProvider.getInstance().getMyGroupsAndRoles()) {
-							if (lstEditors.contains(strRole)) {
-								return false;
-							}
-						}
-					}
+				}
+				if (ctrl.editNewOnly() && !m_New) {
 					return true;
 				}
+				if (ctrl.modifyOnly() && m_New) {
+					return true;
+				}
+				if (ctrl.editRoles().length == 0) {
+					return false;
+				}
+				List<String> lstEditors = Arrays.asList(ctrl.editRoles());
+				for (String strRole : RoleAndGroupProvider.getInstance().getMyGroupsAndRoles()) {
+					if (lstEditors.contains(strRole)) {
+						return false;
+					}
+				}
+				return true;
 			} catch (Exception ex) {
 				throw new XPTRuntimeException("Error during isReadOnly for " + field, ex);
 			}
