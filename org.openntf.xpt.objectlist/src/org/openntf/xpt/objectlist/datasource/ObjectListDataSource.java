@@ -33,9 +33,10 @@ import com.ibm.xsp.FacesExceptionEx;
 import com.ibm.xsp.model.AbstractDataSource;
 import com.ibm.xsp.model.DataContainer;
 import com.ibm.xsp.model.ModelDataSource;
+import com.ibm.xsp.model.TabularDataSource;
 import com.ibm.xsp.util.StateHolderUtil;
 
-public class ObjectListDataSource extends AbstractDataSource implements ModelDataSource {
+public class ObjectListDataSource extends AbstractDataSource implements ModelDataSource, TabularDataSource {
 
 	private MethodBinding m_BuildValues;
 

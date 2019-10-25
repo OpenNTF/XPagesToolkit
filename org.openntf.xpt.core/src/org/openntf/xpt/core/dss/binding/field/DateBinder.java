@@ -32,7 +32,7 @@ import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class DateBinder extends AbstractBaseBinder<Date> implements IBinder<Date> {
 
-	private static DateBinder m_Binder;
+	private static final DateBinder m_Binder = new DateBinder();
 
 	public void processDomino2Java(Document docCurrent, Object objCurrent, Vector<?> vecValues, Definition def) {
 		try {
@@ -73,9 +73,6 @@ public class DateBinder extends AbstractBaseBinder<Date> implements IBinder<Date
 	}
 
 	public static IBinder<Date> getInstance() {
-		if (m_Binder == null) {
-			m_Binder = new DateBinder();
-		}
 		return m_Binder;
 	}
 
