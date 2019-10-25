@@ -20,6 +20,8 @@ import java.util.Date;
 import java.util.Vector;
 
 import lotus.domino.Document;
+import lotus.domino.International;
+import lotus.domino.NotesException;
 import lotus.domino.Session;
 
 import org.openntf.xpt.core.dss.binding.Definition;
@@ -43,19 +45,19 @@ public class DateProcessor {
 
 		try {
 			if (m_DateFormat == null || m_DateFormatDateOnly == null) {
-				String strDateSep = sesCurrent.getInternational().getDateSep();
-				String strTimeSep = sesCurrent.getInternational().getTimeSep();
-				String strHour = sesCurrent.getInternational().isTime24Hour() ? "" : " a";
-
-				if (sesCurrent.getInternational().isDateDMY()) {
+				International international = sesCurrent.getInternational();
+				String strDateSep = international.getDateSep();
+				String timeStamp = buildTimeStamp(international);
+				
+				if (international.isDateDMY()) {
 					m_DateFormatDateOnly = "dd" + strDateSep + "MM" + strDateSep + "yy";
-					m_DateFormat = m_DateFormatDateOnly + " HH" + strTimeSep + "mm" + strTimeSep + "ss" + strHour;
-				} else if (sesCurrent.getInternational().isDateMDY()) {
+					m_DateFormat = m_DateFormatDateOnly + " "+timeStamp;
+				} else if (international.isDateMDY()) {
 					m_DateFormatDateOnly = "MM" + strDateSep + "dd" + strDateSep + "yy";
-					m_DateFormat = m_DateFormatDateOnly + " HH" + strTimeSep + "mm" + strTimeSep + "ss" + strHour;
-				} else if (sesCurrent.getInternational().isDateYMD()) {
+					m_DateFormat = m_DateFormatDateOnly + " "+timeStamp;
+				} else if (international.isDateYMD()) {
 					m_DateFormatDateOnly = "yyyy" + strDateSep + "MM" + strDateSep + "dd";
-					m_DateFormat = m_DateFormatDateOnly + " HH" + strTimeSep + "mm" + strTimeSep + "ss" + strHour;
+					m_DateFormat = m_DateFormatDateOnly + " "+timeStamp;
 				}
 
 			}
@@ -70,6 +72,13 @@ public class DateProcessor {
 		}
 	}
 
+	private String buildTimeStamp(International international) throws NotesException {
+		String strTimeSep = international.getTimeSep();
+		String strHour = international.isTime24Hour() ? "" : " a";
+		String hourSymbol = international.isTime24Hour() ? "HH": "h";
+		return hourSymbol + strTimeSep + "mm" + strTimeSep + "ss" + strHour;
+	}
+	
 	@Deprecated
 	public String getFormattedDateWithFormulaDDMMYYYYHHMMSS(String strNotesField, Document docCurrent, Session sesCurrent) {
 		String strDate = "";

@@ -182,5 +182,12 @@ public class ObjectListDataModel extends TabularDataModel implements Serializabl
 	public Iterator<String> getSelectedIds() {
 		return selectedIds.iterator();
 	}
-	
+	@Override
+	public int hasMoreRows(int arg0) {
+		return m_Container.getObjectList().size();
+	}
+	@Override
+	public boolean canHaveMoreRows() {
+		return true;
+	}
 }
