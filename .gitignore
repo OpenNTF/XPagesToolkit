@@ -31,3 +31,19 @@ org.openntf.xpt.updatesite/.project
 org.openntf.xpt/.project
 xpt.assembly/.project
 
+
+org.openntf.xpt.agents/.settings/
+
+org.openntf.xpt.core/.settings/org.eclipse.jdt.core.prefs
+
+org.openntf.xpt.objectlist/.settings/org.eclipse.jdt.core.prefs
+
+org.openntf.xpt.oneui/.settings/org.eclipse.jdt.core.prefs
+
+org.openntf.xpt.properties/.settings/org.eclipse.jdt.core.prefs
+
+org.openntf.xpt.rss/.settings/org.eclipse.jdt.core.prefs
+
+org.openntf.xpt.testsuite/.settings/org.eclipse.jdt.core.prefs
+
+org.openntf.xpt/.settings/org.eclipse.jdt.core.prefs
