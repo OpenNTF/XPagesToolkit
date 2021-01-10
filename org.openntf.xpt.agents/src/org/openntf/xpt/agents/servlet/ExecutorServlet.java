@@ -42,11 +42,6 @@ public class ExecutorServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	// The FacesContext factory requires a lifecycle parameter which is not
-	// used,
-	// but when not present, it generates
-	// a NUllPointer exception. Silly thing! So we create an empty one that does
-	// nothing...
 	private static Lifecycle dummyLifeCycle = new Lifecycle() {
 
 		@Override
@@ -118,17 +113,15 @@ public class ExecutorServlet extends HttpServlet {
 		HttpServletRequest request = (HttpServletRequest) servletRequest;
 		HttpServletResponse response = (HttpServletResponse) servletResponse;
 
-		// Create a temporary FacesContext and make it available
-
-		// FacesContext context =
-		// m_ContextFactory.getFacesContext(request.getSession().getServletContext(),
-		// request, response, dummyLifeCycle);
 		FacesContext context = m_ContextFactory.getFacesContext(m_Config.getServletContext(), request, response, dummyLifeCycle);
 		return context;
 	}
 
-	public void releaseContext(FacesContext context) throws ServletException, IOException {
-		context.release();
+	public void releaseContext(FacesContext context) {
+		try {
+			context.release();
+		} catch(Exception e) {
+			//No Action
+		}
 	}
-
 }

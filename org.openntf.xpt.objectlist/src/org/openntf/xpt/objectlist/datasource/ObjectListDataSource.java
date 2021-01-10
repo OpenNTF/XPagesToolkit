@@ -18,6 +18,7 @@ package org.openntf.xpt.objectlist.datasource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
@@ -82,7 +83,7 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 
 	@Override
 	public DataContainer load(FacesContext arg0) throws IOException {
-		ObjectListDataContainer dtC = new ObjectListDataContainer(getBeanId(), getUniqueId(), buildList(), getSortableAttributesArray(), getIdAttribute());
+		ObjectListDataContainer dtC = new ObjectListDataContainer(getBeanId(), getUniqueId(), buildList(),  getSortableAttributes(), getIdAttribute());
 		if (dtC.hasSortAttribute()) {
 			dtC.sortList(dtC.getCurrentSortAttribute(), dtC.getCurrentAscending());
 
@@ -146,7 +147,7 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 		state[1] = StateHolderUtil.saveMethodBinding(getFacesContext(), m_BuildValues);
 		state[2] = m_SortAttribute;
 		state[3] = m_Ascending;
-		state[4] = getSortableAttributesArray();
+		state[4] = getSortableAttributes().toArray(new String[getSortableAttributes().size()]);
 		state[5] = m_IdAttribute;
 		return state;
 	}
@@ -189,7 +190,7 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 	}
 
 	public List<String> getSortableAttributes() {
-		return m_SortableAttributes;
+		return m_SortableAttributes != null ? m_SortableAttributes : Collections.EMPTY_LIST;
 	}
 
 	public void setSortableAttributes(List<String> sortableAttributes) {
@@ -201,14 +202,6 @@ public class ObjectListDataSource extends AbstractDataSource implements ModelDat
 			m_SortableAttributes = new ArrayList<String>();
 		}
 		m_SortableAttributes.add(strAttribute);
-	}
-
-	private String[] getSortableAttributesArray() {
-		if (getSortableAttributes() == null) {
-			return new String[0];
-		}
-		List<String> lstSA = getSortableAttributes();
-		return lstSA.toArray(new String[lstSA.size()]);
 	}
 
 	public String getIdAttribute() {
