@@ -36,7 +36,7 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 	private ObjectListDataModel m_Model;
 
 	private String m_CurrentSortAttribute;
-	private SortOrder m_CurrentAscending;
+	private SortOrder m_CurrentAscending = SortOrder.NONE;
 	private String idAttribute;
 
 	public ObjectListDataContainer() {
