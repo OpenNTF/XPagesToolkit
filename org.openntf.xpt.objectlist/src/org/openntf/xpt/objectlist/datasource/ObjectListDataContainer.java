@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.openntf.xpt.objectlist.utils.SortOrder;
+
 import com.ibm.commons.util.StringUtil;
 import com.ibm.xsp.model.AbstractDataContainer;
 import com.ibm.xsp.model.TabularDataModel;
@@ -34,21 +36,21 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 	private ObjectListDataModel m_Model;
 
 	private String m_CurrentSortAttribute;
-	private Boolean m_CurrentAscending;
+	private SortOrder m_CurrentAscending = SortOrder.NONE;
 	private String idAttribute;
 
 	public ObjectListDataContainer() {
 	}
 
-	public ObjectListDataContainer(String strBeanID, String strUniqueID, List<ObjectListDataEntry> objList, String[] sortValues, String idAttribute) {
+	public ObjectListDataContainer(String strBeanID, String strUniqueID, List<ObjectListDataEntry> objList, List<String> sortValues, String idAttribute) {
 		super(strBeanID, strUniqueID);
 		m_ObjectList = objList;
 		m_SortableAttributes = buildSortValues(sortValues);
 		this.idAttribute = idAttribute;
 	}
 
-	private SortAttribute[] buildSortValues(String[] sortValues) {
-		List<SortAttribute> lstSA = new ArrayList<ObjectListDataContainer.SortAttribute>(sortValues.length);
+	private SortAttribute[] buildSortValues(List<String> sortValues) {
+		List<SortAttribute> lstSA = new ArrayList<ObjectListDataContainer.SortAttribute>(sortValues.size());
 		for (String sa : sortValues) {
 			if (!StringUtil.isEmpty(sa)) {
 				lstSA.add(new SortAttribute(sa));
@@ -71,7 +73,7 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 		try {
 			m_SortableAttributes = (SortAttribute[]) in.readObject();
 			m_ObjectList = (List<ObjectListDataEntry>) in.readObject();
-			m_CurrentAscending = in.readBoolean();
+			m_CurrentAscending = SortOrder.valueOf(readUTF(in));
 			m_CurrentSortAttribute = readUTF(in);
 			idAttribute = readUTF(in);
 		} catch (Exception e) {
@@ -84,7 +86,7 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 	public void serialize(ObjectOutput out) throws IOException {
 		out.writeObject(m_SortableAttributes);
 		out.writeObject(m_ObjectList);
-		out.writeBoolean(m_CurrentAscending);
+		writeUTF(out, m_CurrentAscending.name());
 		writeUTF(out, m_CurrentSortAttribute);
 		writeUTF(out, idAttribute);
 	}
@@ -101,7 +103,7 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 			Collections.sort(m_ObjectList, new ObjectEntryComperator(strAttribute, ascending));
 		}
 		m_CurrentSortAttribute = strAttribute;
-		m_CurrentAscending = ascending;
+		m_CurrentAscending = ascending ? SortOrder.ASC: SortOrder.DESC;
 		if (m_Model != null) {
 			m_Model.setRowIndex(0);
 		}
@@ -138,11 +140,11 @@ public class ObjectListDataContainer extends AbstractDataContainer {
 	}
 
 	public Boolean getCurrentAscending() {
-		return m_CurrentAscending;
+		return m_CurrentAscending.isAscending();
 	}
 
 	public void clearSort() {
-		m_CurrentAscending = null;
+		m_CurrentAscending = SortOrder.NONE;
 		m_CurrentSortAttribute = null;
 
 	}
