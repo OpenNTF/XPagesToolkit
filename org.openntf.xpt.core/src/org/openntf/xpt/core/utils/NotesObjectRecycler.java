@@ -15,6 +15,9 @@
  */
 package org.openntf.xpt.core.utils;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 import lotus.domino.Base;
@@ -31,5 +34,14 @@ public class NotesObjectRecycler {
 				}
 			}
 		}
+	}
+	public static void recycleAll(List<?> all) {
+		List<Base> toRecyle = new ArrayList(all.size());
+		for (Object obj:all) {
+			if(obj instanceof Base) {
+				toRecyle.add((Base)obj);
+			}
+		}
+		recycle(toRecyle.toArray(new Base[toRecyle.size()]));
 	}
 }

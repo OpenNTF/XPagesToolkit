@@ -57,38 +57,40 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 		MimeMultipart[] mpRC = new MimeMultipart[2];
 		Logger log = LoggerFactory.getLogger(this.getClass().getCanonicalName());
 		try {
-
+			
 			MimeMultipart oldBody = getRawValueFromStore(docCurrent, def.getNotesField());
 			MimeMultipart body = getValue(objCurrent, def.getJavaField());
 			mpRC[0] = oldBody;
 			mpRC[1] = body;
 			log.fine("oldBody = " + oldBody);
 			log.fine("body = " + body);
-			Stream stream = docCurrent.getParentDatabase().getParent().createStream();
-			if (body != null)
+			if (body != null && (body != null && oldBody == null) || !oldBody.getHTML().equals(body.getHTML())) {
+				boolean isMimeSession = docCurrent.getParentDatabase().getParent().isConvertMime();
+				docCurrent.getParentDatabase().getParent().setConvertMime(false);
+				
+				Stream stream = docCurrent.getParentDatabase().getParent().createStream();
 				stream.writeText(body.getHTML());
-			else
-				return null;
-
-			MIMEEntity entity = docCurrent.getMIMEEntity(def.getNotesField());
-			log.info("entity = " + entity);
-			if (entity == null) {
-				docCurrent.removeItem(def.getNotesField());
-				log.info("creating Entity for " + def.getNotesField());
-				entity = docCurrent.createMIMEEntity(def.getNotesField());
-				log.info("new entity created");
+				MIMEEntity entity = docCurrent.getMIMEEntity(def.getNotesField());
+				log.info("entity = " + entity);
+				if (entity == null) {
+					docCurrent.removeItem(def.getNotesField());
+					log.info("creating Entity for " + def.getNotesField());
+					entity = docCurrent.createMIMEEntity(def.getNotesField());
+					log.info("new entity created");
+				}
+				stream.setPosition(0);
+				entity.setContentFromText(stream, "text/html;charset=UTF-8", 1725);
+				stream.close();
+				docCurrent.closeMIMEEntities(true,def.getNotesField());
+				docCurrent.getParentDatabase().getParent().setConvertMime(isMimeSession);				
+				log.info("done");
 			}
-			stream.setPosition(0);
-			entity.setContentFromText(stream, "text/html;charset=UTF-8", 1725);
-			stream.close();
-			log.info("done");
 
 		} catch (Exception e) {
 			LoggerFactory.logWarning(this.getClass(), "Error during processJava2Domino", e);
 			throw new XPTRuntimeException("Error during processJava2Domino", e);
 		}
 		return mpRC;
-
 	}
 
 	public static IBinder<MimeMultipart> getInstance() {
@@ -113,7 +115,8 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 	}
 
 	@Override
-	public MimeMultipart getValueFromStore(Document docCurrent, Vector<?> vecValues, Definition def) throws DSSException {
+	public MimeMultipart getValueFromStore(Document docCurrent, Vector<?> vecValues, Definition def)
+			throws DSSException {
 		return null;
 	}
 

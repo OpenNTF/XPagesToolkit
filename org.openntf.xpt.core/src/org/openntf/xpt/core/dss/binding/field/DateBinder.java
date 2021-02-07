@@ -28,6 +28,7 @@ import org.openntf.xpt.core.base.AbstractBaseBinder;
 import org.openntf.xpt.core.dss.binding.Definition;
 import org.openntf.xpt.core.dss.binding.IBinder;
 import org.openntf.xpt.core.dss.binding.util.DateProcessor;
+import org.openntf.xpt.core.utils.NotesObjectRecycler;
 import org.openntf.xpt.core.utils.logging.LoggerFactory;
 
 public class DateBinder extends AbstractBaseBinder<Date> implements IBinder<Date> {
@@ -47,29 +48,33 @@ public class DateBinder extends AbstractBaseBinder<Date> implements IBinder<Date
 		}
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Date[] processJava2Domino(Document docCurrent, Object objCurrent, Definition def) {
 		Date[] dtRC = new Date[2];
 		try {
 			Date dtCurrent = getValue(objCurrent, def.getJavaField());
-			Date dtOld = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
+			Vector vecOld = docCurrent.getItemValue(def.getNotesField());
+			Date dtOld = getValueFromStore(docCurrent, vecOld, def);
 			dtRC[0] = dtOld;
+			NotesObjectRecycler.recycleAll(vecOld);
 			if (dtCurrent != null) {
 				DateTime dt = docCurrent.getParentDatabase().getParent().createDateTime(dtCurrent);
 				if (def.isDateOnly()) {
 					dt = docCurrent.getParentDatabase().getParent().createDateTime(dt.getDateOnly());
 				}
 				docCurrent.replaceItemValue(def.getNotesField(), dt);
-				Date dtCurrentNew = getValueFromStore(docCurrent, docCurrent.getItemValue(def.getNotesField()), def);
+				Vector<DateTime> vec = new Vector<DateTime>();
+				vec.add(dt);
+				Date dtCurrentNew = getValueFromStore(docCurrent, vec, def);
 				dtRC[1] = dtCurrentNew;
-
 			} else {
 				docCurrent.removeItem(def.getNotesField());
 			}
 		} catch (Exception e) {
+			e.printStackTrace();
 			LoggerFactory.logWarning(getClass(), "Error during processJava2Domino", e);
 		}
 		return dtRC;
-
 	}
 
 	public static IBinder<Date> getInstance() {
@@ -88,13 +93,10 @@ public class DateBinder extends AbstractBaseBinder<Date> implements IBinder<Date
 				String strFormat = DateProcessor.getInstance().getDateFormat(def, docCurrent.getParentDatabase().getParent());
 				DateFormat formatter = new SimpleDateFormat(strFormat);
 				Date dtRC = formatter.parse(dtCurrent.getLocalTime());
-				dtCurrent.recycle();
 				return dtRC;
 			} catch (Exception e) {
 			}
 		}
 		return null;
-
 	}
-
 }

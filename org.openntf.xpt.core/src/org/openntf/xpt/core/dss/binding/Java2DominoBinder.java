@@ -16,21 +16,22 @@
 package org.openntf.xpt.core.dss.binding;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
-import lotus.domino.Document;
-import lotus.domino.NotesException;
-
+import org.openntf.xpt.core.dss.binding.field.MimeMultipartBinder;
 import org.openntf.xpt.core.dss.changeLog.ChangeLogEntry;
 import org.openntf.xpt.core.dss.changeLog.ChangeLogService;
 import org.openntf.xpt.core.dss.changeLog.StorageAction;
 import org.openntf.xpt.core.dss.encryption.EncryptionService;
 
+import lotus.domino.Document;
+import lotus.domino.NotesException;
+
 public class Java2DominoBinder {
 
 	private ArrayList<Definition> m_Definition;
+	
 
 	public Java2DominoBinder() {
 		m_Definition = new ArrayList<Definition>();
@@ -40,20 +41,23 @@ public class Java2DominoBinder {
 		m_Definition.add(def);
 	}
 
-	/*
-	 * public void addDefinition(String strNotesField, String strJavaField,
-	 * IBinder<?> binCurrent, boolean changeLog, HashMap<String, Object>
-	 * addValues, boolean encrypted, String[] encRoles) { m_Definition.add(new
-	 * Definition(strNotesField, strJavaField, binCurrent, changeLog, addValues,
-	 * encrypted, encRoles)); }
-	 */
 	public void processDocument(Document docProcess, Object objCurrent, String strPK) throws NotesException {
 		StorageAction action = StorageAction.MODIFY;
 		if (docProcess.isNewNote()) {
 			action = StorageAction.CREATE;
 		}
-		for (Iterator<Definition> itDefinition = m_Definition.iterator(); itDefinition.hasNext();) {
-			Definition defCurrent = itDefinition.next();
+		List<Definition> definitionsWithoutMimeBinder = getDefinitionsWithoutMIMEBinder();
+		List<Definition> definitionsWithMimeBinder = getDefinitionsWithMIMEBinder();
+		
+		processDefinitions(definitionsWithoutMimeBinder, docProcess, objCurrent, strPK, action);
+		if (!definitionsWithMimeBinder.isEmpty()) {
+			processDefinitions(definitionsWithMimeBinder, docProcess, objCurrent, strPK, action);
+		}
+	}
+
+	private void processDefinitions(List<Definition> definitions, Document docProcess, Object objCurrent, String strPK, StorageAction action)
+			throws NotesException {
+		for (Definition defCurrent:definitions) {
 			Object[] arrResult = null;
 			arrResult = defCurrent.getBinder().processJava2Domino(docProcess, objCurrent, defCurrent);
 			if (arrResult != null && defCurrent.getBinder() instanceof IEncryptionBinder) {
@@ -65,8 +69,27 @@ public class Java2DominoBinder {
 				ChangeLogService.getInstance().checkChangeLog(objCurrent, strPK, arrResult[0], arrResult[1], defCurrent.getJavaField(), defCurrent.getNotesField(), action, strUser,
 						docProcess.getParentDatabase().getParent(), docProcess.getParentDatabase());
 			}
-
 		}
+	}
+	
+	private List<Definition> getDefinitionsWithoutMIMEBinder() {
+		List<Definition> withoutMIMEBinder = new ArrayList<Definition>();
+		for (Definition def:m_Definition) {
+			if (!(def.getBinder() instanceof MimeMultipartBinder)) {
+				withoutMIMEBinder.add(def);
+			}
+		}
+		return withoutMIMEBinder;
+	}
+
+	private List<Definition> getDefinitionsWithMIMEBinder() {
+		List<Definition> withMIMEBinder = new ArrayList<Definition>();
+		for (Definition def:m_Definition) {
+			if ((def.getBinder() instanceof MimeMultipartBinder)) {
+				withMIMEBinder.add(def);
+			}
+		}
+		return withMIMEBinder;
 	}
 
 	public boolean isFieldAccessible(String strFieldName, List<String> currentRoles) {

@@ -20,11 +20,6 @@ import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 
-import lotus.domino.Database;
-import lotus.domino.Document;
-import lotus.domino.NotesException;
-import lotus.domino.View;
-
 import org.openntf.xpt.core.dss.annotations.DominoStore;
 import org.openntf.xpt.core.dss.annotations.XPTPresentationControl;
 import org.openntf.xpt.core.dss.binding.BinderContainer;
@@ -42,6 +37,11 @@ import org.openntf.xpt.core.utils.NotesObjectRecycler;
 import org.openntf.xpt.core.utils.ServiceSupport;
 
 import com.ibm.designer.runtime.Application;
+
+import lotus.domino.Database;
+import lotus.domino.Document;
+import lotus.domino.NotesException;
+import lotus.domino.View;
 
 public class DominoStorageService {
 
