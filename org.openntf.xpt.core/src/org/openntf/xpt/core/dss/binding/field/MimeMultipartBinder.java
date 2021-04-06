@@ -64,7 +64,9 @@ public class MimeMultipartBinder implements IBinder<MimeMultipart> {
 			mpRC[1] = body;
 			log.fine("oldBody = " + oldBody);
 			log.fine("body = " + body);
-			if (body != null && (body != null && oldBody == null) || !oldBody.getHTML().equals(body.getHTML())) {
+			String htmlBody = body != null ? body.getHTML() : "";
+			String htmlOldBody = oldBody != null ? oldBody.getHTML() :"";
+			if (!htmlBody.equals(htmlOldBody)) {
 				boolean isMimeSession = docCurrent.getParentDatabase().getParent().isConvertMime();
 				docCurrent.getParentDatabase().getParent().setConvertMime(false);
 				
